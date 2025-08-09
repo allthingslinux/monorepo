@@ -1,18 +1,8 @@
 {
-  "name": "atl-tools",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "tailwindcss -i src/input.css -o src/output.css --watch",
-    "build:prod": "tailwindcss -i src/input.css -o src/output.css --minify",
-    "dev": "wrangler pages dev src --compatibility-date=2025-08-09",
-    "deploy": "npm run build:prod && wrangler pages deploy src",
-    "preview": "wrangler pages dev src"
-  },
   "devDependencies": {
-    "@catppuccin/tailwindcss": "^1.0.0",
-    "@egoist/tailwindcss-icons": "^1.9.0",
-    "@iconify/json": "^2.2.367",
-    "tailwindcss": "^4.1.11",
-    "wrangler": "^4.28.1"
+    "@catppuccin/tailwindcss": "^0.1.6",
+    "@egoist/tailwindcss-icons": "^1.8.1",
+    "@iconify/json": "^2.2.217",
+    "tailwindcss": "^3.4.4"
   }
 }
