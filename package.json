@@ -5,10 +5,12 @@
     "build": "tailwindcss -i ./src/input.css -o ./src/output.css --minify",
     "dev": "tailwindcss -i ./src/input.css -o ./src/output.css --watch"
   },
+  "dependencies": {
+    "tailwindcss": "^4.1.11"
+  },
   "devDependencies": {
     "@catppuccin/tailwindcss": "^1.0.0",
     "@egoist/tailwindcss-icons": "^1.9.0",
-    "@iconify/json": "^2.2.367",
-    "tailwindcss": "^4.1.11"
+    "@iconify/json": "^2.2.367"
   }
 }
