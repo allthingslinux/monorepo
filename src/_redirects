@@ -1,0 +1,3 @@
+/panel /panel.html 200
+/register /register.html 200
+/assets/* /assets/:splat 200
