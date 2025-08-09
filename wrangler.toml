@@ -1,10 +1,5 @@
 name = "atl-tools"
 compatibility_date = "2025-08-09"
 
-# Workers configuration for static site
-main = "src/index.js"
-
-# Static assets configuration
-[assets]
-directory = "./dist"
-binding = "STATIC_ASSETS"
+# Pages configuration for static site
+pages_build_output_dir = "src"

@@ -2,15 +2,12 @@
   "name": "atl-tools",
   "version": "1.0.0",
   "scripts": {
-    "build": "npx @tailwindcss/cli@next -i src/input.css -o src/output.css --watch",
-    "build:prod": "npx @tailwindcss/cli@next -i src/input.css -o src/output.css --minify",
-    "build:dist": "npm run copy:files",
-    "copy:files": "rm -rf dist && mkdir -p dist && cp -r src dist/ && cp -r assets dist/",
-    "dev": "npm run build:dist && wrangler dev",
-    "deploy": "npm run build:dist && wrangler deploy",
-    "preview": "npm run build:dist && wrangler dev"
+    "build": "tailwindcss -i src/input.css -o src/output.css --watch",
+    "build:prod": "tailwindcss -i src/input.css -o src/output.css --minify",
+    "dev": "wrangler pages dev src --compatibility-date=2025-08-09",
+    "deploy": "npm run build:prod && wrangler pages deploy src",
+    "preview": "wrangler pages dev src"
   },
-
   "devDependencies": {
     "@catppuccin/tailwindcss": "^1.0.0",
     "@egoist/tailwindcss-icons": "^1.9.0",

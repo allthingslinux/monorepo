@@ -135,5 +135,3 @@ wrangler.toml.bak
 
 # Cloudflare
 .dev.vars
-# Build output
-dist/
