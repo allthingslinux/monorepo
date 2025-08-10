@@ -4,7 +4,7 @@
   "scripts": {
     "build": "npx tailwindcss -i ./src/input.css -o ./src/output.css --minify",
     "dev": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
-    "deploy": "npm run build && npx wrangler pages deploy src"
+    "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "tailwindcss": "^3.4.4",
