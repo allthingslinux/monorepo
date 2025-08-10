@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npx tailwindcss -i ./src/input.css -o ./src/output.css --minify",
-    "dev": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+    "dev": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "deploy": "npm run build && npx wrangler pages deploy src"
   },
   "dependencies": {
     "tailwindcss": "^3.4.4",
     "@catppuccin/tailwindcss": "^0.1.6",
     "@egoist/tailwindcss-icons": "^1.8.1",
-    "@iconify/json": "^2.2.367"
+    "@iconify/json": "^2.2.368",
+    "wrangler": "^4.28.1"
   }
 }
