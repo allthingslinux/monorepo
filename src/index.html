@@ -9,107 +9,185 @@
     <link rel='stylesheet' type='text/css' media='screen' href='output.css'>
 </head>
 <body class="mocha bg-base text-text">
-    <nav class="bg-mantle">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="https://atl.tools/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="/assets/logo_only.png" class="h-8" alt="atl.tools logo" />
-                <span class="self-center text-2xl font-bold italic whitespace-nowrap text-text">atl.tools</span>
-            </a>
-            <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg bg-mantle md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
-                <li>
-                    <a href="panel.html" class="md:p-0 py-2 px-3 text-text rounded hover:bg-surface0 flex items-center" alt="This action is limited to registered users only.">
-                        <span class="i-mdi-lock text-red mr-2 size-5"></span>
-                        Panel
+    <!-- Header -->
+    <header class="bg-mantle border-b border-surface0">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="/assets/logo_only.png" class="h-10 w-10" alt="atl.tools logo" />
+                <span class="text-2xl font-bold italic text-text">atl.tools</span>
+            </div>
+            <nav class="flex space-x-6">
+                <a href="panel.html" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-red text-base hover:bg-red/80 transition-colors">
+                    <span class="i-mdi-lock size-4"></span>
+                    <span>Panel</span>
+                </a>
+                <a href="register.html" class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-green text-base hover:bg-green/80 transition-colors">
+                    <span class="i-mdi-user size-4"></span>
+                    <span>Register</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-mantle to-surface0 py-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-blue to-mauve bg-clip-text text-transparent">
+                welcome to atl.tools
+            </h1>
+            <p class="text-xl text-subtext1 mb-8 max-w-2xl mx-auto">
+                Self-hosted applications for nerds, by nerds. Discover our collection of open source/privacy-focused tools and services.
+            </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="py-16 bg-base">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">Our Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="group bg-red/10 border border-red/20 rounded-xl p-6 hover:bg-red/20 transition-all duration-300">
+                    <div class="w-12 h-12 bg-red rounded-lg flex items-center justify-center mb-4">
+                        <span class="i-mdi-discord text-base size-6"></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-red mb-2">.gg/linux</h3>
+                    <p class="text-subtext1 mb-4">An extremely popular Linux server for any skill level</p>
+                    <a href="https://discord.gg/linux" class="inline-flex items-center text-red hover:text-red/80 font-medium">
+                        Join Discord <span class="i-mdi-arrow-right ml-1 size-4"></span>
                     </a>
-                </li>
-                <li>
-                    <a href="register.html" class="md:p-0 py-2 px-3 text-text rounded hover:bg-surface0 flex items-center" alt="This action is limited to registered users only.">
-                        <span class="i-mdi-user text-green mr-2 size-5"></span>
-                        Register
+                </div>
+
+                <div class="group bg-green/10 border border-green/20 rounded-xl p-6 hover:bg-green/20 transition-all duration-300">
+                    <div class="w-12 h-12 bg-green rounded-lg flex items-center justify-center mb-4">
+                        <span class="i-mdi-book-open text-base size-6"></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-green mb-2">atl.wiki</h3>
+                    <p class="text-subtext1 mb-4">A Linux wiki designed with beginners in mind</p>
+                    <a href="https://atl.wiki/" class="inline-flex items-center text-green hover:text-green/80 font-medium">
+                        Visit Wiki <span class="i-mdi-arrow-right ml-1 size-4"></span>
                     </a>
-                </li>
-            </ul>
+                </div>
+
+                <div class="group bg-blue/10 border border-blue/20 rounded-xl p-6 hover:bg-blue/20 transition-all duration-300">
+                    <div class="w-12 h-12 bg-blue rounded-lg flex items-center justify-center mb-4">
+                        <span class="i-mdi-tools text-base size-6"></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue mb-2">atl.tools</h3>
+                    <p class="text-subtext1 mb-4">Self-hosted applications for nerds, by nerds</p>
+                    <span class="inline-flex items-center text-blue font-medium">
+                        You are here <span class="i-mdi-check ml-1 size-4"></span>
+                    </span>
+                </div>
+
+                <div class="group bg-yellow/10 border border-yellow/20 rounded-xl p-6 hover:bg-yellow/20 transition-all duration-300">
+                    <div class="w-12 h-12 bg-yellow rounded-lg flex items-center justify-center mb-4">
+                        <span class="i-mdi-dots-horizontal text-base size-6"></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-yellow mb-2">More Coming</h3>
+                    <p class="text-subtext1 mb-4">We are making new projects extremely fast</p>
+                    <span class="inline-flex items-center text-yellow font-medium">
+                        Stay tuned <span class="i-mdi-clock ml-1 size-4"></span>
+                    </span>
+                </div>
             </div>
         </div>
-    </nav>
+    </section>
 
-    <div class="max-w-screen-xl mx-auto p-4">
-        <h1 class="text-5xl font-bold">welcome to atl.tools</h1>
-        <p class="mt-4">self hosted applications for nerds, by nerds</p>
-        <hr class="mt-4 border-2 border-surface0">
-    </div>
+    <!-- Services Section -->
+    <section class="py-16 bg-surface0">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Self-Hosted Services</h2>
+                <p class="text-xl text-subtext1">Privacy-focused tools and applications</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-red/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-red rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-content-paste text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">PrivateBin</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A minimalist, open source online pastebin where the server has zero knowledge of pasted data</p>
+                    <a href="https://pb.atl.tools/" class="inline-flex items-center px-4 py-2 bg-red text-base rounded-lg hover:bg-red/80 transition-colors">
+                        Start Pasting <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
 
-    <div class="max-w-screen-xl mx-auto p-4">
-        <h1 class="text-3xl font-bold">what we host</h1>
-        <p class="mt-4">we host many projects not just atl.tools, here are some of our other projects</p>
-    </div>
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-green/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-green rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-mail text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">Mail</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A mail server powered by mailcow (currently registrations are closed)</p>
+                    <a href="https://mail.atl.tools/" class="inline-flex items-center px-4 py-2 bg-green text-base rounded-lg hover:bg-green/80 transition-colors">
+                        Visit Mail <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
 
-    <div class="max-w-screen-xl mx-auto p-4 align flex justify-center">
-        <div class="bg-red p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">.gg/linux</h1>
-            <p class="mt-4">an extremely popular linux server for any skill level</p>
-            <br>
-            <a href="https://discord.gg/linux" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">join the discord</a>
-        </div>
-        <div class="bg-green p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">atl.wiki</h1>
-            <p class="mt-4">a linux wiki designed with beginners in mind</p>
-            <br>
-            <a href="https://atl.wiki/" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">visit atl.wiki</a>
-        </div>
-        <div class="bg-blue p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">atl.tools</h1>
-            <p class="mt-4">selfhosted applications for nerds, by nerds</p>
-            <br>
-            <a href="https://atl.tools/" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">you are here</a>
-        </div>
-        <div class="bg-yellow p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">???</h1>
-            <p class="mt-4">and more to come.. we are making new projects extremely fast</p>
-            <br>
-            <br>
-        </div>
-    </div>
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-blue/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-encryption text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">CyberChef</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A swiss army knife for encryption, encoding, compression and data analysis</p>
+                    <a href="https://cyberchef.atl.tools/" class="inline-flex items-center px-4 py-2 bg-blue text-base rounded-lg hover:bg-blue/80 transition-colors">
+                        Join Us <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
 
-    <div class="max-w-screen-xl mx-auto p-4">
-        <hr class="mt-4 border-2 border-surface0">
-        <br>
-        <h1 class="text-3xl font-bold">self hosted services</h1>
-    </div>
-    <div class="max-w-screen-xl mx-auto p-4 align flex justify-center">
-        <div class="bg-red p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">privatebin</h1>
-            <p class="mt-4">a minimalist, open source online pastebin where the server has zero knowledge of pasted data</p>
-            <br>
-            <a href="https://pb.atl.tools/" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">
-                <span class="i-mdi-content-paste align-middle size-6"></span>
-                start pasting
-            </a>
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-yellow/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-yellow rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-swap-horizontal text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">ConvertX</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A conversion tool for various file formats and data types</p>
+                    <a href="https://convert.atl.tools/" class="inline-flex items-center px-4 py-2 bg-yellow text-base rounded-lg hover:bg-yellow/80 transition-colors">
+                        Start Converting <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
+
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-mauve/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-mauve rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-magnify text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">SearXNG</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A privacy-respecting, hackable metasearch engine</p>
+                    <a href="https://search.atl.tools/" class="inline-flex items-center px-4 py-2 bg-mauve text-base rounded-lg hover:bg-mauve/80 transition-colors">
+                        Start Searching <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
+
+                <div class="bg-base rounded-xl p-6 border border-surface1 hover:border-teal/50 transition-all duration-300 group flex flex-col h-full">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-teal rounded-lg flex items-center justify-center mr-3">
+                            <span class="i-mdi-tools text-base size-5"></span>
+                        </div>
+                        <h3 class="text-xl font-bold">IT-Tools</h3>
+                    </div>
+                    <p class="text-subtext1 mb-6 flex-grow">A collection of handy online tools for developers</p>
+                    <a href="https://it.atl.tools/" class="inline-flex items-center px-4 py-2 bg-teal text-base rounded-lg hover:bg-teal/80 transition-colors">
+                        Use Tools <span class="i-mdi-arrow-right ml-2 size-4"></span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="bg-green p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">mail</h1>
-            <p class="mt-4">(currently registrations are closed) a mail server powered by mailcow</p>
-            <br>
-            <a href="https://mail.atl.tools/" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">
-                <span class="i-mdi-mail align-middle size-6"></span>
-                visit mail
-            </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-mantle py-8 border-t border-surface0">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-subtext1">Built with ❤️ by tAll Things Linux</p>
         </div>
-        <div class="bg-blue p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">cyberchef</h1>
-            <p class="mt-4">a swiss army knife for encryption, encoding, compression and data analysis</p>
-            <br>
-            <a href="https://cyberchef.atl.tools/" class="mt-4 bg-surface0 text-text p-2 rounded-lg hover:bg-surface1">
-                <span class="i-mdi-encryption align-middle size-6"></span>
-                join us
-            </a>
-        </div>
-        <div class="bg-yellow p-4 rounded-lg text-base mr-4 mb-4">
-            <h1 class="text-3xl font-bold">???</h1>
-            <p class="mt-4">and more to come..</p>
-            <br>
-            <br>
-        </div>
-    </div>
+    </footer>
 </body>
 </html>
