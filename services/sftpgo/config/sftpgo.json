@@ -1,0 +1,89 @@
+{
+  "common": {
+    "idle_timeout": 900,
+    "upload_mode": 0,
+    "actions": {
+      "execute_on": [],
+      "hook": ""
+    },
+    "setstat_mode": 0,
+    "proxy_protocol": 0,
+    "proxy_allowed": []
+  },
+  "sftpd": {
+    "bindings": [
+      {
+        "port": 2022,
+        "address": "",
+        "apply_proxy_config": true
+      }
+    ],
+    "max_auth_tries": 6,
+    "banner": ""
+  },
+  "ftpd": {
+    "bindings": [
+      {
+        "port": 0,
+        "address": "",
+        "apply_proxy_config": true
+      }
+    ],
+    "banner": "",
+    "active_transfers_port_non_standard": false
+  },
+  "webdavd": {
+    "bindings": [
+      {
+        "port": 0,
+        "address": "",
+        "enable_https": false
+      }
+    ]
+  },
+  "data_provider": {
+    "driver": "sqlite",
+    "name": "sftpgo.db",
+    "track_quota": 1
+  },
+  "httpd": {
+    "bindings": [
+      {
+        "port": 8080,
+        "address": "",
+        "enable_web_admin": true,
+        "enable_web_client": true,
+        "enable_https": false,
+        "proxy_mode": 0,
+        "client_ip_proxy_header": "X-Forwarded-For",
+        "client_ip_header_depth": 0
+      }
+    ]
+  },
+  "telemetry": {
+    "bind_port": 10000,
+    "bind_address": "",
+    "enable_profiler": false,
+    "auth_user_file": "",
+    "certificate_file": "",
+    "certificate_key_file": "",
+    "min_tls_version": 12,
+    "tls_cipher_suites": [],
+    "tls_protocols": [
+      "http/1.1",
+      "h2"
+    ]
+  },
+  "defender": {
+    "enabled": true,
+    "driver": "memory",
+    "ban_time": 30,
+    "ban_time_increment": 50,
+    "threshold": 10,
+    "score_invalid": 2,
+    "score_valid": 1,
+    "observation_time": 30,
+    "entries_soft_limit": 100,
+    "entries_hard_limit": 150
+  }
+}
