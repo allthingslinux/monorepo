@@ -38,7 +38,8 @@ export type ServiceCategory =
 	| "development"
 	| "conversion"
 	| "visualization"
-	| "documents";
+	| "documents"
+	| "frontends";
 
 export const categoryLabels: Record<ServiceCategory, string> = {
 	privacy: "Privacy",
@@ -48,6 +49,7 @@ export const categoryLabels: Record<ServiceCategory, string> = {
 	conversion: "Conversion",
 	visualization: "Visualization",
 	documents: "Documents",
+	frontends: "Frontends",
 };
 
 export interface ServiceDefinition {
@@ -135,6 +137,18 @@ export const services: ServiceDefinition[] = [
 		category: "visualization",
 		status: "active",
 		tags: ["json", "yaml", "visualization", "graphs"],
+	},
+	{
+		id: "hckrnws",
+		name: "hckrnws",
+		description:
+			"A cleaner reading experience for HackerNews. Dark mode, nested comment lines, quote highlighting and starred stories.",
+		url: "https://hn.atl.tools",
+		icon: "Newspaper",
+		color: "yellow",
+		category: "frontends",
+		status: "active",
+		tags: ["hackernews", "reader", "frontend"],
 	},
 	{
 		id: "stirling-pdf",

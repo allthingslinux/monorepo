@@ -1,0 +1,30 @@
+# =============================================================================
+# hckrnws — Build from source
+# https://github.com/rajatkulkarni95/hckrnws
+# =============================================================================
+
+FROM node:18-alpine AS builder
+RUN apk add --no-cache git
+RUN npm install -g pnpm@8
+WORKDIR /app
+RUN git clone --depth 1 https://github.com/rajatkulkarni95/hckrnws.git .
+
+# Patch next.config.js: add standalone output for smaller image
+RUN sed -i 's/module.exports = {/module.exports = {\n  output: "standalone",/' next.config.js
+
+# Skip static prerendering of API-dependent pages — the HN API may not be
+# reachable (or may return Cloudflare challenges) during Docker builds.
+# With fallback: "blocking", pages are server-rendered on first request instead.
+RUN find src/pages -name '*.tsx' -exec sed -i 's/return { paths,/return { paths: [],/' {} +
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+EXPOSE 3000
+CMD ["node", "server.js"]

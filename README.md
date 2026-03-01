@@ -16,6 +16,7 @@ one runs self-hosted on our infrastructure — no third-party data sharing.
 | [IT-Tools](https://it.atl.tools) | `it.atl.tools` | Development | A curated toolbox for developers and sysadmins. Token generators, formatters, converters, network tools and more. |
 | [JSON Crack](https://json.atl.tools) | `json.atl.tools` | Visualization | Visualize JSON, YAML, XML and CSV as interactive graphs. Format, validate, convert and explore structured data in the browser. |
 | [Stirling PDF](https://pdf.atl.tools) | `pdf.atl.tools` | Documents | Self-hosted PDF Swiss Army Knife. Merge, split, compress, convert, OCR, sign and watermark — all in the browser. |
+| [hckrnws](https://hn.atl.tools) | `hn.atl.tools` | Frontends | A cleaner reading experience for HackerNews. Dark mode, nested comment lines, quote highlighting and starred stories. |
 
 ## Stack
 
@@ -67,7 +68,7 @@ All services are defined in `packages/manifest/src/index.ts`. Add an entry to th
 },
 ```
 
-Available categories: `privacy`, `utilities`, `search`, `development`, `conversion`, `visualization`, `documents`
+Available categories: `privacy`, `utilities`, `search`, `development`, `conversion`, `visualization`, `documents`, `frontends`
 
 ## Deployment
 

@@ -1,0 +1,19 @@
+# =============================================================================
+# hckrnws — A cleaner reading experience for HackerNews
+# https://github.com/rajatkulkarni95/hckrnws
+# =============================================================================
+
+services:
+  hckrnws:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: atl-hckrnws
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${HCKRNWS_PORT:-3000}:3000"
+    networks:
+      - atl-tools
+
+include:
+  - ../networks.yaml
