@@ -1,0 +1,18 @@
+# =============================================================================
+# IT-Tools — Handy online tools for developers
+# Original: https://github.com/CorentinTh/it-tools
+# Fork with improvements we are using: https://github.com/sharevb/it-tools
+# =============================================================================
+
+services:
+  it-tools:
+    image: ghcr.io/sharevb/it-tools:latest
+    container_name: atl-it-tools
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${IT_TOOLS_PORT:-8083}:8080"
+    networks:
+      - atl-tools
+
+include:
+  - ../networks.yaml
