@@ -1,0 +1,24 @@
+# =============================================================================
+# ConvertX — Self-hosted file conversion tool
+# https://github.com/C4illin/ConvertX
+# =============================================================================
+
+services:
+  convertx:
+    image: ghcr.io/c4illin/convertx:latest
+    container_name: atl-convertx
+    restart: unless-stopped
+    environment:
+      - JWT_SECRET=${CONVERTX_JWT_SECRET:-changeme}
+      - ALLOW_UNAUTHENTICATED=${CONVERTX_ALLOW_UNAUTHENTICATED:-true}
+      - HIDE_HISTORY=true
+      - AUTO_DELETE_EVERY_N_HOURS=1
+    volumes:
+      - ../../data/convertx:/app/data
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${CONVERTX_PORT:-3001}:3000"
+    networks:
+      - atl-tools
+
+include:
+  - ../networks.yaml
