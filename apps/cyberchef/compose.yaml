@@ -5,7 +5,7 @@
 
 services:
   cyberchef:
-    image: ghcr.io/gchq/cyberchef:v10.22.1
+    image: ghcr.io/gchq/cyberchef:10.22.1
     container_name: atl-cyberchef
     restart: unless-stopped
     ports:
