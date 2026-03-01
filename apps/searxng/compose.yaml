@@ -29,9 +29,11 @@ services:
         max-size: "1m"
         max-file: "1"
     depends_on:
-      - valkey
+      valkey:
+        condition: service_healthy
     networks:
       - atl-tools
+      - searxng-internal
 
   valkey:
     image: valkey/valkey:8-alpine
@@ -45,8 +47,18 @@ services:
       options:
         max-size: "1m"
         max-file: "1"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
-      - atl-tools
+      - searxng-internal
+
+networks:
+  searxng-internal:
+    driver: bridge
+    internal: true
 
 include:
   - ../networks.yaml
