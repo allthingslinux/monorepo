@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,14 +20,9 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "types": [
-      "@cloudflare/workers-types",
-      "./types/env.d.ts"
-    ]
+    "types": ["@cloudflare/workers-types", "./types/env.d.ts"]
   },
   "include": [
     "next-env.d.ts",
@@ -41,7 +32,5 @@
     ".next/dev/types/**/*.ts",
     "alchemy.run.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
