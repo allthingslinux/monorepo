@@ -6,7 +6,7 @@
 
 services:
   it-tools:
-    image: ghcr.io/sharevb/it-tools:v2026.1.4
+    image: ghcr.io/sharevb/it-tools:latest
     container_name: atl-it-tools
     restart: unless-stopped
     ports:
