@@ -2,7 +2,7 @@ FROM node:24-alpine AS builder
 RUN apk add --no-cache git
 RUN npm install -g pnpm@10
 WORKDIR /app
-RUN git clone --depth 1 --branch v4.0.0 https://github.com/AykutSarac/jsoncrack.com.git .
+RUN git clone --depth 1 https://github.com/AykutSarac/jsoncrack.com.git .
 RUN pnpm install --frozen-lockfile
 RUN pnpm --filter jsoncrack-react build
 
