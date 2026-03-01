@@ -1,0 +1,17 @@
+FROM node:24-alpine AS builder
+RUN apk add --no-cache git
+RUN npm install -g pnpm@10
+WORKDIR /app
+RUN git clone --depth 1 https://github.com/AykutSarac/jsoncrack.com.git .
+RUN pnpm install
+RUN pnpm --filter jsoncrack-react build
+
+# Replace landing page with redirect to editor
+RUN printf 'import { useEffect } from "react";\nimport { useRouter } from "next/router";\nexport default function Home() {\n  const r = useRouter();\n  useEffect(() => { r.replace("/editor"); }, []);\n  return null;\n}\n' > /app/apps/www/src/pages/index.tsx
+
+RUN pnpm --filter www build
+
+FROM nginxinc/nginx-unprivileged:stable
+COPY --from=builder /app/apps/www/out /app
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 8080
