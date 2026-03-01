@@ -1,2 +1,0 @@
-# Cloudflare Pages redirects
-/assets/* /assets/:splat 200
