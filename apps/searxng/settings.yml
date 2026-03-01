@@ -29,8 +29,8 @@ search:
 server:
   base_url: false # overridden by SEARXNG_BASE_URL env
   secret_key: "override-me" # overridden by SEARXNG_SECRET env
-  limiter: true # public instance, needs bot protection
-  public_instance: true
+  limiter: false
+  public_instance: false
   image_proxy: true
   method: "POST"
   default_http_headers:
