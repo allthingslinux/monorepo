@@ -128,3 +128,22 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Turbo
+.turbo
+
+# Docker volumes / service data
+data/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# pnpm
+pnpm-debug.log*
+apps/web/.open-next
+apps/web/.alchemy
+wrangler.toml
+wrangler.jsonc
+wrangler.json5
