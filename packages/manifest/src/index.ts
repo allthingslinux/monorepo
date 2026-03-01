@@ -11,25 +11,25 @@ export type CatppuccinColor =
 	| "lavender"
 	| "sapphire"
 	| "sky"
-	| "maroon"
+	| "maroon";
 
 export const tokyoNightHex: Record<CatppuccinColor, string> = {
-	red:      "#f7768e",
-	green:    "#9ece6a",
-	blue:     "#7aa2f7",
-	yellow:   "#e0af68",
-	mauve:    "#bb9af7",
-	teal:     "#73daca",
-	peach:    "#ff9e64",
-	pink:     "#ff007c",
+	red: "#f7768e",
+	green: "#9ece6a",
+	blue: "#7aa2f7",
+	yellow: "#e0af68",
+	mauve: "#bb9af7",
+	teal: "#73daca",
+	peach: "#ff9e64",
+	pink: "#ff007c",
 	flamingo: "#f7768e",
 	lavender: "#9d7cd8",
 	sapphire: "#2ac3de",
-	sky:      "#7dcfff",
-	maroon:   "#db4b4b",
-}
+	sky: "#7dcfff",
+	maroon: "#db4b4b",
+};
 
-export type ServiceStatus = "active" | "planned" | "maintenance"
+export type ServiceStatus = "active" | "planned" | "maintenance";
 
 export type ServiceCategory =
 	| "privacy"
@@ -38,29 +38,29 @@ export type ServiceCategory =
 	| "development"
 	| "conversion"
 	| "visualization"
-	| "documents"
+	| "documents";
 
 export const categoryLabels: Record<ServiceCategory, string> = {
-	privacy:    "Privacy",
-	utilities:  "Utilities",
-	search:     "Search",
+	privacy: "Privacy",
+	utilities: "Utilities",
+	search: "Search",
 	development: "Development",
 	conversion: "Conversion",
 	visualization: "Visualization",
 	documents: "Documents",
-}
+};
 
 export interface ServiceDefinition {
-	id: string
-	name: string
-	description: string
-	url: string
+	category: ServiceCategory;
+	color: CatppuccinColor;
+	description: string;
 	/** Lucide icon name (PascalCase) */
-	icon: string
-	color: CatppuccinColor
-	category: ServiceCategory
-	status: ServiceStatus
-	tags: string[]
+	icon: string;
+	id: string;
+	name: string;
+	status: ServiceStatus;
+	tags: string[];
+	url: string;
 }
 
 export const services: ServiceDefinition[] = [
@@ -148,11 +148,13 @@ export const services: ServiceDefinition[] = [
 		status: "active",
 		tags: ["pdf", "merge", "convert", "ocr"],
 	},
-]
+];
 
 export const servicesByCategory = services.reduce<
 	Partial<Record<ServiceCategory, ServiceDefinition[]>>
 >((acc, service) => {
-	const existing = acc[service.category] ?? []
-	return { ...acc, [service.category]: [...existing, service] }
-}, {})
+	const existing = acc[service.category] ?? [];
+	existing.push(service);
+	acc[service.category] = existing;
+	return acc;
+}, {});
