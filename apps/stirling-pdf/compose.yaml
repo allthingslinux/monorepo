@@ -33,12 +33,6 @@ services:
       interval: 5s
       timeout: 10s
       retries: 16
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - SETGID
-      - SETUID
     logging:
       driver: "json-file"
       options:
