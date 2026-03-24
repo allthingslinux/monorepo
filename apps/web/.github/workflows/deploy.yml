@@ -69,8 +69,7 @@ jobs:
             docs/**/*.md
             package.json
             pnpm-lock.yaml
-            .github/renovate.json
-            renovate.json
+            .github/renovate.json5
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
