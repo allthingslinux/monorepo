@@ -8,7 +8,7 @@ import { runtimeEnv as env } from "@/env";
 // Simple admin-only OAuth setup
 export const runtime = "nodejs";
 
-export async function GET(request: NextRequest) {
+export function GET(request: NextRequest) {
   // Require admin key authentication in all environments
   const adminKey = request.nextUrl.searchParams.get("admin");
 

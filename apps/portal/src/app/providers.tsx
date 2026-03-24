@@ -234,13 +234,15 @@ export function Providers({ children }: { children: ReactNode }) {
 /** Loads and runs client Sentry init only in the browser. Avoids pulling in @sentry/nextjs during server render (next-prerender-crypto). */
 function SentryClientInit() {
   useEffect(() => {
-    import("@portal/observability/client")
-      .then(({ initializeSentry }) => {
+    (async () => {
+      try {
+        const { initializeSentry } =
+          await import("@portal/observability/client");
         initializeSentry();
-      })
-      .catch(() => {
+      } catch {
         // Best-effort; ignore load errors (e.g. missing DSN in dev)
-      });
+      }
+    })();
   }, []);
   return null;
 }

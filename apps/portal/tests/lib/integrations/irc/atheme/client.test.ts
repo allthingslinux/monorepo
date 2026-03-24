@@ -16,8 +16,6 @@ vi.mock("@sentry/nextjs", () => ({
 }));
 
 // Mock keys and config to avoid T3-Env validation errors
-process.env.SKIP_ENV_VALIDATION = "true";
-
 vi.mock("@/features/integrations/lib/irc/keys", () => ({
   keys: () => ({}),
 }));
@@ -48,7 +46,8 @@ describe("Atheme Client", () => {
       const email = "alice@example.com";
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ id: "1", jsonrpc: "2.0", result: "Success" }),
+        json: () =>
+          Promise.resolve({ id: "1", jsonrpc: "2.0", result: "Success" }),
         ok: true,
       });
 
@@ -85,11 +84,12 @@ describe("Atheme Client", () => {
       const email = "alice@example.com";
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          error: { code: 8, message: "Nick already registered" },
-          id: "1",
-          jsonrpc: "2.0",
-        }),
+        json: () =>
+          Promise.resolve({
+            error: { code: 8, message: "Nick already registered" },
+            id: "1",
+            jsonrpc: "2.0",
+          }),
         ok: false,
         status: 400,
       });
@@ -123,7 +123,8 @@ describe("Atheme Client", () => {
 
       try {
         mockFetch.mockResolvedValueOnce({
-          json: async () => ({ id: "1", jsonrpc: "2.0", result: "Success" }),
+          json: () =>
+            Promise.resolve({ id: "1", jsonrpc: "2.0", result: "Success" }),
           ok: true,
         });
 

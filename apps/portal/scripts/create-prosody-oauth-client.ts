@@ -103,12 +103,15 @@ async function createProsodyOAuthClient() {
 
 // Run if called directly
 if (require.main === module) {
-  createProsodyOAuthClient()
-    .then(() => process.exit(0))
-    .catch((error) => {
+  (async () => {
+    try {
+      await createProsodyOAuthClient();
+      process.exit(0);
+    } catch (error) {
       console.error(error);
       process.exit(1);
-    });
+    }
+  })();
 }
 
 export { createProsodyOAuthClient };

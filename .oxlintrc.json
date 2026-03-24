@@ -34,13 +34,9 @@
     "react_perf/jsx-no-new-function-as-prop": "off",
     "prefer-destructuring": "off",
     "no-use-before-define": "off",
-    "class-methods-use-this": "off",
     "typescript/no-explicit-any": "off",
     "promise/prefer-await-to-callbacks": "off",
-    "import/first": "off",
-    "promise/prefer-await-to-then": "off",
     "import/no-named-as-default-member": "off",
-    "require-await": "off",
     "no-shadow": "off",
     "no-warning-comments": "off",
     "no-empty-function": "off",
@@ -144,6 +140,14 @@
       "files": ["apps/portal/src/features/auth/lib/localization.ts"],
       "rules": {
         "sort-keys": "off"
+      }
+    },
+    {
+      "files": [
+        "apps/portal/src/features/integrations/lib/**/implementation.ts"
+      ],
+      "rules": {
+        "class-methods-use-this": "off"
       }
     },
     {

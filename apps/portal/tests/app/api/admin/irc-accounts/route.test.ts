@@ -1,7 +1,8 @@
-process.env.SKIP_ENV_VALIDATION = "true";
-
+import { db } from "@portal/db/client";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { GET } from "@/app/api/admin/irc-accounts/route";
 
 // Mock keys before anything else to avoid T3-Env validation
 vi.mock("@/features/integrations/lib/xmpp/keys", () => ({
@@ -19,10 +20,6 @@ vi.mock("@/features/auth/lib/keys", () => ({
 vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
   keys: () => ({}),
 }));
-
-import { db } from "@portal/db/client";
-
-import { GET } from "@/app/api/admin/irc-accounts/route";
 
 // Mock DB
 vi.mock("@portal/db/client", () => ({

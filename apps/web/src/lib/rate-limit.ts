@@ -20,9 +20,7 @@ function getClientIP(req: NextRequest): string {
 }
 
 // Simple rate limiter for form submissions: 1 per hour
-export async function formSubmissionRateLimit(
-  req: NextRequest
-): Promise<NextResponse | null> {
+export function formSubmissionRateLimit(req: NextRequest): NextResponse | null {
   const ip = getClientIP(req);
   const now = Date.now();
   const windowMs = 60 * 60 * 1000; // 1 hour
@@ -54,9 +52,7 @@ export async function formSubmissionRateLimit(
 }
 
 // General API rate limiter: 100 requests per hour
-export async function apiRateLimit(
-  req: NextRequest
-): Promise<NextResponse | null> {
+export function apiRateLimit(req: NextRequest): NextResponse | null {
   const ip = getClientIP(req);
   const now = Date.now();
   const windowMs = 60 * 60 * 1000; // 1 hour

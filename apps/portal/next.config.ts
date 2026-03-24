@@ -126,7 +126,7 @@ let nextConfig: NextConfig = {
   // Generate consistent build IDs for multi-container deployments
   // Ensures the same build ID is used across all containers in a deployment
   // Priority: GIT_HASH env var > git rev-parse > timestamp fallback
-  generateBuildId: async () => {
+  generateBuildId: () => {
     // Use GIT_HASH if provided (common in CI/CD pipelines)
     if (process.env.GIT_HASH) {
       return process.env.GIT_HASH;

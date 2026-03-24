@@ -1,5 +1,8 @@
+import { APIError } from "@portal/api/utils";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { GET } from "@/app/api/user/me/route";
 
 // Mock env.ts first to prevent all keys from loading
 vi.mock("@/env", () => ({
@@ -176,10 +179,6 @@ vi.mock("@portal/api/utils", async () => {
     requireAuth: (...args: unknown[]) => mockRequireAuth(...args),
   };
 });
-
-import { APIError } from "@portal/api/utils";
-
-import { GET } from "@/app/api/user/me/route";
 
 describe("GET /api/user/me", () => {
   beforeEach(() => {

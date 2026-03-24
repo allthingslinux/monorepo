@@ -94,10 +94,11 @@ function ReactScan(): React.ReactNode | null {
     // Dynamically import react-scan only when enabled
     // This prevents the module from initializing and attempting connections
     // when the environment variable is not set
-    import("react-scan/all-environments")
-      .then((module) => {
+    (async () => {
+      try {
+        const reactScan = await import("react-scan/all-environments");
         try {
-          module.scan({
+          reactScan.scan({
             enabled: true,
           });
         } catch (error) {
@@ -109,13 +110,13 @@ function ReactScan(): React.ReactNode | null {
             );
           }
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         // Handle import errors (e.g., module not found)
         if (process.env.NODE_ENV === "test") {
           console.warn("[DevTools] Failed to load react-scan module.", error);
         }
-      });
+      }
+    })();
   }, []);
 
   // Return null if not enabled to prevent any rendering
@@ -157,9 +158,14 @@ export function ReactQueryDevtools({
       return;
     }
 
-    import("@tanstack/react-query-devtools").then((mod) => {
-      setDevtools(() => mod.ReactQueryDevtools);
-    });
+    (async () => {
+      try {
+        const mod = await import("@tanstack/react-query-devtools");
+        setDevtools(() => mod.ReactQueryDevtools);
+      } catch {
+        // ignore load errors
+      }
+    })();
   }, []);
 
   if (isDevToolsDisabled()) {

@@ -911,12 +911,12 @@ async function saveTokens(
  * Updates local environment files (.env.local and .dev.vars) automatically
  * Only works in development mode and when files are writable
  */
-async function updateLocalEnvFiles(tokens: {
+function updateLocalEnvFiles(tokens: {
   refreshToken: string;
   realmId: string;
   clientId?: string;
   environment?: string;
-}): Promise<boolean> {
+}): boolean {
   try {
     const projectRoot = process.cwd();
     const envLocalPath = join(projectRoot, ".env.local");
@@ -1155,7 +1155,7 @@ export async function fetchQuickBooksTransactions(
       console.log(
         "[QuickBooks] ⏳ Token refresh already in progress, waiting..."
       );
-      return refreshPromise;
+      return await refreshPromise;
     }
 
     console.log("[QuickBooks] 🔄 Refreshing access token due to 401 error...");

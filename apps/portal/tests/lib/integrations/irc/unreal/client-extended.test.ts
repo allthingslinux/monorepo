@@ -9,8 +9,6 @@
  *   - RPC utilities: rpcInfo, rpcSetIssuer, rpcAddTimer, rpcDelTimer
  */
 
-process.env.SKIP_ENV_VALIDATION = "true";
-
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { unrealRpcClient } from "@/features/integrations/lib/irc/unreal/client";
@@ -51,7 +49,7 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
 /** Mock a successful JSON-RPC response. */
 function mockOk(result: unknown) {
   mockFetch.mockResolvedValueOnce({
-    json: async () => ({ id: 1, jsonrpc: "2.0", result }),
+    json: () => Promise.resolve({ id: 1, jsonrpc: "2.0", result }),
     ok: true,
   });
 }
@@ -59,7 +57,7 @@ function mockOk(result: unknown) {
 /** Mock a failed HTTP response (non-2xx). */
 function mockErr(message = "Internal Server Error", status = 500) {
   mockFetch.mockResolvedValueOnce({
-    json: async () => ({ error: { message } }),
+    json: () => Promise.resolve({ error: { message } }),
     ok: false,
     status,
   });

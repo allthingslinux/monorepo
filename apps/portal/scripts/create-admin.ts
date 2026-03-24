@@ -94,12 +94,15 @@ async function createAdminUser() {
 
 // Run if called directly
 if (require.main === module) {
-  createAdminUser()
-    .then(() => process.exit(0))
-    .catch((error) => {
+  (async () => {
+    try {
+      await createAdminUser();
+      process.exit(0);
+    } catch (error) {
       console.error(error);
       process.exit(1);
-    });
+    }
+  })();
 }
 
 export { createAdminUser };

@@ -12,6 +12,8 @@ import {
   zodErrorsIntegration,
 } from "@sentry/nextjs";
 
+import { keys } from "./keys";
+
 // Common regex patterns for edge runtime filtering
 const REQUEST_ABORTED_REGEX = /Request aborted/;
 const EDGE_RUNTIME_REGEX = /edge runtime/i;
@@ -20,8 +22,6 @@ const API_HEALTH_REGEX = /^GET \/api\/health/;
 const MONITORING_REGEX = /^GET \/monitoring/;
 const STATIC_ASSETS_REGEX = /^GET \/_next\/static\//;
 const FAVICON_REGEX = /^GET \/favicon/;
-
-import { keys } from "./keys";
 
 export const initializeSentry = (): ReturnType<typeof init> => {
   const env = keys();

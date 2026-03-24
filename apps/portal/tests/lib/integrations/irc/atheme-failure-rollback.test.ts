@@ -8,19 +8,23 @@
  * **Validates: Requirement 5.3**
  */
 
-process.env.SKIP_ENV_VALIDATION = "true";
-
+import { db } from "@portal/db/client";
 import {
+  assert as fcAssert,
   asyncProperty,
   constantFrom,
-  assert as fcAssert,
   string as fcString,
 } from "fast-check";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import {
+  AthemeFaultError,
+  registerNick,
+} from "@/features/integrations/lib/irc/atheme/client";
+import { IrcIntegration } from "@/features/integrations/lib/irc/implementation";
 
 // Namespace-compatible aliases for fast-check usage
 const fc = { assert: fcAssert, asyncProperty, constantFrom, string: fcString };
-
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/features/integrations/lib/irc/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
@@ -76,14 +80,6 @@ vi.mock("@/features/integrations/lib/irc/atheme/client", () => ({
   },
   registerNick: vi.fn(),
 }));
-
-import { db } from "@portal/db/client";
-
-import {
-  AthemeFaultError,
-  registerNick,
-} from "@/features/integrations/lib/irc/atheme/client";
-import { IrcIntegration } from "@/features/integrations/lib/irc/implementation";
 
 // ---------------------------------------------------------------------------
 // Helpers

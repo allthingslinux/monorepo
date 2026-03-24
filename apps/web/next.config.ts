@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
     webpackMemoryOptimizations: true,
   },
   // Add headers for API endpoints
-  async headers() {
+  headers() {
     return [
       {
         headers: [
@@ -127,7 +127,7 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
   // Add redirects
-  async redirects() {
+  redirects() {
     return [
       {
         destination: "/contribute",

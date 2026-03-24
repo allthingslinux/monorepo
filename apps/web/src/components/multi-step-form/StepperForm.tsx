@@ -164,7 +164,7 @@ function StepperFormContent({
   );
 
   // Handle step navigation
-  const navigateToStep = async (targetStep: StepId) => {
+  const navigateToStep = (targetStep: StepId) => {
     // Reset any previous submission errors when navigating
     setSubmissionError(null);
 

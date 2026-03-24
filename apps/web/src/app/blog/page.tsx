@@ -7,7 +7,7 @@ import { getAllCategories, getAllPosts } from "@/lib/blog";
 
 import { getPageMetadata } from "../metadata";
 
-export async function generateMetadata(): Promise<Metadata> {
+export function generateMetadata(): Metadata {
   // Build dynamic OG image URL with query parameters
   // const ogImageUrl = new URL(getApiUrl('/api/og'));
   // ogImageUrl.searchParams.append('title', 'Latest Insights & Updates');

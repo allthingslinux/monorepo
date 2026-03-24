@@ -12,7 +12,7 @@ import { getServerRouteResolver } from "@/features/routing/lib";
 
 const USERS_PATH = "/app/admin/users" as const;
 
-export async function generateMetadata(): Promise<Metadata> {
+export function generateMetadata(): Metadata {
   return {
     alternates: {
       canonical: USERS_PATH,

@@ -5,15 +5,6 @@
  */
 
 import "server-only";
-
-// Regex constants for performance
-const REQUEST_ABORTED_PATTERN = /Request aborted/;
-const HEALTH_CHECK_PATTERN = /^GET \/health/;
-const API_HEALTH_PATTERN = /^GET \/api\/health/;
-const MONITORING_PATTERN = /^GET \/monitoring/;
-const NEXT_STATIC_PATTERN = /^GET \/_next\/static\//;
-const FAVICON_PATTERN = /^GET \/favicon/;
-
 import {
   consoleLoggingIntegration,
   extraErrorDataIntegration,
@@ -25,6 +16,14 @@ import {
 } from "@sentry/nextjs";
 
 import { keys } from "./keys";
+
+// Regex constants for performance
+const REQUEST_ABORTED_PATTERN = /Request aborted/;
+const HEALTH_CHECK_PATTERN = /^GET \/health/;
+const API_HEALTH_PATTERN = /^GET \/api\/health/;
+const MONITORING_PATTERN = /^GET \/monitoring/;
+const NEXT_STATIC_PATTERN = /^GET \/_next\/static\//;
+const FAVICON_PATTERN = /^GET \/favicon/;
 
 export const initializeSentry = (): ReturnType<typeof init> => {
   const env = keys();

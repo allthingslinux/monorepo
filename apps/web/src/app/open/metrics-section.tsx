@@ -62,7 +62,7 @@ function MetricCard({
   );
 }
 
-export async function MetricsSection() {
+export function MetricsSection() {
   // Community and organization metrics - coming soon
   const metrics = [
     {

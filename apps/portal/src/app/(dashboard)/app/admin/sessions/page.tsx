@@ -11,7 +11,7 @@ import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 
 const SESSIONS_PATH = "/app/admin/sessions" as const;
 
-export async function generateMetadata(): Promise<Metadata> {
+export function generateMetadata(): Metadata {
   const adminRoute = routeConfig.protected.find((r) => r.id === "admin");
   const child = adminRoute?.navigation?.children?.find(
     (c) => c.id === "admin-sessions"

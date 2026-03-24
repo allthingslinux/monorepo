@@ -98,7 +98,11 @@ async function createMailcowOAuthClient() {
   console.log("\nThen restart the app.");
 }
 
-createMailcowOAuthClient().catch((error) => {
-  console.error("❌", error);
-  process.exit(1);
-});
+(async () => {
+  try {
+    await createMailcowOAuthClient();
+  } catch (error) {
+    console.error("❌", error);
+    process.exit(1);
+  }
+})();

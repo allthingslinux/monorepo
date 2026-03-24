@@ -13,8 +13,6 @@ vi.mock("@sentry/nextjs", () => ({
 }));
 
 // Mock keys and config to avoid T3-Env validation errors
-process.env.SKIP_ENV_VALIDATION = "true";
-
 vi.mock("@/features/integrations/lib/irc/keys", () => ({
   keys: () => ({}),
 }));
@@ -42,11 +40,12 @@ describe("UnrealIRCd Client", () => {
       // Arrange — UnrealIRCd list methods return { list: [...] }
       const mockUsers = [{ nick: "alice", realname: "Alice" }];
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          id: 1,
-          jsonrpc: "2.0",
-          result: { list: mockUsers },
-        }),
+        json: () =>
+          Promise.resolve({
+            id: 1,
+            jsonrpc: "2.0",
+            result: { list: mockUsers },
+          }),
         ok: true,
       });
 
@@ -70,7 +69,8 @@ describe("UnrealIRCd Client", () => {
     it("handles errors and returns empty array", async () => {
       // Arrange
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ error: { message: "Internal Server Error" } }),
+        json: () =>
+          Promise.resolve({ error: { message: "Internal Server Error" } }),
         ok: false,
         status: 500,
       });
@@ -88,11 +88,12 @@ describe("UnrealIRCd Client", () => {
       // Arrange — UnrealIRCd list methods return { list: [...] }
       const mockChannels = [{ name: "#allthingslinux" }];
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          id: 1,
-          jsonrpc: "2.0",
-          result: { list: mockChannels },
-        }),
+        json: () =>
+          Promise.resolve({
+            id: 1,
+            jsonrpc: "2.0",
+            result: { list: mockChannels },
+          }),
         ok: true,
       });
 
@@ -106,7 +107,8 @@ describe("UnrealIRCd Client", () => {
     it("handles channel list errors and returns empty array", async () => {
       // Arrange
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ error: { message: "Internal Server Error" } }),
+        json: () =>
+          Promise.resolve({ error: { message: "Internal Server Error" } }),
         ok: false,
         status: 500,
       });
@@ -124,11 +126,12 @@ describe("UnrealIRCd Client", () => {
       // Arrange — UnrealIRCd user.get returns { client: {...} }
       const mockUser = { nick: "alice", realname: "Alice" };
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          id: 1,
-          jsonrpc: "2.0",
-          result: { client: mockUser },
-        }),
+        json: () =>
+          Promise.resolve({
+            id: 1,
+            jsonrpc: "2.0",
+            result: { client: mockUser },
+          }),
         ok: true,
       });
 
@@ -148,7 +151,7 @@ describe("UnrealIRCd Client", () => {
     it("returns null on error", async () => {
       // Arrange
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ error: { message: "Not found" } }),
+        json: () => Promise.resolve({ error: { message: "Not found" } }),
         ok: false,
         status: 404,
       });
@@ -166,11 +169,12 @@ describe("UnrealIRCd Client", () => {
       // Arrange — UnrealIRCd channel.get returns { channel: {...} }
       const mockChannel = { name: "#test" };
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          id: 1,
-          jsonrpc: "2.0",
-          result: { channel: mockChannel },
-        }),
+        json: () =>
+          Promise.resolve({
+            id: 1,
+            jsonrpc: "2.0",
+            result: { channel: mockChannel },
+          }),
         ok: true,
       });
 
@@ -184,7 +188,7 @@ describe("UnrealIRCd Client", () => {
     it("returns null on error", async () => {
       // Arrange
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ error: { message: "Not found" } }),
+        json: () => Promise.resolve({ error: { message: "Not found" } }),
         ok: false,
         status: 404,
       });

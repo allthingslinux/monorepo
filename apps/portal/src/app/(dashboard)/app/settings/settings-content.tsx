@@ -29,70 +29,70 @@ import { useSettingsSearchParams } from "./use-settings-search-params";
 // It's a Client Component because we disable SSR for Better Auth UI components.
 
 const UpdateAvatarCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.UpdateAvatarCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.UpdateAvatarCard };
+  },
   {
     ssr: false,
   }
 );
 
 const UpdateNameCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.UpdateNameCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.UpdateNameCard };
+  },
   {
     ssr: false,
   }
 );
 
 const ChangeEmailCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.ChangeEmailCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.ChangeEmailCard };
+  },
   {
     ssr: false,
   }
 );
 
 const ProvidersCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.ProvidersCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.ProvidersCard };
+  },
   {
     ssr: false,
   }
 );
 
 const UpdateUsernameCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.UpdateUsernameCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.UpdateUsernameCard };
+  },
   {
     ssr: false,
   }
 );
 
 const SecuritySettingsCards = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.SecuritySettingsCards,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.SecuritySettingsCards };
+  },
   {
     ssr: false,
   }
 );
 
 const ApiKeysCard = dynamic(
-  () =>
-    import("@daveyplate/better-auth-ui").then((m) => ({
-      default: m.ApiKeysCard,
-    })),
+  async () => {
+    const m = await import("@daveyplate/better-auth-ui");
+    return { default: m.ApiKeysCard };
+  },
   {
     ssr: false,
   }

@@ -5,7 +5,6 @@ import { registerNick } from "@/features/integrations/lib/irc/atheme/client";
 import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
 
 // Mock keys and config
-process.env.SKIP_ENV_VALIDATION = "true";
 vi.mock("@/features/integrations/lib/irc/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
   keys: () => ({}),

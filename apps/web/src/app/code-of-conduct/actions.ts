@@ -9,7 +9,7 @@ import { CODE_OF_CONDUCT_CONTENT, LAST_UPDATED } from "@/lib/code-of-conduct";
 /**
  * Get the processed content of the Code of Conduct
  */
-export async function getCodeOfConductContent(): Promise<string> {
+export function getCodeOfConductContent(): string {
   // No more fetch calls or network requests - directly return the imported content
   return CODE_OF_CONDUCT_CONTENT;
 }
@@ -17,7 +17,7 @@ export async function getCodeOfConductContent(): Promise<string> {
 /**
  * Get the last updated date of the Code of Conduct
  */
-export async function getLastUpdated(): Promise<string> {
+export function getLastUpdated(): string {
   // No more fetch calls or network requests - directly return the imported date
   return LAST_UPDATED;
 }

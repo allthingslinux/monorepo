@@ -8,24 +8,24 @@
  * Validates: Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6
  */
 
-process.env.SKIP_ENV_VALIDATION = "true";
-
+import { db } from "@portal/db/client";
+import {
+  assert as fcAssert,
+  asyncProperty,
+  constantFrom,
+  record,
+  string as fcString,
+  uuid,
+} from "fast-check";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { GET } from "@/app/api/bridge/identity/route";
 
 // Mock env to avoid full key chain; route needs BRIDGE_SERVICE_TOKEN (optional)
 vi.mock("@/env", () => ({
   env: { BRIDGE_SERVICE_TOKEN: undefined },
 }));
-
-import {
-  asyncProperty,
-  constantFrom,
-  assert as fcAssert,
-  string as fcString,
-  record,
-  uuid,
-} from "fast-check";
 
 // Namespace-compatible aliases for fast-check usage
 const fc = {
@@ -65,10 +65,6 @@ vi.mock("@portal/db/client", () => ({
     select: vi.fn(),
   },
 }));
-
-import { db } from "@portal/db/client";
-
-import { GET } from "@/app/api/bridge/identity/route";
 
 // ---------------------------------------------------------------------------
 // Helpers

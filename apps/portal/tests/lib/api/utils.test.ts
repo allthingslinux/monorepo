@@ -1,3 +1,4 @@
+import { APIError, handleAPIError } from "@portal/api/utils";
 import { describe, expect, it, vi } from "vitest";
 
 // Mock database and auth before importing utils
@@ -22,8 +23,6 @@ vi.mock("@portal/observability/utils", () => ({
     message: error instanceof Error ? error.message : "Unknown error",
   })),
 }));
-
-import { APIError, handleAPIError } from "@portal/api/utils";
 
 describe("APIError", () => {
   it("should create error with message and status", () => {

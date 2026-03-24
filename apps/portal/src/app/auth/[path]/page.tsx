@@ -190,7 +190,7 @@ async function AuthPageContent({
   );
 }
 
-export default async function AuthPage({
+export default function AuthPage({
   params,
 }: {
   params: Promise<{ path: string }>;
