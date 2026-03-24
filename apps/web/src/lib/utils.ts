@@ -1,17 +1,10 @@
-import { clsx } from "clsx";
-import type { ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 
 import { env } from "@/env";
 import type { FormQuestion, Role } from "@/types";
 
-/**
- * Combines multiple class names and merges Tailwind classes
- */
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs));
-}
+/** Same `cn` as `@atl/ui` — single implementation for the monorepo. */
+export { cn } from "@atl/ui/lib/utils";
 
 export const generateFormSchema = (questions: FormQuestion[]) => {
   return z.object(
