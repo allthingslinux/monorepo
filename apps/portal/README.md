@@ -146,7 +146,7 @@ This is a Turborepo monorepo with workspace packages.
 
 ```
 apps/
-└── portal/                 # @portal/portal — Next.js application
+└── portal/                 # @atl/portal — Next.js application
     ├── src/
     │   ├── app/            # Next.js App Router
     │   │   ├── (dashboard)/app/  # Protected dashboard routes
@@ -175,12 +175,12 @@ packages/
 ├── schemas/                # @portal/schemas — Shared Zod validation schemas
 ├── seo/                    # @portal/seo — Metadata, JSON-LD, robots, sitemap
 ├── types/                  # @portal/types — Centralized types (auth, api, routes, common)
-├── ui/                     # @portal/ui — Shared UI components (shadcn + custom)
+├── ui/                     # @atl/ui — Shared UI components (shadcn + custom)
 ├── utils/                  # @portal/utils — Constants, date, error, string helpers
 └── typescript-config/      # @portal/typescript-config — Shared TS configs
 ```
 
-Path aliases within `apps/portal/`: `@/auth` → `src/features/auth/lib`, `@/db` → `packages/db` (via workspace), `@/config` → `src/shared/config`, `@/ui/*` → `packages/ui` (via workspace). Workspace packages use `@portal/*` imports. See [docs/PATH_ALIASES.md](./docs/PATH_ALIASES.md).
+Path aliases within `apps/portal/`: `@/auth` → `src/features/auth/lib`, `@/db` → `packages/db` (via workspace), `@/config` → `src/shared/config`, `@/ui/*` → `packages/ui` (via workspace). Workspace packages use `@atl/*` imports. See [docs/PATH_ALIASES.md](./docs/PATH_ALIASES.md).
 
 ## Database Setup
 
@@ -213,13 +213,13 @@ When integrating with the atl.chat bridge (identity API), set `BRIDGE_SERVICE_TO
 
 ### Import Aliases
 
-The project uses TypeScript path aliases for clean imports within `apps/portal/` (`@/auth` → `src/features/auth/lib`, `@/config` → `src/shared/config`). Workspace packages are imported via `@portal/*` (e.g., `@portal/db/client`, `@portal/types/auth`). See [docs/PATH_ALIASES.md](./docs/PATH_ALIASES.md).
+The project uses TypeScript path aliases for clean imports within `apps/portal/` (`@/auth` → `src/features/auth/lib`, `@/config` → `src/shared/config`). Workspace packages are imported via `@atl/*` (e.g., `@portal/db/client`, `@portal/types/auth`). See [docs/PATH_ALIASES.md](./docs/PATH_ALIASES.md).
 
 ```typescript
 import { auth, authClient } from "@/auth"; // Authentication
 import { db } from "@portal/db/client"; // Database
 import { BASE_URL } from "@/config"; // App config
-import { Button } from "@portal/ui/button"; // UI components
+import { Button } from "@atl/ui/button"; // UI components
 import type { SessionData } from "@portal/types/auth"; // Types
 import { USER_ROLES } from "@portal/utils/constants"; // Constants
 ```
@@ -227,8 +227,8 @@ import { USER_ROLES } from "@portal/utils/constants"; // Constants
 ### Module Organization
 
 - **Barrel Exports**: Core modules (`@/auth`, `@/config`) use barrel exports for convenience
-- **Workspace Packages**: Shared code lives in `packages/` and is imported via `@portal/*`
-- **Direct Imports**: UI components (`@portal/ui/*`) and shared utils use direct imports for performance
+- **Workspace Packages**: Shared code lives in `packages/` and is imported via `@atl/*`
+- **Direct Imports**: UI components (`@atl/ui/*`) and shared utils use direct imports for performance
 - **Types**: Centralized in `packages/types/src/` (auth, api, routes, common); constants in `packages/utils/src/constants.ts`
 - **Environment**: Validated via `@t3-oss/env-nextjs` in `apps/portal/src/env.ts`, extending module-level `keys()` functions
 - **Clear Boundaries**: Strict separation between client and server code
@@ -284,7 +284,7 @@ Portal follows a Turborepo monorepo pattern with shared code extracted into work
   - `email/` (`@portal/email`) - Email service
   - `observability/` (`@portal/observability`) - Sentry, OpenTelemetry, logging
   - `seo/` (`@portal/seo`) - Metadata, JSON-LD, robots, sitemap
-  - `ui/` (`@portal/ui`) - Shared UI components
+  - `ui/` (`@atl/ui`) - Shared UI components
 
 - **`apps/portal/src/shared/`**: App-specific shared code
   - `config/` - Application configuration

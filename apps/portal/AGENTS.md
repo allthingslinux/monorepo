@@ -55,7 +55,7 @@ packages/
 ├── schemas/                # @portal/schemas — Shared Zod validation schemas
 ├── seo/                    # @portal/seo — Metadata helpers
 ├── types/                  # @portal/types — Centralized TypeScript types
-├── ui/                     # @portal/ui — Shared UI components (shadcn + custom)
+├── ui/                     # @atl/ui — Shared UI components (shadcn + custom)
 ├── utils/                  # @portal/utils — Shared utilities & constants
 └── typescript-config/      # @portal/typescript-config — Shared TS configs
 ```
@@ -74,7 +74,7 @@ turbo.json                  # Turborepo pipeline configuration
 
 | Package                 | Import                    | Purpose                                          |
 | ----------------------- | ------------------------- | ------------------------------------------------ |
-| `@portal/portal`        | N/A (app)                 | Next.js application                              |
+| `@atl/portal`           | N/A (app)                 | Next.js application                              |
 | `@portal/db`            | `@portal/db/*`            | Drizzle schema, client, relations, migrations    |
 | `@portal/api`           | `@portal/api/*`           | TanStack Query setup, query keys, server queries |
 | `@portal/types`         | `@portal/types/*`         | Centralized TypeScript types                     |
@@ -83,7 +83,7 @@ turbo.json                  # Turborepo pipeline configuration
 | `@portal/email`         | `@portal/email/*`         | Email service                                    |
 | `@portal/observability` | `@portal/observability/*` | Sentry, OpenTelemetry                            |
 | `@portal/seo`           | `@portal/seo/*`           | Metadata helpers                                 |
-| `@portal/ui`            | `@portal/ui/*`            | Shared UI components                             |
+| `@atl/ui`               | `@atl/ui/*`               | Shared UI components                             |
 
 ## Common Tasks
 
@@ -139,7 +139,7 @@ import { user } from "@portal/db/schema"; // DB schema
 import type { SessionData } from "@portal/types/auth"; // Types
 import { USER_ROLES } from "@portal/utils/constants"; // Constants
 import { queryKeys } from "@portal/api/query-keys"; // Query keys
-import { Button } from "@portal/ui/button"; // UI components
+import { Button } from "@atl/ui/button"; // UI components
 ```
 
 ## Types & Constants

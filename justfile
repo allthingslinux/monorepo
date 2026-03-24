@@ -3,7 +3,7 @@
 #
 # Workspace-wide: use `pnpm build`, `pnpm dev`, `pnpm check`, `pnpm type-check`, `pnpm test` — same as root package.json.
 # App-specific: `pnpm --filter <name> <script>` (see each app’s package.json).
-# Common filters: `allthingslinux` (apps/web), `@portal/portal`, `@atl/docs`.
+# Common filters: `@atl/web`, `@atl/portal`, `@atl/docs`.
 
 set dotenv-load := true
 set positional-arguments := true
@@ -44,25 +44,25 @@ test-coverage:
 clean:
     pnpm run clean
 
-# --- apps/web (marketing, OpenNext + Alchemy) — package: allthingslinux ---
+# --- apps/web (marketing, OpenNext + Alchemy) — package: @atl/web ---
 
 web-dev:
-    pnpm --filter allthingslinux dev
+    pnpm --filter @atl/web dev
 
 web-dev-all:
-    pnpm --filter allthingslinux run dev:all
+    pnpm --filter @atl/web run dev:all
 
 web-build:
-    pnpm --filter allthingslinux run build:all
+    pnpm --filter @atl/web run build:all
 
 web-deploy:
-    pnpm --filter allthingslinux run deploy
+    pnpm --filter @atl/web run deploy
 
 web-destroy:
-    pnpm --filter allthingslinux run destroy
+    pnpm --filter @atl/web run destroy
 
 web-cf-typegen:
-    pnpm --filter allthingslinux run cf:typegen
+    pnpm --filter @atl/web run cf:typegen
 
 # --- apps/docs (Mintlify) — package: @atl/docs ---
 
@@ -75,35 +75,35 @@ docs-build:
 docs-broken-links:
     pnpm --filter @atl/docs run broken-links
 
-# --- apps/portal — package: @portal/portal ---
+# --- apps/portal — package: @atl/portal ---
 
 portal-dev:
-    pnpm --filter @portal/portal dev
+    pnpm --filter @atl/portal dev
 
 portal-build:
-    pnpm --filter @portal/portal build
+    pnpm --filter @atl/portal build
 
 portal-start:
-    pnpm --filter @portal/portal start
+    pnpm --filter @atl/portal start
 
 # Portal database (Docker + Drizzle in packages)
 portal-db-up:
-    pnpm --filter @portal/portal run compose:db
+    pnpm --filter @atl/portal run compose:db
 
 portal-db-down:
-    pnpm --filter @portal/portal run compose:db:down
+    pnpm --filter @atl/portal run compose:db:down
 
 portal-db-generate:
-    pnpm --filter @portal/portal run db:generate
+    pnpm --filter @atl/portal run db:generate
 
 portal-db-migrate:
-    pnpm --filter @portal/portal run db:migrate
+    pnpm --filter @atl/portal run db:migrate
 
 portal-db-push:
-    pnpm --filter @portal/portal run db:push
+    pnpm --filter @atl/portal run db:push
 
 portal-db-studio:
-    pnpm --filter @portal/portal run db:studio
+    pnpm --filter @atl/portal run db:studio
 
 portal-db-seed:
-    pnpm --filter @portal/portal run db:seed
+    pnpm --filter @atl/portal run db:seed

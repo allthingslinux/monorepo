@@ -23,7 +23,7 @@ graph TD
     end
 
     subgraph "packages/"
-        UI["@portal/ui<br/>shadcn components,<br/>icons, layout"]
+        UI["@atl/ui<br/>shadcn components,<br/>icons, layout"]
         DB["@portal/db<br/>Drizzle schema, client,<br/>migrations, seeds"]
         SCHEMAS["@portal/schemas<br/>Shared Zod schemas"]
         TYPES["@portal/types<br/>Shared TypeScript types"]
@@ -33,7 +33,7 @@ graph TD
         SEO["@portal/seo<br/>Metadata, robots, sitemap"]
         API["@portal/api<br/>TanStack Query infra,<br/>query keys, hydration"]
         TS_CFG["@portal/typescript-config<br/>Shared tsconfig presets"]
-        LINTCFG["@portal/lint-config<br/>Shared Oxlint/Oxfmt presets"]
+        LINTCFG["@atl/lint-config<br/>Shared Oxlint/Oxfmt presets"]
     end
 
     WEB --> UI
@@ -76,14 +76,14 @@ sequenceDiagram
     par Build packages (parallel, no deps between them)
         Turbo->>Pkgs: @portal/types — tsc
         Turbo->>Pkgs: @portal/utils — tsc
-        Turbo->>Pkgs: @portal/lint-config — (no build)
+        Turbo->>Pkgs: @atl/lint-config — (no build)
         Turbo->>Pkgs: @portal/typescript-config — (no build)
     end
 
     par Build packages with deps (after types/utils)
         Turbo->>Pkgs: @portal/schemas — tsc (depends on types)
         Turbo->>Pkgs: @portal/db — tsc (depends on types)
-        Turbo->>Pkgs: @portal/ui — tsc (depends on utils)
+        Turbo->>Pkgs: @atl/ui — tsc (depends on utils)
         Turbo->>Pkgs: @portal/api — tsc (depends on types)
         Turbo->>Pkgs: @portal/email — tsc (depends on types)
         Turbo->>Pkgs: @portal/observability — tsc
@@ -169,7 +169,7 @@ sequenceDiagram
 
 **Note**: TypeScript project references (`composite`, `declaration`) are intentionally omitted. JIT packages resolve types directly from `.ts` source via the `exports` field's `types` condition. Turborepo handles dependency ordering, making project references redundant.
 
-### Component 3: @portal/lint-config
+### Component 3: @atl/lint-config
 
 **Purpose**: Shared Oxlint/Oxfmt linting/formatting configuration built on Ultracite presets.
 
@@ -195,9 +195,9 @@ sequenceDiagram
 
 - Extend Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`)
 - Centralize the `noBarrelFile` and `noNamespaceImport` rules with overrides
-- Provide consistent import ordering rules (updated for `@portal/*` package imports)
+- Provide consistent import ordering rules (updated for `@atl/*` package imports)
 - Allow per-package overrides via local `.oxlintrc.json`
-- Root `.oxlintrc.json` extends `@portal/lint-config` and adds app-specific overrides
+- Root `.oxlintrc.json` extends `@atl/lint-config` and adds app-specific overrides
 
 **Note**: `ultracite` and `oxlint & oxfmt` remain as root devDependencies. The `pnpm fix` and `pnpm check` scripts continue to use `ultracite fix` and `ultracite check` respectively, not raw `oxlint` commands.
 
@@ -313,7 +313,7 @@ import { keys } from "@portal/db/keys";
 - Drizzle Kit config for migrations (stays in package, `drizzle/` output at package level)
 - Dependencies: `drizzle-orm`, `pg`, `@t3-oss/env-nextjs`, `zod`, `server-only`
 
-### Component 8: @portal/ui
+### Component 8: @atl/ui
 
 **Purpose**: Shared UI component library (shadcn/ui primitives + custom components).
 
@@ -325,14 +325,14 @@ import { keys } from "@portal/db/keys";
 // Consumers import specific subpaths (no barrel file):
 
 // shadcn primitives
-import { Button } from "@portal/ui/ui/button";
-import { Card } from "@portal/ui/ui/card";
-// ... all shadcn components via @portal/ui/ui/<name>
+import { Button } from "@atl/ui/ui/button";
+import { Card } from "@atl/ui/ui/card";
+// ... all shadcn components via @atl/ui/ui/<name>
 
 // Custom components
-import { CommandMenu } from "@portal/ui/command-menu";
-import { AppLayout, StatusBar, ... } from "@portal/ui/layout";
-import { MailcowIcon } from "@portal/ui/icons/mailcow-icon";
+import { CommandMenu } from "@atl/ui/command-menu";
+import { AppLayout, StatusBar, ... } from "@atl/ui/layout";
+import { MailcowIcon } from "@atl/ui/icons/mailcow-icon";
 ```
 
 **Responsibilities**:
@@ -446,7 +446,7 @@ import { createServerQuery } from "@portal/api/server-queries";
 **Interface**:
 
 ```typescript
-// Consumes all @portal/* packages
+// Consumes all @atl/* packages
 // Retains: app/, features/, hooks/, i18n/, styles/, env.ts, proxy.ts,
 //          instrumentation.ts, sentry configs
 // Key files: turbo.json (package-level overrides for typegen dependency)
@@ -495,7 +495,7 @@ portal/                              # Turborepo root
 │       ├── postcss.config.mjs
 │       ├── components.json          # shadcn config
 │       ├── tsconfig.json            # Extends @portal/typescript-config/nextjs
-│       ├── .oxlintrc.json              # Extends @portal/lint-config
+│       ├── .oxlintrc.json              # Extends @atl/lint-config
 │       ├── turbo.json               # Package-level turbo overrides (typegen dep)
 │       ├── .env                     # Environment variables (app-owned)
 │       └── package.json
@@ -505,7 +505,7 @@ portal/                              # Turborepo root
 │   │   ├── nextjs.json
 │   │   ├── library.json
 │   │   └── package.json
-│   ├── lint-config/                # @portal/lint-config
+│   ├── lint-config/                # @atl/lint-config
 │   │   ├── .oxlintrc.json
 │   │   └── package.json
 │   ├── types/                       # @portal/types
@@ -545,7 +545,7 @@ portal/                              # Turborepo root
 │   │   ├── drizzle/                 # Migration files
 │   │   ├── tsconfig.json
 │   │   └── package.json
-│   ├── ui/                          # @portal/ui
+│   ├── ui/                          # @atl/ui
 │   │   ├── src/
 │   │   │   ├── ui/                  # shadcn primitives
 │   │   │   ├── icons/
@@ -591,7 +591,7 @@ portal/                              # Turborepo root
 ├── .github/workflows/               # Updated CI/CD
 ├── turbo.json                       # Turborepo config
 ├── pnpm-workspace.yaml              # Workspace definition
-├── .oxlintrc.json                      # Root Oxlint/Oxfmt (extends @portal/lint-config)
+├── .oxlintrc.json                      # Root Oxlint/Oxfmt (extends @atl/lint-config)
 ├── Containerfile                    # Updated for monorepo
 ├── compose.yaml                     # Docker Compose (unchanged)
 └── package.json                     # Root package.json
@@ -609,8 +609,8 @@ The migration rewrites `@/` path aliases to package imports:
 | `@/shared/schemas`           | `@portal/schemas/user` (or specific file)    |
 | `@/db`                       | `@portal/db/client`                          |
 | `@/db/schema`                | `@portal/db/schema`                          |
-| `@/components/ui/button`     | `@portal/ui/ui/button`                       |
-| `@/components/layout`        | `@portal/ui/layout`                          |
+| `@/components/ui/button`     | `@atl/ui/ui/button`                          |
+| `@/components/layout`        | `@atl/ui/layout`                             |
 | `@/shared/api`               | `@portal/api/query-client` (or specific)     |
 | `@/shared/email`             | `@portal/email`                              |
 | `@/shared/observability`     | `@portal/observability/client` (or specific) |
@@ -626,7 +626,7 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
 **Existing dedicated aliases that change**:
 
 - `@/db` / `@/db/*` → `@portal/db` / `@portal/db/*` (currently aliased to `src/shared/db`)
-- `@/ui/*` → `@portal/ui/ui/*` (currently aliased to `src/components/ui/*`)
+- `@/ui/*` → `@atl/ui/ui/*` (currently aliased to `src/components/ui/*`)
 
 **Existing dedicated aliases that stay**:
 
@@ -819,7 +819,7 @@ onlyBuiltDependencies:
 
 - `pnpm install` links all workspace packages
 - `workspace:*` protocol resolves to local packages
-- `pnpm --filter @portal/ui add react` installs to the correct package
+- `pnpm --filter @atl/ui add react` installs to the correct package
 
 ### Function 4: Root package.json Scripts
 
@@ -1080,11 +1080,11 @@ STEP 20: Extract @portal/api from src/shared/api/
   - Move api infra files to packages/api/src/
   // ASSERT: pnpm type-check passes
 
-STEP 21: Extract @portal/ui from src/components/
+STEP 21: Extract @atl/ui from src/components/
   - Depends on @portal/utils (for cn())
   - Move all component files to packages/ui/src/
   - Update shadcn components.json paths
-  - Update imports: @/components/* → @portal/ui/*
+  - Update imports: @/components/* → @atl/ui/*
   // ASSERT: pnpm type-check passes
 
 // Phase 4: Update CI/CD, Docker, and tooling
@@ -1148,7 +1148,7 @@ OUTPUT: Minimal production Docker image for apps/portal
 // Stage 1: Prune — use turbo prune to create minimal install context
 // turbo prune generates a pruned workspace with only the packages
 // that apps/portal depends on, plus a lockfile subset
-RUN turbo prune @portal/portal --docker
+RUN turbo prune @atl/portal --docker
 
 // This produces:
 //   out/json/        — package.json files only (for install layer caching)
@@ -1162,7 +1162,7 @@ RUN pnpm install --frozen-lockfile
 
 // Stage 3: Build
 COPY out/full/ .
-RUN turbo run build --filter=@portal/portal
+RUN turbo run build --filter=@atl/portal
 
 // Stage 4: Runner (production)
 COPY standalone output + static + public
@@ -1189,7 +1189,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 RUN pnpm add -g turbo@^2
 COPY . .
-RUN turbo prune @portal/portal --docker
+RUN turbo prune @atl/portal --docker
 
 # Stage 2: Install dependencies
 FROM node:22-alpine AS deps
@@ -1216,7 +1216,7 @@ ARG GIT_COMMIT_SHA
 ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN pnpm turbo run build --filter=@portal/portal
+RUN pnpm turbo run build --filter=@atl/portal
 
 # Stage 4: Runner
 FROM node:22-alpine AS runner
@@ -1276,16 +1276,16 @@ pnpm db:push
 
 ```typescript
 // Build only the portal app and its dependencies
-pnpm turbo run build --filter=@portal/portal
+pnpm turbo run build --filter=@atl/portal
 
 // Type-check only the UI package
-pnpm turbo run type-check --filter=@portal/ui
+pnpm turbo run type-check --filter=@atl/ui
 
 // Run tests only in the app
-pnpm turbo run test --filter=@portal/portal
+pnpm turbo run test --filter=@atl/portal
 
 // Add a dependency to a specific package
-pnpm --filter @portal/ui add lucide-react
+pnpm --filter @atl/ui add lucide-react
 pnpm --filter @portal/db add drizzle-orm
 ```
 
@@ -1306,7 +1306,7 @@ import { sendEmail } from "@/shared/email";
 import { cn } from "@portal/utils/utils";
 import { USER_ROLES } from "@portal/utils/constants";
 import type { SessionData } from "@portal/types/auth";
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import { db } from "@portal/db/client";
 import { userSchema } from "@portal/schemas/user";
 import { queryKeys } from "@portal/api/query-keys";
@@ -1390,13 +1390,13 @@ _For all_ pairs of internal packages (A, B) in the workspace, if A declares B as
 
 ### Property 2: No stale imports remain
 
-_For all_ source files in the codebase (app and packages), no import statement references `@/shared/types`, `@/shared/utils`, `@/shared/schemas`, `@/shared/db`, `@/shared/api`, `@/shared/email`, `@/shared/observability`, `@/shared/seo`, `@/components/`, `@/db`, or `@/ui/` — all of which have been migrated to `@portal/*` package imports.
+_For all_ source files in the codebase (app and packages), no import statement references `@/shared/types`, `@/shared/utils`, `@/shared/schemas`, `@/shared/db`, `@/shared/api`, `@/shared/email`, `@/shared/observability`, `@/shared/seo`, `@/components/`, `@/db`, or `@/ui/` — all of which have been migrated to `@atl/*` package imports.
 
 **Validates: Requirements 6.1, 6.4, 6.5**
 
 ### Property 3: Package boundary enforcement
 
-_For all_ source files in `packages/*/src/`, no import uses the `@/` app-internal alias, and no import references another internal package via a direct relative file path (e.g., `../../other-package/src/`). All cross-package imports go through `@portal/*` package exports.
+_For all_ source files in `packages/*/src/`, no import uses the `@/` app-internal alias, and no import references another internal package via a direct relative file path (e.g., `../../other-package/src/`). All cross-package imports go through `@atl/*` package exports.
 
 **Validates: Requirements 13.2, 13.3**
 
@@ -1438,13 +1438,13 @@ _For all_ source files in packages that use `@t3-oss/env-nextjs` for environment
 
 ### Property 10: Import path correctness
 
-_For all_ `@portal/*` imports in the codebase, the import uses a direct subpath (e.g., `@portal/utils/constants`) rather than a bare package name, except for `@portal/email` which is a single-file module.
+_For all_ `@atl/*` imports in the codebase, the import uses a direct subpath (e.g., `@portal/utils/constants`) rather than a bare package name, except for `@portal/email` which is a single-file module.
 
 **Validates: Requirement 6.2**
 
 ### Property 11: App-internal alias preservation
 
-_For all_ imports of `@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, and `@/env` in the Portal App source, the `@/` prefix is preserved (not rewritten to a `@portal/*` import).
+_For all_ imports of `@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, and `@/env` in the Portal App source, the `@/` prefix is preserved (not rewritten to a `@atl/*` import).
 
 **Validates: Requirement 6.3**
 
@@ -1472,13 +1472,13 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 **Condition**: Package A imports from Package B, and Package B imports from Package A (directly or transitively).
 **Response**: pnpm workspace resolution fails or Turborepo detects a cycle in the task graph and errors.
-**Recovery**: Identify the cycle using `pnpm why @portal/X` or `turbo run build --graph`. Extract the shared code into a lower-level package (e.g., move shared types into `@portal/types`) or inline the dependency.
+**Recovery**: Identify the cycle using `pnpm why @atl/X` or `turbo run build --graph`. Extract the shared code into a lower-level package (e.g., move shared types into `@portal/types`) or inline the dependency.
 **Prevention**: The extraction order (leaf-first: types → utils → schemas → db → ui) is designed to avoid cycles. Types and utils have zero internal dependencies.
 
 ### Error Scenario 2: Missing Export in Package
 
-**Condition**: App code imports a symbol from `@portal/X` that isn't listed in the package's `exports` field.
-**Response**: TypeScript reports "Cannot find module '@portal/X/foo'" or bundler fails to resolve.
+**Condition**: App code imports a symbol from `@atl/X` that isn't listed in the package's `exports` field.
+**Response**: TypeScript reports "Cannot find module '@atl/X/foo'" or bundler fails to resolve.
 **Recovery**: Add the missing subpath to the package's `exports` map in `package.json`. For wildcard exports (`"./*"`), ensure the file exists at the expected path.
 **Prevention**: Use wildcard exports (`"./*": { "types": "./src/*.ts", "default": "./src/*.ts" }`) to avoid manually listing every subpath.
 
@@ -1493,7 +1493,7 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 **Condition**: `turbo prune` doesn't include a required package, or standalone output paths change.
 **Response**: Docker build fails at the `COPY` stage or the runner can't find `server.js`.
-**Recovery**: Verify `turbo prune @portal/portal --docker` output includes all packages. Check that `next.config.ts` still has `output: "standalone"`. Verify COPY paths match the new `apps/portal/.next/standalone` location.
+**Recovery**: Verify `turbo prune @atl/portal --docker` output includes all packages. Check that `next.config.ts` still has `output: "standalone"`. Verify COPY paths match the new `apps/portal/.next/standalone` location.
 **Prevention**: Test Docker build in CI before merging. The standalone output path changes from `.next/standalone` to `apps/portal/.next/standalone`.
 
 ### Error Scenario 5: shadcn CLI Breaks After UI Package Extraction
@@ -1501,13 +1501,13 @@ _For all_ internal packages, every runtime import in the package's source files 
 **Condition**: Running `pnpm dlx shadcn add <component>` fails because `components.json` paths no longer resolve.
 **Response**: shadcn can't find the target directory for new components.
 **Recovery**: Update `components.json` in `apps/portal/` to point to the UI package paths, or configure shadcn to write to `packages/ui/src/ui/`. Alternatively, run shadcn from within the UI package directory.
-**Prevention**: Update `components.json` aliases during the UI extraction step. Set `"ui": "@portal/ui/ui"` and configure the output directory.
+**Prevention**: Update `components.json` aliases during the UI extraction step. Set `"ui": "@atl/ui/ui"` and configure the output directory.
 
 ### Error Scenario 6: Vitest Path Aliases Break
 
-**Condition**: Tests fail with "Cannot find module '@portal/...'" because Vitest doesn't resolve workspace packages.
+**Condition**: Tests fail with "Cannot find module '@atl/...'" because Vitest doesn't resolve workspace packages.
 **Response**: Test imports fail at runtime.
-**Recovery**: Update `vitest.config.ts` resolve aliases to map `@portal/*` to the package source directories, or ensure Vitest uses the workspace resolution (which it should by default with pnpm workspaces).
+**Recovery**: Update `vitest.config.ts` resolve aliases to map `@atl/*` to the package source directories, or ensure Vitest uses the workspace resolution (which it should by default with pnpm workspaces).
 **Prevention**: pnpm workspace linking should handle resolution automatically. If not, add explicit aliases in `vitest.config.ts`.
 
 ### Error Scenario 7: Barrel File Lint Errors in Packages
@@ -1529,7 +1529,7 @@ _For all_ internal packages, every runtime import in the package's source files 
 **Condition**: Individual packages can't resolve `ultracite/oxlint/*` presets because `ultracite` is only installed at root.
 **Response**: `pnpm check` or `pnpm fix` fails in package directories.
 **Recovery**: Ensure `ultracite` and `oxlint & oxfmt` are root devDependencies (not per-package). Run lint commands from root via `turbo run check` which inherits the root node_modules resolution.
-**Prevention**: Keep `ultracite` as a root-only devDependency. Package-level `.oxlintrc.json` files extend from `../../.oxlintrc.json` (root) or from `@portal/lint-config`. The `check` and `fix` turbo tasks run from each package's directory but resolve configs up the tree.
+**Prevention**: Keep `ultracite` as a root-only devDependency. Package-level `.oxlintrc.json` files extend from `../../.oxlintrc.json` (root) or from `@atl/lint-config`. The `check` and `fix` turbo tasks run from each package's directory but resolve configs up the tree.
 
 ## Testing Strategy
 
@@ -1537,9 +1537,9 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 - All existing tests in `tests/` remain in `apps/portal/tests/`
 - Tests continue to use Vitest with the same configuration
-- Import paths in test files are updated to use `@portal/*` for extracted packages
+- Import paths in test files are updated to use `@atl/*` for extracted packages
 - The `vitest.config.ts` resolve aliases are updated to reflect new package locations
-- pnpm workspace linking handles `@portal/*` resolution in tests automatically
+- pnpm workspace linking handles `@atl/*` resolution in tests automatically
 
 ### Property-Based Testing Approach
 
@@ -1547,7 +1547,7 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 Key properties to test:
 
-1. **Import resolution**: For every `@portal/*` import in the codebase, the target file exists and exports the referenced symbol
+1. **Import resolution**: For every `@atl/*` import in the codebase, the target file exists and exports the referenced symbol
 2. **Package boundary**: No file in `packages/X/src/` imports from `@/` (app-internal alias) or from another package's `src/` directly (must go through package exports)
 3. **Dependency completeness**: For every package P, all runtime imports resolve to either P's own files, a declared dependency in P's `package.json`, or a Node.js built-in
 
@@ -1558,14 +1558,14 @@ Key properties to test:
 - Run `pnpm type-check` from root to verify TypeScript across all packages
 - Run `pnpm check` from root to verify Oxlint/Oxfmt linting across all packages
 - Build Docker image and verify health check endpoint responds
-- Verify `turbo prune @portal/portal --docker` produces correct output
+- Verify `turbo prune @atl/portal --docker` produces correct output
 
 ## Performance Considerations
 
 ### Build Performance
 
 - **Turborepo caching**: Unchanged packages are not rebuilt. On a typical PR that touches only `apps/portal/src/features/`, only the app build runs — all package builds are cache hits.
-- **Parallel execution**: Independent packages build in parallel. `@portal/types`, `@portal/utils`, `@portal/lint-config`, and `@portal/typescript-config` all build simultaneously.
+- **Parallel execution**: Independent packages build in parallel. `@portal/types`, `@portal/utils`, `@atl/lint-config`, and `@portal/typescript-config` all build simultaneously.
 - **Remote caching**: Turborepo supports remote caching (Vercel Remote Cache or self-hosted). CI runs can share cache across branches and developers.
 - **JIT packages**: Using the "Just-in-Time" pattern (exports point to `.ts` source, no build step), most packages have zero build time. The consuming app's bundler transpiles them.
 
@@ -1603,7 +1603,7 @@ Dependencies are redistributed from the single root `package.json` to individual
 - `@portal/utils`: `clsx`, `tailwind-merge`, `date-fns`
 - `@portal/schemas`: `zod`, `zod-validation-error`
 - `@portal/db`: `drizzle-orm`, `pg`, `@t3-oss/env-nextjs`, `zod`, `server-only`, `dotenv`
-- `@portal/ui`: `@radix-ui/*`, `lucide-react`, `class-variance-authority`, `cmdk`, `sonner`, `vaul`, `react-resizable-panels`, `embla-carousel-react`, `input-otp`, `react-day-picker`, `recharts`, `react-icons`
+- `@atl/ui`: `@radix-ui/*`, `lucide-react`, `class-variance-authority`, `cmdk`, `sonner`, `vaul`, `react-resizable-panels`, `embla-carousel-react`, `input-otp`, `react-day-picker`, `recharts`, `react-icons`
 - `@portal/observability`: `@sentry/nextjs`, `@t3-oss/env-nextjs`, `zod`
 - `@portal/email`: (minimal — currently placeholder)
 - `@portal/seo`: `schema-dts`

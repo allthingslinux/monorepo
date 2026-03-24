@@ -27,7 +27,7 @@ const CONFIG_PACKAGES = new Set(["typescript-config"]);
 /**
  * Packages that retain @/ app-internal imports by design.
  * These resolve through the consuming app's bundler at build time.
- * See design doc: "Some packages (@portal/seo, @portal/api, @atl/ui)
+ * See design doc: "Some packages (@atl/seo, @atl/api, @atl/ui)
  * retain @/ app-internal imports that resolve through the app's bundler"
  */
 const PACKAGES_WITH_APP_IMPORTS = new Set(["seo", "ui", "api"]);
@@ -133,8 +133,8 @@ describe("Property 1: Dependency acyclicity", () => {
       const deps = {
         ...(pkg.dependencies as Record<string, string> | undefined),
       };
-      const portalDeps = Object.keys(deps).filter((d) =>
-        d.startsWith("@portal/")
+      const portalDeps = Object.keys(deps).filter(
+        (d) => d.startsWith("@portal/") || d === "@atl/ui"
       );
       graph.set(name, portalDeps);
     }
@@ -221,7 +221,7 @@ describe("Property 1: Dependency acyclicity", () => {
  *
  * For all source files in the codebase (app and packages), no import
  * statement references the old @/shared/*, @/components/*, @/db, or
- * @/ui/* patterns that have been migrated to @portal/* package imports.
+ * @/ui/* patterns that have been migrated to @portal/* or @atl/ui package imports.
  *
  * Validates: Requirements 6.1, 6.4, 6.5
  */
@@ -300,7 +300,7 @@ describe("Property 2: No stale imports remain", () => {
  * For all source files in packages/star/src/, no import uses the @/
  * app-internal alias, and no import references another internal package
  * via a direct relative file path. All cross-package imports go through
- * @portal/* package exports.
+ * @portal/* (and shared @atl/ui) package exports.
  *
  * Note: Some packages (seo, ui, api) retain @/ app-internal imports that
  * resolve through the app's bundler. These are documented architectural
@@ -670,9 +670,9 @@ describe("Property 9: No direct process.env access in packages", () => {
 /**
  * Property 10: Import path correctness
  *
- * For all @portal/* imports in the codebase, the import uses a direct
- * subpath (e.g., @portal/utils/constants) rather than a bare package
- * name, except for @portal/email which is a single-file module.
+ * For all @portal/* imports (portal stack) and @atl/ui imports (shared UI),
+ * the import uses a direct subpath (e.g. @portal/utils/constants) rather
+ * than a bare package name, except @portal/email (single-file module).
  *
  * Validates: Requirement 6.2
  */
@@ -689,7 +689,12 @@ describe("Property 10: Import path correctness", () => {
     return files;
   }
 
-  it("all @portal/* imports use direct subpaths (except @portal/email)", () => {
+  function isBareWorkspaceImport(imp: string): boolean {
+    const parts = imp.split("/").filter(Boolean);
+    return parts.length <= 2;
+  }
+
+  it("all @portal/* and @atl/ui imports use direct subpaths (except @portal/email)", () => {
     const sourceFiles = getAllSourceFiles();
     const violations: { file: string; importPath: string }[] = [];
 
@@ -698,7 +703,9 @@ describe("Property 10: Import path correctness", () => {
       const imports = extractImports(content);
 
       for (const imp of imports) {
-        if (!imp.startsWith("@portal/")) {
+        const isPortal = imp.startsWith("@portal/");
+        const isAtlUi = imp.startsWith("@atl/ui");
+        if (!(isPortal || isAtlUi)) {
           continue;
         }
         if (CONFIG_PACKAGE_IMPORTS.some((cp) => imp.startsWith(cp))) {
@@ -707,10 +714,7 @@ describe("Property 10: Import path correctness", () => {
         if (BARE_IMPORT_ALLOWED.has(imp)) {
           continue;
         }
-
-        // @portal/X has 2 parts, @portal/X/subpath has 3+
-        const parts = imp.split("/");
-        if (parts.length <= 2) {
+        if (isBareWorkspaceImport(imp)) {
           violations.push({
             file: path.relative(ROOT_DIR, file),
             importPath: imp,
@@ -721,13 +725,13 @@ describe("Property 10: Import path correctness", () => {
 
     expect(
       violations,
-      `Found ${violations.length} bare @portal/* import(s) missing subpath:\n${violations
+      `Found ${violations.length} bare workspace import(s) missing subpath:\n${violations
         .map((v) => `  ${v.file}: import "${v.importPath}"`)
         .join("\n")}`
     ).toHaveLength(0);
   });
 
-  it("property: random source files use correct @portal/* import subpaths", () => {
+  it("property: random source files use correct workspace import subpaths", () => {
     const sourceFiles = getAllSourceFiles();
     if (sourceFiles.length === 0) {
       return;
@@ -738,7 +742,9 @@ describe("Property 10: Import path correctness", () => {
         const content = fs.readFileSync(file, "utf-8");
         const imports = extractImports(content);
         for (const imp of imports) {
-          if (!imp.startsWith("@portal/")) {
+          const isPortal = imp.startsWith("@portal/");
+          const isAtlUi = imp.startsWith("@atl/ui");
+          if (!(isPortal || isAtlUi)) {
             continue;
           }
           if (CONFIG_PACKAGE_IMPORTS.some((cp) => imp.startsWith(cp))) {
@@ -747,7 +753,7 @@ describe("Property 10: Import path correctness", () => {
           if (BARE_IMPORT_ALLOWED.has(imp)) {
             continue;
           }
-          if (imp.split("/").length <= 2) {
+          if (isBareWorkspaceImport(imp)) {
             return false;
           }
         }

@@ -123,7 +123,7 @@ See [`docs/integrations/quickbooks.md`](docs/integrations/quickbooks.md) for det
 - **State:** set `ALCHEMY_STATE_TOKEN` for Cloudflare remote state (CI); without it, local deploys use filesystem state under `apps/web/.alchemy/` (gitignored).
 - **Login:** `pnpm exec alchemy login` (profiles in `~/.alchemy`; CI uses API tokens only).
 
-**Turborepo:** from the monorepo root, `pnpm turbo run deploy --filter=allthingslinux` runs the web package’s `deploy` task (`cache: false`).
+**Turborepo:** from the monorepo root, `pnpm turbo run deploy --filter=@atl/web` runs the web package’s `deploy` task (`cache: false`).
 
 ### Manual Deployments
 
@@ -234,7 +234,7 @@ pnpm run build:opennext        # Cloudflare OpenNext build
 pnpm run build:opennext:profile # Unminified OpenNext (profiling)
 
 # Quality
-pnpm run type-check     # contentlayer + TypeScript (from repo root: pnpm --filter allthingslinux type-check)
+pnpm run type-check     # contentlayer + TypeScript (from repo root: pnpm --filter @atl/web type-check)
 pnpm run check          # type-check + Ultracite (oxlint + oxfmt) for this app
 
 # Deployment (Alchemy)

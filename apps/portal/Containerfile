@@ -1,7 +1,7 @@
 # ============================================================================
 # Multi-stage Containerfile for Portal (Turborepo Monorepo)
 # ============================================================================
-# Stage 1: Pruner  - Prune workspace to only @portal/portal and its deps
+# Stage 1: Pruner  - Prune workspace to only @atl/portal and its deps
 # Stage 2: Deps    - Install production dependencies from pruned lockfile
 # Stage 3: Builder - Build the Next.js application via turbo
 # Stage 4: Runner  - Minimal production runtime
@@ -26,7 +26,7 @@ RUN pnpm add -g turbo@^2
 COPY . .
 
 # Prune to only the portal app and its workspace dependencies
-RUN turbo prune @portal/portal --docker
+RUN turbo prune @atl/portal --docker
 
 # ============================================================================
 # Stage 2: Deps — install dependencies from pruned package.json files
@@ -73,7 +73,7 @@ ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the portal app (turbo handles dependency ordering)
-RUN pnpm turbo run build --filter=@portal/portal
+RUN pnpm turbo run build --filter=@atl/portal
 
 # ============================================================================
 # Stage 4: Runner — minimal production image

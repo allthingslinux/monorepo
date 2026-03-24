@@ -101,9 +101,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Generate Next.js types
-        run: pnpm --filter @portal/portal typegen
+        run: pnpm --filter @atl/portal typegen
       - name: Run type check
-        run: pnpm exec turbo run type-check --filter=@portal/portal
+        run: pnpm exec turbo run type-check --filter=@atl/portal
 
   build:
     name: Build
@@ -133,7 +133,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-
       - name: Build
-        run: pnpm exec turbo run build --filter=@portal/portal
+        run: pnpm exec turbo run build --filter=@atl/portal
 
   test:
     name: Test
@@ -153,7 +153,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Run tests
-        run: pnpm exec turbo run test:coverage --filter=@portal/portal
+        run: pnpm exec turbo run test:coverage --filter=@atl/portal
       - name: Upload coverage reports
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
         if: always()
@@ -190,4 +190,4 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: pnpm --filter @portal/portal run release
+        run: pnpm --filter @atl/portal run release

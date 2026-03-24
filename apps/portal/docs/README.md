@@ -15,7 +15,7 @@ This directory holds project documentation. Use it as the single source of truth
 | [INTEGRATIONS.md](./INTEGRATIONS.md)   | Integrations framework, adding new integrations, DB schema, types                                                                                            |
 | [IRC.md](./IRC.md)                     | IRC integration: Atheme NickServ provisioning, UnrealIRCd admin client, env vars, admin UI                                                                   |
 | [LOGGING.md](./LOGGING.md)             | Wide-events pattern, observability, structured logging                                                                                                       |
-| [PATH_ALIASES.md](./PATH_ALIASES.md)   | TypeScript path aliases (`@/auth`, `@portal/*`, etc.) and targets                                                                                            |
+| [PATH_ALIASES.md](./PATH_ALIASES.md)   | TypeScript path aliases (`@/auth`, `@atl/*`, etc.) and targets                                                                                               |
 | [TESTING.md](./TESTING.md)             | Vitest, test organization, unit/component/hook patterns, mocking                                                                                             |
 | [TSCONFIG.md](./TSCONFIG.md)           | TypeScript configuration, compiler options, paths, include/exclude                                                                                           |
 | [NUQS.md](./NUQS.md)                   | nuqs setup for type-safe URL search params (filters, pagination, tabs)                                                                                       |

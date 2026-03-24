@@ -8,14 +8,14 @@ This document defines the requirements for migrating the Portal project from a s
 
 - **Monorepo_Root**: The top-level directory containing `turbo.json`, `pnpm-workspace.yaml`, and the `apps/` and `packages/` directories.
 - **Turborepo**: The build system tool that orchestrates task execution, caching, and dependency ordering across workspace packages.
-- **Internal_Package**: A private npm package under `packages/` that is consumed by the app via `workspace:*` protocol (e.g., `@portal/utils`, `@portal/ui`).
+- **Internal_Package**: A private npm package under `packages/` that is consumed by the app via `workspace:*` protocol (e.g., `@portal/utils`, `@atl/ui`).
 - **JIT_Package**: A "Just-in-Time" internal package whose `exports` field points directly to TypeScript source files, requiring no build step — the consuming bundler transpiles the source.
 - **Portal_App**: The Next.js 16 application located at `apps/portal/`, the sole deployable artifact.
 - **Task_Pipeline**: The Turborepo task graph defined in `turbo.json` that specifies task dependencies, cache inputs/outputs, and environment variable passthrough.
 - **Workspace**: The pnpm workspace defined by `pnpm-workspace.yaml` that links `apps/*` and `packages/*` directories.
 - **Transit_Task**: A virtual Turborepo task with no script that propagates cache invalidation through the dependency graph without requiring builds.
 - **Turbo_Prune**: The `turbo prune` command that generates a minimal workspace subset for Docker builds, containing only the packages a specific app depends on.
-- **Import_Alias**: A TypeScript path alias (e.g., `@/`, `@portal/`) that maps to a directory or package for module resolution.
+- **Import_Alias**: A TypeScript path alias (e.g., `@/`, `@atl/`) that maps to a directory or package for module resolution.
 
 ## Requirements
 
@@ -64,11 +64,11 @@ This document defines the requirements for migrating the Portal project from a s
 
 #### Acceptance Criteria
 
-1. THE `@portal/lint-config` package SHALL extend the Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`).
-2. THE `@portal/lint-config` package SHALL enforce `noBarrelFile: "error"` and `noNamespaceImport: "error"` rules with the existing override patterns.
-3. THE `@portal/lint-config` package SHALL preserve the existing import ordering configuration for React, UI libs, Next.js, form/validation, packages, internal aliases, and relative imports.
+1. THE `@atl/lint-config` package SHALL extend the Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`).
+2. THE `@atl/lint-config` package SHALL enforce `noBarrelFile: "error"` and `noNamespaceImport: "error"` rules with the existing override patterns.
+3. THE `@atl/lint-config` package SHALL preserve the existing import ordering configuration for React, UI libs, Next.js, form/validation, packages, internal aliases, and relative imports.
 4. WHEN `turbo run check` is executed, THE Task_Pipeline SHALL run Oxlint/Oxfmt checks across all packages in parallel.
-5. THE Monorepo_Root `.oxlintrc.json` SHALL extend `@portal/lint-config` and add app-specific overrides.
+5. THE Monorepo_Root `.oxlintrc.json` SHALL extend `@atl/lint-config` and add app-specific overrides.
 
 ### Requirement 5: Internal Package Extraction
 
@@ -76,7 +76,7 @@ This document defines the requirements for migrating the Portal project from a s
 
 #### Acceptance Criteria
 
-1. THE migration SHALL extract the following Internal_Packages from the existing codebase: `@portal/types`, `@portal/utils`, `@portal/schemas`, `@portal/db`, `@portal/ui`, `@portal/api`, `@portal/email`, `@portal/observability`, `@portal/seo`.
+1. THE migration SHALL extract the following Internal_Packages from the existing codebase: `@portal/types`, `@portal/utils`, `@portal/schemas`, `@portal/db`, `@atl/ui`, `@portal/api`, `@portal/email`, `@portal/observability`, `@portal/seo`.
 2. WHEN an Internal_Package is extracted, THE Internal_Package SHALL use the JIT_Package pattern with `exports` pointing directly to TypeScript source files.
 3. THE Internal_Package extraction order SHALL follow a leaf-first dependency order: `@portal/types` and `@portal/utils` first (zero internal dependencies), then packages that depend on them.
 4. WHEN an Internal_Package is extracted, THE Internal_Package SHALL declare only its own runtime dependencies in its `package.json`.
@@ -87,15 +87,15 @@ This document defines the requirements for migrating the Portal project from a s
 
 ### Requirement 6: Import Path Migration
 
-**User Story:** As a developer, I want import paths updated from `@/` path aliases to `@portal/*` package imports for extracted modules, so that imports reflect the new package boundaries.
+**User Story:** As a developer, I want import paths updated from `@/` path aliases to `@atl/*` package imports for extracted modules, so that imports reflect the new package boundaries.
 
 #### Acceptance Criteria
 
-1. WHEN a module is extracted into an Internal_Package, THE migration SHALL rewrite all `@/shared/*` and `@/components/*` imports in the codebase to use the corresponding `@portal/*` package import.
+1. WHEN a module is extracted into an Internal_Package, THE migration SHALL rewrite all `@/shared/*` and `@/components/*` imports in the codebase to use the corresponding `@atl/*` package import.
 2. WHEN imports are rewritten, THE migration SHALL use direct subpath imports (e.g., `@portal/utils/constants`) instead of barrel re-exports.
 3. THE migration SHALL preserve `@/` path aliases for app-internal modules that remain in Portal_App (`@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, `@/env`).
 4. WHEN the `@/db` alias is migrated, THE migration SHALL rewrite it to `@portal/db/client` or the appropriate `@portal/db/*` subpath.
-5. WHEN the `@/ui/*` alias is migrated, THE migration SHALL rewrite it to `@portal/ui/ui/*`.
+5. WHEN the `@/ui/*` alias is migrated, THE migration SHALL rewrite it to `@atl/ui/ui/*`.
 6. WHEN all imports are rewritten, THE Portal_App SHALL pass `pnpm type-check` without errors.
 
 ### Requirement 7: Portal App Restructuring
@@ -116,7 +116,7 @@ This document defines the requirements for migrating the Portal project from a s
 
 #### Acceptance Criteria
 
-1. THE Containerfile SHALL use `turbo prune @portal/portal --docker` to generate a minimal workspace subset for the Docker build context.
+1. THE Containerfile SHALL use `turbo prune @atl/portal --docker` to generate a minimal workspace subset for the Docker build context.
 2. THE Containerfile SHALL use a multi-stage build with separate pruner, deps, builder, and runner stages.
 3. WHEN the Docker image is built, THE runner stage SHALL contain only the standalone Next.js output, static assets, and public files — no source code or dev dependencies.
 4. THE Containerfile SHALL maximize layer caching by installing dependencies from the pruned `package.json` files before copying full source.
@@ -155,7 +155,7 @@ This document defines the requirements for migrating the Portal project from a s
 
 1. THE Monorepo_Root SHALL retain Husky git hooks, lint-staged, and commitlint configuration at the root level.
 2. WHEN `pnpm fix` is run, THE Workspace SHALL execute `ultracite fix` (not bare `oxlint` / `oxfmt` without Ultracite) across all packages via Turborepo.
-3. WHEN the shadcn CLI is used to add a component, THE CLI SHALL write to the `@portal/ui` package at the correct path.
+3. WHEN the shadcn CLI is used to add a component, THE CLI SHALL write to the `@atl/ui` package at the correct path.
 4. THE `semantic-release` configuration SHALL continue to function for the Portal_App release process.
 5. WHEN database scripts (`db:generate`, `db:migrate`, `db:push`, `db:studio`) are run from the Monorepo_Root, THE scripts SHALL be scoped to the correct package (`@portal/db` or Portal_App).
 6. WHEN `tsx`-based scripts (`db:wipe`, `db:seed`, `create-admin`) are run, THE scripts SHALL execute from `apps/portal/scripts/` with correct relative paths.

@@ -54,7 +54,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
 
   - [x] 3.2 Create `apps/portal/package.json` with all app dependencies
     - Move runtime and dev dependencies from the old root `package.json` to `apps/portal/package.json`
-    - Add `@portal/*` workspace dependencies (`workspace:*` protocol)
+    - Add `@atl/*` workspace dependencies (`workspace:*` protocol)
     - Keep `tsx`, `vitest`, `drizzle-kit`, `semantic-release` and plugins as app devDependencies
     - Define app scripts: `dev`, `build`, `start`, `check`, `fix`, `type-check`, `test`, `typegen`, `db:*`, `auth:*`, `create-admin`, etc.
     - _Requirements: 7.1, 11.5, 11.6_
@@ -64,7 +64,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Remove dedicated `@/db`, `@/ui` aliases (will be replaced by package imports later)
     - _Requirements: 3.5, 7.4_
 
-  - [x] 3.4 Update root `.oxlintrc.json` to extend `@portal/lint-config`
+  - [x] 3.4 Update root `.oxlintrc.json` to extend `@atl/lint-config`
     - Add app-specific overrides as needed
     - _Requirements: 4.5_
 
@@ -207,7 +207,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Use direct subpath imports (e.g., `@portal/api/query-keys`, `@portal/api/query-client`)
     - _Requirements: 6.1, 6.2_
 
-- [x] 14. Extract `@portal/ui` package
+- [x] 14. Extract `@atl/ui` package
   - [x] 14.1 Create `packages/ui/` with `package.json`, `tsconfig.json`
     - Dependencies: `@portal/utils` (`workspace:*`), all Radix UI packages, `lucide-react`, `class-variance-authority`, `tailwind-merge`, `clsx`, `cmdk`, `sonner`, `vaul`, `react-resizable-panels`, `embla-carousel-react`, `input-otp`, `react-day-picker`, `recharts`
     - _Requirements: 5.1, 5.2, 5.4, 5.6_
@@ -217,14 +217,14 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Update internal imports within UI components to use `@portal/utils/utils` for `cn()`
     - _Requirements: 5.3_
 
-  - [x] 14.3 Update all imports from `@/components/*` and `@/ui/*` to `@portal/ui/*`
-    - Rewrite `@/components/ui/button` → `@portal/ui/ui/button`
-    - Rewrite `@/components/layout` → `@portal/ui/layout`
-    - Rewrite `@/ui/*` → `@portal/ui/ui/*`
+  - [x] 14.3 Update all imports from `@/components/*` and `@/ui/*` to `@atl/ui/*`
+    - Rewrite `@/components/ui/button` → `@atl/ui/ui/button`
+    - Rewrite `@/components/layout` → `@atl/ui/layout`
+    - Rewrite `@/ui/*` → `@atl/ui/ui/*`
     - _Requirements: 6.1, 6.5_
 
   - [x] 14.4 Update `components.json` in `apps/portal/` for shadcn CLI
-    - Update aliases and output paths to point to `@portal/ui` package
+    - Update aliases and output paths to point to `@atl/ui` package
     - _Requirements: 11.3_
 
 - [x] 15. Checkpoint — Verify all package extractions
@@ -261,7 +261,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
 
   - [x] 16.6 Write property test: Import path correctness
     - **Property 10: Import path correctness**
-    - Verify all `@portal/*` imports use direct subpaths (except `@portal/email`)
+    - Verify all `@atl/*` imports use direct subpaths (except `@portal/email`)
     - **Validates: Requirement 6.2**
 
   - [x] 16.7 Write property test: App-internal alias preservation
@@ -292,9 +292,9 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
 
 - [x] 18. Update Containerfile for monorepo Docker builds
   - [x] 18.1 Rewrite `Containerfile` with multi-stage turbo prune build
-    - Stage 1 (pruner): Install turbo, run `turbo prune @portal/portal --docker`
+    - Stage 1 (pruner): Install turbo, run `turbo prune @atl/portal --docker`
     - Stage 2 (deps): Copy pruned `package.json` files, run `pnpm install --frozen-lockfile`
-    - Stage 3 (builder): Copy full source, run `pnpm turbo run build --filter=@portal/portal`
+    - Stage 3 (builder): Copy full source, run `pnpm turbo run build --filter=@atl/portal`
     - Stage 4 (runner): Copy standalone output, static assets, public files only
     - Include health check for `/api/health`
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
@@ -305,7 +305,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
 
 - [x] 19. Update tooling configuration
   - [x] 19.1 Update `apps/portal/env.ts` to aggregate package `keys()` functions
-    - Update imports from `@/shared/*/keys` to `@portal/*/keys` where applicable
+    - Update imports from `@/shared/*/keys` to `@atl/*/keys` where applicable
     - _Requirements: 12.2, 12.5_
 
   - [x] 19.2 Verify and update lint-staged, commitlint, and husky configs at root
@@ -317,7 +317,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Ensure `.releaserc.json` references correct paths for `CHANGELOG.md` and `package.json`
     - _Requirements: 11.4_
 
-  - [x] 19.4 Verify Vitest configuration resolves `@portal/*` imports
+  - [x] 19.4 Verify Vitest configuration resolves `@atl/*` imports
     - Update `vitest.config.ts` resolve aliases if pnpm workspace linking doesn't handle resolution automatically
     - _Requirements: 10.2, 10.4_
 

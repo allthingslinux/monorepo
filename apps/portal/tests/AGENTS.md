@@ -1,6 +1,6 @@
 # apps/portal/tests
 
-> Scope: Vitest suite for `@portal/portal`. Inherits monorepo [AGENTS.md](../../../AGENTS.md).
+> Scope: Vitest suite for `@atl/portal`. Inherits monorepo [AGENTS.md](../../../AGENTS.md).
 
 ## Layout
 

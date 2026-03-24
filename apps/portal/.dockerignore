@@ -1,7 +1,7 @@
 # =============================================================================
 # .dockerignore — Monorepo-aware exclusions for turbo prune Docker builds
 # =============================================================================
-# The pruner stage copies the full monorepo, runs `turbo prune @portal/portal
+# The pruner stage copies the full monorepo, runs `turbo prune @atl/portal
 # --docker`, then subsequent stages use only the pruned output. Exclude build
 # artifacts, dev tooling, and files not needed for the production build.
 # =============================================================================

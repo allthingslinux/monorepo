@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup bindings for the "allthingslinux" worker
+# Setup bindings for apps/web (Wrangler worker names use the allthingslinux-* prefix)
 # This recreates KV namespaces, R2 buckets, and verifies Durable Objects setup
 
 set -e

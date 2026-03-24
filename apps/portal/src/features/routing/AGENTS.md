@@ -47,7 +47,7 @@ import { generateBreadcrumbs, routeConfig } from "@/features/routing/lib";
 const crumbs = generateBreadcrumbs(pathname, routeConfig, resolver);
 ```
 
-Dashboard pages often use `@portal/ui` `PageHeader` with `pathname` + `getServerRouteResolver()` instead of assembling crumbs manually.
+Dashboard pages often use `@atl/ui` `PageHeader` with `pathname` + `getServerRouteResolver()` instead of assembling crumbs manually.
 
 ## i18n
 

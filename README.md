@@ -8,7 +8,9 @@ Local monorepo combining the marketing site and the portal (identity stack), imp
 | ------------- | --------------------------------------------------------------------------------- |
 | `apps/web`    | Main marketing site (Next.js, OpenNext / Cloudflare)                              |
 | `apps/docs`   | Product documentation ([Mintlify](https://mintlify.com); `docs.json` at app root) |
-| `apps/portal` | Portal app (`@portal/portal`) and workspace packages (`apps/portal/packages/*`)   |
+| `apps/portal` | Portal app (`@atl/portal`) and workspace packages (`apps/portal/packages/*`)      |
+
+**Package names:** **`@atl/*`** is for org-level apps and shared libraries (`@atl/web`, `@atl/portal`, `@atl/ui`, `@atl/docs`). The **portal stack** libraries under `apps/portal/packages/*` use the **`@portal/*`** scope (e.g. `@portal/db`, `@portal/api`, `@portal/typescript-config`) so they read as “portal product” rather than org-wide.
 
 Planning context: see `monorepo-planning/MASTER.md` in your planning repository (canonical layout and ADRs).
 
@@ -24,7 +26,7 @@ Planning context: see `monorepo-planning/MASTER.md` in your planning repository 
 | Lint + format (Ultracite / Oxlint + Oxfmt) | `pnpm check` / `pnpm fix`     |
 | Docs preview (Mintlify)                    | `pnpm --filter @atl/docs dev` |
 
-**Checks:** Root `pnpm check` / `pnpm fix` run **Ultracite only** (whole repo). The **web** app also defines `pnpm run check` (and `type-check`) under `apps/web` — that runs **contentlayer + `tsc` + Ultracite** for the marketing site. Use `pnpm --filter allthingslinux check` from the root when you mean the web app’s full check.
+**Checks:** Root `pnpm check` / `pnpm fix` run **Ultracite only** (whole repo). The **web** app also defines `pnpm run check` (and `type-check`) under `apps/web` — that runs **contentlayer + `tsc` + Ultracite** for the marketing site. Use `pnpm --filter @atl/web check` from the root when you mean the web app’s full check.
 
 **Note:** `apps/web` is **excluded from Oxlint** (`.eslintignore`) until that tree is brought up to the same rules as `apps/portal`. Oxfmt still formats it. Remove `apps/web/**` from `.eslintignore` when you are ready to fix findings.
 

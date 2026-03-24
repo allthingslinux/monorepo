@@ -78,13 +78,13 @@
 
 Structure:
 
-- apps/portal/ — Next.js application (@portal/portal)
+- apps/portal/ — Next.js application (@atl/portal)
 - packages/db/ — Drizzle schema, client, migrations (@portal/db)
 - packages/api/ — TanStack Query, server queries (@portal/api)
 - packages/types/ — centralized TypeScript types (@portal/types)
 - packages/schemas/ — shared Zod validation schemas (@portal/schemas)
 - packages/utils/ — shared utilities and constants (@portal/utils)
-- packages/ui/ — shared UI components (@portal/ui)
+- packages/ui/ — shared UI components (@atl/ui)
 - packages/email/ — email service (@portal/email)
 - packages/observability/ — Sentry, OpenTelemetry (@portal/observability)
 - packages/seo/ — metadata helpers (@portal/seo)
