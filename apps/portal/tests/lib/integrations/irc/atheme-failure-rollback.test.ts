@@ -104,7 +104,8 @@ const ACCOUNT_ID = "acc-001";
 function setupDbMocks(nick: string) {
   let selectCall = 0;
   (db.select as ReturnType<typeof vi.fn>).mockImplementation(() => {
-    const call = selectCall++;
+    const call = selectCall;
+    selectCall += 1;
     let rows: unknown[];
     if (call === 0) {
       // resolveUserIdentity: Portal user row (IRC nick = username)

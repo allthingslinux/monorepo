@@ -93,7 +93,7 @@ function mockSelectSequence(...rowSets: unknown[][]) {
   let call = 0;
   (db.select as ReturnType<typeof vi.fn>).mockImplementation(() => {
     const rows = rowSets[call] ?? [];
-    call++;
+    call += 1;
     const chain = {
       from: vi.fn(),
       limit: vi.fn(),

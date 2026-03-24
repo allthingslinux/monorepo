@@ -57,10 +57,10 @@ export async function GET(request: NextRequest) {
   const isSecure = finalProtocol === "https";
   response.cookies.set("qb_oauth_state", state, {
     httpOnly: true,
-    secure: isSecure,
-    sameSite: "lax",
     maxAge: 600, // 10 minutes
     path: "/", // Ensure cookie is available for callback route
+    sameSite: "lax",
+    secure: isSecure,
   });
 
   // Debug logging (always log for troubleshooting)

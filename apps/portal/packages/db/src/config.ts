@@ -36,10 +36,6 @@ if (!process.env.DATABASE_URL) {
 }
 
 export default defineConfig({
-  // Database dialect
-  // Options: "postgresql" | "mysql" | "sqlite" | "turso" | "singlestore" | "mssql" | "cockroachdb"
-  dialect: "postgresql",
-
   // Database connection credentials
   // For PostgreSQL, you can also specify: host, port, user, password, database, ssl
   dbCredentials: {
@@ -53,14 +49,9 @@ export default defineConfig({
     // ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   },
 
-  // Schema file paths (glob-based)
-  // Can be a string, array of strings, or glob pattern
-  // Examples:
-  //   "./src/shared/db/schema.ts"       - Single file
-  //   "./src/shared/db/schema/*"        - All files in schema folder
-  //   ["./src/shared/db/schema/*.ts"]  - Array of glob patterns
-  //   "./src/**/schema.ts"               - All schema.ts files recursively
-  schema: "./src/schema/*",
+  // Database dialect
+  // Options: "postgresql" | "mysql" | "sqlite" | "turso" | "singlestore" | "mssql" | "cockroachdb"
+  dialect: "postgresql",
 
   // Output folder for migrations, snapshots, and pulled schemas
   // Default: "./drizzle"
@@ -70,14 +61,23 @@ export default defineConfig({
   //   - Generated schema.ts from drizzle-kit pull
   out: "./drizzle",
 
-  // Print all SQL statements during operations
-  // Useful for debugging and understanding what Drizzle Kit is doing
-  verbose: true,
+  // Schema file paths (glob-based)
+  // Can be a string, array of strings, or glob pattern
+  // Examples:
+  //   "./src/shared/db/schema.ts"       - Single file
+  //   "./src/shared/db/schema/*"        - All files in schema folder
+  //   ["./src/shared/db/schema/*.ts"]  - Array of glob patterns
+  //   "./src/**/schema.ts"               - All schema.ts files recursively
+  schema: "./src/schema/*",
 
   // Prompt confirmation before running SQL statements (push command)
   // When true, Drizzle Kit will ask for confirmation before executing SQL
   // Recommended: true for production, false for development
   strict: true,
+
+  // Print all SQL statements during operations
+  // Useful for debugging and understanding what Drizzle Kit is doing
+  verbose: true,
 
   // Embed statement breakpoints in generated SQL migrations
   // Required for databases that don't support multiple DDL statements in one transaction

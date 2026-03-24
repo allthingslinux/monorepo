@@ -6,10 +6,10 @@ import { verifySession } from "@/auth/dal";
 // With viewPaths: { SETTINGS: "account" }, links are /app/settings/account, /security, /api-keys.
 const SEGMENT_TO_TAB: Record<string, string> = {
   account: "account",
-  settings: "account", // fallback if viewPaths not used
-  security: "security",
   "api-keys": "api-keys",
   organizations: "account", // No orgs tab; show account
+  security: "security",
+  settings: "account", // fallback if viewPaths not used
 };
 
 interface SegmentPageProps {

@@ -23,14 +23,14 @@ export const ac = createAccessControl(statement);
 
 // User role: No admin permissions (default role for regular users)
 export const user = ac.newRole({
-  user: [], // No user permissions
   session: [], // No session permissions
+  user: [], // No user permissions
 });
 
 // Staff role: Limited admin permissions (can manage users and sessions, but not create users)
 export const staff = ac.newRole({
-  user: ["list", "ban"], // Can list users and ban them
   session: ["list", "revoke"], // Can list sessions and revoke them
+  user: ["list", "ban"], // Can list users and ban them
   // Cannot: create users, set roles, delete users, set passwords
 });
 

@@ -31,10 +31,10 @@ interface PortalEventContext {
  */
 export const setPortalUser = (user: PortalUserContext): void => {
   try {
-    const { setUser, setTag } = require("@sentry/nextjs");
+    const { setTag, setUser } = require("@sentry/nextjs");
     setUser({
-      id: user.id,
       email: user.email, // Will be filtered out by beforeSend
+      id: user.id,
       username: user.username,
     });
     if (user.role) {
@@ -210,10 +210,10 @@ export const withIsolatedScope = <T>(
 ): T => {
   try {
     const {
-      withIsolationScope,
-      setUser,
-      setTag,
       setExtras,
+      setTag,
+      setUser,
+      withIsolationScope,
     } = require("@sentry/nextjs");
     return withIsolationScope(() => {
       if (data.user) {
@@ -481,7 +481,7 @@ export const instrumentQueueProducer = async <T>(
   producer: (traceHeaders: TraceHeaders) => Promise<T>
 ): Promise<T> => {
   try {
-    const { startSpan, getTraceData } = require("@sentry/nextjs");
+    const { getTraceData, startSpan } = require("@sentry/nextjs");
     return await startSpan(
       {
         attributes: {
@@ -1040,7 +1040,7 @@ export const captureExceptionWithLevel = (
   level: SentryLevel
 ): void => {
   try {
-    const { withScope, captureException } = require("@sentry/nextjs");
+    const { captureException, withScope } = require("@sentry/nextjs");
     withScope((scope: { setLevel: (level: string) => void }) => {
       scope.setLevel(level);
       captureException(error);

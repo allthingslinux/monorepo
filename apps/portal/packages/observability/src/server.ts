@@ -102,7 +102,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
 
     // HTTP integration for request/response tracking
     httpIntegration({
-      spans: true, // Enable spans for outgoing HTTP requests
       breadcrumbs: true, // Enable breadcrumbs for HTTP requests
       ignoreIncomingRequests: (urlPath) =>
         urlPath.includes("/health") ||
@@ -110,6 +109,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
         urlPath.includes("/monitoring"),
       ignoreOutgoingRequests: (url) => isSentryHost(url),
       maxIncomingRequestBodySize: "medium", // 10KB limit for request bodies
+      spans: true, // Enable spans for outgoing HTTP requests
     }),
 
     // Zod validation error enhancement
@@ -121,8 +121,8 @@ export const initializeSentry = (): ReturnType<typeof init> => {
   // Add extra error data integration for richer error context
   integrations.push(
     extraErrorDataIntegration({
-      depth: 5, // Capture deeper error object properties
       captureErrorCause: true, // Capture error.cause chains
+      depth: 5, // Capture deeper error object properties
     })
   );
 
@@ -147,34 +147,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
   }
 
   return init({
-    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-
-    // Environment and release info
-    environment: process.env.NODE_ENV,
-    release: env.SENTRY_RELEASE || "unknown",
-
-    // Enable logging
-    enableLogs: true,
-
-    // Filter out common server errors that aren't actionable
-    ignoreErrors: [
-      "ECONNRESET",
-      "EPIPE",
-      "ENOTFOUND",
-      "ECONNREFUSED",
-      "socket hang up",
-      REQUEST_ABORTED_PATTERN,
-    ],
-
-    // Filter out health check and monitoring transactions
-    ignoreTransactions: [
-      HEALTH_CHECK_PATTERN,
-      API_HEALTH_PATTERN,
-      MONITORING_PATTERN,
-      NEXT_STATIC_PATTERN,
-      FAVICON_PATTERN,
-    ],
-
     // Filter sensitive data before sending
     beforeSend(event) {
       // Remove sensitive request data
@@ -206,6 +178,47 @@ export const initializeSentry = (): ReturnType<typeof init> => {
       }
       return event;
     },
+    // Setting this option to true will print useful information to the console while you're setting up Sentry.
+    debug: false,
+
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+
+    // Enable logging
+    enableLogs: true,
+
+    // Environment and release info
+    environment: process.env.NODE_ENV,
+
+    // Filter out common server errors that aren't actionable
+    ignoreErrors: [
+      "ECONNRESET",
+      "EPIPE",
+      "ENOTFOUND",
+      "ECONNREFUSED",
+      "socket hang up",
+      REQUEST_ABORTED_PATTERN,
+    ],
+
+    // Filter out health check and monitoring transactions
+    ignoreTransactions: [
+      HEALTH_CHECK_PATTERN,
+      API_HEALTH_PATTERN,
+      MONITORING_PATTERN,
+      NEXT_STATIC_PATTERN,
+      FAVICON_PATTERN,
+    ],
+
+    // Integrations for console logging and profiling
+    integrations,
+
+    // Use trace lifecycle profiling (automatic)
+    profileLifecycle: "trace",
+
+    // Node profiling sample rate
+    // Lower in production to balance performance monitoring with cost
+    profileSessionSampleRate: isProduction ? 0.1 : 1,
+
+    release: env.SENTRY_RELEASE || "unknown",
 
     // Lower sample rate in production to reduce costs
     // In production: 10% of transactions (90% cost reduction)
@@ -213,18 +226,5 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     // Note: This may impact debugging of rare production issues. Consider increasing
     // sampling for critical paths (e.g., payment processing, user registration) if needed.
     tracesSampleRate: isProduction ? 0.1 : 1,
-
-    // Node profiling sample rate
-    // Lower in production to balance performance monitoring with cost
-    profileSessionSampleRate: isProduction ? 0.1 : 1,
-
-    // Use trace lifecycle profiling (automatic)
-    profileLifecycle: "trace",
-
-    // Setting this option to true will print useful information to the console while you're setting up Sentry.
-    debug: false,
-
-    // Integrations for console logging and profiling
-    integrations,
   });
 };

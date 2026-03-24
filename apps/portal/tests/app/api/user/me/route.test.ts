@@ -34,10 +34,10 @@ vi.mock("@/features/integrations/lib/xmpp/keys", () => ({
 }));
 
 vi.mock("@/features/integrations/lib/xmpp/config", () => ({
-  xmppConfig: {},
   isXmppConfigured: () => false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function -- mock
   validateXmppConfig: () => {},
+  xmppConfig: {},
 }));
 
 vi.mock("@/features/integrations/lib/xmpp/client", () => ({

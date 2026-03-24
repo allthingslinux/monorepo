@@ -50,10 +50,9 @@ export async function generateMetadata({
       title: post.title,
     }),
     openGraph: {
-      title: post.title,
+      authors: [post.author || "All Things Linux"],
       description: post.description || `Read our post about ${post.title}`,
-      type: "article",
-      url: `${getBaseUrl()}/blog/${category}/${slug}`,
+      modifiedTime: post.date,
       // images: [
       //   {
       //     url: ogImageUrl.toString(),
@@ -63,8 +62,9 @@ export async function generateMetadata({
       //   },
       // ],
       publishedTime: post.date,
-      modifiedTime: post.date,
-      authors: [post.author || "All Things Linux"],
+      title: post.title,
+      type: "article",
+      url: `${getBaseUrl()}/blog/${category}/${slug}`,
     },
     twitter: {
       card: "summary_large_image",

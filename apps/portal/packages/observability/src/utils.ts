@@ -42,9 +42,9 @@ export const captureError = (
     log.error(`Error captured: ${message}`);
   } catch (sentryError) {
     // Fallback error logging when Sentry fails
-    // eslint-disable-next-line no-console
+
     console.error("Failed to capture error to Sentry:", sentryError);
-    // eslint-disable-next-line no-console
+
     console.error("Original error:", parseError(error));
   }
 };
@@ -67,33 +67,33 @@ type LogAttributes = Record<string, unknown>;
  * Captured once at module load for performance.
  */
 const getEnvContext = (): Record<string, string | undefined> => ({
+  availability_zone: process.env.AWS_AVAILABILITY_ZONE,
   // Deployment info
   commit_hash:
     process.env.GIT_COMMIT_SHA ||
     process.env.COMMIT_SHA ||
     process.env.GIT_COMMIT,
+  container_id: process.env.CONTAINER_ID,
+  deploy_time: process.env.DEPLOY_TIMESTAMP,
+
+  deployment_id: process.env.DEPLOYMENT_ID,
+  // Environment type
+  environment: process.env.NODE_ENV || process.env.ENVIRONMENT,
+  instance_id: process.env.INSTANCE_ID || process.env.HOSTNAME,
+  memory_limit_mb: process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE,
+  // Runtime
+  node_version: process.version,
+
+  region: process.env.AWS_REGION || process.env.REGION,
+  runtime: process.env.AWS_EXECUTION_ENV || "node",
+  // Infrastructure
+  service: process.env.SERVICE_NAME || "portal",
+
+  stage: process.env.STAGE,
   version:
     process.env.SENTRY_RELEASE ||
     process.env.SERVICE_VERSION ||
     process.env.npm_package_version,
-  deployment_id: process.env.DEPLOYMENT_ID,
-  deploy_time: process.env.DEPLOY_TIMESTAMP,
-
-  // Infrastructure
-  service: process.env.SERVICE_NAME || "portal",
-  region: process.env.AWS_REGION || process.env.REGION,
-  availability_zone: process.env.AWS_AVAILABILITY_ZONE,
-  instance_id: process.env.INSTANCE_ID || process.env.HOSTNAME,
-  container_id: process.env.CONTAINER_ID,
-
-  // Runtime
-  node_version: process.version,
-  runtime: process.env.AWS_EXECUTION_ENV || "node",
-  memory_limit_mb: process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE,
-
-  // Environment type
-  environment: process.env.NODE_ENV || process.env.ENVIRONMENT,
-  stage: process.env.STAGE,
 });
 
 // Capture environment context once at module load

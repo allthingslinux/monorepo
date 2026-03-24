@@ -127,14 +127,14 @@ export function createMailbox(
     },
     async () => {
       const body = {
-        domain,
-        local_part: localPart,
-        password,
-        password2: password, // confirmation required
-        name,
-        quota: 3072, // 3GB default, matching OpenAPI example and domain defaults
         active: 1,
         authsource: "mailcow",
+        domain,
+        local_part: localPart,
+        name,
+        password,
+        password2: password, // confirmation required
+        quota: 3072, // 3GB default, matching OpenAPI example and domain defaults
       };
 
       const result = await mailcowRequest("/api/v1/add/mailbox", {
@@ -471,9 +471,9 @@ export function getMailboxUsage(
         return { percent_in_use: 0, quota: 0, quota_used: 0 };
       }
       return {
+        percent_in_use: Number(mailbox.percent_in_use),
         quota: Number(mailbox.quota), // Already in Bytes from API
         quota_used: Number(mailbox.quota_used), // Already in Bytes from API
-        percent_in_use: Number(mailbox.percent_in_use),
       };
     }
   );

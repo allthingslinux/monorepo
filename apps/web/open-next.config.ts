@@ -6,6 +6,12 @@ import doQueue from "@opennextjs/cloudflare/overrides/queue/do-queue";
 import doShardedTagCache from "@opennextjs/cloudflare/overrides/tag-cache/do-sharded-tag-cache";
 
 export default defineCloudflareConfig({
+  // Automatic cache purge for on-demand revalidation
+  cachePurge: purgeCache({ type: "direct" }),
+
+  // Enable cache interception for better performance (not compatible with PPR)
+  enableCacheInterception: true,
+
   // Enhanced R2 incremental cache with regional caching for faster retrieval
   incrementalCache: withRegionalCache(r2IncrementalCache, {
     bypassTagCacheOnCacheHit: true,
@@ -17,10 +23,4 @@ export default defineCloudflareConfig({
 
   // Sharded Durable Object tag cache for on-demand revalidation
   tagCache: doShardedTagCache({ baseShardSize: 12 }),
-
-  // Enable cache interception for better performance (not compatible with PPR)
-  enableCacheInterception: true,
-
-  // Automatic cache purge for on-demand revalidation
-  cachePurge: purgeCache({ type: "direct" }),
 });

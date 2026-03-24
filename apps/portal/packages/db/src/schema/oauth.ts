@@ -3,36 +3,36 @@ import { boolean, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { session, user } from "./auth";
 
 export const oauthClient = pgTable("oauth_client", {
-  id: text("id").primaryKey(),
   clientId: text("client_id").notNull().unique(),
   clientSecret: text("client_secret"),
-  disabled: boolean("disabled").default(false),
-  skipConsent: boolean("skip_consent"),
-  enableEndSession: boolean("enable_end_session"),
-  scopes: text("scopes").array(),
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
-  name: text("name"),
-  uri: text("uri"),
-  icon: text("icon"),
-  contacts: text("contacts").array(),
-  tos: text("tos").array(), // Terms of Service URLs (array)
-  policy: text("policy").array(), // Privacy Policy URLs (array)
-  softwareId: text("software_id"),
-  softwareVersion: text("software_version"),
-  softwareStatement: text("software_statement"),
-  redirectUris: text("redirect_uris").array().notNull(),
-  postLogoutRedirectUris: text("post_logout_redirect_uris").array(),
-  tokenEndpointAuthMethod: text("token_endpoint_auth_method"),
-  grantTypes: text("grant_types").array(),
-  responseTypes: text("response_types").array(),
-  public: boolean("public"),
-  type: text("type"),
-  referenceId: text("reference_id"),
   clientSecretExpiresAt: timestamp("client_secret_expires_at"), // Optional: Expiration time for client secret
-  resources: text("resources").array(), // Optional: Allowed resources for this client
+  contacts: text("contacts").array(),
+  createdAt: timestamp("created_at"),
+  disabled: boolean("disabled").default(false),
+  enableEndSession: boolean("enable_end_session"),
+  grantTypes: text("grant_types").array(),
+  icon: text("icon"),
+  id: text("id").primaryKey(),
   metadata: jsonb("metadata"),
+  name: text("name"),
+  policy: text("policy").array(), // Privacy Policy URLs (array)
+  postLogoutRedirectUris: text("post_logout_redirect_uris").array(),
+  public: boolean("public"),
+  redirectUris: text("redirect_uris").array().notNull(),
+  referenceId: text("reference_id"),
+  resources: text("resources").array(), // Optional: Allowed resources for this client
+  responseTypes: text("response_types").array(),
+  scopes: text("scopes").array(),
+  skipConsent: boolean("skip_consent"),
+  softwareId: text("software_id"),
+  softwareStatement: text("software_statement"),
+  softwareVersion: text("software_version"),
+  tokenEndpointAuthMethod: text("token_endpoint_auth_method"),
+  tos: text("tos").array(), // Terms of Service URLs (array)
+  type: text("type"),
+  updatedAt: timestamp("updated_at"),
+  uri: text("uri"),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const oauthRefreshToken = pgTable("oauth_refresh_token", {
@@ -74,13 +74,13 @@ export const oauthAccessToken = pgTable("oauth_access_token", {
 });
 
 export const oauthConsent = pgTable("oauth_consent", {
-  id: text("id").primaryKey(),
   clientId: text("client_id")
     .notNull()
     .references(() => oauthClient.clientId, { onDelete: "cascade" }),
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at"),
+  id: text("id").primaryKey(),
   referenceId: text("reference_id"),
   scopes: text("scopes").notNull(), // Comma-separated list of scopes (not array)
-  createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
 });

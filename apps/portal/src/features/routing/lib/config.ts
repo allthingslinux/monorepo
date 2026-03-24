@@ -24,40 +24,37 @@ import type { ProtectedRoute, RouteConfig } from "./types";
  * This config only contains structure (paths, icons, permissions, etc.)
  */
 export const routeConfig = {
-  // Public routes (no auth required)
-  public: [
+  // Footer actions (user actions in sidebar)
+  footerActions: [
     {
-      id: "home",
+      icon: Settings2,
+      id: "settings",
+      metadata: {
+        robots: { follow: false, index: false },
+      },
+      path: "/app/settings",
+    },
+    {
+      icon: HelpCircle,
+      id: "support",
       metadata: {
         robots: { follow: true, index: true },
       },
-      path: "/",
-      sitemap: {
-        changeFrequency: "weekly",
-        priority: 1,
-      },
+      path: "/support",
     },
     {
-      id: "sign-in",
-      metadata: {
-        robots: { follow: false, index: false },
-      },
-      path: "/auth/sign-in",
-      sitemap: {
-        changeFrequency: "monthly",
-        priority: 0.8,
-      },
+      action: "logout", // Special action, not a route
+      icon: LogOut,
+      id: "logout",
+      variant: "destructive",
     },
+  ],
+
+  // Navigation groups configuration
+  navigationGroups: [
     {
-      id: "sign-up",
-      metadata: {
-        robots: { follow: false, index: false },
-      },
-      path: "/auth/sign-up",
-      sitemap: {
-        changeFrequency: "monthly",
-        priority: 0.8,
-      },
+      id: "platform",
+      order: 1,
     },
   ],
 
@@ -181,37 +178,40 @@ export const routeConfig = {
     },
   ],
 
-  // Navigation groups configuration
-  navigationGroups: [
+  // Public routes (no auth required)
+  public: [
     {
-      id: "platform",
-      order: 1,
-    },
-  ],
-
-  // Footer actions (user actions in sidebar)
-  footerActions: [
-    {
-      icon: Settings2,
-      id: "settings",
-      metadata: {
-        robots: { follow: false, index: false },
-      },
-      path: "/app/settings",
-    },
-    {
-      icon: HelpCircle,
-      id: "support",
+      id: "home",
       metadata: {
         robots: { follow: true, index: true },
       },
-      path: "/support",
+      path: "/",
+      sitemap: {
+        changeFrequency: "weekly",
+        priority: 1,
+      },
     },
     {
-      id: "logout",
-      icon: LogOut,
-      action: "logout", // Special action, not a route
-      variant: "destructive",
+      id: "sign-in",
+      metadata: {
+        robots: { follow: false, index: false },
+      },
+      path: "/auth/sign-in",
+      sitemap: {
+        changeFrequency: "monthly",
+        priority: 0.8,
+      },
+    },
+    {
+      id: "sign-up",
+      metadata: {
+        robots: { follow: false, index: false },
+      },
+      path: "/auth/sign-up",
+      sitemap: {
+        changeFrequency: "monthly",
+        priority: 0.8,
+      },
     },
   ],
 } as RouteConfig;

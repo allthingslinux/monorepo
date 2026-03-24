@@ -59,17 +59,17 @@ async function createProsodyOAuthClient() {
     const [newClient] = await db
       .insert(oauthClient)
       .values({
-        id: randomUUID(),
         clientId,
         clientSecret,
-        name: clientName,
-        redirectUris: [], // Not needed for server-to-server auth
+        disabled: false,
         grantTypes: ["authorization_code", "password"], // Password grant for legacy clients
-        tokenEndpointAuthMethod: "client_secret_post", // Prosody will use POST for auth
+        id: randomUUID(),
+        name: clientName,
+        public: false, // Confidential client
+        redirectUris: [], // Not needed for server-to-server auth
         scopes: ["openid", "xmpp"], // Required scopes
         skipConsent: true, // Trusted first-party client
-        public: false, // Confidential client
-        disabled: false,
+        tokenEndpointAuthMethod: "client_secret_post", // Prosody will use POST for auth
       })
       .returning();
 

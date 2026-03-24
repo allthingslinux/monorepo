@@ -74,8 +74,8 @@ export const UpdateXmppAccountRequestSchema = z
  */
 export const XmppAccountSchema = selectXmppAccountSchema.extend({
   integrationId: z.literal("xmpp"),
-  temporaryPassword: z.string().optional(), // Only present on creation
   metadata: metadataSchema,
+  temporaryPassword: z.string().optional(), // Only present on creation
 });
 
 // Type exports

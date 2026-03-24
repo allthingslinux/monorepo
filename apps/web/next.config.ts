@@ -14,17 +14,6 @@ import "./src/env";
 const monorepoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: monorepoRoot,
-  },
-  transpilePackages: ["@atl/ui"],
-  reactStrictMode: true,
-  poweredByHeader: false,
-  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  productionBrowserSourceMaps: false,
-
-  // Performance optimizations
-  compress: true,
   compiler: {
     // Remove console logs for better performance in production
     // removeConsole:
@@ -38,33 +27,22 @@ const nextConfig: NextConfig = {
     // Remove React properties in production
     reactRemoveProperties: process.env.NODE_ENV === "production",
   },
-
-  typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === "production",
-  },
-
-  // Output configuration for better caching
-  output: "standalone",
-  logging: {
-    fetches: {
-      fullUrl: true,
-      hmrRefreshes: true,
-    },
-  },
+  // Performance optimizations
+  compress: true,
   // Turbopack configuration moved from experimental
   experimental: {
-    // mdxRs: true,
-    cssChunking: true,
-    // Optimize bundle analysis - disabled to prevent critters issues
-    // optimizeCss: true,
-    // Use SWC for faster compilation
-    swcTraceProfiling: false,
     // Enable build worker threads
     cpus: Math.max(1, Math.floor(cpus().length / 2)),
+    // mdxRs: true,
+    cssChunking: true,
     // Disable server minification for easier performance profiling
     serverMinification: false,
     // Disable server source maps to prevent esbuild errors in OpenNext/Cloudflare builds
     serverSourceMaps: false,
+    // Optimize bundle analysis - disabled to prevent critters issues
+    // optimizeCss: true,
+    // Use SWC for faster compilation
+    swcTraceProfiling: false,
     // Optimize webpack memory usage (reduces max memory, may slightly increase build time)
     webpackMemoryOptimizations: true,
   },
@@ -93,35 +71,16 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
-  // Add redirects
-  async redirects() {
-    return [
-      {
-        destination: "/contribute",
-        permanent: true,
-        source: "/donate",
-      },
-      {
-        destination: "/apply",
-        permanent: true,
-        source: "/get-involved",
-      },
-      {
-        destination: "/apply",
-        permanent: true,
-        source: "/roles",
-      },
-      {
-        destination: "/apply",
-        permanent: true,
-        source: "/careers",
-      },
-    ];
-  },
-
   // Image optimizations
   images: {
+    contentDispositionType: "attachment" as const,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    dangerouslyAllowSVG: true,
+    // Reduced device sizes for faster processing
+    deviceSizes: [640, 828, 1200, 1920],
+    // Optimized image settings for better performance
+    formats: ["image/avif", "image/webp"] as const,
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     remotePatterns: [
       {
         hostname: "contrib.rocks",
@@ -148,17 +107,58 @@ const nextConfig: NextConfig = {
         protocol: "https" as const,
       },
     ],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment" as const,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Optimized image settings for better performance
-    formats: ["image/avif", "image/webp"] as const,
-    // Reduced device sizes for faster processing
-    deviceSizes: [640, 828, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     // Disable image optimization for Cloudflare Workers deployment
     // Cloudflare Workers don't support Sharp, which is required for Next.js image optimization
     unoptimized: true,
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+  },
+
+  // Output configuration for better caching
+  output: "standalone",
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+
+  poweredByHeader: false,
+
+  productionBrowserSourceMaps: false,
+  reactStrictMode: true,
+  // Add redirects
+  async redirects() {
+    return [
+      {
+        destination: "/contribute",
+        permanent: true,
+        source: "/donate",
+      },
+      {
+        destination: "/apply",
+        permanent: true,
+        source: "/get-involved",
+      },
+      {
+        destination: "/apply",
+        permanent: true,
+        source: "/roles",
+      },
+      {
+        destination: "/apply",
+        permanent: true,
+        source: "/careers",
+      },
+    ];
+  },
+  transpilePackages: ["@atl/ui"],
+
+  turbopack: {
+    root: monorepoRoot,
+  },
+
+  typescript: {
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
   },
 };
 

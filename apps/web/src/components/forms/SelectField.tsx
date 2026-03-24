@@ -26,19 +26,19 @@ interface SelectFieldProps {
 
 // Using memo to prevent unnecessary re-renders
 const SelectField = memo(function SelectField({
-  name,
-  label,
+  className,
   description,
+  disabled,
+  label,
+  name,
   options,
   placeholder = "Select an option",
-  disabled,
   required = false,
-  className,
 }: SelectFieldProps) {
   const {
+    formState: { errors },
     setValue,
     watch,
-    formState: { errors },
   } = useFormContext();
 
   // Ensure value is always a string
@@ -71,9 +71,9 @@ const SelectField = memo(function SelectField({
         disabled={disabled}
         onValueChange={(newValue) => {
           setValue(name, newValue, {
-            shouldValidate: false, // Don't validate immediately on selection
             shouldDirty: true,
             shouldTouch: true,
+            shouldValidate: false, // Don't validate immediately on selection
           });
         }}
         value={value}

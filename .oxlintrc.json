@@ -28,7 +28,6 @@
     "import/no-namespace": "error",
     "oxc/no-barrel-file": "error",
     "func-style": "off",
-    "sort-keys": "off",
     "global-require": "off",
     "unicorn/prefer-module": "off",
     "no-inline-comments": "off",
@@ -48,7 +47,6 @@
     "no-warning-comments": "off",
     "no-empty-function": "off",
     "unicorn/prefer-dom-node-remove": "off",
-    "no-plusplus": "off",
     "unicorn/prefer-string-replace-all": "off",
     "typescript/consistent-type-imports": "off",
     "unicorn/consistent-function-scoping": "off",
@@ -67,9 +65,7 @@
     "react/no-danger": "off",
     "no-useless-return": "off",
     "max-classes-per-file": "off",
-    "complexity": "off",
-    "arrow-body-style": "off",
-    "react/no-array-index-key": "off"
+    "complexity": "off"
   },
   "overrides": [
     {
@@ -145,6 +141,12 @@
       "rules": {
         "import/no-namespace": "off",
         "no-param-reassign": "off"
+      }
+    },
+    {
+      "files": ["apps/portal/src/features/auth/lib/localization.ts"],
+      "rules": {
+        "sort-keys": "off"
       }
     },
     {

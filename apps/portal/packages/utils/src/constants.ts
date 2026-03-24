@@ -73,14 +73,14 @@ export type APIErrorCode =
  * TanStack Query cache time constants (in milliseconds)
  */
 export const QUERY_CACHE = {
-  /** Short cache time: 30 seconds - for frequently changing data */
-  STALE_TIME_SHORT: 30 * 1000,
+  /** Default garbage collection time: 5 minutes */
+  GC_TIME_DEFAULT: 5 * 60 * 1000,
   /** Default cache time: 1 minute - for most queries */
   STALE_TIME_DEFAULT: 60 * 1000,
   /** Long cache time: 5 minutes - for stable data */
   STALE_TIME_LONG: 5 * 60 * 1000,
-  /** Default garbage collection time: 5 minutes */
-  GC_TIME_DEFAULT: 5 * 60 * 1000,
+  /** Short cache time: 30 seconds - for frequently changing data */
+  STALE_TIME_SHORT: 30 * 1000,
 } as const;
 
 // ============================================================================
@@ -91,10 +91,10 @@ export const QUERY_CACHE = {
  * API rate limit defaults
  */
 export const RATE_LIMIT = {
-  /** Default rate limit time window: 1 day in milliseconds */
-  DEFAULT_TIME_WINDOW_MS: 86_400_000,
   /** Default maximum requests per time window */
   DEFAULT_MAX_REQUESTS: 10,
+  /** Default rate limit time window: 1 day in milliseconds */
+  DEFAULT_TIME_WINDOW_MS: 86_400_000,
 } as const;
 
 // ============================================================================
@@ -152,8 +152,8 @@ export const MOBILE_BREAKPOINT = 768;
  * Common date formats
  */
 export const DATE_FORMATS = {
-  ISO: "yyyy-MM-dd",
   DISPLAY: "PPp", // e.g., "Apr 29th, 2021"
+  ISO: "yyyy-MM-dd",
   SHORT: "PP", // e.g., "Apr 29, 2021"
   TIME: "p", // e.g., "4:30 PM"
 } as const;

@@ -44,15 +44,15 @@ export class XmppIntegration extends IntegrationBase<
 > {
   constructor() {
     super({
-      id: "xmpp",
-      name: "XMPP",
+      // Cast is safe as XmppAccountSchema matches XmppAccount
+      accountSchema: XmppAccountSchema as unknown as z.ZodType<XmppAccount>,
+      createAccountSchema: CreateXmppAccountRequestSchema,
       description:
         "Get a Jabber/XMPP account on xmpp.atl.chat for encrypted messaging and group chat.",
       enabled: isXmppConfigured(),
-      createAccountSchema: CreateXmppAccountRequestSchema,
+      id: "xmpp",
+      name: "XMPP",
       updateAccountSchema: UpdateXmppAccountRequestSchema,
-      // Cast is safe as XmppAccountSchema matches XmppAccount
-      accountSchema: XmppAccountSchema as unknown as z.ZodType<XmppAccount>,
     });
   }
 

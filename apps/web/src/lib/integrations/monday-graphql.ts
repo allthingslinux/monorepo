@@ -68,12 +68,12 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 function createMondayClient(apiKey: string): GraphQLClient {
   // Use a more basic fetch-based configuration to avoid any compatibility issues
   const client = new GraphQLClient("https://api.monday.com/v2", {
+    // Avoid any Node.js specific features
+    fetch: globalThis.fetch,
     headers: {
       Authorization: apiKey,
       "Content-Type": "application/json",
     },
-    // Avoid any Node.js specific features
-    fetch: globalThis.fetch,
   });
   return client;
 }
@@ -364,7 +364,7 @@ async function addDetailsToItem(
             return false; // Avoid infinite loops or pointless retries
           }
 
-          for (let i = 0; i < chunks.length; i++) {
+          for (let i = 0; i < chunks.length; i += 1) {
             const chunkBody = chunks[i];
             // Add prefix only if splitting happened
             const retryPrefix = `(Split Part ${i + 1}/${chunks.length}) `;
@@ -426,7 +426,7 @@ async function addDetailsToItem(
     // Send updates in reverse order for correct chronological display in Monday
 
     // 4. Send Role-Specific Questions (in reverse order)
-    for (let i = roleQuestions.length - 1; i >= 0; i--) {
+    for (let i = roleQuestions.length - 1; i >= 0; i -= 1) {
       const q = roleQuestions[i];
       const questionBody = `Q: ${q.question}\nA: ${formData[q.name]}`;
       if (!(await sendUpdate(questionBody))) {
@@ -440,7 +440,7 @@ async function addDetailsToItem(
     }
 
     // 2. Send General Questions (in reverse order)
-    for (let i = generalQuestions.length - 1; i >= 0; i--) {
+    for (let i = generalQuestions.length - 1; i >= 0; i -= 1) {
       const q = generalQuestions[i];
       const questionBody = `Q: ${q.question}\nA: ${formData[q.name]}`;
       if (!(await sendUpdate(questionBody))) {

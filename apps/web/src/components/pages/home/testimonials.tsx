@@ -8,7 +8,7 @@ import {
   CarouselItem,
 } from "@atl/ui/components/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
-import { memo, useRef } from "react";
+import { memo, useId, useRef } from "react";
 
 import testimonalsData from "@/data/testimonials.json";
 
@@ -54,6 +54,7 @@ export const ReviewCard = memo(
 ReviewCard.displayName = "ReviewCard";
 
 export default function Testimonials() {
+  const slideIdPrefix = useId();
   const plugin = useRef(
     AutoScroll({
       speed: 1,
@@ -87,16 +88,27 @@ export default function Testimonials() {
           plugins={[plugin.current]}
         >
           <CarouselContent className="-ml-4 px-4">
-            {[...reviews, ...reviews].map((review, index) => (
-              <CarouselItem className="pl-4 md:basis-[520px]" key={index}>
-                <ReviewCard
-                  avatar={`/images/penguins/${avatars[index % avatars.length]}.webp`}
-                  {...review}
-                  onMouseEnter={() => plugin.current.stop()}
-                  onMouseLeave={() => plugin.current.play()}
-                />
-              </CarouselItem>
-            ))}
+            {reviews
+              .flatMap((review, reviewIndex) => [
+                {
+                  review,
+                  slideKey: `${slideIdPrefix}-a-${reviewIndex}`,
+                },
+                {
+                  review,
+                  slideKey: `${slideIdPrefix}-b-${reviewIndex}`,
+                },
+              ])
+              .map(({ review, slideKey }, index) => (
+                <CarouselItem className="pl-4 md:basis-[520px]" key={slideKey}>
+                  <ReviewCard
+                    avatar={`/images/penguins/${avatars[index % avatars.length]}.webp`}
+                    {...review}
+                    onMouseEnter={() => plugin.current.stop()}
+                    onMouseLeave={() => plugin.current.play()}
+                  />
+                </CarouselItem>
+              ))}
           </CarouselContent>
         </Carousel>
       </div>

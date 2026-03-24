@@ -48,6 +48,19 @@ const baseURL =
 // You can pass any better-fetch options here or per-function call
 
 const fetchOptions = {
+  // Bearer token authentication configuration
+  auth: {
+    // Retrieve bearer token from localStorage
+    // This token is automatically included in the Authorization header for all requests
+    token: () => {
+      if (typeof window !== "undefined") {
+        return localStorage.getItem("bearer_token") || "";
+      }
+      return "";
+    },
+    // Bearer token authentication type
+    type: "Bearer" as const,
+  },
   // Global error handler for all client requests
   onError(e: { error: { status: number; message?: string } }) {
     // Handle rate limiting errors
@@ -67,19 +80,6 @@ const fetchOptions = {
     if (authToken) {
       localStorage.setItem("bearer_token", authToken);
     }
-  },
-  // Bearer token authentication configuration
-  auth: {
-    // Bearer token authentication type
-    type: "Bearer" as const,
-    // Retrieve bearer token from localStorage
-    // This token is automatically included in the Authorization header for all requests
-    token: () => {
-      if (typeof window !== "undefined") {
-        return localStorage.getItem("bearer_token") || "";
-      }
-      return "";
-    },
   },
   // Additional better-fetch options can be added here:
   // - baseURL: Override base URL for specific requests

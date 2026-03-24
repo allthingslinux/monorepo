@@ -8,23 +8,23 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  username: text("username").unique(),
-  displayUsername: text("display_username").unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
+  banExpires: timestamp("ban_expires"), // Optional: The date when the user's ban will expire
+  banReason: text("ban_reason"), // Optional: The reason for the user's ban
+  banned: boolean("banned").default(false), // Optional: Indicates whether the user is banned
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  displayUsername: text("display_username").unique(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  id: text("id").primaryKey(),
+  image: text("image"),
+  name: text("name").notNull(),
+  role: text("role"), // Optional: The user's role (defaults to "user", admins have "admin" role)
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  twoFactorEnabled: boolean("two_factor_enabled").default(false),
-  role: text("role"), // Optional: The user's role (defaults to "user", admins have "admin" role)
-  banned: boolean("banned").default(false), // Optional: Indicates whether the user is banned
-  banReason: text("ban_reason"), // Optional: The reason for the user's ban
-  banExpires: timestamp("ban_expires"), // Optional: The date when the user's ban will expire
+  username: text("username").unique(),
 });
 
 export const session = pgTable(
@@ -90,19 +90,19 @@ export const verification = pgTable(
 export const passkey = pgTable(
   "passkey",
   {
+    aaguid: text("aaguid"), // Optional: Authenticator's Attestation GUID indicating the type of the authenticator
+    backedUp: boolean("backed_up").notNull(), // Whether the passkey is backed up
+    counter: integer("counter").notNull(), // The counter of the passkey
+    createdAt: timestamp("created_at"), // Optional: The time when the passkey was created
+    credentialID: text("credential_id").notNull(), // The unique identifier of the registered credential
+    deviceType: text("device_type").notNull(), // The type of device used to register the passkey
     id: text("id").primaryKey(), // Unique identifier for each passkey
     name: text("name"), // Optional: The name of the passkey
     publicKey: text("public_key").notNull(), // The public key of the passkey
+    transports: text("transports"), // Optional: The transports used to register the passkey
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }), // The ID of the user
-    credentialID: text("credential_id").notNull(), // The unique identifier of the registered credential
-    counter: integer("counter").notNull(), // The counter of the passkey
-    deviceType: text("device_type").notNull(), // The type of device used to register the passkey
-    backedUp: boolean("backed_up").notNull(), // Whether the passkey is backed up
-    transports: text("transports"), // Optional: The transports used to register the passkey
-    createdAt: timestamp("created_at"), // Optional: The time when the passkey was created
-    aaguid: text("aaguid"), // Optional: Authenticator's Attestation GUID indicating the type of the authenticator
   },
   (table) => [
     index("passkey_userId_idx").on(table.userId),
@@ -113,12 +113,12 @@ export const passkey = pgTable(
 export const twoFactor = pgTable(
   "two_factor",
   {
+    backupCodes: text("backup_codes"), // Optional: The backup codes for account recovery
     id: text("id").primaryKey(),
+    secret: text("secret"), // Optional: The secret used to generate the TOTP code
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    secret: text("secret"), // Optional: The secret used to generate the TOTP code
-    backupCodes: text("backup_codes"), // Optional: The backup codes for account recovery
   },
   (table) => [
     index("twoFactor_secret_idx").on(table.secret),

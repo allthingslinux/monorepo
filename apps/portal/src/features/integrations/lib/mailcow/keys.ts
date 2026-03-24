@@ -15,8 +15,6 @@ import { z } from "zod";
 export const keys = () =>
   createEnv({
     client: {
-      /** Webmail UI URL for "Open webmail" link. When unset, the link is hidden. */
-      NEXT_PUBLIC_MAILCOW_WEB_URL: z.url().optional(),
       /**
        * Set to "true" to show "Sign in with Mailcow" on the auth page.
        * Requires MAILCOW_OAUTH_CLIENT_ID and MAILCOW_OAUTH_CLIENT_SECRET on the server.
@@ -25,6 +23,8 @@ export const keys = () =>
         .string()
         .optional()
         .transform((v) => v === "true"),
+      /** Webmail UI URL for "Open webmail" link. When unset, the link is hidden. */
+      NEXT_PUBLIC_MAILCOW_WEB_URL: z.url().optional(),
     },
     runtimeEnv: {
       MAILCOW_API_KEY: process.env.MAILCOW_API_KEY,

@@ -31,13 +31,13 @@ async function loadLocaleMessages(locale: string) {
       marketing
     ) {
       return {
-        common: common.default, // Wrap common.json content under "common" key
-        navigation: navigation.default, // Wrap navigation.json content under "navigation" key
-        routes: routes.default, // Wrap routes.json content under "routes" key
-        auth: auth.default, // Wrap auth.json content under "auth" key
         account: account.default, // Wrap account.json content under "account" key
+        auth: auth.default, // Wrap auth.json content under "auth" key
+        common: common.default, // Wrap common.json content under "common" key
         error: error.default, // Wrap error.json content under "error" key (includes notFound nested)
         marketing: marketing.default, // Wrap marketing.json content under "marketing" key
+        navigation: navigation.default, // Wrap navigation.json content under "navigation" key
+        routes: routes.default, // Wrap routes.json content under "routes" key
       };
     }
   } catch {

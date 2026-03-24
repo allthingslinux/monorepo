@@ -58,16 +58,16 @@ export const LINUX_FEED_SOURCES: FeedSource[] = [
     siteUrl: "https://www.linux.com",
   },
   {
-    id: "phoronix",
-    name: "Phoronix",
-    description: "Linux hardware news and benchmarks",
-    feedUrl: "https://www.phoronix.com/rss.php",
-    siteUrl: "https://www.phoronix.com",
     categories: ["news", "development"],
-    enabled: true,
     // Phoronix's RSS exposes no <category> elements from any endpoint.
     // Extract the first URL path segment (e.g. "news", "review") as a coarse fallback.
     categoryFromLinkPath: true,
+    description: "Linux hardware news and benchmarks",
+    enabled: true,
+    feedUrl: "https://www.phoronix.com/rss.php",
+    id: "phoronix",
+    name: "Phoronix",
+    siteUrl: "https://www.phoronix.com",
   },
   {
     categories: ["news", "development", "security"],
@@ -79,14 +79,14 @@ export const LINUX_FEED_SOURCES: FeedSource[] = [
     siteUrl: "https://lwn.net",
   },
   {
-    id: "omglinux",
-    name: "OMG! Linux",
-    description: "Accessible Linux news and app reviews",
-    feedUrl: "https://www.omglinux.com/feed/",
-    siteUrl: "https://www.omglinux.com",
     categories: ["news", "community"],
+    description: "Accessible Linux news and app reviews",
     // Last post was August 2025 — source appears to be inactive
     enabled: false,
+    feedUrl: "https://www.omglinux.com/feed/",
+    id: "omglinux",
+    name: "OMG! Linux",
+    siteUrl: "https://www.omglinux.com",
   },
   {
     categories: ["news", "community"],
@@ -107,14 +107,14 @@ export const LINUX_FEED_SOURCES: FeedSource[] = [
     siteUrl: "https://fossforce.com",
   },
   {
-    id: "linux-insider",
-    name: "Linux Insider",
-    description: "Enterprise Linux and open-source technology news",
-    feedUrl: "https://www.linuxinsider.com/rss-feed/",
-    siteUrl: "https://www.linuxinsider.com",
     categories: ["news", "enterprise"],
+    description: "Enterprise Linux and open-source technology news",
     // Feed is blocked by Cloudflare for automated clients
     enabled: false,
+    feedUrl: "https://www.linuxinsider.com/rss-feed/",
+    id: "linux-insider",
+    name: "Linux Insider",
+    siteUrl: "https://www.linuxinsider.com",
   },
   {
     categories: ["distro", "community"],

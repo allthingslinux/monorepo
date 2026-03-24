@@ -47,9 +47,9 @@ export async function GET(request: NextRequest) {
     // Transform to match expected format (exclude client secret from response)
     const clients = clientsData.map((row) => ({
       ...row.oauthClient,
-      user: row.user?.id ? row.user : undefined,
       // Don't expose client secret in list view
       clientSecret: undefined,
+      user: row.user?.id ? row.user : undefined,
     }));
 
     return Response.json({ clients });

@@ -47,9 +47,9 @@ export async function GET(
     // Exclude client secret from response (or only show it for admins if needed)
     const clientResponse = {
       ...clientData.oauthClient,
-      user: clientData.user?.id ? clientData.user : undefined,
       // Don't expose client secret by default
       clientSecret: undefined,
+      user: clientData.user?.id ? clientData.user : undefined,
     };
 
     return Response.json({ client: clientResponse });

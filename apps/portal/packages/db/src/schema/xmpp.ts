@@ -22,19 +22,19 @@ export const xmppAccountStatusEnum = pgEnum("xmpp_account_status", [
 export const xmppAccount = pgTable(
   "xmpp_account",
   {
-    id: text("id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    jid: text("jid").notNull(), // Full JID: username@xmpp.atl.chat
-    username: text("username").notNull(), // XMPP localpart (username)
-    status: xmppAccountStatusEnum("status").default("active").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    id: text("id").primaryKey(),
+    jid: text("jid").notNull(), // Full JID: username@xmpp.atl.chat
+    metadata: jsonb("metadata"), // Optional JSONB for additional data
+    status: xmppAccountStatusEnum("status").default("active").notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    metadata: jsonb("metadata"), // Optional JSONB for additional data
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    username: text("username").notNull(), // XMPP localpart (username)
   },
   (table) => [
     index("xmpp_account_userId_idx").on(table.userId),

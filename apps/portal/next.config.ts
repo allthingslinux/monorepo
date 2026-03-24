@@ -51,53 +51,77 @@ let nextConfig: NextConfig = {
   // Core Configuration
   // ============================================================================
 
-  env: {
-    NEXT_PUBLIC_APP_VERSION: appVersion,
-  },
-
-  // Enable React Strict Mode for better development experience
-  // Helps identify problems early and prepares for React's future features
-  reactStrictMode: true,
-
-  // Disable x-powered-by header for security
-  // Reduces information disclosure about the technology stack
-  poweredByHeader: false,
+  // Enable Cache Components (Next.js 16+) for opt-in caching and PPR
+  // Use "use cache" + cacheLife/cacheTag in server components or data helpers
+  cacheComponents: true,
 
   // Enable gzip compression for rendered content and static files
   // Improves performance by reducing payload size (only works with server target)
   compress: true,
 
-  // Enable statically typed routes for better type safety
-  // Provides autocomplete and type checking for Next.js Link href props
-  // Requires TypeScript to be used in the project
-  typedRoutes: true,
-
-  // Enable Cache Components (Next.js 16+) for opt-in caching and PPR
-  // Use "use cache" + cacheLife/cacheTag in server components or data helpers
-  cacheComponents: true,
-
   // ============================================================================
-  // TypeScript Configuration
+  // Script Configuration
   // ============================================================================
+  // Set crossOrigin attribute for next/script tags
+  // Matches the crossOrigin="anonymous" used in layout.tsx
+  crossOrigin: "anonymous",
 
-  // Enforce strict type checking during production builds
-  // Builds will fail if TypeScript errors are present, ensuring type safety
-  // This matches the project's strict TypeScript configuration
-  typescript: {
-    // Fail builds on TypeScript errors (default, but explicit for clarity)
-    ignoreBuildErrors: false,
-    // Use the root tsconfig.json (default, but explicit for clarity)
-    tsconfigPath: "tsconfig.json",
+  env: {
+    NEXT_PUBLIC_APP_VERSION: appVersion,
   },
 
-  // ============================================================================
-  // Build Configuration
-  // ============================================================================
+  experimental: {
+    // Forward browser console logs and runtime errors to terminal
+    // Only active in development mode
+    browserDebugInfoInTerminal: {
+      showSourceLocation: true,
+    },
 
-  // Enable standalone output for Docker deployments
-  // Creates a minimal server.js file with only necessary dependencies
-  // Reduces Docker image size and improves startup time
-  output: "standalone",
+    // Workaround for Turbopack "No link element found for chunk [root-of-the-server]...css"
+    // in dev. Disables CSS merge/reorder so fewer chunks are emitted; remove when fixed upstream.
+    cssChunking: false,
+
+    // Only load modules actually used from multi-export packages (lucide-react, date-fns,
+    // recharts, etc. are optimized by default). Add packages not in that list here.
+    optimizePackageImports: ["lodash"],
+
+    // Cache fetch responses during HMR to speed up Server Component reloads
+    // This is especially useful when Server Components make API calls or
+    // database queries, as it avoids re-fetching on every file change
+    serverComponentsHmrCache: true,
+
+    // Extra safeguard against passing sensitive objects/values to Client Components.
+    // Enables React experimental_taintObjectReference / experimental_taintUniqueValue.
+    // Use in DAL or server code to mark values that must not cross the server–client boundary.
+    // Additive to DTOs and server-only; not a substitute for sanitization.
+    taint: true,
+
+    // Enable Turbopack FileSystem caching for production builds (experimental)
+    // Speeds up incremental builds by caching compilation results
+    // Note: Experimental feature, but stable enough for most use cases
+    turbopackFileSystemCacheForBuild: true,
+
+    // Enable Turbopack FileSystem caching for development
+    // Caches compilation results to .next folder for faster subsequent dev sessions
+    // Enabled by default in Next.js 16.1.0+, but explicit for clarity
+    turbopackFileSystemCacheForDev: true,
+
+    // Enable typed environment variables for IntelliSense
+    // Generates .d.ts file in .next/types with environment variable types
+    // Provides autocomplete and type checking for process.env variables in your editor
+    // Types are generated based on environment variables loaded at development runtime
+    // To include production-specific variables, run: NODE_ENV=production next dev
+    typedEnv: true,
+
+    // Enable Web Vitals attribution for detailed performance debugging
+    // Provides element-level information for metrics like:
+    // - CLS: Identifies which element caused layout shifts
+    // - LCP: Identifies the largest contentful paint element (and its URL if it's an image)
+    // Attribution data includes PerformanceEventTiming, PerformanceNavigationTiming,
+    // and PerformanceResourceTiming entries for deeper analysis
+    // Note: Experimental feature, useful for development/debugging
+    webVitalsAttribution: ["CLS", "LCP"],
+  },
 
   // Generate consistent build IDs for multi-container deployments
   // Ensures the same build ID is used across all containers in a deployment
@@ -128,68 +152,8 @@ let nextConfig: NextConfig = {
   },
 
   // ============================================================================
-  // Server External Packages
+  // TypeScript Configuration
   // ============================================================================
-  // Opt-out deps from Server Components/Route Handler bundling; they use Node
-  // require at runtime. Next.js auto opt-outs many packages (pg, @sentry/profiling-node,
-  // etc.)—only list packages not in that built-in list.
-  serverExternalPackages: [
-    "@sentry/node-native", // Native module with dynamic requires, cannot be bundled
-    "@sentry-internal/node-native-stacktrace", // Native stacktrace module
-  ],
-
-  transpilePackages: ["@atl/ui"],
-
-  // ============================================================================
-  // Turbopack Configuration
-  // ============================================================================
-  // Customize Turbopack module resolution, loaders, and build behavior
-  //
-  // Note: TypeScript path aliases (like @/, @/auth, @/db, etc.) work automatically
-  // with Turbopack and don't need to be configured here. They are resolved from tsconfig.json.
-  //
-  // Root directory is automatically detected via pnpm-lock.yaml
-  // If you need to use npm link/yarn link with packages outside the project root,
-  // configure the root option manually.
-  //
-  // Turbopack has built-in support for:
-  // - CSS, SCSS, Sass (sass-loader configured automatically)
-  // - Modern JavaScript/TypeScript compilation
-  // - Next.js features (Image, Font optimization, etc.)
-  turbopack: {
-    // Enable debug IDs generation (experimental)
-    // Adds debug IDs to JavaScript bundles and source maps for better debugging
-    // Available via globalThis._debugIds in the browser
-    // debugIds: false, // Default: false, uncomment to enable
-    // Configure custom loaders for specific file types
-    // Example: Use @svgr/webpack to import SVGs as React components
-    // rules: {
-    //   '*.svg': {
-    //     loaders: ['@svgr/webpack'],
-    //     as: '*.js',
-    //   },
-    // },
-    // Resolve module aliases (similar to webpack resolve.alias)
-    // Useful for aliasing packages or polyfills
-    // resolveAlias: {
-    //   underscore: 'lodash',
-    // },
-    // Customize module resolution extensions
-    // Overwrites default extensions, so include all needed extensions
-    // resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
-    // Manually set root directory (auto-detected via pnpm-lock.yaml by default)
-    // Only needed for monorepos or when using linked dependencies outside project root
-    // root: path.join(__dirname, '..'),
-  },
-
-  // ============================================================================
-  // Security & Production
-  // ============================================================================
-
-  // Disable source maps in production by default
-  // Prevents source code leakage while maintaining debugging in development
-  // Only enable if you specifically need production source maps for error tracking
-  productionBrowserSourceMaps: false,
 
   // Security headers for production
   // These headers help protect against common web vulnerabilities
@@ -303,6 +267,56 @@ let nextConfig: NextConfig = {
   },
 
   // ============================================================================
+  // Build Configuration
+  // ============================================================================
+
+  // ============================================================================
+  // Logging Configuration
+  // ============================================================================
+  // Configure what gets logged during development
+  // Uncomment fetches.fullUrl to see complete URLs for debugging
+  logging: {
+    fetches: {
+      fullUrl: true, // Uncomment to log full fetch URLs in development
+    },
+  },
+
+  // Enable standalone output for Docker deployments
+  // Creates a minimal server.js file with only necessary dependencies
+  // Reduces Docker image size and improves startup time
+  output: "standalone",
+
+  // Disable x-powered-by header for security
+  // Reduces information disclosure about the technology stack
+  poweredByHeader: false,
+
+  // Disable source maps in production by default
+  // Prevents source code leakage while maintaining debugging in development
+  // Only enable if you specifically need production source maps for error tracking
+  productionBrowserSourceMaps: false,
+
+  // Enable React Strict Mode for better development experience
+  // Helps identify problems early and prepares for React's future features
+  reactStrictMode: true,
+
+  // ============================================================================
+  // Security & Production
+  // ============================================================================
+
+  // ============================================================================
+  // Server External Packages
+  // ============================================================================
+  // Opt-out deps from Server Components/Route Handler bundling; they use Node
+  // require at runtime. Next.js auto opt-outs many packages (pg, @sentry/profiling-node,
+  // etc.)—only list packages not in that built-in list.
+  serverExternalPackages: [
+    "@sentry/node-native", // Native module with dynamic requires, cannot be bundled
+    "@sentry-internal/node-native-stacktrace", // Native stacktrace module
+  ],
+
+  transpilePackages: ["@atl/ui"],
+
+  // ============================================================================
   // Development Optimizations
   // ============================================================================
   // These optimizations improve local development performance:
@@ -327,76 +341,62 @@ let nextConfig: NextConfig = {
   //   - Dev cache is enabled by default in Next.js 16.1.0+
   //   - Build cache is experimental but can significantly improve build times
 
-  experimental: {
-    // Workaround for Turbopack "No link element found for chunk [root-of-the-server]...css"
-    // in dev. Disables CSS merge/reorder so fewer chunks are emitted; remove when fixed upstream.
-    cssChunking: false,
-
-    // Only load modules actually used from multi-export packages (lucide-react, date-fns,
-    // recharts, etc. are optimized by default). Add packages not in that list here.
-    optimizePackageImports: ["lodash"],
-
-    // Cache fetch responses during HMR to speed up Server Component reloads
-    // This is especially useful when Server Components make API calls or
-    // database queries, as it avoids re-fetching on every file change
-    serverComponentsHmrCache: true,
-
-    // Forward browser console logs and runtime errors to terminal
-    // Only active in development mode
-    browserDebugInfoInTerminal: {
-      showSourceLocation: true,
-    },
-
-    // Enable Turbopack FileSystem caching for development
-    // Caches compilation results to .next folder for faster subsequent dev sessions
-    // Enabled by default in Next.js 16.1.0+, but explicit for clarity
-    turbopackFileSystemCacheForDev: true,
-
-    // Enable Turbopack FileSystem caching for production builds (experimental)
-    // Speeds up incremental builds by caching compilation results
-    // Note: Experimental feature, but stable enough for most use cases
-    turbopackFileSystemCacheForBuild: true,
-
-    // Enable Web Vitals attribution for detailed performance debugging
-    // Provides element-level information for metrics like:
-    // - CLS: Identifies which element caused layout shifts
-    // - LCP: Identifies the largest contentful paint element (and its URL if it's an image)
-    // Attribution data includes PerformanceEventTiming, PerformanceNavigationTiming,
-    // and PerformanceResourceTiming entries for deeper analysis
-    // Note: Experimental feature, useful for development/debugging
-    webVitalsAttribution: ["CLS", "LCP"],
-
-    // Enable typed environment variables for IntelliSense
-    // Generates .d.ts file in .next/types with environment variable types
-    // Provides autocomplete and type checking for process.env variables in your editor
-    // Types are generated based on environment variables loaded at development runtime
-    // To include production-specific variables, run: NODE_ENV=production next dev
-    typedEnv: true,
-
-    // Extra safeguard against passing sensitive objects/values to Client Components.
-    // Enables React experimental_taintObjectReference / experimental_taintUniqueValue.
-    // Use in DAL or server code to mark values that must not cross the server–client boundary.
-    // Additive to DTOs and server-only; not a substitute for sanitization.
-    taint: true,
+  // ============================================================================
+  // Turbopack Configuration
+  // ============================================================================
+  // Customize Turbopack module resolution, loaders, and build behavior
+  //
+  // Note: TypeScript path aliases (like @/, @/auth, @/db, etc.) work automatically
+  // with Turbopack and don't need to be configured here. They are resolved from tsconfig.json.
+  //
+  // Root directory is automatically detected via pnpm-lock.yaml
+  // If you need to use npm link/yarn link with packages outside the project root,
+  // configure the root option manually.
+  //
+  // Turbopack has built-in support for:
+  // - CSS, SCSS, Sass (sass-loader configured automatically)
+  // - Modern JavaScript/TypeScript compilation
+  // - Next.js features (Image, Font optimization, etc.)
+  turbopack: {
+    // Enable debug IDs generation (experimental)
+    // Adds debug IDs to JavaScript bundles and source maps for better debugging
+    // Available via globalThis._debugIds in the browser
+    // debugIds: false, // Default: false, uncomment to enable
+    // Configure custom loaders for specific file types
+    // Example: Use @svgr/webpack to import SVGs as React components
+    // rules: {
+    //   '*.svg': {
+    //     loaders: ['@svgr/webpack'],
+    //     as: '*.js',
+    //   },
+    // },
+    // Resolve module aliases (similar to webpack resolve.alias)
+    // Useful for aliasing packages or polyfills
+    // resolveAlias: {
+    //   underscore: 'lodash',
+    // },
+    // Customize module resolution extensions
+    // Overwrites default extensions, so include all needed extensions
+    // resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+    // Manually set root directory (auto-detected via pnpm-lock.yaml by default)
+    // Only needed for monorepos or when using linked dependencies outside project root
+    // root: path.join(__dirname, '..'),
   },
 
-  // ============================================================================
-  // Logging Configuration
-  // ============================================================================
-  // Configure what gets logged during development
-  // Uncomment fetches.fullUrl to see complete URLs for debugging
-  logging: {
-    fetches: {
-      fullUrl: true, // Uncomment to log full fetch URLs in development
-    },
-  },
+  // Enable statically typed routes for better type safety
+  // Provides autocomplete and type checking for Next.js Link href props
+  // Requires TypeScript to be used in the project
+  typedRoutes: true,
 
-  // ============================================================================
-  // Script Configuration
-  // ============================================================================
-  // Set crossOrigin attribute for next/script tags
-  // Matches the crossOrigin="anonymous" used in layout.tsx
-  crossOrigin: "anonymous",
+  // Enforce strict type checking during production builds
+  // Builds will fail if TypeScript errors are present, ensuring type safety
+  // This matches the project's strict TypeScript configuration
+  typescript: {
+    // Fail builds on TypeScript errors (default, but explicit for clarity)
+    ignoreBuildErrors: false,
+    // Use the root tsconfig.json (default, but explicit for clarity)
+    tsconfigPath: "tsconfig.json",
+  },
   // Merge with base config from next-config package
   // Spread config last but deep-merge images to avoid overwriting remotePatterns
   ...config,

@@ -153,7 +153,11 @@ async function enrichReleasesWithStats(
 
   // Releases come sorted newest-first from GitHub
   const pairs: { base: string; head: string; index: number }[] = [];
-  for (let i = 0; i < Math.min(releases.length - 1, MAX_COMPARE_FETCHES); i++) {
+  for (
+    let i = 0;
+    i < Math.min(releases.length - 1, MAX_COMPARE_FETCHES);
+    i += 1
+  ) {
     const current = releases[i];
     const previous = releases[i + 1];
     if (current && previous) {
@@ -169,7 +173,7 @@ async function enrichReleasesWithStats(
     pairs.map((p) => fetchCompareStats(repo.owner, repo.repo, p.base, p.head))
   );
 
-  for (let i = 0; i < results.length; i++) {
+  for (let i = 0; i < results.length; i += 1) {
     const result = results[i];
     const pair = pairs[i];
     if (result?.status === "fulfilled" && result.value && pair) {

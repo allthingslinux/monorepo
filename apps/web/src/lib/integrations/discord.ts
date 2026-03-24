@@ -30,12 +30,6 @@ export async function sendToDiscordWebhook(
         // Create a complete backup JSON file with all data
         const backupData = {
           application: {
-            role: {
-              department: roleData.department,
-              description: roleData.description,
-              name: roleData.name,
-              slug: roleData.slug,
-            },
             applicant: {
               discord_id: formData.discord_id,
               discord_username: formData.discord_username,
@@ -49,6 +43,14 @@ export async function sendToDiscordWebhook(
                 optional: q.optional,
                 question: q.question,
               })),
+            // Include raw form data for complete backup
+            rawFormData: formData,
+            role: {
+              department: roleData.department,
+              description: roleData.description,
+              name: roleData.name,
+              slug: roleData.slug,
+            },
             roleAnswers: roleData.questions
               .filter((q: Question) => formData[q.name])
               .map((q: Question) => ({
@@ -57,8 +59,6 @@ export async function sendToDiscordWebhook(
                 optional: q.optional,
                 question: q.question,
               })),
-            // Include raw form data for complete backup
-            rawFormData: formData,
           },
           timestamp,
         };
@@ -92,7 +92,7 @@ export async function sendToDiscordWebhook(
         }
 
         // Send each chunk as a code block - using the safe variable
-        for (let i = 0; i < chunks.length; i++) {
+        for (let i = 0; i < chunks.length; i += 1) {
           const chunkResponse = await fetch(webhookUrl, {
             body: JSON.stringify({
               content: `**Application Data (Part ${i + 1}/${chunks.length})**\n\`\`\`json\n${chunks[i]}\n\`\`\``,
@@ -134,7 +134,7 @@ export async function sendToDiscordWebhook(
         await delay(backoffDelay);
 
         // Increment retry counter
-        retryCount++;
+        retryCount += 1;
       }
     }
 

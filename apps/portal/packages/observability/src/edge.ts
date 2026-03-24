@@ -62,7 +62,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
 
     // HTTP integration for request/response tracking
     httpIntegration({
-      spans: true, // Enable spans for outgoing HTTP requests
       breadcrumbs: true, // Enable breadcrumbs for HTTP requests
       ignoreIncomingRequests: (urlPath) =>
         urlPath.includes("/health") ||
@@ -70,6 +69,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
         urlPath.includes("/monitoring"),
       ignoreOutgoingRequests: (url) => isSentryHost(url),
       maxIncomingRequestBodySize: "small", // 1KB limit for edge runtime
+      spans: true, // Enable spans for outgoing HTTP requests
     }),
 
     // Zod validation error enhancement
@@ -83,8 +83,8 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     const { extraErrorDataIntegration } = require("@sentry/nextjs");
     integrations.push(
       extraErrorDataIntegration({
-        depth: 5, // Capture deeper error object properties
         captureErrorCause: true, // Capture error.cause chains
+        depth: 5, // Capture deeper error object properties
       })
     );
   } catch {
@@ -92,33 +92,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
   }
 
   return init({
-    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-
-    // Environment and release info
-    environment: process.env.NODE_ENV,
-    release: env.SENTRY_RELEASE || "unknown",
-
-    // Enable logging
-    enableLogs: true,
-
-    // Filter out common edge runtime errors
-    ignoreErrors: [
-      "ECONNRESET",
-      "EPIPE",
-      "ENOTFOUND",
-      REQUEST_ABORTED_REGEX,
-      EDGE_RUNTIME_REGEX,
-    ],
-
-    // Filter out health check and monitoring transactions
-    ignoreTransactions: [
-      HEALTH_CHECK_REGEX,
-      API_HEALTH_REGEX,
-      MONITORING_REGEX,
-      STATIC_ASSETS_REGEX,
-      FAVICON_REGEX,
-    ],
-
     // Filter sensitive data before sending
     beforeSend(event) {
       // Remove sensitive request data
@@ -148,16 +121,43 @@ export const initializeSentry = (): ReturnType<typeof init> => {
       }
       return event;
     },
+    // Setting this option to true will print useful information to the console while you're setting up Sentry.
+    debug: false,
+
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+
+    // Enable logging
+    enableLogs: true,
+
+    // Environment and release info
+    environment: process.env.NODE_ENV,
+
+    // Filter out common edge runtime errors
+    ignoreErrors: [
+      "ECONNRESET",
+      "EPIPE",
+      "ENOTFOUND",
+      REQUEST_ABORTED_REGEX,
+      EDGE_RUNTIME_REGEX,
+    ],
+
+    // Filter out health check and monitoring transactions
+    ignoreTransactions: [
+      HEALTH_CHECK_REGEX,
+      API_HEALTH_REGEX,
+      MONITORING_REGEX,
+      STATIC_ASSETS_REGEX,
+      FAVICON_REGEX,
+    ],
+
+    // Integrations for console logging and error data
+    integrations,
+
+    release: env.SENTRY_RELEASE || "unknown",
 
     // Lower sample rate in production to reduce costs
     // In production: 10% of transactions
     // In development: 100% of transactions
     tracesSampleRate: isProduction ? 0.1 : 1,
-
-    // Setting this option to true will print useful information to the console while you're setting up Sentry.
-    debug: false,
-
-    // Integrations for console logging and error data
-    integrations,
   });
 };

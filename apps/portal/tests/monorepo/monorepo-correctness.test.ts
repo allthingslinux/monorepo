@@ -614,7 +614,7 @@ describe("Property 9: No direct process.env access in packages", () => {
         const content = fs.readFileSync(file, "utf8");
         const strippedContent = stripComments(content);
         const lines = strippedContent.split("\n");
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 0; i < lines.length; i += 1) {
           if (hasRealProcessEnvAccess(lines[i]!)) {
             violations.push({
               file: path.relative(ROOT_DIR, file),

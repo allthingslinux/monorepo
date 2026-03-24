@@ -19,18 +19,25 @@ export function BreadcrumbTrail({ items }: BreadcrumbTrailProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {items.map((crumb, index) => (
-          <Fragment key={crumb.href ?? `${crumb.label}-${index}`}>
-            {index > 0 && <BreadcrumbSeparator className="hidden md:block" />}
-            <BreadcrumbItem className={index === 0 ? "hidden md:block" : ""}>
-              {crumb.href ? (
-                <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-              )}
-            </BreadcrumbItem>
-          </Fragment>
-        ))}
+        {items.map((crumb, index) => {
+          const labelOrdinal = items
+            .slice(0, index)
+            .filter((c) => c.label === crumb.label).length;
+          return (
+            <Fragment key={crumb.href ?? `${crumb.label}-${labelOrdinal}`}>
+              {index > 0 && <BreadcrumbSeparator className="hidden md:block" />}
+              <BreadcrumbItem className={index === 0 ? "hidden md:block" : ""}>
+                {crumb.href ? (
+                  <BreadcrumbLink href={crumb.href}>
+                    {crumb.label}
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );

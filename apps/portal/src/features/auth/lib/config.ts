@@ -66,19 +66,19 @@ const database = drizzleAdapter(db, {
 
 const emailAndPassword = {
   enabled: true,
-  // Require email verification before allowing login (set to true in production)
-  requireEmailVerification: false,
+  maxPasswordLength: 128,
   // Disable sign up if you only want existing users to sign in
   // disableSignUp: false,
   // Password length constraints
   minPasswordLength: 8,
-  maxPasswordLength: 128,
+  // Require email verification before allowing login (set to true in production)
+  requireEmailVerification: false,
   // Path for password reset page
   resetPasswordPath: "/auth/reset-password",
-  // Send password reset email (imported from ./email.ts)
-  sendResetPassword: sendResetPasswordEmail,
   // Token expiration time for password reset (1 hour)
   resetPasswordTokenExpiresIn: 60 * 60,
+  // Send password reset email (imported from ./email.ts)
+  sendResetPassword: sendResetPasswordEmail,
   // Callback after password is successfully reset
   // onPasswordReset: async ({ user }, request) => {
   //   // Perform additional actions after password reset
@@ -105,13 +105,6 @@ const emailVerification = {
 // ============================================================================
 
 const session = {
-  // Session expiration: 7 days (default)
-  expiresIn: 60 * 60 * 24 * 7, // 7 days in seconds
-  // Update session expiration when used within this time window
-  updateAge: 60 * 60 * 24, // 1 day in seconds
-  // Session freshness: sessions are considered "fresh" if created within this time
-  // Used for sensitive operations that require recent authentication
-  freshAge: 60 * 60 * 24, // 1 day in seconds (set to 0 to disable freshness check)
   // Cookie cache: stores session data in signed cookie to reduce database queries
   cookieCache: {
     enabled: true,
@@ -119,8 +112,15 @@ const session = {
     // Strategy: "compact" (default, smallest), "jwt" (JWT compatible), or "jwe" (encrypted)
     strategy: "compact" as const,
   },
+  // Session expiration: 7 days (default)
+  expiresIn: 60 * 60 * 24 * 7, // 7 days in seconds
+  // Session freshness: sessions are considered "fresh" if created within this time
+  // Used for sensitive operations that require recent authentication
+  freshAge: 60 * 60 * 24, // 1 day in seconds (set to 0 to disable freshness check)
   // Store sessions in database (required for OAuth provider and session management)
   storeSessionInDatabase: true,
+  // Update session expiration when used within this time window
+  updateAge: 60 * 60 * 24, // 1 day in seconds
   // Disable automatic session refresh (set to true to prevent session expiration updates)
   // disableSessionRefresh: false,
 };
@@ -248,9 +248,6 @@ const mailcowOAuthConfig =
 // This allows other apps to authenticate users via your Better Auth instance
 
 const oauthProviderConfig = {
-  // Redirect screens configuration
-  loginPage: "/auth/sign-in", // Login page for OAuth authorization flow
-  consentPage: "/auth/consent", // Consent page for OAuth authorization flow
   // Sign up configuration
   // signUp: {
   //   page: "/sign-up", // Sign up page for prompt=create
@@ -282,13 +279,7 @@ const oauthProviderConfig = {
   // Client registration
   allowDynamicClientRegistration: true, // Enable dynamic client registration (RFC7591)
   allowUnauthenticatedClientRegistration: true, // Allow unauthenticated public client registration (for MCP)
-  // clientRegistrationClientSecretExpiration: "30d", // Expiration for dynamically registered confidential clients
-  // clientRegistrationDefaultScopes: ["openid", "profile"], // Default scopes for new clients
-  // clientRegistrationAllowedScopes: ["email", "offline_access"], // Additional allowed scopes for new clients
-  // Scopes configuration
-  scopes: ["openid", "profile", "email", "offline_access", "xmpp", "irc"], // Supported scopes
-  // Valid audiences (resources) for this OAuth server
-  validAudiences: [baseURL, `${baseURL}/api`],
+  consentPage: "/auth/consent", // Consent page for OAuth authorization flow
   // Cached trusted clients (first-party applications)
   // cachedTrustedClients: new Set([
   //   "internal-dashboard",
@@ -316,8 +307,8 @@ const oauthProviderConfig = {
   //   };
   // },
   customUserInfoClaims: async ({
-    user,
     scopes,
+    user,
   }: {
     user: { id: string };
     scopes: string[];
@@ -387,6 +378,13 @@ const oauthProviderConfig = {
 
     return claims;
   },
+  // Redirect screens configuration
+  loginPage: "/auth/sign-in", // Login page for OAuth authorization flow
+  // clientRegistrationClientSecretExpiration: "30d", // Expiration for dynamically registered confidential clients
+  // clientRegistrationDefaultScopes: ["openid", "profile"], // Default scopes for new clients
+  // clientRegistrationAllowedScopes: ["email", "offline_access"], // Additional allowed scopes for new clients
+  // Scopes configuration
+  scopes: ["openid", "profile", "email", "offline_access", "xmpp", "irc"], // Supported scopes
   // Token expirations
   // accessTokenExpiresIn: "1h", // Default: 1 hour
   // m2mAccessTokenExpiresIn: "1h", // Default: 1 hour (machine-to-machine)
@@ -430,6 +428,8 @@ const oauthProviderConfig = {
   silenceWarnings: {
     oauthAuthServerConfig: true,
   },
+  // Valid audiences (resources) for this OAuth server
+  validAudiences: [baseURL, `${baseURL}/api`],
 };
 
 // ============================================================================
@@ -599,6 +599,18 @@ const plugins = [
   adminPlugin({
     // Access control system with custom permissions
     ac,
+    // Message shown when a banned user tries to sign in
+    // Default: "You have been banned from this application. Please contact support if you believe this is an error."
+    bannedUserMessage:
+      "Your account has been suspended. Contact support for assistance.",
+    // Default ban expiration in seconds (default: undefined = never expires)
+    // Set to a number to make bans temporary
+    defaultBanExpiresIn: 60 * 60 * 24 * 7, // 1 week
+    // Array of user IDs that should be considered as admin (default: [])
+    // Users in this list can perform any admin operation regardless of role
+    // adminUserIds: ["user_id_1", "user_id_2"],
+    // Default ban reason when banning a user (default: "No reason")
+    defaultBanReason: "Violation of terms of service",
     // Default role for new users (default: "user")
     defaultRole: "user",
     // Note: adminRoles is not needed when using custom access control (ac and roles)
@@ -609,18 +621,6 @@ const plugins = [
       staff: staffRole,
       user: userRole,
     },
-    // Array of user IDs that should be considered as admin (default: [])
-    // Users in this list can perform any admin operation regardless of role
-    // adminUserIds: ["user_id_1", "user_id_2"],
-    // Default ban reason when banning a user (default: "No reason")
-    defaultBanReason: "Violation of terms of service",
-    // Default ban expiration in seconds (default: undefined = never expires)
-    // Set to a number to make bans temporary
-    defaultBanExpiresIn: 60 * 60 * 24 * 7, // 1 week
-    // Message shown when a banned user tries to sign in
-    // Default: "You have been banned from this application. Please contact support if you believe this is an error."
-    bannedUserMessage:
-      "Your account has been suspended. Contact support for assistance.",
   }),
   nextCookies(),
 ];
@@ -684,15 +684,6 @@ const logger = {
 const advanced = {
   // Cookie prefix for all Better Auth cookies
   cookiePrefix: "portal",
-  // IP address configuration
-  // ipAddress: {
-  //   // Headers to check for client IP address
-  //   ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
-  //   // Disable IP tracking (default: false)
-  //   disableIpTracking: false,
-  // },
-  // Use secure cookies (HTTPS only) - enabled in production
-  useSecureCookies: process.env.NODE_ENV === "production",
   // Disable CSRF check (⚠️ security risk - not recommended)
   // disableCSRFCheck: false,
   // Cross-subdomain cookie configuration
@@ -727,6 +718,15 @@ const advanced = {
     // Enable experimental joins support (requires drizzle-orm beta)
     experimentalJoins: false, // Disabled until drizzle-orm beta is supported
   },
+  // IP address configuration
+  // ipAddress: {
+  //   // Headers to check for client IP address
+  //   ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
+  //   // Disable IP tracking (default: false)
+  //   disableIpTracking: false,
+  // },
+  // Use secure cookies (HTTPS only) - enabled in production
+  useSecureCookies: process.env.NODE_ENV === "production",
 };
 
 // ============================================================================
@@ -894,54 +894,54 @@ const trustedOrigins = [
 // ============================================================================
 
 const authOptions = {
+  // Account configuration
+  account,
+  // Advanced configuration options
+  advanced,
   // Application name (used in emails, OAuth, etc.)
   appName: "Portal",
   // Base URL for Better Auth (defaults to BETTER_AUTH_URL env var or inferred from request)
   baseURL,
-  // Base path for Better Auth routes (default: "/api/auth")
-  // basePath: "/api/auth",
-  // Secret for encryption, signing, and hashing (defaults to BETTER_AUTH_SECRET or AUTH_SECRET env var)
-  secret: env.BETTER_AUTH_SECRET,
   // Database adapter configuration
   database,
+  // Database lifecycle hooks
+  databaseHooks,
+  // Disable specific auth paths
+  disabledPaths: ["/token"], // Disabled because OAuth provider handles token endpoint
   // Email and password authentication
   emailAndPassword,
   // Email verification configuration
   emailVerification,
-  // Session configuration
-  session,
-  // User configuration
-  user,
-  // Account configuration
-  account,
-  // Verification configuration
-  verification,
-  // Social providers (OAuth)
-  socialProviders,
-  // Rate limiting configuration
-  rateLimit,
-  // Logger configuration
-  logger,
-  // Advanced configuration options
-  advanced,
-  // Trusted origins for CORS and CSRF protection
-  trustedOrigins,
-  // API error handling
-  onAPIError,
-  // Database lifecycle hooks
-  databaseHooks,
-  // Request lifecycle hooks
-  hooks,
-  // Telemetry collection
-  telemetry,
-  // Disable specific auth paths
-  disabledPaths: ["/token"], // Disabled because OAuth provider handles token endpoint
   // Experimental features
   experimental: {
     joins: false, // Disabled until drizzle-orm beta is supported
   },
+  // Request lifecycle hooks
+  hooks,
+  // Logger configuration
+  logger,
+  // API error handling
+  onAPIError,
   // Plugins
   plugins,
+  // Rate limiting configuration
+  rateLimit,
+  // Base path for Better Auth routes (default: "/api/auth")
+  // basePath: "/api/auth",
+  // Secret for encryption, signing, and hashing (defaults to BETTER_AUTH_SECRET or AUTH_SECRET env var)
+  secret: env.BETTER_AUTH_SECRET,
+  // Session configuration
+  session,
+  // Social providers (OAuth)
+  socialProviders,
+  // Telemetry collection
+  telemetry,
+  // Trusted origins for CORS and CSRF protection
+  trustedOrigins,
+  // User configuration
+  user,
+  // Verification configuration
+  verification,
 } as BetterAuthOptions;
 
 // ============================================================================

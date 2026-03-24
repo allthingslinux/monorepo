@@ -51,7 +51,7 @@ async function seedIntegrationAccounts() {
   const statuses = ["active", "suspended", "deleted"] as const;
   const ircStatuses = ["active", "pending", "suspended", "deleted"] as const;
 
-  for (let i = 0; i < users.length; i++) {
+  for (let i = 0; i < users.length; i += 1) {
     const u = users[i];
     if (!u?.id) {
       continue;

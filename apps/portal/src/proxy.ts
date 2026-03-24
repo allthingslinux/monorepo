@@ -104,10 +104,10 @@ function addCSPNonceToResponse(response: NextResponse, nonce: string): void {
   // Also set it as a cookie so client-side code can access it for inline scripts
   response.cookies.set("csp-nonce", nonce, {
     httpOnly: false, // Allow client-side access for inline scripts
+    maxAge: 60 * 60, // 1 hour
+    path: "/",
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60, // 1 hour
   });
 
   // Build CSP header with nonce

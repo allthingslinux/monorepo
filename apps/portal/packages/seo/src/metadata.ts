@@ -43,15 +43,15 @@ export const defaultMetadata: Metadata = {
   keywords: APP_KEYWORDS,
   metadataBase: new URL(BASE_URL),
   openGraph: {
-    type: "website",
+    description: APP_DESCRIPTION,
     // Locale is set to 'en_US' for English (default locale)
     // For locale-aware metadata, use generateMetadata in individual pages
     // and call getLocale() from 'next-intl/server' to get the current locale
     locale: "en_US",
-    url: BASE_URL,
     siteName: APP_TITLE,
     title: APP_TITLE,
-    description: APP_DESCRIPTION,
+    type: "website",
+    url: BASE_URL,
     // TODO: Add Open Graph image when available
     // images: [
     //   {

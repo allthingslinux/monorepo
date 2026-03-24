@@ -307,7 +307,7 @@ const getUserTierSamplingRate = (
 const portalSampler =
   (isProduction: boolean) =>
   (samplingContext: SamplingContext): number => {
-    const { name, attributes, inheritOrSampleWith } = samplingContext;
+    const { attributes, inheritOrSampleWith, name } = samplingContext;
 
     // Skip health checks and monitoring endpoints
     if (shouldSkipTransaction(name)) {
@@ -476,20 +476,20 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const {
-        browserTracingIntegration,
         browserProfilingIntegration,
+        browserTracingIntegration,
       } = require("@sentry/nextjs");
 
       if (browserTracingIntegration && browserProfilingIntegration) {
         integrations.push(
           browserTracingIntegration({
+            // Enable INP tracking for performance insights
+            enableInp: true,
+            // Ignore noisy resource spans
+            ignoreResourceSpans: ["resource.css", "resource.font"],
             // Filter out health checks and monitoring endpoints
             shouldCreateSpanForRequest: (url: string) =>
               !HEALTH_METRICS_REGEX.test(url),
-            // Ignore noisy resource spans
-            ignoreResourceSpans: ["resource.css", "resource.font"],
-            // Enable INP tracking for performance insights
-            enableInp: true,
           }),
           browserProfilingIntegration()
         );
@@ -521,8 +521,8 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     // Add extra error data integration for richer error context
     integrations.push(
       extraErrorDataIntegration({
-        depth: 5, // Capture deeper error object properties
         captureErrorCause: true, // Capture error.cause chains
+        depth: 5, // Capture deeper error object properties
       })
     );
 
@@ -546,13 +546,26 @@ export const initializeSentry = (): ReturnType<typeof init> => {
   initializeFingerprinting();
 
   return init({
-    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-    enableLogs: true,
+    // Only capture errors from ATL domains
+    allowUrls: [
+      LOCALHOST_REGEX,
+      ATL_DOMAINS_ALLOW_REGEX,
+      RELATIVE_URL_REGEX, // Relative URLs (same origin)
+    ],
+    // Filter breadcrumbs to reduce noise
+    beforeBreadcrumb: createBeforeBreadcrumb(isProduction),
+    // Filter sensitive data before sending
+    beforeSend: createBeforeSend(isProduction),
+    // Filter transaction data
+    beforeSendTransaction,
     debug: false,
+
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+
+    enableLogs: true,
+
     // Environment and release info
     environment: process.env.NODE_ENV,
-    // Use NEXT_PUBLIC_SENTRY_RELEASE for client-side, fallback to unknown
-    release: env.NEXT_PUBLIC_SENTRY_RELEASE || "unknown",
 
     // Filter out common browser extension and third-party errors
     ignoreErrors: [
@@ -578,21 +591,10 @@ export const initializeSentry = (): ReturnType<typeof init> => {
       MONITORING_REGEX,
     ],
 
-    // Only capture errors from ATL domains
-    allowUrls: [
-      LOCALHOST_REGEX,
-      ATL_DOMAINS_ALLOW_REGEX,
-      RELATIVE_URL_REGEX, // Relative URLs (same origin)
-    ],
-
-    // Filter sensitive data before sending
-    beforeSend: createBeforeSend(isProduction),
-
-    // Filter transaction data
-    beforeSendTransaction,
-
-    // Filter breadcrumbs to reduce noise
-    beforeBreadcrumb: createBeforeBreadcrumb(isProduction),
+    // Browser profiling sample rate
+    profileSessionSampleRate: isProduction ? 0.1 : 1,
+    // Use NEXT_PUBLIC_SENTRY_RELEASE for client-side, fallback to unknown
+    release: env.NEXT_PUBLIC_SENTRY_RELEASE || "unknown",
     // Configure trace propagation for distributed tracing
     tracePropagationTargets: [
       "localhost",
@@ -604,8 +606,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     ],
     // Smart sampling based on transaction importance using portalSampler
     tracesSampler: createTracesSampler(isProduction),
-    // Browser profiling sample rate
-    profileSessionSampleRate: isProduction ? 0.1 : 1,
     ...(replay && {
       // Always capture replays on errors (100%)
       replaysOnErrorSampleRate: 1,

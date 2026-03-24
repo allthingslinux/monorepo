@@ -80,8 +80,8 @@ export const UpdateIrcAccountRequestSchema = z
  */
 export const IrcAccountSchema = selectIrcAccountSchema.extend({
   integrationId: z.literal("irc"),
-  temporaryPassword: z.string().optional(), // Only present on creation
   metadata: metadataSchema,
+  temporaryPassword: z.string().optional(), // Only present on creation
 });
 
 // Type exports

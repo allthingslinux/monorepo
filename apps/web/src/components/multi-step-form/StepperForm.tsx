@@ -88,11 +88,11 @@ const { Scoped, useStepper } = defineStepper(
 );
 
 export default function StepperForm({
-  generalQuestions,
   departmentalQuestions,
-  roleQuestions: _unused,
-  role,
+  generalQuestions,
   onSubmitAction,
+  role,
+  roleQuestions: _unused,
 }: {
   generalQuestions: FormQuestion[];
   departmentalQuestions: FormQuestion[];
@@ -114,9 +114,9 @@ export default function StepperForm({
 
 function StepperFormContent({
   generalQuestions,
-  roleQuestions,
-  role,
   onSubmitAction,
+  role,
+  roleQuestions,
 }: {
   generalQuestions: FormQuestion[];
   roleQuestions: FormQuestion[];
@@ -139,11 +139,7 @@ function StepperFormContent({
 
   // Create a single form instance with validation options
   const form = useForm({
-    mode: "onSubmit", // Only validate on submit
-    reValidateMode: "onSubmit", // Never re-validate automatically
     criteriaMode: "all", // Show all validation errors
-    shouldFocusError: true, // Focus on first error field
-    shouldUnregister: false, // Keep all fields registered
     // No resolver - we'll handle validation manually
     // Ensure every field has at least an empty string as default
     defaultValues: {
@@ -152,6 +148,10 @@ function StepperFormContent({
       ),
       ...formData,
     },
+    mode: "onSubmit", // Only validate on submit
+    reValidateMode: "onSubmit", // Never re-validate automatically
+    shouldFocusError: true, // Focus on first error field
+    shouldUnregister: false, // Keep all fields registered
   });
 
   // Compute visible questions for each step
@@ -337,14 +337,14 @@ function StepperFormContent({
   );
 }
 function StepForm({
-  questions,
-  title,
   description,
+  isLastStep = false,
   onNext,
   onPrevious,
   onSubmit,
-  isLastStep = false,
+  questions,
   showPrevious = true,
+  title,
 }: {
   questions: FormQuestion[];
   title: string;
@@ -356,7 +356,7 @@ function StepForm({
   showPrevious?: boolean;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { handleSubmit, formState, trigger, watch } = useFormContext();
+  const { formState, handleSubmit, trigger, watch } = useFormContext();
 
   // Watch form values to reactively check if all required fields are filled
   const watchedValues = watch();

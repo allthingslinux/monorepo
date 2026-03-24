@@ -62,10 +62,10 @@ const MessageSkeleton = memo(
         className={`w-${avatarSize} h-${avatarSize} rounded-full bg-muted`}
       />
       <div className="flex-1 space-y-2">
-        {contentConfig.map((config, index) => (
+        {contentConfig.map((config) => (
           <Skeleton
             className={`h-${config.height} ${config.width} bg-muted`}
-            key={index}
+            key={`${config.height}-${config.width}`}
           />
         ))}
       </div>

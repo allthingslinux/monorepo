@@ -100,8 +100,8 @@ export async function POST(
 
     const newPassword = await ircIntegration.resetPassword(id, ircPassword);
     return Response.json({
-      ok: true,
       message: "IRC password reset successfully",
+      ok: true,
       // Only include temporaryPassword if the user didn't choose their own
       ...(ircPassword ? {} : { temporaryPassword: newPassword }),
     });

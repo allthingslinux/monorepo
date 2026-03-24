@@ -238,17 +238,17 @@ export class IrcIntegration extends IntegrationBase<
 
   constructor() {
     super({
-      id: "irc",
-      name: "IRC",
-      description:
-        "Register a nick on irc.atl.chat and connect to our community IRC network.",
-      enabled: isIrcConfigured(),
-      createAccountSchema: CreateIrcAccountRequestSchema,
-      updateAccountSchema: UpdateIrcAccountRequestSchema,
       // Cast is safe as IrcAccountSchema matches IrcAccount
       accountSchema: IrcAccountSchema as unknown as z.ZodType<
         IrcAccount & { temporaryPassword?: string }
       >,
+      createAccountSchema: CreateIrcAccountRequestSchema,
+      description:
+        "Register a nick on irc.atl.chat and connect to our community IRC network.",
+      enabled: isIrcConfigured(),
+      id: "irc",
+      name: "IRC",
+      updateAccountSchema: UpdateIrcAccountRequestSchema,
     });
   }
 
@@ -424,7 +424,7 @@ export class IrcIntegration extends IntegrationBase<
     if (!parsed.success) {
       throw new Error("Invalid update request");
     }
-    const { status, metadata, nick } = parsed.data;
+    const { metadata, nick, status } = parsed.data;
 
     const [account] = await db
       .select()

@@ -133,8 +133,8 @@ export const defaultMetadata: Metadata = {
   },
   publisher: "All Things Linux",
   robots: {
-    index: !isDevEnvironment(), // noindex for dev environments
     follow: !isDevEnvironment(),
+    index: !isDevEnvironment(), // noindex for dev environments
   },
   title: {
     default: siteConfig.name,

@@ -241,7 +241,7 @@ async function TransactionsContent() {
   } else {
     stats = { expenses: 0, income: 0, netIncome: 0, total: 0 };
     for (const transaction of transactions) {
-      stats.total++;
+      stats.total += 1;
       if (transaction.amount >= 0) {
         stats.income += transaction.amount;
       } else {

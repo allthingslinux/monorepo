@@ -154,120 +154,6 @@ export const unrealRpcClient = {
   // User
   // =========================================================================
 
-  /** List connected users. object_detail_level: 0, 1, 2, or 4 (default 2). */
-  async userList(objectDetailLevel?: 0 | 1 | 2 | 4): Promise<UnrealClient[]> {
-    const params: Record<string, unknown> = {};
-    if (objectDetailLevel !== undefined) {
-      params.object_detail_level = objectDetailLevel;
-    }
-    try {
-      const result = await unrealRequest<
-        { list?: UnrealClient[] } | UnrealClient[]
-      >("user.list", params);
-      return extractList(result);
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "user.list" },
-      });
-      return [];
-    }
-  },
-
-  /** Get a single user by nick or UID. */
-  async userGet(
-    nick: string,
-    objectDetailLevel?: 0 | 1 | 2 | 4
-  ): Promise<UnrealClient | null> {
-    const params: Record<string, unknown> = {
-      nick: sanitize(nick),
-    };
-    if (objectDetailLevel !== undefined) {
-      params.object_detail_level = objectDetailLevel;
-    }
-    try {
-      const result = await unrealRequest<
-        { client?: UnrealClient } | UnrealClient
-      >("user.get", params);
-      if (result && typeof result === "object" && "client" in result) {
-        return (result as { client?: UnrealClient }).client ?? null;
-      }
-      return (result as UnrealClient) ?? null;
-    } catch (error) {
-      Sentry.captureException(error, {
-        extra: { nick },
-        tags: { integration: "irc-unreal", method: "user.get" },
-      });
-      return null;
-    }
-  },
-
-  /** Force-rename a connected user's nick. */
-  async userSetNick(nick: string, newNick: string): Promise<void> {
-    await unrealRequest("user.set_nick", {
-      newnick: sanitize(newNick),
-      nick: sanitize(nick),
-    });
-  },
-
-  /** Force a user to join a channel. */
-  async userJoin(nick: string, channel: string, force = false): Promise<void> {
-    await unrealRequest("user.join", {
-      channel: sanitize(channel),
-      force,
-      nick: sanitize(nick),
-    });
-  },
-
-  /** Force a user to part a channel. */
-  async userPart(nick: string, channel: string, force = false): Promise<void> {
-    await unrealRequest("user.part", {
-      channel: sanitize(channel),
-      force,
-      nick: sanitize(nick),
-    });
-  },
-
-  /** Disconnect a user gracefully (QUIT). */
-  async userQuit(nick: string, reason: string): Promise<void> {
-    await unrealRequest("user.quit", {
-      nick: sanitize(nick),
-      reason: sanitize(reason),
-    });
-  },
-
-  /** Kill (force-disconnect) a user with a reason. */
-  async userKill(nick: string, reason: string): Promise<void> {
-    await unrealRequest("user.kill", {
-      nick: sanitize(nick),
-      reason: sanitize(reason),
-    });
-  },
-
-  // =========================================================================
-  // Channel
-  // =========================================================================
-
-  /** List channels. object_detail_level: 1–4 (default 1). */
-  async channelList(
-    objectDetailLevel?: 1 | 2 | 3 | 4
-  ): Promise<UnrealChannel[]> {
-    const params: Record<string, unknown> = {};
-    if (objectDetailLevel !== undefined) {
-      params.object_detail_level = objectDetailLevel;
-    }
-    try {
-      const result = await unrealRequest<
-        { list?: UnrealChannel[] } | UnrealChannel[]
-      >("channel.list", params);
-      return extractList(result);
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "channel.list" },
-      });
-      return [];
-    }
-  },
-
   /** Get a single channel by name. */
   async channelGet(
     channel: string,
@@ -293,6 +179,40 @@ export const unrealRpcClient = {
         tags: { integration: "irc-unreal", method: "channel.get" },
       });
       return null;
+    }
+  },
+
+  /** Kick a user from a channel. */
+  async channelKick(
+    channel: string,
+    nick: string,
+    reason: string
+  ): Promise<void> {
+    await unrealRequest("channel.kick", {
+      channel: sanitize(channel),
+      nick: sanitize(nick),
+      reason: sanitize(reason),
+    });
+  },
+
+  /** List channels. object_detail_level: 1–4 (default 1). */
+  async channelList(
+    objectDetailLevel?: 1 | 2 | 3 | 4
+  ): Promise<UnrealChannel[]> {
+    const params: Record<string, unknown> = {};
+    if (objectDetailLevel !== undefined) {
+      params.object_detail_level = objectDetailLevel;
+    }
+    try {
+      const result = await unrealRequest<
+        { list?: UnrealChannel[] } | UnrealChannel[]
+      >("channel.list", params);
+      return extractList(result);
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: { integration: "irc-unreal", method: "channel.list" },
+      });
+      return [];
     }
   },
 
@@ -332,85 +252,75 @@ export const unrealRpcClient = {
     await unrealRequest("channel.set_topic", params);
   },
 
-  /** Kick a user from a channel. */
-  async channelKick(
-    channel: string,
-    nick: string,
-    reason: string
-  ): Promise<void> {
-    await unrealRequest("channel.kick", {
-      channel: sanitize(channel),
-      nick: sanitize(nick),
-      reason: sanitize(reason),
-    });
-  },
-
-  // =========================================================================
-  // Server Bans (KLINE / GLINE / ZLINE / GZLINE / SHUN)
-  // =========================================================================
-
-  /** Add a server ban (kline, gline, zline, etc.). duration e.g. "1d", "2h". */
-  async serverBanAdd(
-    name: string,
-    type: UnrealBanType,
-    reason: string,
-    duration = "1d"
-  ): Promise<UnrealTkl | null> {
-    const result = await unrealRequest<{ tkl?: UnrealTkl }>("server_ban.add", {
-      duration_string: duration,
-      name: sanitize(name),
-      reason: sanitize(reason),
-      type,
-    });
-    return result?.tkl ?? null;
-  },
-
-  /** Remove a server ban. */
-  async serverBanDelete(
-    name: string,
-    type: UnrealBanType
-  ): Promise<UnrealTkl | null> {
-    const result = await unrealRequest<{ tkl?: UnrealTkl }>("server_ban.del", {
-      name: sanitize(name),
-      type,
-    });
-    return result?.tkl ?? null;
-  },
-
-  /** List all active server bans. */
-  async serverBanList(): Promise<UnrealTkl[]> {
+  /** List recent log entries. */
+  async logList(): Promise<UnrealLogEntry[]> {
     try {
-      const result = await unrealRequest<{ list?: UnrealTkl[] } | UnrealTkl[]>(
-        "server_ban.list"
-      );
+      const result = await unrealRequest<
+        { list?: UnrealLogEntry[] } | UnrealLogEntry[]
+      >("log.list");
       return extractList(result);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "server_ban.list" },
+        tags: { integration: "irc-unreal", method: "log.list" },
       });
       return [];
     }
   },
 
-  /** Get a specific server ban. */
-  async serverBanGet(
-    name: string,
-    type: UnrealBanType
-  ): Promise<UnrealTkl | null> {
-    try {
-      const result = await unrealRequest<{ tkl?: UnrealTkl }>(
-        "server_ban.get",
-        { name: sanitize(name), type }
-      );
-      return result?.tkl ?? null;
-    } catch {
-      return null;
-    }
+  /** Inject a log entry into the server log. */
+  async logSend(
+    level: string,
+    subsystem: string,
+    eventId: string,
+    msg: string
+  ): Promise<void> {
+    await unrealRequest("log.send", {
+      event_id: sanitize(eventId),
+      level: sanitize(level),
+      msg: sanitize(msg),
+      subsystem: sanitize(subsystem),
+    });
   },
 
   // =========================================================================
-  // Name Bans (Q-lines — ban nick/channel patterns)
+  // Channel
   // =========================================================================
+
+  /**
+   * Subscribe to log events.
+   * @param level   - minimum log level, e.g. "info", "warn", "error"
+   * @param sources - optional array of subsystem sources to filter
+   */
+  async logSubscribe(level: string, sources?: string[]): Promise<void> {
+    const params: Record<string, unknown> = {
+      level: sanitize(level),
+    };
+    if (sources && sources.length > 0) {
+      params.sources = sources.map((s) => sanitize(s));
+    }
+    await unrealRequest("log.subscribe", params);
+  },
+
+  /** Unsubscribe from log events. */
+  async logUnsubscribe(): Promise<void> {
+    await unrealRequest("log.unsubscribe");
+  },
+
+  /** Send a NOTICE to a connected user. */
+  async messageSendNotice(nick: string, message: string): Promise<void> {
+    await unrealRequest("message.send_notice", {
+      message: sanitize(message),
+      nick: sanitize(nick),
+    });
+  },
+
+  /** Send a PRIVMSG to a connected user. */
+  async messageSendPrivmsg(nick: string, message: string): Promise<void> {
+    await unrealRequest("message.send_privmsg", {
+      message: sanitize(message),
+      nick: sanitize(nick),
+    });
+  },
 
   /** Add a name ban (Q-line). duration "0" = permanent. */
   async nameBanAdd(
@@ -434,12 +344,28 @@ export const unrealRpcClient = {
     return result?.tkl ?? null;
   },
 
+  // =========================================================================
+  // Server Bans (KLINE / GLINE / ZLINE / GZLINE / SHUN)
+  // =========================================================================
+
   /** Remove a name ban. */
   async nameBanDelete(name: string): Promise<UnrealTkl | null> {
     const result = await unrealRequest<{ tkl?: UnrealTkl }>("name_ban.del", {
       name: sanitize(name),
     });
     return result?.tkl ?? null;
+  },
+
+  /** Get a specific name ban. */
+  async nameBanGet(name: string): Promise<UnrealTkl | null> {
+    try {
+      const result = await unrealRequest<{ tkl?: UnrealTkl }>("name_ban.get", {
+        name: sanitize(name),
+      });
+      return result?.tkl ?? null;
+    } catch {
+      return null;
+    }
   },
 
   /** List all name bans. */
@@ -457,21 +383,86 @@ export const unrealRpcClient = {
     }
   },
 
-  /** Get a specific name ban. */
-  async nameBanGet(name: string): Promise<UnrealTkl | null> {
+  /**
+   * Schedule a recurring RPC call (timer).
+   * @param name     - unique timer name
+   * @param request  - the RPC method + params to call on each tick
+   * @param every    - interval in seconds
+   */
+  async rpcAddTimer(
+    name: string,
+    request: { method: string; params?: Record<string, unknown> },
+    every: number
+  ): Promise<void> {
+    await unrealRequest("rpc.add_timer", {
+      every,
+      request,
+      timer_name: sanitize(name),
+    });
+  },
+
+  // =========================================================================
+  // Name Bans (Q-lines — ban nick/channel patterns)
+  // =========================================================================
+
+  /** Remove a scheduled RPC timer by name. */
+  async rpcDelTimer(name: string): Promise<void> {
+    await unrealRequest("rpc.del_timer", {
+      timer_name: sanitize(name),
+    });
+  },
+
+  /** Get information about the current RPC connection. */
+  async rpcInfo(): Promise<UnrealRpcInfo | null> {
     try {
-      const result = await unrealRequest<{ tkl?: UnrealTkl }>("name_ban.get", {
-        name: sanitize(name),
+      const result = await unrealRequest<UnrealRpcInfo>("rpc.info");
+      return result ?? null;
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: { integration: "irc-unreal", method: "rpc.info" },
       });
-      return result?.tkl ?? null;
-    } catch {
       return null;
     }
+  },
+
+  /** Set the issuer name for this RPC connection (shown in server logs). */
+  async rpcSetIssuer(issuer: string): Promise<void> {
+    await unrealRequest("rpc.set_issuer", {
+      issuer: sanitize(issuer),
+    });
+  },
+
+  /** Add a server ban (kline, gline, zline, etc.). duration e.g. "1d", "2h". */
+  async serverBanAdd(
+    name: string,
+    type: UnrealBanType,
+    reason: string,
+    duration = "1d"
+  ): Promise<UnrealTkl | null> {
+    const result = await unrealRequest<{ tkl?: UnrealTkl }>("server_ban.add", {
+      duration_string: duration,
+      name: sanitize(name),
+      reason: sanitize(reason),
+      type,
+    });
+    return result?.tkl ?? null;
   },
 
   // =========================================================================
   // Server Ban Exceptions (E-lines)
   // =========================================================================
+
+  /** Remove a server ban. */
+  async serverBanDelete(
+    name: string,
+    type: UnrealBanType
+  ): Promise<UnrealTkl | null> {
+    const result = await unrealRequest<{ tkl?: UnrealTkl }>("server_ban.del", {
+      name: sanitize(name),
+      type,
+    });
+    return result?.tkl ?? null;
+  },
 
   /** Add a ban exception (E-line). types e.g. "kline,gline". */
   async serverBanExceptionAdd(
@@ -508,6 +499,23 @@ export const unrealRpcClient = {
     return result?.tkl ?? null;
   },
 
+  /** Get a specific ban exception. */
+  async serverBanExceptionGet(name: string): Promise<UnrealTkl | null> {
+    try {
+      const result = await unrealRequest<{ tkl?: UnrealTkl }>(
+        "server_ban_exception.get",
+        { name: sanitize(name) }
+      );
+      return result?.tkl ?? null;
+    } catch {
+      return null;
+    }
+  },
+
+  // =========================================================================
+  // Stats
+  // =========================================================================
+
   /** List all ban exceptions. */
   async serverBanExceptionList(): Promise<UnrealTkl[]> {
     try {
@@ -526,12 +534,19 @@ export const unrealRpcClient = {
     }
   },
 
-  /** Get a specific ban exception. */
-  async serverBanExceptionGet(name: string): Promise<UnrealTkl | null> {
+  // =========================================================================
+  // Whowas
+  // =========================================================================
+
+  /** Get a specific server ban. */
+  async serverBanGet(
+    name: string,
+    type: UnrealBanType
+  ): Promise<UnrealTkl | null> {
     try {
       const result = await unrealRequest<{ tkl?: UnrealTkl }>(
-        "server_ban_exception.get",
-        { name: sanitize(name) }
+        "server_ban.get",
+        { name: sanitize(name), type }
       );
       return result?.tkl ?? null;
     } catch {
@@ -540,74 +555,45 @@ export const unrealRpcClient = {
   },
 
   // =========================================================================
-  // Stats
-  // =========================================================================
-
-  /** Get server statistics. */
-  async statsGet(objectDetailLevel: 1 | 2 = 1): Promise<UnrealStats | null> {
-    try {
-      const result = await unrealRequest<UnrealStats>("stats.get", {
-        object_detail_level: objectDetailLevel,
-      });
-      return result ?? null;
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "stats.get" },
-      });
-      return null;
-    }
-  },
-
-  // =========================================================================
-  // Whowas
-  // =========================================================================
-
-  /** Look up nick history by nick or IP. */
-  async whowasGet(
-    nick?: string,
-    ip?: string,
-    objectDetailLevel: 1 | 2 = 2
-  ): Promise<UnrealWhowas[]> {
-    const params: Record<string, unknown> = {
-      object_detail_level: objectDetailLevel,
-    };
-    if (nick) {
-      params.nick = sanitize(nick);
-    }
-    if (ip) {
-      params.ip = sanitize(ip);
-    }
-    try {
-      const result = await unrealRequest<
-        { list?: UnrealWhowas[] } | UnrealWhowas[]
-      >("whowas.get", params);
-      return extractList(result);
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "whowas.get" },
-      });
-      return [];
-    }
-  },
-
-  // =========================================================================
   // Server
   // =========================================================================
 
-  /** List linked servers. */
-  async serverList(): Promise<UnrealServer[]> {
+  /** List all active server bans. */
+  async serverBanList(): Promise<UnrealTkl[]> {
     try {
-      const result = await unrealRequest<
-        { list?: UnrealServer[] } | UnrealServer[]
-      >("server.list");
+      const result = await unrealRequest<{ list?: UnrealTkl[] } | UnrealTkl[]>(
+        "server_ban.list"
+      );
       return extractList(result);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "server.list" },
+        tags: { integration: "irc-unreal", method: "server_ban.list" },
       });
       return [];
     }
   },
+
+  /** Connect to a linked server by name. */
+  async serverConnect(server: string): Promise<void> {
+    await unrealRequest("server.connect", {
+      server: sanitize(server),
+    });
+  },
+
+  /** Disconnect a linked server with an optional reason. */
+  async serverDisconnect(server: string, reason?: string): Promise<void> {
+    const params: Record<string, unknown> = {
+      server: sanitize(server),
+    };
+    if (reason) {
+      params.reason = sanitize(reason);
+    }
+    await unrealRequest("server.disconnect", params);
+  },
+
+  // =========================================================================
+  // Message
+  // =========================================================================
 
   /** Get a specific server by name (omit for local server). */
   async serverGet(server?: string): Promise<UnrealServer | null> {
@@ -631,6 +617,25 @@ export const unrealRpcClient = {
     }
   },
 
+  /** List linked servers. */
+  async serverList(): Promise<UnrealServer[]> {
+    try {
+      const result = await unrealRequest<
+        { list?: UnrealServer[] } | UnrealServer[]
+      >("server.list");
+      return extractList(result);
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: { integration: "irc-unreal", method: "server.list" },
+      });
+      return [];
+    }
+  },
+
+  // =========================================================================
+  // User — extended setters
+  // =========================================================================
+
   /** Rehash server config. */
   async serverRehash(server?: string): Promise<void> {
     const params: Record<string, unknown> = {};
@@ -638,146 +643,6 @@ export const unrealRpcClient = {
       params.server = sanitize(server);
     }
     await unrealRequest("server.rehash", params);
-  },
-
-  // =========================================================================
-  // Message
-  // =========================================================================
-
-  /** Send a PRIVMSG to a connected user. */
-  async messageSendPrivmsg(nick: string, message: string): Promise<void> {
-    await unrealRequest("message.send_privmsg", {
-      message: sanitize(message),
-      nick: sanitize(nick),
-    });
-  },
-
-  /** Send a NOTICE to a connected user. */
-  async messageSendNotice(nick: string, message: string): Promise<void> {
-    await unrealRequest("message.send_notice", {
-      message: sanitize(message),
-      nick: sanitize(nick),
-    });
-  },
-
-  // =========================================================================
-  // User — extended setters
-  // =========================================================================
-
-  /** Change a user's ident/username. */
-  async userSetUsername(nick: string, username: string): Promise<void> {
-    await unrealRequest("user.set_username", {
-      nick: sanitize(nick),
-      username: sanitize(username),
-    });
-  },
-
-  /** Change a user's GECOS/realname. */
-  async userSetRealname(nick: string, realname: string): Promise<void> {
-    await unrealRequest("user.set_realname", {
-      nick: sanitize(nick),
-      realname: sanitize(realname),
-    });
-  },
-
-  /** Set a virtual host (vhost) for a user. */
-  async userSetVhost(nick: string, vhost: string): Promise<void> {
-    await unrealRequest("user.set_vhost", {
-      nick: sanitize(nick),
-      vhost: sanitize(vhost),
-    });
-  },
-
-  /** Change user modes (e.g. "+i-w"). */
-  async userSetMode(nick: string, modes: string): Promise<void> {
-    await unrealRequest("user.set_mode", {
-      modes: sanitize(modes),
-      nick: sanitize(nick),
-    });
-  },
-
-  /** Change server notice mask for a user. */
-  async userSetSnomask(nick: string, snomask: string): Promise<void> {
-    await unrealRequest("user.set_snomask", {
-      nick: sanitize(nick),
-      snomask: sanitize(snomask),
-    });
-  },
-
-  /**
-   * Grant IRC operator status to a user.
-   * @param operAccount - oper block name from unrealircd.conf
-   * @param operClass   - privilege class to assign
-   * @param options     - optional extra flags (e.g. { snomask: "+s" })
-   */
-  async userSetOper(
-    nick: string,
-    operAccount: string,
-    operClass: UnrealOperClass,
-    options?: Record<string, unknown>
-  ): Promise<void> {
-    const params: Record<string, unknown> = {
-      nick: sanitize(nick),
-      oper_account: sanitize(operAccount),
-      oper_class: operClass,
-    };
-    if (options) {
-      params.options = options;
-    }
-    await unrealRequest("user.set_oper", params);
-  },
-
-  // =========================================================================
-  // Server — connect / disconnect
-  // =========================================================================
-
-  /** Connect to a linked server by name. */
-  async serverConnect(server: string): Promise<void> {
-    await unrealRequest("server.connect", {
-      server: sanitize(server),
-    });
-  },
-
-  /** Disconnect a linked server with an optional reason. */
-  async serverDisconnect(server: string, reason?: string): Promise<void> {
-    const params: Record<string, unknown> = {
-      server: sanitize(server),
-    };
-    if (reason) {
-      params.reason = sanitize(reason);
-    }
-    await unrealRequest("server.disconnect", params);
-  },
-
-  // =========================================================================
-  // Spamfilter
-  // =========================================================================
-
-  /** List all active spamfilters. */
-  async spamfilterList(): Promise<UnrealSpamfilter[]> {
-    try {
-      const result = await unrealRequest<
-        { list?: UnrealSpamfilter[] } | UnrealSpamfilter[]
-      >("spamfilter.list");
-      return extractList(result);
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "spamfilter.list" },
-      });
-      return [];
-    }
-  },
-
-  /** Get a specific spamfilter by id. */
-  async spamfilterGet(id: string): Promise<UnrealSpamfilter | null> {
-    try {
-      const result = await unrealRequest<UnrealSpamfilter>("spamfilter.get", {
-        id: sanitize(id),
-      });
-      return result ?? null;
-    } catch {
-      return null;
-    }
   },
 
   /**
@@ -817,106 +682,241 @@ export const unrealRpcClient = {
     return result?.spamfilter ?? null;
   },
 
-  // =========================================================================
-  // Log
-  // =========================================================================
-
-  /** Inject a log entry into the server log. */
-  async logSend(
-    level: string,
-    subsystem: string,
-    eventId: string,
-    msg: string
-  ): Promise<void> {
-    await unrealRequest("log.send", {
-      event_id: sanitize(eventId),
-      level: sanitize(level),
-      msg: sanitize(msg),
-      subsystem: sanitize(subsystem),
-    });
+  /** Get a specific spamfilter by id. */
+  async spamfilterGet(id: string): Promise<UnrealSpamfilter | null> {
+    try {
+      const result = await unrealRequest<UnrealSpamfilter>("spamfilter.get", {
+        id: sanitize(id),
+      });
+      return result ?? null;
+    } catch {
+      return null;
+    }
   },
 
-  /** List recent log entries. */
-  async logList(): Promise<UnrealLogEntry[]> {
+  /** List all active spamfilters. */
+  async spamfilterList(): Promise<UnrealSpamfilter[]> {
     try {
       const result = await unrealRequest<
-        { list?: UnrealLogEntry[] } | UnrealLogEntry[]
-      >("log.list");
+        { list?: UnrealSpamfilter[] } | UnrealSpamfilter[]
+      >("spamfilter.list");
       return extractList(result);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "log.list" },
+        tags: { integration: "irc-unreal", method: "spamfilter.list" },
       });
       return [];
     }
   },
 
-  /**
-   * Subscribe to log events.
-   * @param level   - minimum log level, e.g. "info", "warn", "error"
-   * @param sources - optional array of subsystem sources to filter
-   */
-  async logSubscribe(level: string, sources?: string[]): Promise<void> {
-    const params: Record<string, unknown> = {
-      level: sanitize(level),
-    };
-    if (sources && sources.length > 0) {
-      params.sources = sources.map((s) => sanitize(s));
+  /** Get server statistics. */
+  async statsGet(objectDetailLevel: 1 | 2 = 1): Promise<UnrealStats | null> {
+    try {
+      const result = await unrealRequest<UnrealStats>("stats.get", {
+        object_detail_level: objectDetailLevel,
+      });
+      return result ?? null;
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: { integration: "irc-unreal", method: "stats.get" },
+      });
+      return null;
     }
-    await unrealRequest("log.subscribe", params);
   },
 
-  /** Unsubscribe from log events. */
-  async logUnsubscribe(): Promise<void> {
-    await unrealRequest("log.unsubscribe");
+  // =========================================================================
+  // Server — connect / disconnect
+  // =========================================================================
+
+  /** Get a single user by nick or UID. */
+  async userGet(
+    nick: string,
+    objectDetailLevel?: 0 | 1 | 2 | 4
+  ): Promise<UnrealClient | null> {
+    const params: Record<string, unknown> = {
+      nick: sanitize(nick),
+    };
+    if (objectDetailLevel !== undefined) {
+      params.object_detail_level = objectDetailLevel;
+    }
+    try {
+      const result = await unrealRequest<
+        { client?: UnrealClient } | UnrealClient
+      >("user.get", params);
+      if (result && typeof result === "object" && "client" in result) {
+        return (result as { client?: UnrealClient }).client ?? null;
+      }
+      return (result as UnrealClient) ?? null;
+    } catch (error) {
+      Sentry.captureException(error, {
+        extra: { nick },
+        tags: { integration: "irc-unreal", method: "user.get" },
+      });
+      return null;
+    }
+  },
+
+  /** Force a user to join a channel. */
+  async userJoin(nick: string, channel: string, force = false): Promise<void> {
+    await unrealRequest("user.join", {
+      channel: sanitize(channel),
+      force,
+      nick: sanitize(nick),
+    });
+  },
+
+  // =========================================================================
+  // Spamfilter
+  // =========================================================================
+
+  /** Kill (force-disconnect) a user with a reason. */
+  async userKill(nick: string, reason: string): Promise<void> {
+    await unrealRequest("user.kill", {
+      nick: sanitize(nick),
+      reason: sanitize(reason),
+    });
+  },
+
+  /** List connected users. object_detail_level: 0, 1, 2, or 4 (default 2). */
+  async userList(objectDetailLevel?: 0 | 1 | 2 | 4): Promise<UnrealClient[]> {
+    const params: Record<string, unknown> = {};
+    if (objectDetailLevel !== undefined) {
+      params.object_detail_level = objectDetailLevel;
+    }
+    try {
+      const result = await unrealRequest<
+        { list?: UnrealClient[] } | UnrealClient[]
+      >("user.list", params);
+      return extractList(result);
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: { integration: "irc-unreal", method: "user.list" },
+      });
+      return [];
+    }
+  },
+
+  /** Force a user to part a channel. */
+  async userPart(nick: string, channel: string, force = false): Promise<void> {
+    await unrealRequest("user.part", {
+      channel: sanitize(channel),
+      force,
+      nick: sanitize(nick),
+    });
+  },
+
+  /** Disconnect a user gracefully (QUIT). */
+  async userQuit(nick: string, reason: string): Promise<void> {
+    await unrealRequest("user.quit", {
+      nick: sanitize(nick),
+      reason: sanitize(reason),
+    });
+  },
+
+  // =========================================================================
+  // Log
+  // =========================================================================
+
+  /** Change user modes (e.g. "+i-w"). */
+  async userSetMode(nick: string, modes: string): Promise<void> {
+    await unrealRequest("user.set_mode", {
+      modes: sanitize(modes),
+      nick: sanitize(nick),
+    });
+  },
+
+  /** Force-rename a connected user's nick. */
+  async userSetNick(nick: string, newNick: string): Promise<void> {
+    await unrealRequest("user.set_nick", {
+      newnick: sanitize(newNick),
+      nick: sanitize(nick),
+    });
+  },
+
+  /**
+   * Grant IRC operator status to a user.
+   * @param operAccount - oper block name from unrealircd.conf
+   * @param operClass   - privilege class to assign
+   * @param options     - optional extra flags (e.g. { snomask: "+s" })
+   */
+  async userSetOper(
+    nick: string,
+    operAccount: string,
+    operClass: UnrealOperClass,
+    options?: Record<string, unknown>
+  ): Promise<void> {
+    const params: Record<string, unknown> = {
+      nick: sanitize(nick),
+      oper_account: sanitize(operAccount),
+      oper_class: operClass,
+    };
+    if (options) {
+      params.options = options;
+    }
+    await unrealRequest("user.set_oper", params);
+  },
+
+  /** Change a user's GECOS/realname. */
+  async userSetRealname(nick: string, realname: string): Promise<void> {
+    await unrealRequest("user.set_realname", {
+      nick: sanitize(nick),
+      realname: sanitize(realname),
+    });
   },
 
   // =========================================================================
   // RPC Utilities
   // =========================================================================
 
-  /** Get information about the current RPC connection. */
-  async rpcInfo(): Promise<UnrealRpcInfo | null> {
+  /** Change server notice mask for a user. */
+  async userSetSnomask(nick: string, snomask: string): Promise<void> {
+    await unrealRequest("user.set_snomask", {
+      nick: sanitize(nick),
+      snomask: sanitize(snomask),
+    });
+  },
+
+  /** Change a user's ident/username. */
+  async userSetUsername(nick: string, username: string): Promise<void> {
+    await unrealRequest("user.set_username", {
+      nick: sanitize(nick),
+      username: sanitize(username),
+    });
+  },
+
+  /** Set a virtual host (vhost) for a user. */
+  async userSetVhost(nick: string, vhost: string): Promise<void> {
+    await unrealRequest("user.set_vhost", {
+      nick: sanitize(nick),
+      vhost: sanitize(vhost),
+    });
+  },
+
+  /** Look up nick history by nick or IP. */
+  async whowasGet(
+    nick?: string,
+    ip?: string,
+    objectDetailLevel: 1 | 2 = 2
+  ): Promise<UnrealWhowas[]> {
+    const params: Record<string, unknown> = {
+      object_detail_level: objectDetailLevel,
+    };
+    if (nick) {
+      params.nick = sanitize(nick);
+    }
+    if (ip) {
+      params.ip = sanitize(ip);
+    }
     try {
-      const result = await unrealRequest<UnrealRpcInfo>("rpc.info");
-      return result ?? null;
+      const result = await unrealRequest<
+        { list?: UnrealWhowas[] } | UnrealWhowas[]
+      >("whowas.get", params);
+      return extractList(result);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc-unreal", method: "rpc.info" },
+        tags: { integration: "irc-unreal", method: "whowas.get" },
       });
-      return null;
+      return [];
     }
-  },
-
-  /** Set the issuer name for this RPC connection (shown in server logs). */
-  async rpcSetIssuer(issuer: string): Promise<void> {
-    await unrealRequest("rpc.set_issuer", {
-      issuer: sanitize(issuer),
-    });
-  },
-
-  /**
-   * Schedule a recurring RPC call (timer).
-   * @param name     - unique timer name
-   * @param request  - the RPC method + params to call on each tick
-   * @param every    - interval in seconds
-   */
-  async rpcAddTimer(
-    name: string,
-    request: { method: string; params?: Record<string, unknown> },
-    every: number
-  ): Promise<void> {
-    await unrealRequest("rpc.add_timer", {
-      every,
-      request,
-      timer_name: sanitize(name),
-    });
-  },
-
-  /** Remove a scheduled RPC timer by name. */
-  async rpcDelTimer(name: string): Promise<void> {
-    await unrealRequest("rpc.del_timer", {
-      timer_name: sanitize(name),
-    });
   },
 };

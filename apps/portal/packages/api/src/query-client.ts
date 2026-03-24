@@ -22,13 +22,13 @@ function makeQueryClient() {
         shouldRedactErrors: () => false,
       },
       queries: {
+        gcTime: QUERY_CACHE.GC_TIME_DEFAULT,
+        // Refetch on window focus is good for keeping data fresh
+        refetchOnWindowFocus: true,
+        retry: 0, // No retries by default
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
-        gcTime: QUERY_CACHE.GC_TIME_DEFAULT,
-        retry: 0, // No retries by default
-        // Refetch on window focus is good for keeping data fresh
-        refetchOnWindowFocus: true,
       },
     },
   });

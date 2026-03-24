@@ -81,7 +81,7 @@ export async function apiRateLimit(
   // Increment count if within window
   const current = store.get(ip);
   if (current && current.count < maxRequests) {
-    current.count++;
+    current.count += 1;
     return null; // Allow request
   }
 

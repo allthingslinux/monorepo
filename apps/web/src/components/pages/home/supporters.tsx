@@ -170,14 +170,11 @@ const Supporters = memo(() => {
           style={{ willChange: "transform" }}
         >
           {/* Render multiple sets for seamless loop */}
-          {Array.from({ length: 3 }).map((_, setIndex) => (
-            <div
-              className="flex shrink-0 gap-4 md:gap-8"
-              key={`set-${setIndex}`}
-            >
+          {(["set-a", "set-b", "set-c"] as const).map((setKey) => (
+            <div className="flex shrink-0 gap-4 md:gap-8" key={setKey}>
               {SUPPORTERS.map((supporter) => (
                 <SupporterLogo
-                  key={`${setIndex}-${supporter.name}`}
+                  key={`${setKey}-${supporter.name}`}
                   {...supporter}
                 />
               ))}

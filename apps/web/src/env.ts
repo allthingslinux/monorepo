@@ -43,82 +43,82 @@ const getQuickBooksEnvironment = (): "sandbox" | "production" | undefined => {
 
 export const env = createEnv({
   /**
-   * Server-side environment variables (not exposed to browser)
-   */
-  server: {
-    // Private API tokens and keys
-    GITHUB_TOKEN: z.string().optional(),
-    MONDAY_API_KEY: z.string().optional(),
-    MONDAY_BOARD_ID: z.string().optional(),
-    DISCORD_WEBHOOK_URL: z.string().url().optional(),
-    TRIGGER_SECRET_KEY: z.string().optional(),
-
-    // QuickBooks API
-    QUICKBOOKS_CLIENT_ID: z.string().optional(),
-    QUICKBOOKS_CLIENT_SECRET: z.string().optional(),
-    QUICKBOOKS_REFRESH_TOKEN: z.string().optional(),
-    QUICKBOOKS_REALM_ID: z.string().optional(),
-    // QuickBooks Environment: 'sandbox' for development/testing, 'production' for live data
-    // Defaults to 'sandbox' in development, 'production' in production (handled in runtimeEnv)
-    QUICKBOOKS_ENVIRONMENT: z.enum(["sandbox", "production"]).optional(),
-    // Admin key for QuickBooks API operations (token refresh, etc.)
-    QUICKBOOKS_ADMIN_KEY: z.string().optional(),
-
-    // Server configuration
-    NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
-  },
-
-  /**
    * Client-side variables (accessible in browser)
    */
   client: {
-    // Application URLs and public configuration
-    NEXT_PUBLIC_URL: z.string().url().default("https://allthingslinux.org"),
     NEXT_PUBLIC_API_URL: z
       .string()
       .url()
       .default("https://allthingslinux.org/api"),
+    NEXT_PUBLIC_GITHUB_REPO_NAME: z.string().default("applications"),
 
     // Public repository information (no tokens, just public identifiers)
     NEXT_PUBLIC_GITHUB_REPO_OWNER: z.string().default("allthingslinux"),
-    NEXT_PUBLIC_GITHUB_REPO_NAME: z.string().default("applications"),
+    // Application URLs and public configuration
+    NEXT_PUBLIC_URL: z.string().url().default("https://allthingslinux.org"),
+  },
+
+  emptyStringAsUndefined: true,
+
+  onValidationError: (error) => {
+    console.error("❌ Invalid environment variables:", error);
+    throw new Error("Invalid environment variables, check server logs");
   },
 
   /**
    * Map environment variables to the schemas
    */
   runtimeEnv: {
-    // Server variables
-    NODE_ENV: process.env.NODE_ENV,
+    DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     MONDAY_API_KEY: process.env.MONDAY_API_KEY,
     MONDAY_BOARD_ID: process.env.MONDAY_BOARD_ID,
-    DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
-    TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
-    QUICKBOOKS_CLIENT_ID: process.env.QUICKBOOKS_CLIENT_ID,
-    QUICKBOOKS_CLIENT_SECRET: process.env.QUICKBOOKS_CLIENT_SECRET,
-    QUICKBOOKS_REFRESH_TOKEN: process.env.QUICKBOOKS_REFRESH_TOKEN,
-    QUICKBOOKS_REALM_ID: process.env.QUICKBOOKS_REALM_ID,
-    QUICKBOOKS_ENVIRONMENT: getQuickBooksEnvironment(),
-    QUICKBOOKS_ADMIN_KEY: process.env.QUICKBOOKS_ADMIN_KEY,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_GITHUB_REPO_NAME: process.env.NEXT_PUBLIC_GITHUB_REPO_NAME,
+    NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
     // Client variables
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
-    NEXT_PUBLIC_GITHUB_REPO_NAME: process.env.NEXT_PUBLIC_GITHUB_REPO_NAME,
+    // Server variables
+    NODE_ENV: process.env.NODE_ENV,
+    QUICKBOOKS_ADMIN_KEY: process.env.QUICKBOOKS_ADMIN_KEY,
+    QUICKBOOKS_CLIENT_ID: process.env.QUICKBOOKS_CLIENT_ID,
+    QUICKBOOKS_CLIENT_SECRET: process.env.QUICKBOOKS_CLIENT_SECRET,
+    QUICKBOOKS_ENVIRONMENT: getQuickBooksEnvironment(),
+    QUICKBOOKS_REALM_ID: process.env.QUICKBOOKS_REALM_ID,
+    QUICKBOOKS_REFRESH_TOKEN: process.env.QUICKBOOKS_REFRESH_TOKEN,
+    TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
   },
+  /**
+   * Server-side environment variables (not exposed to browser)
+   */
+  server: {
+    DISCORD_WEBHOOK_URL: z.string().url().optional(),
+    // Private API tokens and keys
+    GITHUB_TOKEN: z.string().optional(),
+    MONDAY_API_KEY: z.string().optional(),
+    MONDAY_BOARD_ID: z.string().optional(),
+    // Server configuration
+    NODE_ENV: z
+      .enum(["development", "production", "test"])
+      .default("development"),
 
+    // Admin key for QuickBooks API operations (token refresh, etc.)
+    QUICKBOOKS_ADMIN_KEY: z.string().optional(),
+    // QuickBooks API
+    QUICKBOOKS_CLIENT_ID: z.string().optional(),
+    QUICKBOOKS_CLIENT_SECRET: z.string().optional(),
+    // QuickBooks Environment: 'sandbox' for development/testing, 'production' for live data
+    // Defaults to 'sandbox' in development, 'production' in production (handled in runtimeEnv)
+    QUICKBOOKS_ENVIRONMENT: z.enum(["sandbox", "production"]).optional(),
+    QUICKBOOKS_REALM_ID: z.string().optional(),
+    QUICKBOOKS_REFRESH_TOKEN: z.string().optional(),
+
+    TRIGGER_SECRET_KEY: z.string().optional(),
+  },
   /**
    * Configuration options
    */
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-  emptyStringAsUndefined: true,
-  onValidationError: (error) => {
-    console.error("❌ Invalid environment variables:", error);
-    throw new Error("Invalid environment variables, check server logs");
-  },
 });
 
 /**
@@ -130,25 +130,25 @@ export const env = createEnv({
  * Falls back to non-prefixed for local development
  */
 export const cloudflareEnv = {
-  // Server variables (secrets are set directly in each environment worker)
-  NODE_ENV: process.env.NODE_ENV,
+  DISCORD_WEBHOOK_URL: getEnvVar("DISCORD_WEBHOOK_URL") as string | undefined,
   GITHUB_TOKEN: getEnvVar("GITHUB_TOKEN"),
   MONDAY_API_KEY: getEnvVar("MONDAY_API_KEY"),
   MONDAY_BOARD_ID: getEnvVar("MONDAY_BOARD_ID"),
-  DISCORD_WEBHOOK_URL: getEnvVar("DISCORD_WEBHOOK_URL") as string | undefined,
-  TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY, // Not prefixed (Trigger.dev handles separately)
-  QUICKBOOKS_CLIENT_ID: getEnvVar("QUICKBOOKS_CLIENT_ID"),
-  QUICKBOOKS_CLIENT_SECRET: getEnvVar("QUICKBOOKS_CLIENT_SECRET"),
-  QUICKBOOKS_REFRESH_TOKEN: getEnvVar("QUICKBOOKS_REFRESH_TOKEN"),
-  QUICKBOOKS_REALM_ID: getEnvVar("QUICKBOOKS_REALM_ID"),
-  QUICKBOOKS_ENVIRONMENT: getQuickBooksEnvironment(),
-  QUICKBOOKS_ADMIN_KEY: getEnvVar("QUICKBOOKS_ADMIN_KEY"),
-
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_GITHUB_REPO_NAME: process.env.NEXT_PUBLIC_GITHUB_REPO_NAME,
+  NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
   // Client variables (not prefixed - these are public anyway)
   NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
-  NEXT_PUBLIC_GITHUB_REPO_NAME: process.env.NEXT_PUBLIC_GITHUB_REPO_NAME,
+  // Server variables (secrets are set directly in each environment worker)
+  NODE_ENV: process.env.NODE_ENV,
+  QUICKBOOKS_ADMIN_KEY: getEnvVar("QUICKBOOKS_ADMIN_KEY"),
+  QUICKBOOKS_CLIENT_ID: getEnvVar("QUICKBOOKS_CLIENT_ID"),
+  QUICKBOOKS_CLIENT_SECRET: getEnvVar("QUICKBOOKS_CLIENT_SECRET"),
+
+  QUICKBOOKS_ENVIRONMENT: getQuickBooksEnvironment(),
+  QUICKBOOKS_REALM_ID: getEnvVar("QUICKBOOKS_REALM_ID"),
+  QUICKBOOKS_REFRESH_TOKEN: getEnvVar("QUICKBOOKS_REFRESH_TOKEN"),
+  TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY, // Not prefixed (Trigger.dev handles separately)
 };
 
 // Helper function to detect if running in Cloudflare Workers environment

@@ -116,13 +116,13 @@ export type CreateAliasRequest = z.infer<typeof CreateAliasRequestSchema>;
  * Mailbox Detail Schema (for usage/quota)
  */
 export const MailcowMailboxSchema = z.object({
-  username: z.string(),
+  active: z.coerce.number(),
+  last_login: z.coerce.number().optional(),
+  messages: z.coerce.number().optional(),
   name: z.string(),
   quota: z.coerce.number(), // Total quota in bytes
   quota_used: z.coerce.number().optional(), // Used quota in bytes
-  messages: z.coerce.number().optional(),
-  active: z.coerce.number(),
-  last_login: z.coerce.number().optional(),
+  username: z.string(),
 });
 
 export type MailcowMailbox = z.infer<typeof MailcowMailboxSchema>;

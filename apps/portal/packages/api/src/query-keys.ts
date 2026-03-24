@@ -11,55 +11,6 @@ import type {
 } from "./types";
 
 export const queryKeys = {
-  // User queries
-  users: {
-    all: ["users"] as const,
-    current: () => [...queryKeys.users.all, "current"] as const,
-    detail: (id: string) => [...queryKeys.users.details(), id] as const,
-    details: () => [...queryKeys.users.all, "detail"] as const,
-    list: (filters?: UserListFilters) =>
-      [...queryKeys.users.lists(), { filters }] as const,
-    lists: () => [...queryKeys.users.all, "list"] as const,
-    stats: () => [...queryKeys.users.all, "stats"] as const,
-  },
-
-  // Session queries
-  sessions: {
-    all: ["sessions"] as const,
-    current: () => [...queryKeys.sessions.all, "current"] as const,
-    detail: (id: string) => [...queryKeys.sessions.details(), id] as const,
-    details: () => [...queryKeys.sessions.all, "detail"] as const,
-    list: (filters?: SessionListFilters) =>
-      [...queryKeys.sessions.lists(), { filters }] as const,
-    lists: () => [...queryKeys.sessions.all, "list"] as const,
-    user: (userId: string) =>
-      [...queryKeys.sessions.all, "user", userId] as const,
-  },
-
-  // API Key queries
-  apiKeys: {
-    all: ["apiKeys"] as const,
-    detail: (id: string) => [...queryKeys.apiKeys.details(), id] as const,
-    details: () => [...queryKeys.apiKeys.all, "detail"] as const,
-    list: (userId?: string) =>
-      [...queryKeys.apiKeys.lists(), { userId }] as const,
-    lists: () => [...queryKeys.apiKeys.all, "list"] as const,
-    user: (userId: string) =>
-      [...queryKeys.apiKeys.all, "user", userId] as const,
-  },
-
-  // OAuth Client queries
-  oauthClients: {
-    all: ["oauthClients"] as const,
-    detail: (id: string) => [...queryKeys.oauthClients.details(), id] as const,
-    details: () => [...queryKeys.oauthClients.all, "detail"] as const,
-    list: (filters?: OAuthClientListFilters) =>
-      [...queryKeys.oauthClients.lists(), { filters }] as const,
-    lists: () => [...queryKeys.oauthClients.all, "list"] as const,
-    user: (userId: string) =>
-      [...queryKeys.oauthClients.all, "user", userId] as const,
-  },
-
   // Admin queries
   admin: {
     all: ["admin"] as const,
@@ -88,6 +39,18 @@ export const queryKeys = {
     },
   },
 
+  // API Key queries
+  apiKeys: {
+    all: ["apiKeys"] as const,
+    detail: (id: string) => [...queryKeys.apiKeys.details(), id] as const,
+    details: () => [...queryKeys.apiKeys.all, "detail"] as const,
+    list: (userId?: string) =>
+      [...queryKeys.apiKeys.lists(), { userId }] as const,
+    lists: () => [...queryKeys.apiKeys.all, "list"] as const,
+    user: (userId: string) =>
+      [...queryKeys.apiKeys.all, "user", userId] as const,
+  },
+
   // Integration queries
   integrations: {
     accounts: {
@@ -112,5 +75,42 @@ export const queryKeys = {
     all: ["integrations"] as const,
     list: () => [...queryKeys.integrations.lists()] as const,
     lists: () => [...queryKeys.integrations.all, "list"] as const,
+  },
+
+  // OAuth Client queries
+  oauthClients: {
+    all: ["oauthClients"] as const,
+    detail: (id: string) => [...queryKeys.oauthClients.details(), id] as const,
+    details: () => [...queryKeys.oauthClients.all, "detail"] as const,
+    list: (filters?: OAuthClientListFilters) =>
+      [...queryKeys.oauthClients.lists(), { filters }] as const,
+    lists: () => [...queryKeys.oauthClients.all, "list"] as const,
+    user: (userId: string) =>
+      [...queryKeys.oauthClients.all, "user", userId] as const,
+  },
+
+  // Session queries
+  sessions: {
+    all: ["sessions"] as const,
+    current: () => [...queryKeys.sessions.all, "current"] as const,
+    detail: (id: string) => [...queryKeys.sessions.details(), id] as const,
+    details: () => [...queryKeys.sessions.all, "detail"] as const,
+    list: (filters?: SessionListFilters) =>
+      [...queryKeys.sessions.lists(), { filters }] as const,
+    lists: () => [...queryKeys.sessions.all, "list"] as const,
+    user: (userId: string) =>
+      [...queryKeys.sessions.all, "user", userId] as const,
+  },
+
+  // User queries
+  users: {
+    all: ["users"] as const,
+    current: () => [...queryKeys.users.all, "current"] as const,
+    detail: (id: string) => [...queryKeys.users.details(), id] as const,
+    details: () => [...queryKeys.users.all, "detail"] as const,
+    list: (filters?: UserListFilters) =>
+      [...queryKeys.users.lists(), { filters }] as const,
+    lists: () => [...queryKeys.users.all, "list"] as const,
+    stats: () => [...queryKeys.users.all, "stats"] as const,
   },
 } as const;

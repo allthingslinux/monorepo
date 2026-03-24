@@ -45,13 +45,6 @@ export async function storeApplicationDataOnGitHub(
 
     // Create application data object
     const applicationData = {
-      timestamp,
-      role: {
-        department: roleData.department,
-        description: roleData.description,
-        name: roleData.name,
-        slug: roleData.slug,
-      },
       applicant: {
         discord_id: formData.discord_id,
         discord_username: formData.discord_username,
@@ -65,6 +58,16 @@ export async function storeApplicationDataOnGitHub(
           optional: q.optional,
           question: q.question,
         })),
+      // Include simplified form data for complete backup
+      rawFormData: Object.fromEntries(
+        Object.entries(formData).map(([key, value]) => [key, String(value)])
+      ),
+      role: {
+        department: roleData.department,
+        description: roleData.description,
+        name: roleData.name,
+        slug: roleData.slug,
+      },
       roleAnswers: roleData.questions
         .filter((q: Question) => formData[q.name])
         .map((q: Question) => ({
@@ -73,10 +76,7 @@ export async function storeApplicationDataOnGitHub(
           optional: q.optional,
           question: q.question,
         })),
-      // Include simplified form data for complete backup
-      rawFormData: Object.fromEntries(
-        Object.entries(formData).map(([key, value]) => [key, String(value)])
-      ),
+      timestamp,
     };
 
     // Format timestamp for filename
