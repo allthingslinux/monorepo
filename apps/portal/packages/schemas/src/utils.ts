@@ -44,7 +44,7 @@ export const optionalNonEmptyStringSchema = z
   .string()
   .min(1)
   .optional()
-  .or(z.literal("").transform(() => {}));
+  .or(z.literal("").transform(() => undefined));
 
 /**
  * Helper for creating branded string schemas

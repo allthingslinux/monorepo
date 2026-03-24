@@ -33,7 +33,7 @@ const PasswordOnlyCreateSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password must be 128 characters or less")
     .optional()
-    .or(z.literal("").transform(() => {})),
+    .or(z.literal("").transform(() => undefined)),
 });
 
 export function IntegrationsContent() {

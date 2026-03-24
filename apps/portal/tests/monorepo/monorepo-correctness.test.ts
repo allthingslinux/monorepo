@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import fc from "fast-check";
+import { assert, constantFrom, property } from "fast-check";
 import { describe, expect, it } from "vitest";
 
 /**
@@ -206,8 +206,8 @@ describe("Property 1: Dependency acyclicity", () => {
       return seen;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...packageNames), (pkg) => {
+    assert(
+      property(constantFrom(...packageNames), (pkg) => {
         const transitiveDeps = getTransitiveDeps(pkg);
         return !transitiveDeps.has(pkg);
       }),
@@ -284,8 +284,8 @@ describe("Property 2: No stale imports remain", () => {
       return;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...sourceFiles), (file) => {
+    assert(
+      property(constantFrom(...sourceFiles), (file) => {
         const content = fs.readFileSync(file, "utf8");
         return STALE_PATTERNS.every((p) => !p.test(content));
       }),
@@ -404,8 +404,8 @@ describe("Property 3: Package boundary enforcement", () => {
       return;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...files), ({ pkgDir, file }) => {
+    assert(
+      property(constantFrom(...files), ({ pkgDir, file }) => {
         const content = fs.readFileSync(file, "utf8");
         if (/(?:from|import)\s+["']@\//.test(content)) {
           return false;
@@ -655,8 +655,8 @@ describe("Property 9: No direct process.env access in packages", () => {
       return;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...nonKeysFiles), (file) => {
+    assert(
+      property(constantFrom(...nonKeysFiles), (file) => {
         const content = fs.readFileSync(file, "utf8");
         const stripped = stripComments(content);
         const lines = stripped.split("\n");
@@ -737,8 +737,8 @@ describe("Property 10: Import path correctness", () => {
       return;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...sourceFiles), (file) => {
+    assert(
+      property(constantFrom(...sourceFiles), (file) => {
         const content = fs.readFileSync(file, "utf8");
         const imports = extractImports(content);
         for (const imp of imports) {
@@ -810,8 +810,8 @@ describe("Property 11: App-internal alias preservation", () => {
       return;
     }
 
-    fc.assert(
-      fc.property(fc.constantFrom(...appFiles), (file) => {
+    assert(
+      property(constantFrom(...appFiles), (file) => {
         const content = fs.readFileSync(file, "utf8");
         const imports = extractImports(content);
         for (const imp of imports) {
