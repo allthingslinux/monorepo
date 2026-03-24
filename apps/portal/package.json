@@ -6,7 +6,6 @@
   "scripts": {
     "transit": "true",
     "preinstall": "npx only-allow pnpm",
-    "deduplicate": "pnpm dedupe",
     "build": "next typegen && next build",
     "dev": "next dev --turbopack",
     "start": "next start",
