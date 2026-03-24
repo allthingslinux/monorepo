@@ -13,7 +13,7 @@
 ## Terminology
 
 - **All Things Linux** / **ATL** — The organization ([allthingslinux.org](https://allthingslinux.org), [GitHub](https://github.com/allthingslinux)).
-- **Docs** — This Mintlify site: **Overview** first, then **product tabs** (portal, atl.chat, atl.sh, atl.dev, atl.tools, atl.wiki, tux), then **Authoring** and **API reference**; not the full internal org handbook unless we add explicit pages.
+- **Docs** — This Mintlify site: **Overview** first, then **product dropdowns** in the sidebar (portal, atl.chat, atl.sh, atl.dev, atl.tools, atl.wiki, tux), then **Authoring** and **API reference**; not the full internal org handbook unless we add explicit pages.
 - **Monorepo** — The repository containing `apps/docs`, `apps/web`, `apps/portal`, and shared packages.
 - **non-profit** — Hyphenated in ATL communications (501(c)(3) status).
 - Prefer **FOSS** / **open source**, **community-driven**, **beginner** (not “noob”), **accessible** (honest about difficulty—see org terminology guide).

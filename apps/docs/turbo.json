@@ -13,7 +13,13 @@
         "api-reference/**",
         "ai-tools/**",
         "essentials/**",
-        "products/**"
+        "portal/**",
+        "chat/**",
+        "sh/**",
+        "dev/**",
+        "tools/**",
+        "wiki/**",
+        "tux/**"
       ],
       "outputs": []
     },

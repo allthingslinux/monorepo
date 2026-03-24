@@ -2,13 +2,16 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "All Things Linux",
-  "description": "Product and platform documentation for All Things Linux: portal, atl.chat, atl.sh, atl.dev, atl.tools, atl.wiki, tux, plus Mintlify authoring guides. 501(c)(3) Linux community.",
+  "description": "All Things Linux is a 501(c)(3) non-profit organization with a mission to empower the Linux ecosystem through education, collaboration, and support.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#64748b",
+    "light": "#94a3b8",
+    "dark": "#475569"
   },
   "favicon": "/favicon.svg",
+  "icons": {
+    "library": "lucide"
+  },
   "seo": {
     "indexing": "navigable",
     "metatags": {
@@ -18,7 +21,7 @@
     }
   },
   "search": {
-    "prompt": "Search All Things Linux docs…"
+    "prompt": "Enter a search term…"
   },
   "api": {
     "openapi": "api-reference/openapi.json",
@@ -30,9 +33,10 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "dropdowns": [
       {
-        "tab": "Overview",
+        "dropdown": "Overview",
+        "icon": "layout-grid",
         "groups": [
           {
             "group": "Getting started",
@@ -47,70 +51,78 @@
         ]
       },
       {
-        "tab": "portal",
+        "dropdown": "portal",
+        "icon": "user",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/portal/index"]
+            "pages": ["portal/index"]
           }
         ]
       },
       {
-        "tab": "atl.chat",
+        "dropdown": "atl.chat",
+        "icon": "messages-square",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/atl-chat/index"]
+            "pages": ["chat/index"]
           }
         ]
       },
       {
-        "tab": "atl.sh",
+        "dropdown": "atl.sh",
+        "icon": "terminal",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/atl-sh/index"]
+            "pages": ["sh/index"]
           }
         ]
       },
       {
-        "tab": "atl.dev",
+        "dropdown": "atl.dev",
+        "icon": "cloud",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/atl-dev/index"]
+            "pages": ["dev/index"]
           }
         ]
       },
       {
-        "tab": "atl.tools",
+        "dropdown": "atl.tools",
+        "icon": "server",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/atl-tools/index"]
+            "pages": ["tools/index"]
           }
         ]
       },
       {
-        "tab": "atl.wiki",
+        "dropdown": "atl.wiki",
+        "icon": "book-marked",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/atl-wiki/index"]
+            "pages": ["wiki/index"]
           }
         ]
       },
       {
-        "tab": "tux",
+        "dropdown": "tux",
+        "icon": "bot",
         "groups": [
           {
             "group": "Documentation",
-            "pages": ["products/tux/index"]
+            "pages": ["tux/index"]
           }
         ]
       },
       {
-        "tab": "Authoring",
+        "dropdown": "Authoring",
+        "icon": "pen-line",
         "groups": [
           {
             "group": "Site configuration",
@@ -136,7 +148,8 @@
         ]
       },
       {
-        "tab": "API reference",
+        "dropdown": "API reference",
+        "icon": "braces",
         "groups": [
           {
             "group": "API documentation",
