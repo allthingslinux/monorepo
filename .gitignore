@@ -1,3 +1,4 @@
+# Git — monorepo-wide (single root file; no per-app .gitignore).
 # Dependencies
 node_modules/
 .pnp

@@ -1,3 +1,4 @@
+# Oxlint — monorepo-wide (root only). Oxfmt uses `.prettierignore` + `.gitignore`.
 # Dependencies & build
 node_modules/
 .next/

@@ -1,16 +1,30 @@
-# Monorepo-wide: Cursor indexing
+# =============================================================================
+# Cursor indexing — monorepo-wide
+# (Merged apps/portal/.cursorignore + apps/web/.cursorignore; per-app copies removed.)
+# =============================================================================
+
+# Dependencies & build artifacts
 node_modules/
 .next/
-.turbo/
+out/
 dist/
 coverage/
 .open-next/
 .contentlayer/
 .wrangler/
 .pnpm-store/
+.turbo/
+build/
 
-# Env (examples can be un-ignored as needed)
+# Env: hide secrets; keep committed examples discoverable
 .env
 .env.*
 !.env.example
 !.env*.example
+!.env.shared.example
+!.env.dev.example
+!.env.prod.example
+!.dev.vars.example
+
+# Gitignored trees we still want indexed (portal reference checkouts)
+!apps/portal/references/

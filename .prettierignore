@@ -1,4 +1,5 @@
-# Oxfmt reads .gitignore and .prettierignore — keep Mintlify tree unformatted (matches prior biome.jsonc)
+# Oxfmt — monorepo-wide (root only). Reads this file and root `.gitignore`.
+# Keep Mintlify tree unformatted (`mint` validates content).
 apps/docs/**
 
 # Cursor skill templates (mixed .ts/.tsx content; not production code)
