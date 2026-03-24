@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": [],
+      "inputs": [
+        "**/*.mdx",
+        "**/*.json",
+        "docs.json",
+        "snippets/**",
+        "images/**",
+        "logo/**",
+        "api-reference/**",
+        "ai-tools/**",
+        "essentials/**"
+      ],
+      "outputs": []
+    },
+    "dev": {
+      "dependsOn": []
+    }
+  }
+}
