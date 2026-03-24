@@ -1,10 +1,10 @@
 import { getServerQueryClient } from "@portal/api/hydration";
 import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 
 import { IntegrationsContent } from "./integrations-content";

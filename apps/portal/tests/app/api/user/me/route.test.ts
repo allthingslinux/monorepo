@@ -36,7 +36,7 @@ vi.mock("@/features/integrations/lib/xmpp/keys", () => ({
 vi.mock("@/features/integrations/lib/xmpp/config", () => ({
   xmppConfig: {},
   isXmppConfigured: () => false,
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: Suppress empty block in tests
+  // eslint-disable-next-line @typescript-eslint/no-empty-function -- mock
   validateXmppConfig: () => {},
 }));
 

@@ -1,7 +1,7 @@
-import { execSync } from "child_process";
-import * as fs from "fs";
-import * as path from "path";
-import { fileURLToPath } from "url";
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Get the current file's directory
 const __filename = fileURLToPath(import.meta.url);
@@ -42,7 +42,7 @@ function processMarkdownContent(content) {
 }
 
 // Get the processed content
-const readmePath = path.join(rootDir, "code-of-conduct", "README.md");
+const readmePath = path.join(rootDir, "src", "code-of-conduct", "README.md");
 let readmeContent;
 let lastUpdated;
 
@@ -53,6 +53,7 @@ try {
   // Get the last updated date
   const gitCommand = `git -C ${path.join(
     rootDir,
+    "src",
     "code-of-conduct"
   )} log -1 --format=%cd --date=format:'%B %d, %Y' -- README.md`;
 
@@ -89,7 +90,7 @@ export const LAST_UPDATED = '${lastUpdated}';
 `;
 
 // Ensure the lib directory exists
-const libDir = path.join(rootDir, "lib");
+const libDir = path.join(rootDir, "src", "lib");
 if (!fs.existsSync(libDir)) {
   fs.mkdirSync(libDir, { recursive: true });
 }

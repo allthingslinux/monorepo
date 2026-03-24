@@ -16,7 +16,7 @@ Centralized identity and hub management system for the AllThingsLinux (ATL) comm
 
 ## Tech Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · TailwindCSS 4 · shadcn/ui (Base) · BetterAuth · Drizzle ORM · PostgreSQL · Zod · TanStack Query · next-intl · Biome / Ultracite · Turborepo
+Next.js 16 (App Router) · React 19 · TypeScript · TailwindCSS 4 · shadcn/ui (Base) · BetterAuth · Drizzle ORM · PostgreSQL · Zod · TanStack Query · next-intl · Ultracite (Oxlint + Oxfmt) · Turborepo
 
 ## Repository Structure
 
@@ -64,7 +64,7 @@ Supporting files:
 
 ```
 .agents/
-├── code-standards.md       # Coding rules beyond what Biome enforces
+├── code-standards.md       # Coding rules beyond what Oxlint enforces
 └── skills.md               # Available agent skills index
 docs/                       # Architecture and reference docs
 turbo.json                  # Turborepo pipeline configuration
@@ -97,7 +97,7 @@ All commands run from the monorepo root. Turborepo orchestrates cross-package bu
 
 ### Quality
 
-- `pnpm fix` — Format & lint fix (Biome/Ultracite) — **run before committing**
+- `pnpm fix` — Format & lint fix (Ultracite: Oxlint + Oxfmt) — **run before committing**
 - `pnpm check` — Check formatting & linting without fixing
 - `pnpm type-check` — TypeScript validation across all packages (via Turborepo)
 - `pnpm typegen` — Generate Next.js route types (run before `type-check`)
@@ -170,14 +170,14 @@ Canonical reference: `docs/ENV_VARS.md`.
 - **Package manager is pnpm**. Never use npm or yarn.
 - **Never run `pnpm dev`** — always ask the user to run it.
 - **Never delete code** without asking first — fix it instead.
-- **Run `pnpm fix` before committing** to ensure Biome/Ultracite compliance.
+- **Run `pnpm fix` before committing** to ensure Ultracite (Oxlint + Oxfmt) compliance.
 - **Never use `db:push` in production** — always generate and run migrations.
 - **Never access `process.env` directly** — use the module's `keys()` function.
 - **Always validate inputs with Zod** — never trust raw external data.
 
 ## Guidelines
 
-- [Code Standards](.agents/code-standards.md) — Rules beyond what Biome enforces
+- [Code Standards](.agents/code-standards.md) — Rules beyond what Oxlint enforces
 - [Project Skills](.agents/skills.md) — Available agent skills index
 
 ## Per-feature AGENTS.md (`apps/portal`)

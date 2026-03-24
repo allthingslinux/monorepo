@@ -1,19 +1,19 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
+  "style": "base-vega",
   "rsc": true,
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "app/globals.css",
+    "css": "src/styles/globals.css",
     "baseColor": "gray",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "components": "@atl/ui",
+    "utils": "@atl/ui/lib/utils",
+    "ui": "@atl/ui/ui",
     "lib": "@/lib",
     "hooks": "@/hooks",
     "types": "@/types",

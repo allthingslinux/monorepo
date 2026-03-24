@@ -1,6 +1,6 @@
+import { Button } from "@atl/ui/ui/button";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { createPageMetadata } from "@portal/seo/metadata";
-import { Button } from "@portal/ui/ui/button";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";

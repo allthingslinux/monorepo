@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, reopened, synchronize, closed]
   workflow_dispatch:
 
 concurrency:
@@ -34,14 +35,14 @@ jobs:
         id: deploy_changes
         with:
           files: |
-            apps/web/app/**
-            apps/web/components/**
-            apps/web/lib/**
+            apps/web/src/app/**
+            apps/web/src/components/**
+            apps/web/src/lib/**
             apps/web/content/**
             apps/web/public/**
-            apps/web/data/**
-            apps/web/types/**
-            apps/web/middleware.ts
+            apps/web/src/data/**
+            apps/web/src/types/**
+            apps/web/proxy.ts
             apps/web/next.config.ts
             apps/web/next-env.d.ts
             apps/web/open-next.config.ts
@@ -52,19 +53,20 @@ jobs:
             apps/web/eslint.config.mjs
             apps/web/prettier.config.mjs
             apps/web/components.json
-            apps/web/env.ts
+            apps/web/src/env.ts
             apps/web/cloudflare-env.d.ts
             apps/web/worker-configuration.d.ts
             apps/web/wrangler.jsonc
+            apps/web/alchemy.run.ts
             apps/web/trigger.config.ts
-            apps/web/trigger/**
+            apps/web/src/trigger/**
             apps/web/scripts/**
             .github/scripts/web/**
             apps/web/docs/**
           files_ignore: |
             apps/web/**/*.test.*
             apps/web/**/*.spec.*
-            apps/web/__tests__/**
+            apps/web/src/__tests__/**
             apps/web/**/test/**
             apps/web/**/tests/**
             apps/web/*.md
@@ -77,7 +79,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: [changes]
-    if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'renovate[bot]') && (needs.changes.outputs.deploy == 'true' || github.event_name == 'workflow_dispatch') }}
+    if: >-
+      (github.event_name != 'pull_request' || github.event.action != 'closed') &&
+      (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'renovate[bot]') &&
+      (needs.changes.outputs.deploy == 'true' || github.event_name == 'workflow_dispatch')
     environment:
       name: ${{ contains(github.ref, 'main') && 'prod' || 'dev' }}
       url: ${{ contains(github.ref, 'main') && 'https://allthingslinux.org' || 'https://allthingslinux.dev' }}
@@ -88,6 +93,10 @@ jobs:
     defaults:
       run:
         working-directory: apps/web
+    env:
+      STAGE: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
+      PULL_REQUEST: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+      GITHUB_PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -106,15 +115,28 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-      - name: Build application
-        run: pnpm run build:all
+      - name: Deploy with Alchemy (OpenNext build runs in-stack)
+        run: |
+          echo "🚀 Deploying Alchemy app ${{ env.STAGE }} (worker profile from alchemy.run.ts)..."
+          pnpm exec alchemy deploy --app web --stage "${{ env.STAGE }}"
+        env:
+          ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
+          ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Set secrets in Cloudflare Worker
         run: |
-          ENV_NAME="${{ contains(github.ref, 'main') && 'prod' || 'dev' }}"
-          echo "🔐 Setting secrets for ${ENV_NAME} environment..."
           chmod +x "${{ github.workspace }}/.github/scripts/web/secrets.sh"
-          bash "${{ github.workspace }}/.github/scripts/web/secrets.sh" "$ENV_NAME"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            bash "${{ github.workspace }}/.github/scripts/web/secrets.sh" "dev" "allthingslinux-${{ env.STAGE }}"
+          else
+            ENV_NAME="${{ contains(github.ref, 'refs/heads/main') && 'prod' || 'dev' }}"
+            bash "${{ github.workspace }}/.github/scripts/web/secrets.sh" "$ENV_NAME"
+          fi
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           QUICKBOOKS_CLIENT_ID: ${{ secrets.QUICKBOOKS_CLIENT_ID }}
@@ -129,30 +151,42 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ vars.DISCORD_WEBHOOK_URL }}
           QUICKBOOKS_ENVIRONMENT: ${{ vars.QUICKBOOKS_ENVIRONMENT }}
 
-      - name: Deploy to Cloudflare Workers
+  cleanup:
+    name: Destroy PR preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Destroy PR stage (never prod)
         run: |
-          ENV_NAME="${{ contains(github.ref, 'main') && 'prod' || 'dev' }}"
-          echo "🚀 Deploying to ${{ contains(github.ref, 'main') && 'PRODUCTION' || 'DEVELOPMENT' }} environment (worker: allthingslinux-${ENV_NAME})..."
-          pnpm exec opennextjs-cloudflare deploy --env $ENV_NAME
+          STAGE="pr-${{ github.event.pull_request.number }}"
+          if [ "$STAGE" = "pr-" ] || [ "${{ github.event.pull_request.number }}" = "" ]; then
+            echo "Refusing to run destroy without a valid PR number."
+            exit 1
+          fi
+          if [ "$STAGE" = "prod" ]; then
+            echo "Refusing to destroy prod."
+            exit 1
+          fi
+          echo "🧹 Destroying Alchemy stage $STAGE"
+          pnpm exec alchemy destroy --app web --stage "$STAGE"
         env:
+          ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
+          ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - name: Create deployment comment
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v5
-        continue-on-error: true
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## 🚀 Deployment Status
-
-            **Environment:** ${{ contains(github.ref, 'main') && 'Production' || 'Development' }}
-            **Branch:** `${{ github.event_name == 'pull_request' && 'PR #' || '' }}${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref_name }} ${{ github.event_name == 'pull_request' && '(' || '' }}${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }} ${{ github.event_name == 'pull_request' && ')' || '' }}`
-            **Commit:** `${{ github.sha }}`
-
-            **URLs:**
-            - **Production:** [https://allthingslinux.org](https://allthingslinux.org)
-            - **Development:** [https://allthingslinux.dev](https://allthingslinux.dev)
-
-            Deployment completed successfully! ✨
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}

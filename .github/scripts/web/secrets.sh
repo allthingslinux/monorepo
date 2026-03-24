@@ -8,6 +8,8 @@
 
 # Environment to set secrets for (dev or prod)
 ENV=${1:-dev}
+# Optional: explicit worker name (e.g. allthingslinux-pr-42 for PR preview workers)
+WORKER_NAME_OVERRIDE=${2:-}
 
 # Validate environment parameter
 if [ "$ENV" != "dev" ] && [ "$ENV" != "prod" ]; then
@@ -15,10 +17,17 @@ if [ "$ENV" != "dev" ] && [ "$ENV" != "prod" ]; then
     exit 1
 fi
 
-WORKER_NAME="allthingslinux-${ENV}"
+if [ -n "$WORKER_NAME_OVERRIDE" ]; then
+    WORKER_NAME="$WORKER_NAME_OVERRIDE"
+else
+    WORKER_NAME="allthingslinux-${ENV}"
+fi
 
 echo "Setting secrets for worker: $WORKER_NAME"
 echo "Environment: $ENV"
+if [ -n "$WORKER_NAME_OVERRIDE" ]; then
+    echo "Mode: explicit worker name (not wrangler --env)"
+fi
 echo ""
 
 # Load secrets from .env.secrets files (same pattern as deploy scripts)
@@ -62,7 +71,12 @@ set_secret() {
     fi
 
     echo "Setting $SECRET_NAME..."
-    if echo "$SECRET_VALUE" | pnpm exec wrangler secret put "$SECRET_NAME" --env "$ENV"; then
+    if [ -n "$WORKER_NAME_OVERRIDE" ]; then
+        SECRET_CMD=(pnpm exec wrangler secret put "$SECRET_NAME" --name "$WORKER_NAME")
+    else
+        SECRET_CMD=(pnpm exec wrangler secret put "$SECRET_NAME" --env "$ENV")
+    fi
+    if echo "$SECRET_VALUE" | "${SECRET_CMD[@]}"; then
         echo "✓ $SECRET_NAME set successfully"
         return 0
     else

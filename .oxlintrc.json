@@ -70,7 +70,21 @@
       }
     },
     {
-      "files": ["apps/portal/packages/ui/src/layout/index.ts"],
+      "files": [
+        "apps/portal/src/features/routing/lib/index.ts",
+        "apps/portal/src/features/auth/lib/index.ts",
+        "apps/portal/src/features/integrations/lib/mailcow/index.ts",
+        "apps/portal/src/features/integrations/lib/mediawiki/index.ts",
+        "apps/portal/src/features/integrations/lib/irc/index.ts",
+        "apps/portal/src/features/integrations/lib/xmpp/index.ts",
+        "apps/portal/src/hooks/index.ts",
+        "apps/portal/src/components/layout/page/index.ts",
+        "apps/portal/src/components/layout/sidebar/index.ts",
+        "apps/portal/src/components/layout/index.ts",
+        "apps/portal/src/components/layout/header/index.ts",
+        "apps/portal/src/components/layout/navigation/index.ts",
+        "apps/portal/src/shared/config/index.ts"
+      ],
       "rules": {
         "oxc/no-barrel-file": "off"
       }
@@ -87,6 +101,24 @@
       ],
       "rules": {
         "import/no-namespace": "off"
+      }
+    },
+    {
+      "files": ["packages/ui/**/*.{ts,tsx}"],
+      "rules": {
+        "import/no-namespace": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "unicorn/no-document-cookie": "off",
+        "react/button-has-type": "off",
+        "no-nested-ternary": "off",
+        "unicorn/no-nested-ternary": "off",
+        "jsx-a11y/prefer-tag-over-role": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "react/jsx-no-constructed-context-values": "off",
+        "react/no-clone-element": "off",
+        "react/no-react-children": "off",
+        "no-negated-condition": "off",
+        "jsx-a11y/anchor-has-content": "off"
       }
     }
   ]

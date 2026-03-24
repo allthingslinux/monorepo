@@ -1,5 +1,4 @@
 // Core routing configuration
-/** biome-ignore-all lint/performance/noBarrelFile: Barrel file for routes */
 
 export type { BreadcrumbItem } from "./breadcrumbs";
 export { generateBreadcrumbs, mergeBreadcrumbs } from "./breadcrumbs";

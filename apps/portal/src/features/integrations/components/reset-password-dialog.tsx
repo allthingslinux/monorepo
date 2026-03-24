@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@portal/ui/ui/dialog";
-import { Input } from "@portal/ui/ui/input";
-import { Label } from "@portal/ui/ui/label";
+} from "@atl/ui/ui/dialog";
+import { Input } from "@atl/ui/ui/input";
+import { Label } from "@atl/ui/ui/label";
 import * as Sentry from "@sentry/nextjs";
 import { Copy, KeyRound, Loader2 } from "lucide-react";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
+} from "@atl/ui/ui/card";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect } from "react";

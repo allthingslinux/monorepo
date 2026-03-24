@@ -1,4 +1,3 @@
-// biome-ignore-all lint/performance/noBarrelFile: Public API for IRC integration
 import "server-only";
 
 export { AthemeFaultError, registerNick } from "./atheme/client";

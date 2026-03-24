@@ -18,5 +18,5 @@ export default defineConfig({
       randomize: true,
     },
   },
-  dirs: ["./trigger/jobs"],
+  dirs: ["./src/trigger/jobs"],
 });

@@ -27,7 +27,7 @@ const CONFIG_PACKAGES = new Set(["typescript-config"]);
 /**
  * Packages that retain @/ app-internal imports by design.
  * These resolve through the consuming app's bundler at build time.
- * See design doc: "Some packages (@portal/seo, @portal/api, @portal/ui)
+ * See design doc: "Some packages (@portal/seo, @portal/api, @atl/ui)
  * retain @/ app-internal imports that resolve through the app's bundler"
  */
 const PACKAGES_WITH_APP_IMPORTS = new Set(["seo", "ui", "api"]);

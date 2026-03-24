@@ -1,0 +1,152 @@
+@import "tailwindcss";
+/* Explicit path from src/styles/ → apps/web/node_modules (PostCSS may resolve bare imports incorrectly in monorepos) */
+@import "../../node_modules/tw-animate-css/dist/tw-animate.css";
+
+@plugin "@tailwindcss/typography";
+
+@import "shadcn/tailwind.css";
+
+@import "@atl/ui/styles/design-tokens.css";
+
+/* Paths relative to this file (src/styles/). Repo root = ../../../../ */
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+/* App + components + lib */
+@source "../**/*.{ts,tsx}";
+/* MDX blog (class names in content) */
+@source "../../content/**/*.{mdx}";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Consistent section spacing utility */
+@layer components {
+  .section-padding {
+    @apply py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32;
+  }
+
+  .section-margin {
+    @apply my-8 sm:my-12 md:my-16 lg:my-20;
+  }
+
+  .page-padding {
+    @apply pt-28 sm:pt-32 md:pt-36 lg:pt-40;
+  }
+}
+
+/* Legacy container utility class -- deprecated in v4, needs removed across the codebase */
+@utility container {
+  padding-inline: 1rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 2rem;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    /* --primary is oklch in design tokens, not hsl() */
+    border-color: var(--primary);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - 1rem));
+  }
+}
+
+@layer utilities {
+  .animate-typing {
+    width: 0;
+    animation:
+      typing 3.5s steps(40, end),
+      blink 0.75s step-end infinite;
+  }
+
+  .animate-type-once {
+    width: 0;
+    animation: typing 2.5s steps(30, end) forwards;
+  }
+
+  .animate-marquee {
+    animation: marquee var(--duration, 20s) linear infinite;
+  }
+
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration, 20s) linear infinite;
+  }
+}
+
+/* Custom prose overrides for dark mode */
+.prose table,
+.prose thead,
+.prose tbody,
+.prose tr,
+.prose th,
+.prose td,
+.prose strong,
+.prose code,
+.prose pre {
+  color: #e5e7eb !important;
+  background-color: #181a20 !important;
+  border-color: #2d2f36 !important;
+}
+
+.prose th,
+.prose strong {
+  font-weight: 600 !important;
+  color: #e5e7eb !important;
+}
+
+.prose code {
+  color: #e5e7eb !important;
+  background-color: #23272e !important;
+}
+
+.prose pre {
+  color: #e5e7eb !important;
+  background-color: #181a20 !important;
+  border-color: #2d2f36 !important;
+}
+
+/* Remove unwanted transparency or inheritance */
+.prose th,
+.prose td,
+.prose tr {
+  background-color: #181a20 !important;
+}

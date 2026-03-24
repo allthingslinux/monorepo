@@ -1,15 +1,15 @@
 "use client";
 
-import type { AdminUserDetailResponse } from "@portal/api/types";
-import { Badge } from "@portal/ui/ui/badge";
-import { Separator } from "@portal/ui/ui/separator";
+import { Badge } from "@atl/ui/ui/badge";
+import { Separator } from "@atl/ui/ui/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@portal/ui/ui/sheet";
+} from "@atl/ui/ui/sheet";
+import type { AdminUserDetailResponse } from "@portal/api/types";
 import { formatDate } from "@portal/utils/date";
 
 import { useUser } from "@/features/admin/hooks/use-admin";

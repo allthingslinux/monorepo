@@ -1,4 +1,4 @@
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import {
   Card,
   CardContent,
@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
+} from "@atl/ui/ui/card";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { connection } from "next/server";

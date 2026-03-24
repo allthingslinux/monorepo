@@ -91,7 +91,6 @@ export function getTranslatedRouteConfig(
         },
       };
     }),
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: TODO
     protected: config.protected.map((route) => {
       const label = resolveRouteTranslation(route.id, "label", resolver);
       const title = resolveRouteTranslation(

@@ -11,11 +11,11 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     },
     "plugins": [
@@ -38,10 +38,11 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".contentlayer/generated",
-    "types/**/*.d.ts",
+    "src/types/**/*.d.ts",
     "**/*.mjs",
     "**/*.cjs",
-    "trigger.config.ts"
+    "trigger.config.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules", "open-next.config.ts"]
 }

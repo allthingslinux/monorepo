@@ -58,17 +58,17 @@ This document defines the requirements for migrating the Portal project from a s
 4. WHEN a new Internal_Package is created, THE Internal_Package SHALL extend `@portal/typescript-config/library.json` in its `tsconfig.json`.
 5. THE Portal_App SHALL extend `@portal/typescript-config/nextjs.json` in its `tsconfig.json`.
 
-### Requirement 4: Shared Biome Configuration
+### Requirement 4: Shared Oxlint/Oxfmt Configuration
 
 **User Story:** As a developer, I want centralized linting and formatting rules, so that code style is consistent across all packages and the app.
 
 #### Acceptance Criteria
 
-1. THE `@portal/biome-config` package SHALL extend the Ultracite presets (`ultracite/biome/core`, `ultracite/biome/react`, `ultracite/biome/next`).
-2. THE `@portal/biome-config` package SHALL enforce `noBarrelFile: "error"` and `noNamespaceImport: "error"` rules with the existing override patterns.
-3. THE `@portal/biome-config` package SHALL preserve the existing import ordering configuration for React, UI libs, Next.js, form/validation, packages, internal aliases, and relative imports.
-4. WHEN `turbo run check` is executed, THE Task_Pipeline SHALL run Biome checks across all packages in parallel.
-5. THE Monorepo_Root `biome.jsonc` SHALL extend `@portal/biome-config` and add app-specific overrides.
+1. THE `@portal/lint-config` package SHALL extend the Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`).
+2. THE `@portal/lint-config` package SHALL enforce `noBarrelFile: "error"` and `noNamespaceImport: "error"` rules with the existing override patterns.
+3. THE `@portal/lint-config` package SHALL preserve the existing import ordering configuration for React, UI libs, Next.js, form/validation, packages, internal aliases, and relative imports.
+4. WHEN `turbo run check` is executed, THE Task_Pipeline SHALL run Oxlint/Oxfmt checks across all packages in parallel.
+5. THE Monorepo_Root `.oxlintrc.json` SHALL extend `@portal/lint-config` and add app-specific overrides.
 
 ### Requirement 5: Internal Package Extraction
 
@@ -82,7 +82,7 @@ This document defines the requirements for migrating the Portal project from a s
 4. WHEN an Internal_Package is extracted, THE Internal_Package SHALL declare only its own runtime dependencies in its `package.json`.
 5. THE Internal_Package dependency graph SHALL contain no cycles.
 6. WHEN an Internal_Package is extracted, THE Internal_Package SHALL declare `check`, `fix`, and `type-check` scripts in its `package.json` for Turborepo parallel execution.
-7. WHEN an Internal_Package uses the wildcard export pattern (`"./*"`), THE Internal_Package SHALL NOT contain barrel `index.ts` files, consistent with the `noBarrelFile: "error"` Biome rule.
+7. WHEN an Internal_Package uses the wildcard export pattern (`"./*"`), THE Internal_Package SHALL NOT contain barrel `index.ts` files, consistent with the `noBarrelFile: "error"` Oxlint/Oxfmt rule.
 8. THE `@portal/email` package SHALL use a `"."` export entry pointing to its single source file, as it is a single-file module.
 
 ### Requirement 6: Import Path Migration
@@ -154,7 +154,7 @@ This document defines the requirements for migrating the Portal project from a s
 #### Acceptance Criteria
 
 1. THE Monorepo_Root SHALL retain Husky git hooks, lint-staged, and commitlint configuration at the root level.
-2. WHEN `pnpm fix` is run, THE Workspace SHALL execute `ultracite fix` (not raw `biome fix`) across all packages via Turborepo.
+2. WHEN `pnpm fix` is run, THE Workspace SHALL execute `ultracite fix` (not bare `oxlint` / `oxfmt` without Ultracite) across all packages via Turborepo.
 3. WHEN the shadcn CLI is used to add a component, THE CLI SHALL write to the `@portal/ui` package at the correct path.
 4. THE `semantic-release` configuration SHALL continue to function for the Portal_App release process.
 5. WHEN database scripts (`db:generate`, `db:migrate`, `db:push`, `db:studio`) are run from the Monorepo_Root, THE scripts SHALL be scoped to the correct package (`@portal/db` or Portal_App).

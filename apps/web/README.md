@@ -20,16 +20,6 @@ pnpm run setup:bindings
 pnpm run dev:all
 ```
 
-```bash
-# Development with all services
-pnpm run dev:all  # Next.js + Wrangler + Trigger.dev
-```
-
-```bash
-# Development with all services
-pnpm run dev:all  # Next.js + Wrangler + Trigger.dev
-```
-
 Open [http://localhost:3000](http://localhost:3000) for Next.js dev, or [http://localhost:8788](http://localhost:8788) for Cloudflare Workers simulation.
 
 ## 📋 Tech Stack
@@ -37,9 +27,9 @@ Open [http://localhost:3000](http://localhost:3000) for Next.js dev, or [http://
 - **Framework:** Next.js 15 (App Router)
 - **Styling:** Tailwind CSS
 - **Content:** Contentlayer (MDX blogs)
-- **Deployment:** Cloudflare Workers + OpenNext (^1.14.7)
-  - Multi-worker architecture: Separate `dev` and `prod` environments
-  - PR deployments target dev environment only
+- **Deployment:** [Alchemy](https://alchemy.run) (TypeScript IaC) + OpenNext on Cloudflare Workers
+  - Stages map to workers in `alchemy.run.ts` (`prod`, `dev`, `pr-<number>`, local defaults)
+  - OpenNext build is invoked by Alchemy (`opennextjs-cloudflare build`); committed `wrangler.jsonc` stays for `wrangler dev` / reference
 - **Background Jobs:** Trigger.dev
 - **Package Manager:** pnpm
 
@@ -107,43 +97,53 @@ pnpm run dev:all  # Next.js + Wrangler + Trigger.dev
 
 **GitHub Actions with GitHub Environments** - Automatic deployments on push/PR:
 
-| Branch   | Environment | URL                                              |
-| -------- | ----------- | ------------------------------------------------ |
-| `main`   | Production  | [allthingslinux.org](https://allthingslinux.org) |
-| PR/other | Development | [allthingslinux.dev](https://allthingslinux.dev) |
+| Branch / event | Alchemy stage | Typical URL                                      |
+| -------------- | ------------- | ------------------------------------------------ |
+| `main` push    | `prod`        | [allthingslinux.org](https://allthingslinux.org) |
+| PR to `main`   | `pr-<number>` | workers.dev preview URL (commented on the PR)    |
 
 **Quick setup:**
 
 1. Create GitHub Environments: `dev` and `prod` (Settings → Environments)
-2. Add secrets and variables to each environment:
-   - **Secrets** (sensitive): `QUICKBOOKS_CLIENT_ID`, `QUICKBOOKS_CLIENT_SECRET`, `QUICKBOOKS_REFRESH_TOKEN`, `QUICKBOOKS_REALM_ID`, `QUICKBOOKS_ADMIN_KEY`, `GITHUB_TOKEN`, `MONDAY_API_KEY`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `TRIGGER_SECRET_KEY`
+2. Add repository or environment secrets (see [Alchemy CI](https://alchemy.run/guides/ci/) and Cloudflare state store):
+   - **Alchemy / Cloudflare:** `ALCHEMY_PASSWORD`, `ALCHEMY_STATE_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_EMAIL`
+   - **App secrets (existing):** `QUICKBOOKS_*`, `GITHUB_TOKEN`, `MONDAY_API_KEY`, `TRIGGER_SECRET_KEY`, etc.
    - **Variables** (non-sensitive): `MONDAY_BOARD_ID`, `DISCORD_WEBHOOK_URL`, `QUICKBOOKS_ENVIRONMENT`
-3. Push to any branch → Auto-deploys to development environment
-4. Merge to `main` → Auto-deploys to production environment
+3. Push to `main` → deploys stage `prod`. Open a PR → deploys stage `pr-<number>`; closing the PR runs `alchemy destroy` for that stage.
 
 See [`docs/integrations/quickbooks.md`](docs/integrations/quickbooks.md) for detailed QuickBooks integration setup.
 
-**Architecture:** Separate Cloudflare Workers for dev/prod with isolated R2/KV bindings. `.github/workflows/deploy.yml` automatically handles branch detection and deploys to appropriate worker.
+**Architecture:** Separate Cloudflare Workers per stage; bindings are declared in `alchemy.run.ts` and aligned with `wrangler.jsonc`. CI uses [`web-deploy.yml`](../../.github/workflows/web-deploy.yml).
+
+### Alchemy (local)
+
+- **Default stage** is your POSIX username (`$USER`), not Wrangler’s `local` env. Use `--stage dev` or `--stage prod` to match shared workers.
+- **From repo root:** `pnpm exec alchemy deploy --cwd apps/web --app web --stage <name>`
+- **From `apps/web`:** `pnpm run deploy` (same as `pnpm exec alchemy deploy --app web`)
+- **State:** set `ALCHEMY_STATE_TOKEN` for Cloudflare remote state (CI); without it, local deploys use filesystem state under `apps/web/.alchemy/` (gitignored).
+- **Login:** `pnpm exec alchemy login` (profiles in `~/.alchemy`; CI uses API tokens only).
+
+**Turborepo:** from the monorepo root, `pnpm turbo run deploy --filter=allthingslinux` runs the web package’s `deploy` task (`cache: false`).
 
 ### Manual Deployments
 
 #### Quick Deploy (Immediate)
 
-````bash
-pnpm run deploy:dev     # Deploy immediately to dev
 ```bash
-pnpm run deploy:prod    # Deploy immediately to prod
-pnpm run deploy         # Quick production deploy
-````
+pnpm exec alchemy deploy --app web --stage dev   # Example: shared dev worker
+pnpm exec alchemy deploy --app web --stage prod  # Example: production
+pnpm run deploy                                  # Same as alchemy deploy --app web (stage: $USER default)
+pnpm run deploy:prod                             # Legacy: OpenNext + wrangler deploy to prod
+pnpm run deploy:dev                              # Legacy: OpenNext + wrangler deploy to dev
+```
 
 #### Version Management (Safer Production)
 
-````bash
-pnpm run version:upload # Upload version to production
 ```bash
-pnpm run version:list   # List all versions
-pnpm run version:deploy # Deploy latest version
-````
+pnpm run version:upload   # Upload version to production
+pnpm run version:list     # List all versions
+pnpm run version:deploy   # Deploy latest version
+```
 
 **Benefits:**
 
@@ -215,17 +215,20 @@ pnpm run secrets:prod   # Upload secrets to prod worker
 
 ## 📁 Project Structure
 
-````text
-├── app/                 # Next.js App Router pages
-├── components/          # React components
-├── content/            # MDX blog content
-├── lib/                # Utilities & integrations
-├── public/             # Static assets
-├── scripts/            # Build & utility scripts
 ```text
-├── trigger/            # Background job definitions
-└── wrangler.jsonc      # Cloudflare Workers config
-````
+├── src/
+│   ├── app/             # Next.js App Router pages
+│   ├── components/      # React components
+│   ├── lib/             # Utilities & integrations
+│   ├── data/            # Form & app data
+│   ├── types/           # Shared TypeScript types
+│   ├── trigger/         # Background job definitions (Trigger.dev)
+│   └── env.ts           # Validated environment (t3-env / build-time checks)
+├── content/             # MDX blog content
+├── public/              # Static assets
+├── scripts/             # Build & utility scripts
+└── wrangler.jsonc       # Cloudflare Workers config
+```
 
 ## 🛠️ Development Scripts
 

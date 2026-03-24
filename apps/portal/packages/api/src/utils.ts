@@ -104,11 +104,7 @@ export function parseRouteId(value: string | string[] | undefined): string {
 export class APIError extends Error {
   constructor(
     message: string,
-    // biome-ignore lint/style/noParameterProperties: Concise error class
-    // biome-ignore lint/style/useConsistentMemberAccessibility: Concise error class
     public status = 500,
-    // biome-ignore lint/style/noParameterProperties: Concise error class
-    // biome-ignore lint/style/useConsistentMemberAccessibility: Concise error class
     public details?: unknown
   ) {
     super(message);

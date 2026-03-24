@@ -1,5 +1,6 @@
-import { PageContent } from "@portal/ui/layout/page";
-import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Skeleton } from "@atl/ui/ui/skeleton";
+
+import { PageContent } from "@/components/layout/page";
 
 /**
  * Loading UI for the dashboard segment.

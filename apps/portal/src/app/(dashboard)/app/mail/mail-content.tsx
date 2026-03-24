@@ -10,16 +10,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@portal/ui/ui/alert-dialog";
-import { Button, buttonVariants } from "@portal/ui/ui/button";
+} from "@atl/ui/ui/alert-dialog";
+import { Button, buttonVariants } from "@atl/ui/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
-import { Separator } from "@portal/ui/ui/separator";
+} from "@atl/ui/ui/card";
+import { Separator } from "@atl/ui/ui/separator";
 import { captureException } from "@sentry/nextjs";
 import {
   AlertCircle,

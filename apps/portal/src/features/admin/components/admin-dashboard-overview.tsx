@@ -1,10 +1,10 @@
 "use client";
 
-import { PageHeader } from "@portal/ui/layout/page/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@atl/ui/ui/card";
 import { UserCheck, Users } from "lucide-react";
 import Link from "next/link";
 
+import { PageHeader } from "@/components/layout/page/page-header";
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 
 import { AdminStats } from "./admin-stats";

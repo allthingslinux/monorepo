@@ -138,6 +138,8 @@ let nextConfig: NextConfig = {
     "@sentry-internal/node-native-stacktrace", // Native stacktrace module
   ],
 
+  transpilePackages: ["@atl/ui"],
+
   // ============================================================================
   // Turbopack Configuration
   // ============================================================================

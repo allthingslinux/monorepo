@@ -59,10 +59,10 @@ pnpm dev
 ### Code Style
 
 - **TypeScript**: Strict mode enabled, use explicit types
-- **Formatting**: Biome handles formatting (run `pnpm fix`)
-- **Linting**: Ultracite enforces code quality (run `pnpm check`)
+- **Formatting**: Oxfmt via Ultracite (run `pnpm fix` from monorepo root)
+- **Linting**: Oxlint via Ultracite (run `pnpm check` from monorepo root)
 - **Imports**: Use TypeScript path aliases (`@/auth`, `@/db`, etc.)
-- **Quotes**: Single quotes, no semicolons (Biome config)
+- **Quotes**: Single quotes, no semicolons (Ultracite / Oxfmt defaults)
 
 ### Git Workflow
 

@@ -19,7 +19,7 @@ apps/web/.contentlayer/
 apps/web/.open-next/
 apps/web/.wrangler/
 
-# Deferred lint (marketing site) — format via oxfmt still applies via .prettierignore exclusions
+# Marketing site — lint/format deferred until rules align with shared UI patterns
 apps/web/**
 
 # Mintlify docs — validated by `mint`; skip lint + format

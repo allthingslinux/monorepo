@@ -57,6 +57,9 @@ next-env.d.ts
 .dev.vars
 .wrangler/
 
+# Alchemy (IaC / deploy state — use remote CloudflareStateStore in CI)
+.alchemy/
+
 # Trigger.dev
 .trigger/
 
@@ -70,3 +73,5 @@ examples/
 
 # Misc project paths
 form-backups/
+# next-agents-md
+.next-docs/

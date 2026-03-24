@@ -4,7 +4,7 @@ import type { AnyAthemeFaultCode, AthemeFault } from "../types";
 
 // Atheme RESETPASS response: "The password for nick has been changed to password."
 // \x02 is the IRC bold control character — intentional, not a bug.
-// biome-ignore lint/suspicious/noControlCharactersInRegex: Atheme uses IRC bold byte (\x02) in RESETPASS responses
+// eslint-disable-next-line no-control-regex -- Atheme uses IRC bold byte (\x02) in RESETPASS responses
 const RESETPASS_BOLD_RE = /changed to ([^]+)/;
 const RESETPASS_FALLBACK_RE = /changed to (.+?)\./;
 

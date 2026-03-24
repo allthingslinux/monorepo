@@ -28,7 +28,7 @@ All services are accessible across multiple domains: `atl.dev`, `atl.sh`, `atl.t
 - **Validation**: Zod
 - **State Management**: TanStack Query (React Query)
 - **Internationalization**: next-intl
-- **Code Quality**: Biome + Ultracite
+- **Code Quality**: Ultracite (Oxlint + Oxfmt)
 
 ## Prerequisites
 
@@ -265,8 +265,8 @@ The project uses `next-intl` for multi-language support:
 - **Git Hooks**: Husky for pre-commit linting/formatting and commit message validation
 - **Version Management**: Mise (optional) for Node.js version management
 - **Type Safety**: Strict TypeScript with comprehensive type checking
-- **Linting**: Biome for fast linting and formatting
-- **Code Quality**: Ultracite for enhanced code quality checks
+- **Linting / formatting**: Oxlint + Oxfmt via Ultracite (`pnpm check` / `pnpm fix`)
+- **Code Quality**: Same toolchain; shared rules in the monorepo root
 - **Testing**: Vitest for unit and integration tests
 - **CI/CD**: GitHub Actions for automated testing and deployment
 

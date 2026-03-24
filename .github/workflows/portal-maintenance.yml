@@ -16,9 +16,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+# Global CI kill switch: commit `.github/CI_DISABLE` (see `.github/CI_DISABLE.example`).
+
 jobs:
   todos:
     name: TODOs
+    if: ${{ hashFiles('.github/CI_DISABLE') == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

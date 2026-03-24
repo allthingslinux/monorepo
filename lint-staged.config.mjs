@@ -1,5 +1,5 @@
 /**
- * Paths passed to `ultracite fix` bypass `.eslintignore`. Mirror root
+ * Paths skipped for Ultracite (oxlint + oxfmt) on staged files — mirror root
  * `.eslintignore` so pre-commit matches `pnpm check`.
  */
 const IGNORE_PATH_PREFIXES = [

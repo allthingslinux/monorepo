@@ -1,23 +1,22 @@
-// TODO: Fix unused variable ignore
-// biome-ignore-all lint/correctness/noUnusedVariables: Type parameters in module augmentation must match original signature
+/* eslint-disable @typescript-eslint/no-unused-vars -- module augmentation: type params must match upstream */
 "use client";
 
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@portal/ui/ui/dropdown-menu";
-import { Input } from "@portal/ui/ui/input";
-import { Label } from "@portal/ui/ui/label";
+} from "@atl/ui/ui/dropdown-menu";
+import { Input } from "@atl/ui/ui/input";
+import { Label } from "@atl/ui/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@portal/ui/ui/select";
+} from "@atl/ui/ui/select";
 import {
   Table,
   TableBody,
@@ -25,7 +24,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@portal/ui/ui/table";
+} from "@atl/ui/ui/table";
 import { cn } from "@portal/utils/utils";
 import {
   flexRender,

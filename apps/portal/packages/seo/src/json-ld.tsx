@@ -19,7 +19,6 @@ export async function JsonLd({ code }: JsonLdProps) {
 
   return (
     <script
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires script tag with escaped JSON content
       dangerouslySetInnerHTML={{
         __html: escapeJsonForHtml(JSON.stringify(code)),
       }}

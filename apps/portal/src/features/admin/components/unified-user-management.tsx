@@ -1,23 +1,23 @@
 "use client";
 
-import type { UserWithIntegrations } from "@portal/api/types";
-import type { UserListWithIntegrationsResponse } from "@portal/types/api";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
-import { Input } from "@portal/ui/ui/input";
-import { Label } from "@portal/ui/ui/label";
+} from "@atl/ui/ui/card";
+import { Input } from "@atl/ui/ui/input";
+import { Label } from "@atl/ui/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@portal/ui/ui/select";
+} from "@atl/ui/ui/select";
+import type { UserWithIntegrations } from "@portal/api/types";
+import type { UserListWithIntegrationsResponse } from "@portal/types/api";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 

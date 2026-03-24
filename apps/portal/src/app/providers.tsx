@@ -3,8 +3,6 @@
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
 import { AuthUIProviderTanstack } from "@daveyplate/better-auth-ui/tanstack";
 import { getQueryClient } from "@portal/api/query-client";
-import { CommandMenu } from "@portal/ui/command-menu";
-import { ReactQueryDevtools } from "@portal/ui/dev-tools";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { Route } from "next";
 import { ThemeProvider } from "next-themes";
@@ -15,10 +13,12 @@ import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import { useListApiKeys } from "@/auth/auth-hooks";
-// import { ErrorBoundary } from "@portal/ui/error-boundary";
+// import { ErrorBoundary } from "@atl/ui/error-boundary";
 import { authClient } from "@/auth/client";
 import { useBetterAuthUILocalization } from "@/auth/localization";
 import { SessionProvider } from "@/auth/session-context";
+import { CommandMenu } from "@/components/command-menu";
+import { ReactQueryDevtools } from "@/components/dev-tools";
 
 // Note: We use our own QueryClientProvider for general data fetching hooks.
 // AuthQueryProvider is still needed for Better Auth's TanStack Query integration.
@@ -168,7 +168,6 @@ export function Providers({ children }: { children: ReactNode }) {
               // Normalize Better Auth 1.5 list response { apiKeys } → array for ApiKeysCard.
               // Pending upstream fix: https://github.com/better-auth-ui/better-auth-ui/issues/345
               // eslint-disable-next-line @typescript-eslint/no-explicit-any -- AuthHook expects BetterFetchError; TanStack Query uses Error
-              // biome-ignore lint/suspicious/noExplicitAny: pending upstream fix
               hooks={{ useListApiKeys: useListApiKeys as any }}
               // Multiple device session management
               Link={LinkWrapper}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@portal/ui/ui/button";
+import { Button } from "@atl/ui/ui/button";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
+} from "@atl/ui/ui/card";
 import { captureException } from "@sentry/nextjs";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -19,8 +19,7 @@ import { useEffect } from "react";
  * Root error boundary content. Rendered lazily via app/error.tsx.
  * Uses next-intl "error" namespace per next-intl error-files doc.
  */
-// biome-ignore lint/suspicious/noShadowRestrictedNames: Next.js Error component
-export default function Error({
+export default function RootErrorContent({
   error,
   reset,
 }: {

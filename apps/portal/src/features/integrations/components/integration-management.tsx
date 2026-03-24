@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,9 +10,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@portal/ui/ui/alert-dialog";
-import { Button } from "@portal/ui/ui/button";
-import { Card } from "@portal/ui/ui/card";
+} from "@atl/ui/ui/alert-dialog";
+import { Button } from "@atl/ui/ui/button";
+import { Card } from "@atl/ui/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +20,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@portal/ui/ui/dialog";
-import { Input } from "@portal/ui/ui/input";
-import { Label } from "@portal/ui/ui/label";
+} from "@atl/ui/ui/dialog";
+import { Input } from "@atl/ui/ui/input";
+import { Label } from "@atl/ui/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@portal/utils/utils";
 import * as Sentry from "@sentry/nextjs";
 import {
@@ -485,7 +485,6 @@ function SetupDialog<TAccount extends { id: string }>({
     reset,
     setError,
   } = useForm<FormValues>({
-    // biome-ignore lint/suspicious/noExplicitAny: Resolver type mismatch workaround
     defaultValues: {
       [createInputName]: "",
       ...(createSecondInputName ? { [createSecondInputName]: "" } : {}),

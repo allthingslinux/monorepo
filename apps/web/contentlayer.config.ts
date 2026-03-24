@@ -71,8 +71,8 @@ export const BlogPost = defineDocumentType(() => ({
             "December",
           ];
           return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-        } catch (e) {
-          console.error("Error formatting date:", e);
+        } catch (error) {
+          console.error("Error formatting date:", error);
           return doc.date;
         }
       },

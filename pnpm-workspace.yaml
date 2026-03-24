@@ -3,9 +3,15 @@ packages:
   - "apps/docs"
   - "apps/portal"
   - "apps/portal/packages/*"
+  - "packages/*"
 
 onlyBuiltDependencies:
+  - "@depot/cli"
+  - "@tailwindcss/oxide"
+  - contentlayer2
   - core-js
   - esbuild
+  - protobufjs
   - sharp
   - unrs-resolver
+  - workerd

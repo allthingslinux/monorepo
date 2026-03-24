@@ -1,14 +1,14 @@
 "use client";
 
-import type { Session } from "@portal/api/types";
-import type { SessionListResponse } from "@portal/types/api";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
+} from "@atl/ui/ui/card";
+import type { Session } from "@portal/api/types";
+import type { SessionListResponse } from "@portal/types/api";
 import { memo, useMemo } from "react";
 
 import {

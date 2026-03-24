@@ -7,7 +7,7 @@ describe("sendEmail", () => {
   });
 
   it("should log email details in development", () => {
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: Suppress console.log in tests
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- mock
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     sendEmail({
@@ -27,7 +27,7 @@ describe("sendEmail", () => {
   });
 
   it("should handle text content", () => {
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: Suppress console.log in tests
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- mock
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     sendEmail({

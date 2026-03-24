@@ -2,13 +2,13 @@ import { getServerQueryClient } from "@portal/api/hydration";
 import { queryKeys } from "@portal/api/query-keys";
 import { fetchCurrentUserServer } from "@portal/api/server-queries";
 import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
 import { LatestUpdatesCard } from "@/features/blog/components/latest-updates-card";
 import { DiscordMemberStat } from "@/features/integrations/components/discord-member-stat";
 import { IrcMemberStat } from "@/features/integrations/components/irc-member-stat";

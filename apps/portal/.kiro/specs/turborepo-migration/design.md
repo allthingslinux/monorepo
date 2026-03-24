@@ -15,7 +15,7 @@ graph TD
     subgraph "Turborepo Root"
         TURBO["turbo.json — Task orchestration & caching"]
         PNPM["pnpm-workspace.yaml — Workspace definition"]
-        BIOME["biome.jsonc — Root lint/format config"]
+        LINTROOT[".oxlintrc.json — Root lint/format config"]
     end
 
     subgraph "apps/"
@@ -33,7 +33,7 @@ graph TD
         SEO["@portal/seo<br/>Metadata, robots, sitemap"]
         API["@portal/api<br/>TanStack Query infra,<br/>query keys, hydration"]
         TS_CFG["@portal/typescript-config<br/>Shared tsconfig presets"]
-        BIOME_CFG["@portal/biome-config<br/>Shared Biome presets"]
+        LINTCFG["@portal/lint-config<br/>Shared Oxlint/Oxfmt presets"]
     end
 
     WEB --> UI
@@ -51,7 +51,7 @@ graph TD
     API --> TYPES
 
     WEB -.-> TS_CFG
-    WEB -.-> BIOME_CFG
+    WEB -.-> LINTCFG
     UI -.-> TS_CFG
     DB -.-> TS_CFG
 
@@ -76,7 +76,7 @@ sequenceDiagram
     par Build packages (parallel, no deps between them)
         Turbo->>Pkgs: @portal/types — tsc
         Turbo->>Pkgs: @portal/utils — tsc
-        Turbo->>Pkgs: @portal/biome-config — (no build)
+        Turbo->>Pkgs: @portal/lint-config — (no build)
         Turbo->>Pkgs: @portal/typescript-config — (no build)
     end
 
@@ -137,7 +137,7 @@ sequenceDiagram
 - `turbo.json` — Task pipeline definitions, cache inputs/outputs, env vars
 - `pnpm-workspace.yaml` — Workspace glob patterns
 - `package.json` — Root scripts delegating to `turbo run`
-- `biome.jsonc` — Root Biome config (extended by packages)
+- `.oxlintrc.json` — Root Oxlint/Oxfmt config (extended by packages)
 
 **Note**: No root `tsconfig.json` is needed. Each package extends `@portal/typescript-config` presets directly. A root tsconfig would cause all tasks to miss cache when it changes.
 
@@ -169,18 +169,18 @@ sequenceDiagram
 
 **Note**: TypeScript project references (`composite`, `declaration`) are intentionally omitted. JIT packages resolve types directly from `.ts` source via the `exports` field's `types` condition. Turborepo handles dependency ordering, making project references redundant.
 
-### Component 3: @portal/biome-config
+### Component 3: @portal/lint-config
 
-**Purpose**: Shared Biome linting/formatting configuration built on Ultracite presets.
+**Purpose**: Shared Oxlint/Oxfmt linting/formatting configuration built on Ultracite presets.
 
 **Interface**:
 
 ```typescript
-// packages/biome-config/biome.jsonc — Base Biome config
-// Extended by each package's local biome.jsonc via "extends"
+// packages/lint-config/.oxlintrc.json — Base Oxlint/Oxfmt config
+// Extended by each package's local .oxlintrc.json via "extends"
 ```
 
-**Key detail**: The project uses **Ultracite** (`ultracite` npm package) as a zero-config Biome preset wrapper. The current `biome.jsonc` extends `ultracite/biome/core`, `ultracite/biome/react`, and `ultracite/biome/next`. The shared config must preserve this, not replace it.
+**Key detail**: The project uses **Ultracite** (`ultracite` npm package) as a zero-config Oxlint/Oxfmt preset wrapper. The current `.oxlintrc.json` extends `ultracite (Oxlint)`, `ultracite (Oxlint)`, and `ultracite (Oxlint)`. The shared config must preserve this, not replace it.
 
 **Current rules that must be preserved**:
 
@@ -193,13 +193,13 @@ sequenceDiagram
 
 **Responsibilities**:
 
-- Extend Ultracite presets (`ultracite/biome/core`, `ultracite/biome/react`, `ultracite/biome/next`)
+- Extend Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`)
 - Centralize the `noBarrelFile` and `noNamespaceImport` rules with overrides
 - Provide consistent import ordering rules (updated for `@portal/*` package imports)
-- Allow per-package overrides via local `biome.jsonc`
-- Root `biome.jsonc` extends `@portal/biome-config` and adds app-specific overrides
+- Allow per-package overrides via local `.oxlintrc.json`
+- Root `.oxlintrc.json` extends `@portal/lint-config` and adds app-specific overrides
 
-**Note**: `ultracite` and `@biomejs/biome` remain as root devDependencies. The `pnpm fix` and `pnpm check` scripts continue to use `ultracite fix` and `ultracite check` respectively, not raw `biome` commands.
+**Note**: `ultracite` and `oxlint & oxfmt` remain as root devDependencies. The `pnpm fix` and `pnpm check` scripts continue to use `ultracite fix` and `ultracite check` respectively, not raw `oxlint` commands.
 
 ### Component 4: @portal/types
 
@@ -495,7 +495,7 @@ portal/                              # Turborepo root
 │       ├── postcss.config.mjs
 │       ├── components.json          # shadcn config
 │       ├── tsconfig.json            # Extends @portal/typescript-config/nextjs
-│       ├── biome.jsonc              # Extends @portal/biome-config
+│       ├── .oxlintrc.json              # Extends @portal/lint-config
 │       ├── turbo.json               # Package-level turbo overrides (typegen dep)
 │       ├── .env                     # Environment variables (app-owned)
 │       └── package.json
@@ -505,8 +505,8 @@ portal/                              # Turborepo root
 │   │   ├── nextjs.json
 │   │   ├── library.json
 │   │   └── package.json
-│   ├── biome-config/                # @portal/biome-config
-│   │   ├── biome.jsonc
+│   ├── lint-config/                # @portal/lint-config
+│   │   ├── .oxlintrc.json
 │   │   └── package.json
 │   ├── types/                       # @portal/types
 │   │   ├── src/
@@ -591,7 +591,7 @@ portal/                              # Turborepo root
 ├── .github/workflows/               # Updated CI/CD
 ├── turbo.json                       # Turborepo config
 ├── pnpm-workspace.yaml              # Workspace definition
-├── biome.jsonc                      # Root Biome (extends @portal/biome-config)
+├── .oxlintrc.json                      # Root Oxlint/Oxfmt (extends @portal/lint-config)
 ├── Containerfile                    # Updated for monorepo
 ├── compose.yaml                     # Docker Compose (unchanged)
 └── package.json                     # Root package.json
@@ -621,7 +621,7 @@ The migration rewrites `@/` path aliases to package imports:
 | `@/config`                   | `@/config` (stays — app-internal)            |
 | `@/env`                      | `@/env` (stays — app-internal)               |
 
-Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-internal imports. Only shared modules become package imports. Packages use direct subpath imports (e.g., `@portal/utils/constants`) instead of barrel re-exports, aligning with the `noBarrelFile: "error"` Biome rule. The exception is `@portal/email` which uses `"."` since it's a single-file module.
+Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-internal imports. Only shared modules become package imports. Packages use direct subpath imports (e.g., `@portal/utils/constants`) instead of barrel re-exports, aligning with the `noBarrelFile: "error"` Oxlint/Oxfmt rule. The exception is `@portal/email` which uses `"."` since it's a single-file module.
 
 **Existing dedicated aliases that change**:
 
@@ -648,8 +648,8 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
     "./*": { "types": "./src/*.ts", "default": "./src/*.ts" }
   },
   "scripts": {
-    "check": "biome check .",
-    "fix": "biome fix .",
+    "check": "pnpm check .",
+    "fix": "pnpm fix .",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -664,9 +664,9 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
 }
 ```
 
-**Note on per-package scripts**: Each package declares its own `check`, `fix`, and `type-check` scripts. This enables Turborepo to run these tasks in parallel across all packages. The `biome` CLI is available via the root `@biomejs/biome` devDependency, and config resolution walks up the directory tree to find the nearest `biome.jsonc`.
+**Note on per-package scripts**: Each package declares its own `check`, `fix`, and `type-check` scripts. This enables Turborepo to run these tasks in parallel across all packages. The Ultracite CLI is available via the root `oxlint & oxfmt` devDependency, and config resolution walks up the directory tree to find the nearest `.oxlintrc.json`.
 
-**Note on exports**: Packages use only the wildcard export `"./*"` instead of a `"."` barrel entry. This aligns with the project's `noBarrelFile: "error"` Biome rule. Consumers import specific subpaths (e.g., `@portal/utils/constants`, `@portal/utils/utils`). For packages with a single file like `@portal/email`, `"."` points directly to that file (not a barrel re-export).
+**Note on exports**: Packages use only the wildcard export `"./*"` instead of a `"."` barrel entry. This aligns with the project's `noBarrelFile: "error"` Oxlint/Oxfmt rule. Consumers import specific subpaths (e.g., `@portal/utils/constants`, `@portal/utils/utils`). For packages with a single file like `@portal/email`, `"."` points directly to that file (not a barrel re-export).
 
 **Preconditions:**
 
@@ -706,12 +706,12 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
     },
     "check": {
       "dependsOn": ["transit"],
-      "inputs": ["src/**", "biome.jsonc"],
+      "inputs": ["src/**", ".oxlintrc.json"],
       "outputs": []
     },
     "fix": {
       "dependsOn": [],
-      "inputs": ["src/**", "biome.jsonc"],
+      "inputs": ["src/**", ".oxlintrc.json"],
       "outputs": [],
       "cache": false
     },
@@ -776,7 +776,7 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
 
 **Note on `.env` in task inputs**: Turbo does NOT load `.env` files — the framework (Next.js) does. But Turbo needs to know about `.env` changes to invalidate cache correctly. The `.env` and `.env.*` patterns are included in `build` and `test` inputs so that env var changes trigger rebuilds. Since `.env` lives in `apps/portal/`, the inputs are relative to that package.
 
-**Note on `fix` task**: The `fix` task runs `ultracite fix` (not `biome fix`). It's not cached because it modifies files in place. The `check` task runs `ultracite check` and can be cached.
+**Note on `fix` task**: The `fix` task runs `ultracite fix` (not `pnpm fix`). It's not cached because it modifies files in place. The `check` task runs `ultracite check` and can be cached.
 
 ````
 
@@ -872,7 +872,7 @@ onlyBuiltDependencies:
 }
 ```
 
-**Note on Husky/lint-staged/commitlint**: These tools must remain at the monorepo root level. `husky` hooks run from the git root, `lint-staged` runs Biome on staged files, and `commitlint` validates commit messages. Their configs (`.husky/`, `.lintstagedrc.json`, `commitlint.config.cjs`) stay at root. The `lint-staged` config may need path updates if it references `src/` directly.
+**Note on Husky/lint-staged/commitlint**: These tools must remain at the monorepo root level. `husky` hooks run from the git root, `lint-staged` runs Oxlint/Oxfmt on staged files, and `commitlint` validates commit messages. Their configs (`.husky/`, `.lintstagedrc.json`, `commitlint.config.cjs`) stay at root. The `lint-staged` config may need path updates if it references `src/` directly.
 
 **Note on semantic-release**: The `release` script delegates to `apps/portal` where `semantic-release` and its plugins (`@semantic-release/changelog`, `@semantic-release/git`, `@semantic-release/exec`) remain as devDependencies. The `.releaserc.json` stays at root or moves to `apps/portal/`.
 
@@ -888,7 +888,7 @@ onlyBuiltDependencies:
 - `pnpm build` triggers `turbo run build` which builds all packages then the app
 - `pnpm dev` starts the Next.js dev server with package watching
 - Database commands are scoped to the correct package/app
-- `pnpm fix` runs Biome across all packages
+- `pnpm fix` runs Oxlint/Oxfmt across all packages
 
 ### Function 5: TypeScript Config Presets
 
@@ -960,8 +960,8 @@ onlyBuiltDependencies:
     "./*": { "types": "./src/*.ts", "default": "./src/*.ts" }
   },
   "scripts": {
-    "check": "biome check .",
-    "fix": "biome fix .",
+    "check": "pnpm check .",
+    "fix": "pnpm fix .",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -1015,7 +1015,7 @@ STEP 2: Create turbo.json with task pipeline
 STEP 3: Update pnpm-workspace.yaml to include apps/* and packages/*
 STEP 4: Create apps/portal/ directory
 STEP 5: Create packages/typescript-config/ with base, nextjs, library presets
-STEP 6: Create packages/biome-config/ with shared biome.jsonc
+STEP 6: Create packages/lint-config/ with shared .oxlintrc.json
 
 // ASSERT: pnpm install succeeds, no packages moved yet
 
@@ -1512,9 +1512,9 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 ### Error Scenario 7: Barrel File Lint Errors in Packages
 
-**Condition**: Biome reports `noBarrelFile` errors on package files that re-export symbols.
+**Condition**: Oxlint/Oxfmt reports `noBarrelFile` errors on package files that re-export symbols.
 **Response**: `pnpm check` fails on package files.
-**Recovery**: This scenario is largely avoided by using direct exports via the wildcard `"./*"` pattern instead of barrel `index.ts` files. Packages do not have barrel files — consumers import specific subpaths (e.g., `@portal/utils/constants`). The only exception is `@portal/email` which uses `"."` pointing to a single-file module (not a barrel re-export). If a package genuinely needs a barrel file, add an override in the biome config for that specific path.
+**Recovery**: This scenario is largely avoided by using direct exports via the wildcard `"./*"` pattern instead of barrel `index.ts` files. Packages do not have barrel files — consumers import specific subpaths (e.g., `@portal/utils/constants`). The only exception is `@portal/email` which uses `"."` pointing to a single-file module (not a barrel re-export). If a package genuinely needs a barrel file, add an override in the oxlint config for that specific path.
 **Prevention**: Follow the direct export pattern for all new packages. The `noBarrelFile: "error"` rule applies cleanly when packages use `"./*"` exports.
 
 ### Error Scenario 8: RouteContext Type Errors After Migration
@@ -1524,12 +1524,12 @@ _For all_ internal packages, every runtime import in the package's source files 
 **Recovery**: Run `pnpm typegen` before `pnpm type-check`. In turbo.json, the `type-check` task for `apps/portal` depends on `typegen`.
 **Prevention**: The turbo.json pipeline includes `typegen` as a dependency of `type-check`. The app's `build` script already runs `next typegen && next build`, so builds are unaffected.
 
-### Error Scenario 9: Ultracite/Biome Config Resolution in Packages
+### Error Scenario 9: Ultracite/Oxlint Config Resolution in Packages
 
-**Condition**: Individual packages can't resolve `ultracite/biome/*` presets because `ultracite` is only installed at root.
+**Condition**: Individual packages can't resolve `ultracite/oxlint/*` presets because `ultracite` is only installed at root.
 **Response**: `pnpm check` or `pnpm fix` fails in package directories.
-**Recovery**: Ensure `ultracite` and `@biomejs/biome` are root devDependencies (not per-package). Run lint commands from root via `turbo run check` which inherits the root node_modules resolution.
-**Prevention**: Keep `ultracite` as a root-only devDependency. Package-level `biome.jsonc` files extend from `../../biome.jsonc` (root) or from `@portal/biome-config`. The `check` and `fix` turbo tasks run from each package's directory but resolve configs up the tree.
+**Recovery**: Ensure `ultracite` and `oxlint & oxfmt` are root devDependencies (not per-package). Run lint commands from root via `turbo run check` which inherits the root node_modules resolution.
+**Prevention**: Keep `ultracite` as a root-only devDependency. Package-level `.oxlintrc.json` files extend from `../../.oxlintrc.json` (root) or from `@portal/lint-config`. The `check` and `fix` turbo tasks run from each package's directory but resolve configs up the tree.
 
 ## Testing Strategy
 
@@ -1556,7 +1556,7 @@ Key properties to test:
 - Run `pnpm build` from root to verify the full Turborepo pipeline
 - Run `pnpm test` from root to verify all tests pass through Turborepo
 - Run `pnpm type-check` from root to verify TypeScript across all packages
-- Run `pnpm check` from root to verify Biome linting across all packages
+- Run `pnpm check` from root to verify Oxlint/Oxfmt linting across all packages
 - Build Docker image and verify health check endpoint responds
 - Verify `turbo prune @portal/portal --docker` produces correct output
 
@@ -1565,7 +1565,7 @@ Key properties to test:
 ### Build Performance
 
 - **Turborepo caching**: Unchanged packages are not rebuilt. On a typical PR that touches only `apps/portal/src/features/`, only the app build runs — all package builds are cache hits.
-- **Parallel execution**: Independent packages build in parallel. `@portal/types`, `@portal/utils`, `@portal/biome-config`, and `@portal/typescript-config` all build simultaneously.
+- **Parallel execution**: Independent packages build in parallel. `@portal/types`, `@portal/utils`, `@portal/lint-config`, and `@portal/typescript-config` all build simultaneously.
 - **Remote caching**: Turborepo supports remote caching (Vercel Remote Cache or self-hosted). CI runs can share cache across branches and developers.
 - **JIT packages**: Using the "Just-in-Time" pattern (exports point to `.ts` source, no build step), most packages have zero build time. The consuming app's bundler transpiles them.
 
@@ -1613,7 +1613,7 @@ Dependencies are redistributed from the single root `package.json` to individual
 ### Preserved Dependencies
 
 - `pnpm` 10.28.2 as package manager (unchanged)
-- `ultracite` / `@biomejs/biome` for linting (stays as root devDependencies — not per-package)
+- `ultracite` / `oxlint & oxfmt` for linting (stays as root devDependencies — not per-package)
 - `vitest` / `fast-check` for testing (stays in `apps/portal`)
 - `husky` / `lint-staged` / `@commitlint/cli` / `@commitlint/config-conventional` (stay as root devDependencies)
 - `semantic-release` and plugins (stay in `apps/portal` or root)
@@ -1627,7 +1627,7 @@ Dependencies are redistributed from the single root `package.json` to individual
 These stay at the monorepo root, not in individual packages:
 
 - `turbo` — Turborepo CLI (new)
-- `ultracite` / `@biomejs/biome` — Linting/formatting
+- `ultracite` / `oxlint & oxfmt` — Linting/formatting
 - `husky` — Git hooks
 - `lint-staged` — Pre-commit lint
 - `@commitlint/cli` / `@commitlint/config-conventional` — Commit message validation

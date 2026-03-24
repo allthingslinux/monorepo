@@ -1,9 +1,0 @@
-onlyBuiltDependencies:
-  - "@depot/cli"
-  - "@tailwindcss/oxide"
-  - contentlayer2
-  - esbuild
-  - protobufjs
-  - sharp
-  - unrs-resolver
-  - workerd

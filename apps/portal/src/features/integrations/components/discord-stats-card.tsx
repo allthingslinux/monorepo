@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
-import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@atl/ui/ui/card";
+import { Skeleton } from "@atl/ui/ui/skeleton";
 import Image from "next/image";
 import { Suspense } from "react";
 

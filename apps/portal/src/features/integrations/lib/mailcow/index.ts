@@ -1,5 +1,3 @@
-// biome-ignore-all lint/performance/noBarrelFile: Public API for mailcow integration
-
 export {
   isMailcowConfigured,
   mailcowConfig,

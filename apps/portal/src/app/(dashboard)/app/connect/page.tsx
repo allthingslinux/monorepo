@@ -1,5 +1,4 @@
 import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import {
   ArrowUpRight,
   BookOpen,
@@ -18,6 +17,7 @@ import {
 import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
 import { COMMUNITY_LINKS, SOCIAL_MEDIA_LINKS } from "@/config/community";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 

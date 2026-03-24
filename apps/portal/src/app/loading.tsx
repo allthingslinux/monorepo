@@ -1,4 +1,4 @@
-import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Skeleton } from "@atl/ui/ui/skeleton";
 
 /**
  * Loading UI for the root segment.

@@ -12,9 +12,9 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "utils": "@portal/utils",
-    "components": "@portal/ui",
-    "ui": "@portal/ui/ui",
+    "utils": "@atl/ui/lib/utils",
+    "components": "@atl/ui",
+    "ui": "@atl/ui/ui",
     "lib": "@/shared",
     "hooks": "@/hooks",
     "styles": "@/styles",

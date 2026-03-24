@@ -1,6 +1,5 @@
 "use client";
 
-import type { User } from "@portal/api/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,23 +9,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@portal/ui/ui/alert-dialog";
-import { Badge } from "@portal/ui/ui/badge";
-import { Button } from "@portal/ui/ui/button";
+} from "@atl/ui/ui/alert-dialog";
+import { Badge } from "@atl/ui/ui/badge";
+import { Button } from "@atl/ui/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@portal/ui/ui/dropdown-menu";
+} from "@atl/ui/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@portal/ui/ui/select";
+} from "@atl/ui/ui/select";
+import type { User } from "@portal/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";

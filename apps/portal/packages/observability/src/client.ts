@@ -371,7 +371,6 @@ const createBeforeSend =
 /**
  * Filter transaction data
  */
-// biome-ignore lint/suspicious/noExplicitAny: Sentry callback types require any
 const beforeSendTransaction = (event: any) => {
   // Remove query parameters that might contain sensitive data
   if (event?.transaction) {

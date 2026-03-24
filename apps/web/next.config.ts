@@ -1,13 +1,23 @@
 import { cpus } from "node:os";
+import path from "node:path";
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import type { NextConfig } from "next";
 import { withContentlayer } from "next-contentlayer2";
 
 // Validate environment variables at build time
-import "./env";
+import "./src/env";
+
+// pnpm hoists `next` under monorepo/node_modules/.pnpm/...; symlinks from apps/web/node_modules
+// point outside apps/web. Turbopack only resolves inside turbopack.root, so the root must be
+// the monorepo directory that contains node_modules/.pnpm (see turbopack root-directory docs).
+const monorepoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: monorepoRoot,
+  },
+  transpilePackages: ["@atl/ui"],
   reactStrictMode: true,
   poweredByHeader: false,
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
@@ -23,8 +33,8 @@ const nextConfig: NextConfig = {
     //     : {
     //         exclude: ['error', 'warn'],
     //       },
-    // Enable emotion optimization if used
-    emotion: true,
+    // Keep default (React JSX). `emotion: true` applies Emotion’s JSX runtime to
+    // transpiled packages too (e.g. `@atl/ui`) and breaks unless they depend on `@emotion/react`.
     // Remove React properties in production
     reactRemoveProperties: process.env.NODE_ENV === "production",
   },
@@ -57,41 +67,6 @@ const nextConfig: NextConfig = {
     serverSourceMaps: false,
     // Optimize webpack memory usage (reduces max memory, may slightly increase build time)
     webpackMemoryOptimizations: true,
-  },
-  // Performance profiling - disable webpack minification for better debugging
-  webpack: (config, { isServer }) => {
-    // Only disable minification in development for easier profiling
-    if (process.env.NODE_ENV === "development") {
-      config.optimization.minimize = false;
-    }
-
-    // Ignore .map files to prevent esbuild errors in OpenNext/Cloudflare builds
-    // This prevents webpack from trying to process source map files
-    if (isServer) {
-      // Only apply to server-side builds (where OpenNext/esbuild processes files)
-      config.module.rules.push({
-        test: /\.map$/,
-        type: "asset/source",
-        generator: {
-          emit: false, // Don't emit .map files
-        },
-      });
-
-      // Ignore .map files in module resolution
-      config.resolve.extensions = config.resolve.extensions.filter(
-        (ext: string) => ext !== ".map"
-      );
-
-      // Add ignore plugin to completely skip .map files
-      const { IgnorePlugin } = require("webpack");
-      config.plugins.push(
-        new IgnorePlugin({
-          resourceRegExp: /\.map$/,
-        })
-      );
-    }
-
-    return config;
   },
   // Add headers for API endpoints
   async headers() {

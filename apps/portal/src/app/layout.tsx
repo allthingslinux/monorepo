@@ -1,11 +1,12 @@
 import { createPageMetadata } from "@portal/seo/metadata";
-import { DevTools } from "@portal/ui/dev-tools";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { connection } from "next/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
+
+import { DevTools } from "@/components/dev-tools";
 
 import { geistMono, geistSans, inter } from "./fonts";
 

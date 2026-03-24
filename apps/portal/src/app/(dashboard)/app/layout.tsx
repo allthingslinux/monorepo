@@ -1,9 +1,9 @@
-import { AppLayout } from "@portal/ui/layout/app-layout";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 
 import { isAdminOrStaff } from "@/auth/check-role";
 import { verifySession } from "@/auth/dal";
+import { AppLayout } from "@/components/layout/app-layout";
 
 export default async function DashboardLayout({
   children,

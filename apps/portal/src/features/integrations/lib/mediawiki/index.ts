@@ -1,4 +1,3 @@
-// biome-ignore-all lint/performance/noBarrelFile: Public API for MediaWiki integration
 import "server-only";
 
 export { mediawikiBotClient } from "./bot-client";

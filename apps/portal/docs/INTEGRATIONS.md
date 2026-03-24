@@ -683,7 +683,7 @@ export function register{Integration}Integration(): void {
 Create `index.ts`:
 
 ```typescript
-// biome-ignore lint/performance/noBarrelFile: Public API for integration
+// Barrel: add `apps/portal/src/features/integrations/lib/{integration}/index.ts` to root `.oxlintrc.json` overrides if `oxc/no-barrel-file` fires.
 export { {integration}Integration, register{Integration}Integration } from "./implementation";
 export type {
   {Integration}Account,

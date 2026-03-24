@@ -1,12 +1,12 @@
 "use client";
 
+import { Button } from "@atl/ui/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@atl/ui/ui/card";
+import { DialogFooter } from "@atl/ui/ui/dialog";
+import { Input } from "@atl/ui/ui/input";
+import { Label } from "@atl/ui/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateMailboxRequestSchema } from "@portal/schemas/integrations/mailcow";
-import { Button } from "@portal/ui/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@portal/ui/ui/card";
-import { DialogFooter } from "@portal/ui/ui/dialog";
-import { Input } from "@portal/ui/ui/input";
-import { Label } from "@portal/ui/ui/label";
 import { captureException } from "@sentry/nextjs";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";

@@ -1,8 +1,8 @@
 import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
 import { LINUX_FEED_SOURCES } from "@/config/feed";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { fetchAllLinuxFeeds } from "@/shared/feed";

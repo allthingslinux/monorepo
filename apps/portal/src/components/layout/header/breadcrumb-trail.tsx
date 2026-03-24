@@ -1,0 +1,37 @@
+"use client";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@atl/ui/ui/breadcrumb";
+import type { BreadcrumbItem as BreadcrumbItemType } from "@portal/types/routes";
+import { Fragment } from "react";
+
+interface BreadcrumbTrailProps {
+  items: BreadcrumbItemType[];
+}
+
+export function BreadcrumbTrail({ items }: BreadcrumbTrailProps) {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {items.map((crumb, index) => (
+          <Fragment key={crumb.href ?? `${crumb.label}-${index}`}>
+            {index > 0 && <BreadcrumbSeparator className="hidden md:block" />}
+            <BreadcrumbItem className={index === 0 ? "hidden md:block" : ""}>
+              {crumb.href ? (
+                <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </Fragment>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}

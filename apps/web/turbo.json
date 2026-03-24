@@ -10,6 +10,12 @@
     },
     "type-check": {
       "dependsOn": []
+    },
+    "deploy": {
+      "cache": false
+    },
+    "destroy": {
+      "cache": false
     }
   }
 }

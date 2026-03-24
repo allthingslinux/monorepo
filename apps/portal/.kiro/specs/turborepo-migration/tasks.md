@@ -13,8 +13,8 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - `library.json` extends base with JSX, DOM libs, `noEmit: true`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [x] 1.2 Create `packages/biome-config/` with `package.json` and `biome.jsonc`
-    - Extend Ultracite presets (`ultracite/biome/core`, `ultracite/biome/react`, `ultracite/biome/next`)
+  - [x] 1.2 Create `packages/lint-config/` with `package.json` and `.oxlintrc.json`
+    - Extend Ultracite presets (`ultracite (Oxlint)`, `ultracite (Oxlint)`, `ultracite (Oxlint)`)
     - Preserve `noBarrelFile: "error"` and `noNamespaceImport: "error"` with existing overrides
     - Preserve existing import ordering configuration
     - _Requirements: 4.1, 4.2, 4.3_
@@ -35,7 +35,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Add scoped scripts for db, auth, release, compose commands
     - Add `preinstall` script enforcing pnpm via `only-allow`
     - Add `turbo` as root devDependency
-    - Keep `ultracite`, `@biomejs/biome`, `husky`, `lint-staged`, `@commitlint/*` as root devDependencies
+    - Keep `ultracite`, `oxlint & oxfmt`, `husky`, `lint-staged`, `@commitlint/*` as root devDependencies
     - Set `packageManager` and `engines` fields
     - _Requirements: 1.3, 1.4, 1.5, 11.1_
 
@@ -64,7 +64,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - Remove dedicated `@/db`, `@/ui` aliases (will be replaced by package imports later)
     - _Requirements: 3.5, 7.4_
 
-  - [x] 3.4 Update root `biome.jsonc` to extend `@portal/biome-config`
+  - [x] 3.4 Update root `.oxlintrc.json` to extend `@portal/lint-config`
     - Add app-specific overrides as needed
     - _Requirements: 4.5_
 
@@ -326,7 +326,7 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
   - Ensure `pnpm type-check` passes across all packages and the app
   - Ensure `pnpm build` succeeds from the monorepo root
   - Ensure `pnpm test` passes (excluding the 2 known pre-existing `vi.mock` hoisting failures)
-  - Ensure `pnpm check` (Biome lint) passes across all packages
+  - Ensure `pnpm check` (Oxlint/Oxfmt lint) passes across all packages
   - Ask the user to verify `pnpm dev` works manually
   - Ask the user if questions arise.
 
@@ -338,4 +338,4 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
 - Package extraction follows leaf-first dependency order to avoid cycles
 - Property tests validate structural correctness of the monorepo (no stale imports, no cycles, proper boundaries)
 - The `@/` alias inside `apps/portal/` continues to resolve to `apps/portal/src/` for app-internal imports
-- `ultracite` and `@biomejs/biome` remain as root devDependencies, not per-package
+- `ultracite` and `oxlint & oxfmt` remain as root devDependencies, not per-package

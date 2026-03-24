@@ -1,7 +1,7 @@
 "use client";
 
+import { Button } from "@atl/ui/ui/button";
 import type { Session } from "@portal/api/types";
-import { Button } from "@portal/ui/ui/button";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";

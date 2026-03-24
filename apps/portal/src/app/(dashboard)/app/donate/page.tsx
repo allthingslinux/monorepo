@@ -1,13 +1,12 @@
-import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
-import { buttonVariants } from "@portal/ui/ui/button-variants";
+import { buttonVariants } from "@atl/ui/ui/button-variants";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@portal/ui/ui/card";
+} from "@atl/ui/ui/card";
+import { getRouteMetadata } from "@portal/seo/metadata";
 import { BarChart3, BookOpen, Code, MessageSquare, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -20,6 +19,7 @@ import {
 } from "react-icons/si";
 
 import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
 import { DONATION_OPTIONS } from "@/config/donate";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 

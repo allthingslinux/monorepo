@@ -138,7 +138,7 @@ describe("usePermissions", () => {
       throw new Error("Permission check failed");
     });
 
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: Suppress console.error in tests
+    // eslint-disable-next-line @typescript-eslint/no-empty-function -- mock
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     try {

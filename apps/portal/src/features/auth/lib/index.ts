@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/performance/noBarrelFile: Required for @/auth path alias */
-
 // ============================================================================
 // Auth Module Exports
 // ============================================================================

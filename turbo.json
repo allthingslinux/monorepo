@@ -79,6 +79,14 @@
     },
     "db:push": {
       "cache": false
+    },
+    "deploy": {
+      "dependsOn": ["^deploy"],
+      "cache": false
+    },
+    "destroy": {
+      "dependsOn": ["^destroy"],
+      "cache": false
     }
   },
   "globalDependencies": ["pnpm-lock.yaml"],
