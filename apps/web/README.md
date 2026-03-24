@@ -127,50 +127,37 @@ See [`docs/integrations/quickbooks.md`](docs/integrations/quickbooks.md) for det
 
 ### Manual Deployments
 
-#### Quick Deploy (Immediate)
+#### Quick deploy
 
 ```bash
-pnpm exec alchemy deploy --app web --stage dev   # Example: shared dev worker
-pnpm exec alchemy deploy --app web --stage prod  # Example: production
-pnpm run deploy                                  # Same as alchemy deploy --app web (stage: $USER default)
-pnpm run deploy:prod                             # Legacy: OpenNext + wrangler deploy to prod
-pnpm run deploy:dev                              # Legacy: OpenNext + wrangler deploy to dev
+pnpm exec alchemy deploy --app web --stage dev   # Shared dev worker
+pnpm exec alchemy deploy --app web --stage prod  # Production
+pnpm run deploy                                  # alchemy deploy --app web (default stage: $USER)
 ```
 
-#### Version Management (Safer Production)
+CI uses the same Alchemy flow in [`web-deploy.yml`](../../.github/workflows/web-deploy.yml).
+
+### Build process
 
 ```bash
-pnpm run version:upload   # Upload version to production
-pnpm run version:list     # List all versions
-pnpm run version:deploy   # Deploy latest version
-```
-
-**Benefits:**
-
-- **Rollback capability**: Quickly revert to previous versions
-- **Audit trail**: Track deployment history
-- **Risk reduction**: Test versions before full deployment
-
-### Build Process
-
-```bash
-# Full production build (Next.js + OpenNext for Cloudflare)
+# OpenNext bundle for Cloudflare (after Next build when needed)
 pnpm run build:all
 
 # Next.js build only
 pnpm run build
 
-# Preview build locally (tests the Cloudflare Workers build)
-pnpm run preview           # Standard preview
-pnpm run preview:profile   # Preview with profiling settings
+# Unminified OpenNext build (profiling / debugging)
+pnpm run build:opennext:profile
+
+# Then test locally with the worker dev server
+pnpm run wrangler
 ```
 
-````bash
-# Development commands
 ```bash
+# Development commands
 pnpm run dev:all       # Start all services
 pnpm run trigger       # Start Trigger.dev CLI
-````
+```
 
 ## 📁 Project Structure
 
@@ -232,7 +219,7 @@ pnpm run secrets:prod   # Upload secrets to prod worker
 
 ## 🛠️ Development Scripts
 
-````bash
+```bash
 # Development
 pnpm run dev:all        # Full stack (Next.js + Wrangler + Trigger)
 pnpm run dev            # Next.js development server
@@ -241,27 +228,18 @@ pnpm run wrangler       # Cloudflare Workers dev server
 pnpm run trigger        # Trigger.dev background jobs
 
 # Building
-pnpm run build:all             # Build Next.js + OpenNext
+pnpm run build:all             # OpenNext Cloudflare bundle (alias for build:opennext)
 pnpm run build                 # Next.js build only
 pnpm run build:opennext        # Cloudflare OpenNext build
-pnpm run build:opennext:profile # Build with profiling (unminified)
+pnpm run build:opennext:profile # Unminified OpenNext (profiling)
 
-# Testing
-pnpm run preview        # Test built Cloudflare app locally
-pnpm run check          # Run all code quality checks
-pnpm run lint           # ESLint
-pnpm run format         # Prettier
-pnpm run check:ts       # TypeScript check
+# Quality
+pnpm run type-check     # contentlayer + TypeScript (from repo root: pnpm --filter allthingslinux type-check)
+pnpm run check          # type-check + Ultracite (oxlint + oxfmt) for this app
 
-# Deployment
-pnpm run deploy:dev     # Deploy to development
-pnpm run deploy:prod    # Deploy to production
-pnpm run deploy         # Quick production deploy
-
-# Version Management
-pnpm run version:upload # Upload version to production
-pnpm run version:list   # List all versions
-pnpm run version:deploy # Deploy latest version
+# Deployment (Alchemy)
+pnpm run deploy         # alchemy deploy --app web
+pnpm run destroy        # alchemy destroy --app web
 
 # Secrets
 pnpm run secrets:dev    # Upload dev secrets to dev worker (repo .github/scripts/web/secrets.sh)
@@ -269,11 +247,10 @@ pnpm run secrets:prod   # Upload prod secrets to prod worker (repo .github/scrip
 
 # Infrastructure
 pnpm run setup:bindings # Setup Cloudflare bindings (R2, KV)
-```bash
 pnpm run cf:typegen     # Generate Cloudflare types
 pnpm run analyze:bundle # Bundle size analysis guidance
 pnpm run coc:generate   # Generate Code of Conduct
-````
+```
 
 ### Troubleshooting
 
@@ -285,12 +262,11 @@ See [`PNPM_SCRIPTS.md`](PNPM_SCRIPTS.md) for detailed script explanations.
 
 #### Build fails with "Module not found"
 
-````bash
-# Clear caches and reinstall
 ```bash
+# Clear caches and reinstall
 rm -rf node_modules .next .open-next
 pnpm install
-````
+```
 
 #### Wrangler secrets not working
 
@@ -307,11 +283,10 @@ npx wrangler secret list --env prod
 
 #### Trigger.dev not connecting
 
-````bash
 ```bash
 # Check Trigger.dev CLI is running
 pnpm run trigger
-````
+```
 
 #### Environment variables not loading
 
@@ -327,8 +302,8 @@ For performance analysis and debugging:
 # Build with profiling (unminified code for easier debugging)
 pnpm run build:opennext:profile
 
-# Preview with profiling settings
-pnpm run preview:profile
+# Run worker locally after build:opennext
+pnpm run wrangler
 
 # Analyze bundle size after building
 pnpm run analyze:bundle
