@@ -6,7 +6,7 @@ export const BlogPost = defineDocumentType(() => ({
     categorySlug: {
       resolve: (doc) => {
         const category = doc.category || "Uncategorized";
-        return category.toLowerCase().replace(/ /g, "-");
+        return category.toLowerCase().replaceAll(" ", "-");
       },
       type: "string",
     },
@@ -44,7 +44,7 @@ export const BlogPost = defineDocumentType(() => ({
     url: {
       resolve: (doc) => {
         const categorySlug = doc.category
-          ? doc.category.toLowerCase().replace(/ /g, "-")
+          ? doc.category.toLowerCase().replaceAll(" ", "-")
           : "uncategorized";
         const slug = doc._raw.sourceFileName.replace(/\.mdx$/, "");
         return `/blog/${categorySlug}/${slug}`;

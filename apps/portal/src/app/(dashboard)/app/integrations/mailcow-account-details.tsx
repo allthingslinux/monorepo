@@ -52,7 +52,7 @@ export function MailcowAccountDetails({
                         if (!document.execCommand("copy")) {
                           throw new Error("execCommand copy failed");
                         }
-                        document.body.removeChild(textArea);
+                        textArea.remove();
                         toast.success("Copied", {
                           description: "Email copied to clipboard",
                         });

@@ -34,19 +34,11 @@ export async function proxy(request: NextRequest) {
       });
     }
 
-    // Apply rate limiting based on the endpoint
-    let rateLimitResponse = null;
-
-    if (
-      request.nextUrl.pathname.includes("/forms/") &&
-      request.method === "POST"
-    ) {
-      // Apply stricter rate limiting for form submissions
-      rateLimitResponse = await formSubmissionRateLimit(request);
-    } else {
-      // Apply general API rate limiting
-      rateLimitResponse = await apiRateLimit(request);
-    }
+    // Stricter limit for POSTs to /forms/; general limit otherwise
+    const rateLimitResponse =
+      request.nextUrl.pathname.includes("/forms/") && request.method === "POST"
+        ? await formSubmissionRateLimit(request)
+        : await apiRateLimit(request);
 
     // If rate limit exceeded, return the rate limit response
     if (rateLimitResponse) {

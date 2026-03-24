@@ -75,7 +75,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
 
         // Remove overlay after fade completes
         setTimeout(() => {
-          document.body.removeChild(overlay);
+          overlay.remove();
           setIsNavigating(false);
         }, 300);
       }, 300); // Increased timeout for navigation to complete

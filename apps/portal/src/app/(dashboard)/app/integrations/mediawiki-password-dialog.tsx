@@ -75,7 +75,7 @@ export function MediaWikiPasswordDialog({
                           document.body.append(ta);
                           ta.select();
                           const success = document.execCommand("copy");
-                          document.body.removeChild(ta);
+                          ta.remove();
                           if (!success) {
                             throw new Error("execCommand copy failed");
                           }

@@ -48,7 +48,7 @@ export function IrcAccountDetails({ account }: IrcAccountDetailsProps) {
                         if (!document.execCommand("copy")) {
                           throw new Error("execCommand copy failed");
                         }
-                        document.body.removeChild(ta);
+                        ta.remove();
                       }
                       toast.success("Copied", {
                         description: "Connect string copied",

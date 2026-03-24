@@ -147,7 +147,7 @@ function extractCategories(
 
   if (fromLinkPath) {
     try {
-      const segment = new URL(link).pathname.split("/").filter(Boolean)[0];
+      const segment = new URL(link).pathname.split("/").find(Boolean);
       if (segment && segment.length <= 50 && !isSlugLike(segment)) {
         return [segment.toLowerCase()];
       }

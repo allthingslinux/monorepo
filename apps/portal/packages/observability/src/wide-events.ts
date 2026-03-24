@@ -113,18 +113,17 @@ export function enrichWideEventWithError(
   event: WideEvent,
   error: unknown
 ): void {
-  if (error instanceof Error) {
-    event.error = {
-      message: error.message,
-      type: error.name,
-      ...(error.stack && { stack: error.stack }),
-    };
-  } else {
-    event.error = {
-      message: String(error),
-      type: "UnknownError",
-    };
-  }
+  event.error =
+    error instanceof Error
+      ? {
+          message: error.message,
+          type: error.name,
+          ...(error.stack && { stack: error.stack }),
+        }
+      : {
+          message: String(error),
+          type: "UnknownError",
+        };
   event.outcome = "error";
 }
 

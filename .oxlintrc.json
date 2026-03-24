@@ -37,20 +37,12 @@
     "typescript/no-explicit-any": "off",
     "promise/prefer-await-to-callbacks": "off",
     "no-warning-comments": "off",
-    "unicorn/prefer-dom-node-remove": "off",
-    "unicorn/prefer-string-replace-all": "off",
     "typescript/consistent-type-imports": "off",
     "unicorn/consistent-function-scoping": "off",
-    "unicorn/text-encoding-identifier-case": "off",
     "unicorn/no-immediate-mutation": "off",
     "jsdoc/check-tag-names": "off",
     "typescript/parameter-properties": "off",
     "typescript/no-non-null-assertion": "off",
-    "unicorn/prefer-array-find": "off",
-    "unicorn/prefer-ternary": "off",
-    "unicorn/prefer-spread": "off",
-    "unicorn/prefer-regexp-test": "off",
-    "unicorn/no-useless-undefined": "off",
     "unicorn/no-array-for-each": "off",
     "react/no-danger": "off",
     "max-classes-per-file": "off",
@@ -144,6 +136,15 @@
       ],
       "rules": {
         "class-methods-use-this": "off"
+      }
+    },
+    {
+      "files": [
+        "apps/portal/packages/schemas/**/*.ts",
+        "apps/portal/src/app/**/integrations-content.tsx"
+      ],
+      "rules": {
+        "unicorn/no-useless-undefined": "off"
       }
     },
     {

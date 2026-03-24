@@ -79,7 +79,7 @@ function parseProsodyErrorBody(text: string, fallback: string): string {
   const firstLine = stripped
     .split("\n")
     .map((l) => l.trim())
-    .filter(Boolean)[0];
+    .find(Boolean);
   if (firstLine && firstLine.length < 200) {
     return firstLine;
   }
