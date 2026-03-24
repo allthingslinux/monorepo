@@ -102,7 +102,6 @@ The application will be available at [http://localhost:3000](http://localhost:30
 - `pnpm typegen` - Generate Next.js types (run before build for full type checking)
 - `pnpm analyze` - Analyze bundle size
 - `pnpm analyze:output` - Analyze and output bundle report
-- `pnpm deduplicate` - Deduplicate dependencies
 
 ### Testing
 
