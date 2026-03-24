@@ -11,12 +11,12 @@ import {
   CardTitle,
 } from "@portal/ui/ui/card";
 
-import { DataTable } from "./data-table";
-import { createSessionColumns } from "./session-columns";
 import {
   useDeleteSession,
   useSessions,
 } from "@/features/admin/hooks/use-admin";
+import { DataTable } from "./data-table";
+import { createSessionColumns } from "./session-columns";
 
 function SessionManagementInner() {
   const { data, error } = useSessions({ limit: 100 });

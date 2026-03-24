@@ -20,9 +20,9 @@ import {
 import { formatDate } from "@portal/utils/date";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
-import { DataTable } from "./data-table";
 import { useAdminIrcAccounts } from "@/features/admin/hooks/use-admin";
 import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
+import { DataTable } from "./data-table";
 
 const columnHelper = createColumnHelper<IrcAccountWithUser>();
 

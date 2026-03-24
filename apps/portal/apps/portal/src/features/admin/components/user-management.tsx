@@ -22,9 +22,6 @@ import {
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { DataTable } from "./data-table";
-import { createUserColumns } from "./user-columns";
-import { UserDetailSheet } from "./user-detail-sheet";
 import { useUsers } from "@/features/admin/hooks/use-admin";
 import {
   useBanUser,
@@ -32,6 +29,9 @@ import {
   useUnbanUser,
 } from "@/features/admin/hooks/use-admin-actions";
 import { useUsersListSearchParams } from "@/features/admin/hooks/use-users-list-search-params";
+import { DataTable } from "./data-table";
+import { createUserColumns } from "./user-columns";
+import { UserDetailSheet } from "./user-detail-sheet";
 
 const ROLE_OPTIONS = [
   { value: "all", label: "All" },

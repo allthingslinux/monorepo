@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Portal! This document provides gu
 
 ### Prerequisites
 
-- Node.js >= 20.19.0 (22.x LTS recommended)
+- Node.js >= 24.0.0 (see monorepo root `package.json` `engines`)
 - pnpm 10.28.2
 - PostgreSQL database (PostgreSQL 18 recommended)
 - Docker and Docker Compose (for local database setup)
@@ -87,6 +87,7 @@ git checkout -b refactor/db-queries
 ```
 
 **Branch Types:**
+
 - `feat/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation changes

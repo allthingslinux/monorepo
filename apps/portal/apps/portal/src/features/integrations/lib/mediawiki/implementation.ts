@@ -11,12 +11,12 @@ import {
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
 
-import { mediawikiBotClient } from "./bot-client";
-import { isMediaWikiConfigured } from "./keys";
-import type { MediaWikiAccount, UpdateMediaWikiAccountRequest } from "./types";
 import { IntegrationBase } from "@/features/integrations/lib/core/base";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
+import { mediawikiBotClient } from "./bot-client";
+import { isMediaWikiConfigured } from "./keys";
+import type { MediaWikiAccount, UpdateMediaWikiAccountRequest } from "./types";
 
 function rowToAccount(
   row: typeof mediawikiAccount.$inferSelect

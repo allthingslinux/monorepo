@@ -5,8 +5,8 @@ import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { verifySession } from "@/auth/dal";
-import { SettingsContent } from "./settings-content";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { SettingsContent } from "./settings-content";
 
 const SETTINGS_PATH = "/app/settings" as const;
 

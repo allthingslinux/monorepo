@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { SidebarMenuButton, SidebarMenuItem } from "../../ui/sidebar";
 import type { ProtectedRoute } from "@/features/routing/lib/types";
+import { SidebarMenuButton, SidebarMenuItem } from "../../ui/sidebar";
 
 interface NavItemProps {
   route: ProtectedRoute;

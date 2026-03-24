@@ -2,6 +2,7 @@ import "server-only";
 
 import { captureException } from "@sentry/nextjs";
 
+import { BASE_URL } from "@/config/app";
 import { keys } from "./keys";
 import type {
   RawBlockResponse,
@@ -14,7 +15,6 @@ import type {
   UserContrib,
   UserInfo,
 } from "./types";
-import { BASE_URL } from "@/config/app";
 
 /**
  * Authenticated MediaWiki bot client for write operations.

@@ -3,15 +3,15 @@
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { Separator } from "../../ui/separator";
-import { SidebarTrigger } from "../../ui/sidebar";
-import { BreadcrumbTrail } from "./breadcrumb-trail";
-import { ThemeToggle } from "./theme-toggle";
 import {
   createRouteTranslationResolver,
   generateBreadcrumbs,
   routeConfig,
 } from "@/features/routing/lib";
+import { Separator } from "../../ui/separator";
+import { SidebarTrigger } from "../../ui/sidebar";
+import { BreadcrumbTrail } from "./breadcrumb-trail";
+import { ThemeToggle } from "./theme-toggle";
 
 export function AppHeader() {
   const pathname = usePathname();

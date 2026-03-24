@@ -3,9 +3,9 @@ import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
 
 import { verifySession } from "@/auth/dal";
-import { MailContent } from "./mail-content";
 import { env } from "@/env";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { MailContent } from "./mail-content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const resolver = await getServerRouteResolver();

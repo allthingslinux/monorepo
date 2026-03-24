@@ -3,10 +3,10 @@ import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
 
 import { verifySession } from "@/auth/dal";
-import { FeedContent } from "./feed-content";
 import { LINUX_FEED_SOURCES } from "@/config/feed";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { fetchAllLinuxFeeds } from "@/shared/feed";
+import { FeedContent } from "./feed-content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const resolver = await getServerRouteResolver();

@@ -5,8 +5,8 @@ import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { verifySession } from "@/auth/dal";
-import { IntegrationsContent } from "./integrations-content";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { IntegrationsContent } from "./integrations-content";
 
 // Metadata is automatically generated from route config
 export async function generateMetadata(): Promise<Metadata> {

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { PageHeader } from "@portal/ui/layout/page/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
 
-import { AdminStats } from "./admin-stats";
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
+import { AdminStats } from "./admin-stats";
 
 const QUICK_LINKS = [
   {

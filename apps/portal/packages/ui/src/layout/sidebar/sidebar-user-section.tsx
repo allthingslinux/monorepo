@@ -6,13 +6,13 @@ import { UserAvatar } from "@daveyplate/better-auth-ui";
 
 import { authClient } from "@/auth/client";
 import { useSession } from "@/auth/session-context";
+import type { FooterAction } from "@/features/routing/lib/types";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "../../ui/sidebar";
-import type { FooterAction } from "@/features/routing/lib/types";
 
 interface SidebarUserSectionProps {
   actions: FooterAction[];

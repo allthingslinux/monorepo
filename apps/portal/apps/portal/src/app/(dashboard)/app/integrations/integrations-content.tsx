@@ -6,6 +6,13 @@ import { z } from "zod";
 import { CreateMediaWikiAccountRequestSchema } from "@portal/schemas/integrations/mediawiki";
 
 import { useSession } from "@/auth/session-context";
+import { IntegrationManagement } from "@/features/integrations/components/integration-management";
+import { ResetPasswordDialog } from "@/features/integrations/components/reset-password-dialog";
+import { useIntegrations } from "@/features/integrations/hooks/use-integration";
+import type { IrcAccount } from "@/features/integrations/lib/irc/types";
+import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
+import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
+import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
 import { IrcAccountDetails } from "./irc-account-details";
 import {
   IrcPasswordDialog,
@@ -24,13 +31,6 @@ import {
   XmppPasswordDialog,
   type XmppPasswordDialogData,
 } from "./xmpp-password-dialog";
-import { IntegrationManagement } from "@/features/integrations/components/integration-management";
-import { ResetPasswordDialog } from "@/features/integrations/components/reset-password-dialog";
-import { useIntegrations } from "@/features/integrations/hooks/use-integration";
-import type { IrcAccount } from "@/features/integrations/lib/irc/types";
-import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
-import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
-import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
 
 const PasswordOnlyCreateSchema = z.object({
   password: z

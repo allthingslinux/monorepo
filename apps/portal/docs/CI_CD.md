@@ -65,7 +65,7 @@ If present, a workflow such as `.github/workflows/dependency-review.yml` can aut
 - Coverage thresholds: 40% minimum (lines, functions, branches, statements)
 - Target: 70%+ for new code
 
-### Renovate Configuration (`renovate.json`)
+### Renovate Configuration (`.github/renovate.json5`)
 
 Automatically creates pull requests for dependency updates using Renovate.
 
@@ -80,7 +80,7 @@ Automatically creates pull requests for dependency updates using Renovate.
 
 **Configuration:**
 
-- Config file: `renovate.json`
+- Config file: `.github/renovate.json5` at the **monorepo root** (covers `apps/web`, `apps/portal`, and shared packages)
 - Schedule: Monday before 10am UTC
 - Auto-merge: Enabled for minor/patch updates
 - Reviewers: AllThingsLinux team
@@ -132,6 +132,7 @@ Automated version management and GitHub releases using semantic-release.
 **Note on Committing Changes:**
 
 This project commits both `package.json` version and `CHANGELOG.md` during releases. While this adds complexity (requires proper branch protection configuration), it's beneficial for:
+
 - Visibility: Contributors can see the current version in the repository
 - Documentation: `CHANGELOG.md` provides a local reference for changes
 - GitHub-only releases: Since we're not publishing to npm, committing these files provides better visibility
@@ -157,6 +158,7 @@ See [semantic-release FAQ](https://semantic-release.gitbook.io/semantic-release/
 **Job Dependencies:**
 
 The release job depends on all other CI jobs:
+
 - `lint` - Must pass
 - `type-check` - Must pass
 - `build` - Must pass
@@ -507,6 +509,7 @@ The workflow can be extended to support more complex release strategies:
 ```
 
 This configuration would enable:
+
 - Regular releases from `main` (default channel)
 - Pre-releases from `beta` and `alpha` branches
 - Experimental releases from `next` branch
@@ -519,6 +522,7 @@ See [semantic-release workflow configuration](https://semantic-release.gitbook.i
 ### PR Title Validation
 
 PR titles are automatically validated to ensure they follow Conventional Commits format. This helps:
+
 - Ensure semantic-release can properly analyze merged PRs
 - Maintain consistency across the project
 - Prevent merge of PRs with invalid titles
@@ -550,11 +554,13 @@ This project uses **semantic-release** instead of alternatives like Changesets o
 - Better for projects that want fully automated releases without manual intervention
 
 **Changesets** would require:
+
 - Manual creation of changeset files for each PR
 - Additional PR step to add changeset
 - More overhead for contributors
 
 **release-please** would require:
+
 - Manual version bump PRs
 - Less automation than semantic-release
 - More manual intervention

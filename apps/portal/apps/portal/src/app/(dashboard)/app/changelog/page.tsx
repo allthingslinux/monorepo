@@ -3,10 +3,10 @@ import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
 
 import { verifySession } from "@/auth/dal";
-import { ChangelogContent } from "./changelog-content";
 import { fetchChangelog } from "@/features/changelog/lib/service";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { CHANGELOG_REPOS } from "@/shared/config/changelog";
+import { ChangelogContent } from "./changelog-content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const resolver = await getServerRouteResolver();

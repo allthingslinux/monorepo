@@ -14,6 +14,9 @@ import { isValidCanonicalUsername } from "@portal/schemas/integrations/validatio
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
 
+import { IntegrationBase } from "@/features/integrations/lib/core/base";
+import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
+import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 import {
   AthemeFaultError,
   fdropNick,
@@ -24,9 +27,6 @@ import {
 import { ircConfig, isAthemeOperConfigured, isIrcConfigured } from "./config";
 import type { IrcAccount, UpdateIrcAccountRequest } from "./types";
 import { generateIrcPassword } from "./utils";
-import { IntegrationBase } from "@/features/integrations/lib/core/base";
-import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
-import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 
 // Schemas are now imported from @portal/schemas/integrations/irc
 

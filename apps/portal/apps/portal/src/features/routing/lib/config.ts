@@ -12,8 +12,8 @@ import {
   SquareTerminal,
 } from "lucide-react";
 
-import type { ProtectedRoute, RouteConfig } from "./types";
 import type { IntegrationPublicInfo } from "@/features/integrations/lib/core/types";
+import type { ProtectedRoute, RouteConfig } from "./types";
 
 /**
  * Single source of truth for all application routes

@@ -1,5 +1,10 @@
 import "server-only";
 
+import type { RepoConfig } from "@/shared/config/changelog";
+import {
+  CHANGELOG_MAX_COMMITS_PER_REPO,
+  CHANGELOG_REVALIDATE_SECONDS,
+} from "@/shared/config/changelog";
 import type {
   ChangelogResult,
   CommitEntry,
@@ -9,11 +14,6 @@ import type {
   RepoSummary,
   TimelineEntry,
 } from "./types";
-import type { RepoConfig } from "@/shared/config/changelog";
-import {
-  CHANGELOG_MAX_COMMITS_PER_REPO,
-  CHANGELOG_REVALIDATE_SECONDS,
-} from "@/shared/config/changelog";
 
 // ---------------------------------------------------------------------------
 // Internal helpers

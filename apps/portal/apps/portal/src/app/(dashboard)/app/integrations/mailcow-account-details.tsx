@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import { captureException, startSpan } from "@sentry/nextjs";
 
-import { MailboxQuota } from "./mailcow-quota";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
+import { MailboxQuota } from "./mailcow-quota";
 
 interface MailcowAccountDetailsProps {
   account: MailcowAccount;

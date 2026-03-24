@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@portal/utils/utils";
 
+import type { ProtectedRoute } from "@/features/routing/lib/types";
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,7 +19,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "../../ui/sidebar";
-import type { ProtectedRoute } from "@/features/routing/lib/types";
 
 interface NavCollapsibleProps {
   route: ProtectedRoute;

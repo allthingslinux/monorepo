@@ -6,6 +6,9 @@ import { useTranslations } from "next-intl";
 
 import { useIsClient } from "@/hooks/use-is-client";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
+import { createRouteTranslationResolver } from "@/features/routing/lib/i18n";
+import { getNavigationItems } from "@/features/routing/lib/permissions";
 import {
   CommandDialog,
   CommandEmpty,
@@ -15,9 +18,6 @@ import {
   CommandList,
   CommandSeparator,
 } from "./ui/command";
-import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
-import { createRouteTranslationResolver } from "@/features/routing/lib/i18n";
-import { getNavigationItems } from "@/features/routing/lib/permissions";
 
 /**
  * Global command menu component (Cmd+K / Ctrl+K)

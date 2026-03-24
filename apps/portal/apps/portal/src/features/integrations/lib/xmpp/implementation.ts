@@ -12,6 +12,8 @@ import {
 } from "@portal/schemas/integrations/xmpp";
 import { and, eq, ne } from "drizzle-orm";
 
+import { IntegrationBase } from "@/features/integrations/lib/core/base";
+import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import {
   checkProsodyAccountExists,
   createProsodyAccount,
@@ -27,8 +29,6 @@ import type {
   XmppAccount,
 } from "./types";
 import { formatJid, isValidXmppUsername } from "./utils";
-import { IntegrationBase } from "@/features/integrations/lib/core/base";
-import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 
 // Schemas are now imported from @portal/schemas/integrations/xmpp
 

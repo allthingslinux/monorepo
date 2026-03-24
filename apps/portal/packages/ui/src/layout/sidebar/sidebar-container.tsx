@@ -1,6 +1,11 @@
 "use client";
 
 import { usePermissions } from "@/hooks/use-permissions";
+import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
+import {
+  getFooterActions,
+  getNavigationItems,
+} from "@/features/routing/lib/permissions";
 import {
   Sidebar,
   SidebarContent,
@@ -11,11 +16,6 @@ import {
 import { SidebarBrand } from "./sidebar-brand";
 import { SidebarNavigation } from "./sidebar-navigation";
 import { SidebarUserSection } from "./sidebar-user-section";
-import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
-import {
-  getFooterActions,
-  getNavigationItems,
-} from "@/features/routing/lib/permissions";
 
 interface SidebarContainerProps {
   canViewAdmin?: boolean;

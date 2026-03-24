@@ -30,6 +30,8 @@ import { xmppAccount } from "@portal/db/schema/xmpp";
 import { isValidCanonicalUsername } from "@portal/schemas/integrations/validation";
 import { and, eq } from "drizzle-orm";
 
+import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
+import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
 import {
   sendOTPEmail,
   sendResetPasswordEmail,
@@ -42,8 +44,6 @@ import {
   staff as staffRole,
   user as userRole,
 } from "./permissions";
-import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
-import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
 
 // ============================================================================
 // Constants
