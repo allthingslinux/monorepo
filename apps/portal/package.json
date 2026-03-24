@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky",
     "deduplicate": "pnpm dedupe",
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -52,7 +51,7 @@
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {
-    "pnpm": "10.28.2",
-    "node": ">=20.19.0"
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
   }
 }
