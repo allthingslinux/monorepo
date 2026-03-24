@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
+import { cookies } from "next/headers";
 
 /**
  * Load and merge all locale files from a directory

@@ -1,6 +1,5 @@
 import type { z } from "zod";
 import "server-only";
-
 import type {
   Integration,
   IntegrationAccount,
@@ -25,8 +24,7 @@ export abstract class IntegrationBase<
   TAccount extends IntegrationAccount = IntegrationAccount,
   TCreateInput extends IntegrationCreateInput = IntegrationCreateInput,
   TUpdateInput extends IntegrationUpdateInput = IntegrationUpdateInput,
-> implements Integration<TAccount, TCreateInput, TUpdateInput>
-{
+> implements Integration<TAccount, TCreateInput, TUpdateInput> {
   readonly id: string;
   readonly name: string;
   readonly description: string;

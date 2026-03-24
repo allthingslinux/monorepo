@@ -41,10 +41,10 @@ vi.mock("@/features/integrations/lib/xmpp/config", () => ({
 }));
 
 vi.mock("@/features/integrations/lib/xmpp/client", () => ({
+  ProsodyAccountNotFoundError: class extends Error {},
   checkProsodyAccountExists: vi.fn(),
   createProsodyAccount: vi.fn(),
   deleteProsodyAccount: vi.fn(),
-  ProsodyAccountNotFoundError: class extends Error {},
 }));
 
 vi.mock("@/features/integrations/lib/xmpp", () => ({
@@ -66,6 +66,22 @@ vi.mock("@portal/db/relations", () => ({
 }));
 
 vi.mock("@portal/db/schema/auth", () => ({
+  account: {
+    id: "id",
+    userId: "userId",
+  },
+  passkey: {
+    id: "id",
+    userId: "userId",
+  },
+  session: {
+    id: "id",
+    userId: "userId",
+  },
+  twoFactor: {
+    id: "id",
+    userId: "userId",
+  },
   user: {
     id: "id",
     name: "name",
@@ -75,23 +91,7 @@ vi.mock("@portal/db/schema/auth", () => ({
     emailVerified: "emailVerified",
     createdAt: "createdAt",
   },
-  session: {
-    id: "id",
-    userId: "userId",
-  },
-  account: {
-    id: "id",
-    userId: "userId",
-  },
   verification: {},
-  passkey: {
-    id: "id",
-    userId: "userId",
-  },
-  twoFactor: {
-    id: "id",
-    userId: "userId",
-  },
 }));
 
 vi.mock("@portal/db/schema/api-keys", () => ({
@@ -103,6 +103,13 @@ vi.mock("@portal/db/schema/api-keys", () => ({
 }));
 
 vi.mock("@portal/db/schema/oauth", () => ({
+  oauthAccessToken: {
+    id: "id",
+    clientId: "clientId",
+    userId: "userId",
+    sessionId: "sessionId",
+    refreshId: "refreshId",
+  },
   oauthClient: {
     id: "id",
     clientId: "clientId",
@@ -112,13 +119,6 @@ vi.mock("@portal/db/schema/oauth", () => ({
     id: "id",
     clientId: "clientId",
     userId: "userId",
-  },
-  oauthAccessToken: {
-    id: "id",
-    clientId: "clientId",
-    userId: "userId",
-    sessionId: "sessionId",
-    refreshId: "refreshId",
   },
   oauthRefreshToken: {
     id: "id",
@@ -158,8 +158,8 @@ vi.mock("@portal/db/client", () => ({
   db: {
     select: () => mockSelect(),
   },
-  schema: {},
   relations: {},
+  schema: {},
 }));
 
 const mockRequireAuth = vi.fn();
@@ -172,8 +172,8 @@ vi.mock("@portal/api/utils", async () => {
     );
   return {
     ...actual,
-    requireAuth: (...args: unknown[]) => mockRequireAuth(...args),
     handleAPIError: (...args: unknown[]) => mockHandleAPIError(...args),
+    requireAuth: (...args: unknown[]) => mockRequireAuth(...args),
   };
 });
 
@@ -197,19 +197,19 @@ describe("GET /api/user/me", () => {
 
   it("should return user data for authenticated user", async () => {
     mockRequireAuth.mockResolvedValue({
-      userId: "user-1",
       session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      userId: "user-1",
     });
 
     mockLimit.mockResolvedValue([
       {
-        id: "user-1",
-        name: "Test User",
-        email: "test@example.com",
-        image: null,
-        role: "user",
-        emailVerified: true,
         createdAt: new Date("2024-01-01"),
+        email: "test@example.com",
+        emailVerified: true,
+        id: "user-1",
+        image: null,
+        name: "Test User",
+        role: "user",
       },
     ]);
 
@@ -225,19 +225,19 @@ describe("GET /api/user/me", () => {
     expect(response.status).toBe(200);
     expect(data).toHaveProperty("user");
     expect(data.user).toMatchObject({
+      email: "test@example.com",
+      emailVerified: true,
       id: "user-1",
       name: "Test User",
-      email: "test@example.com",
       role: "user",
-      emailVerified: true,
     });
     expect(mockRequireAuth).toHaveBeenCalledWith(request);
   });
 
   it("should return 404 when user is not found", async () => {
     mockRequireAuth.mockResolvedValue({
-      userId: "user-1",
       session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      userId: "user-1",
     });
 
     mockLimit.mockResolvedValue([]);
@@ -249,8 +249,8 @@ describe("GET /api/user/me", () => {
 
     expect(response.status).toBe(404);
     expect(data).toEqual({
-      ok: false,
       error: "User not found",
+      ok: false,
     });
   });
 
@@ -258,7 +258,7 @@ describe("GET /api/user/me", () => {
     const authError = new APIError("Unauthorized", 401);
     mockRequireAuth.mockRejectedValue(authError);
     mockHandleAPIError.mockReturnValue(
-      Response.json({ ok: false, error: "Unauthorized" }, { status: 401 })
+      Response.json({ error: "Unauthorized", ok: false }, { status: 401 })
     );
 
     const request = new NextRequest("http://localhost/api/user/me");
@@ -268,16 +268,16 @@ describe("GET /api/user/me", () => {
 
     expect(response.status).toBe(401);
     expect(data).toEqual({
-      ok: false,
       error: "Unauthorized",
+      ok: false,
     });
     expect(mockHandleAPIError).toHaveBeenCalledWith(authError);
   });
 
   it("should handle database errors", async () => {
     mockRequireAuth.mockResolvedValue({
-      userId: "user-1",
       session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      userId: "user-1",
     });
 
     mockSelect.mockImplementation(() => {
@@ -286,7 +286,7 @@ describe("GET /api/user/me", () => {
 
     mockHandleAPIError.mockReturnValue(
       Response.json(
-        { ok: false, error: "Internal server error" },
+        { error: "Internal server error", ok: false },
         { status: 500 }
       )
     );
@@ -298,8 +298,8 @@ describe("GET /api/user/me", () => {
 
     expect(response.status).toBe(500);
     expect(data).toEqual({
-      ok: false,
       error: "Internal server error",
+      ok: false,
     });
     expect(mockHandleAPIError).toHaveBeenCalled();
   });

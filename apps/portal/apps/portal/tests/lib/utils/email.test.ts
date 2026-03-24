@@ -11,17 +11,17 @@ describe("sendEmail", () => {
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     sendEmail({
-      to: "test@example.com",
-      subject: "Test Subject",
       html: "<p>Test content</p>",
+      subject: "Test Subject",
+      to: "test@example.com",
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
       "📧 Email would be sent:",
       expect.objectContaining({
-        to: "test@example.com",
-        subject: "Test Subject",
         content: "<p>Test content</p>",
+        subject: "Test Subject",
+        to: "test@example.com",
       })
     );
   });
@@ -31,17 +31,17 @@ describe("sendEmail", () => {
     const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     sendEmail({
-      to: "test@example.com",
       subject: "Test Subject",
       text: "Plain text content",
+      to: "test@example.com",
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
       "📧 Email would be sent:",
       expect.objectContaining({
-        to: "test@example.com",
-        subject: "Test Subject",
         content: "Plain text content",
+        subject: "Test Subject",
+        to: "test@example.com",
       })
     );
   });

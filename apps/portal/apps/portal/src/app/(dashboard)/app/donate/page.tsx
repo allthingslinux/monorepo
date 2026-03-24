@@ -1,6 +1,3 @@
-import { BarChart3, BookOpen, Code, MessageSquare, Users } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
 import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { buttonVariants } from "@portal/ui/ui/button-variants";
@@ -11,6 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@portal/ui/ui/card";
+import { BarChart3, BookOpen, Code, MessageSquare, Users } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import {
   SiBitcoin,
   SiCashapp,
@@ -27,12 +27,12 @@ const DONATION_ICON_MAP: Record<
   string,
   React.ComponentType<{ className?: string }>
 > = {
+  cashapp: SiCashapp,
+  "every-org": SiBitcoin,
   opencollective: SiOpencollective,
   paypal: SiPaypal,
   "stripe-monthly": SiStripe,
   "stripe-onetime": SiStripe,
-  "every-org": SiBitcoin,
-  cashapp: SiCashapp,
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -95,11 +95,11 @@ export default async function DonatePage() {
                 return (
                   <a
                     className={buttonVariants({
-                      variant:
-                        option.id === "opencollective" ? "default" : "outline",
-                      size: "default",
                       className:
                         "inline-flex w-full items-center justify-center gap-2",
+                      size: "default",
+                      variant:
+                        option.id === "opencollective" ? "default" : "outline",
                     })}
                     href={option.href}
                     key={option.id}
@@ -133,10 +133,10 @@ export default async function DonatePage() {
             <CardContent className="mt-auto">
               <Link
                 className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
                   className:
                     "inline-flex w-full items-center justify-center gap-2",
+                  size: "lg",
+                  variant: "outline",
                 })}
                 href="/app/connect"
               >
@@ -164,10 +164,10 @@ export default async function DonatePage() {
             <CardContent className="mt-auto">
               <a
                 className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
                   className:
                     "inline-flex w-full items-center justify-center gap-2",
+                  size: "lg",
+                  variant: "outline",
                 })}
                 href="https://wiki.atl.dev"
                 rel="noopener noreferrer"
@@ -195,10 +195,10 @@ export default async function DonatePage() {
             <CardContent className="mt-auto">
               <a
                 className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
                   className:
                     "inline-flex w-full items-center justify-center gap-2",
+                  size: "lg",
+                  variant: "outline",
                 })}
                 href="https://github.com/allthingslinux"
                 rel="noopener noreferrer"
@@ -226,10 +226,10 @@ export default async function DonatePage() {
             <CardContent className="mt-auto">
               <Link
                 className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
                   className:
                     "inline-flex w-full items-center justify-center gap-2",
+                  size: "lg",
+                  variant: "outline",
                 })}
                 href="/app/connect"
               >

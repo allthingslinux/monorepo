@@ -1,5 +1,4 @@
 import "server-only";
-
 import { registerIrcIntegration } from "./irc";
 import { registerMailcowIntegration } from "./mailcow";
 import { registerMediaWikiIntegration } from "./mediawiki";

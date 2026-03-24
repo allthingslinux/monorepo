@@ -1,8 +1,7 @@
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 import "./globals.css";
-
-import { GoogleTagManager } from "@next/third-parties/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
@@ -10,6 +9,7 @@ import {
   OrganizationSchema,
   WebsiteSchema,
 } from "@/components/structured-data";
+
 import { defaultMetadata, viewport } from "./metadata";
 
 // Initialize font with subset for better performance
@@ -29,6 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = defaultMetadata;
+
 export { viewport };
 
 export default function RootLayout({

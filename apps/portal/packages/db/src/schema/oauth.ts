@@ -36,41 +36,41 @@ export const oauthClient = pgTable("oauth_client", {
 });
 
 export const oauthRefreshToken = pgTable("oauth_refresh_token", {
-  id: text("id").primaryKey(),
-  token: text("token").notNull(),
   clientId: text("client_id")
     .notNull()
     .references(() => oauthClient.clientId, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at"),
+  expiresAt: timestamp("expires_at"),
+  id: text("id").primaryKey(),
+  referenceId: text("reference_id"),
+  revoked: timestamp("revoked"),
+  scopes: text("scopes").array().notNull(),
   sessionId: text("session_id").references(() => session.id, {
     onDelete: "set null",
   }),
+  token: text("token").notNull(),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  referenceId: text("reference_id"),
-  expiresAt: timestamp("expires_at"),
-  createdAt: timestamp("created_at"),
-  revoked: timestamp("revoked"),
-  scopes: text("scopes").array().notNull(),
 });
 
 export const oauthAccessToken = pgTable("oauth_access_token", {
-  id: text("id").primaryKey(),
-  token: text("token").unique(),
   clientId: text("client_id")
     .notNull()
     .references(() => oauthClient.clientId, { onDelete: "cascade" }),
-  sessionId: text("session_id").references(() => session.id, {
-    onDelete: "set null",
-  }),
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at"),
+  expiresAt: timestamp("expires_at"),
+  id: text("id").primaryKey(),
   referenceId: text("reference_id"),
   refreshId: text("refresh_id").references(() => oauthRefreshToken.id, {
     onDelete: "cascade",
   }),
-  expiresAt: timestamp("expires_at"),
-  createdAt: timestamp("created_at"),
   scopes: text("scopes").array().notNull(),
+  sessionId: text("session_id").references(() => session.id, {
+    onDelete: "set null",
+  }),
+  token: text("token").unique(),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const oauthConsent = pgTable("oauth_consent", {

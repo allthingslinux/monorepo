@@ -29,17 +29,18 @@ src/features/integrations/lib/mailcow/
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MAILCOW_API_URL` | Yes | **Base URL** of your Mailcow UI — the origin only, e.g. `https://mail.atl.tools`. Do **not** include `/api` or `/api/v1`; the client appends these paths automatically. |
-| `MAILCOW_API_KEY` | Yes | Read-write API key (from Mailcow: Configuration → Access → Edit administrator details → API). Use the read-write key, not read-only. |
-| `MAILCOW_DOMAIN` | Yes | Email domain for provisioning (e.g. `atl.tools`). Must already exist in Mailcow. |
-| `NEXT_PUBLIC_MAILCOW_WEB_URL` | No | Webmail UI URL for the "Open webmail" link on the Mail page. When unset, the link is hidden. |
-| `MAILCOW_OAUTH_CLIENT_ID` | No | OAuth2 client ID for "Sign in with Mailcow". Create via Mailcow API or UI (see below). |
-| `MAILCOW_OAUTH_CLIENT_SECRET` | No | OAuth2 client secret for "Sign in with Mailcow". |
-| `NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED` | No | Set to `"true"` to show "Sign in with Mailcow" on the auth page. Requires OAuth credentials above. |
+| Variable                            | Required | Description                                                                                                                                                             |
+| ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MAILCOW_API_URL`                   | Yes      | **Base URL** of your Mailcow UI — the origin only, e.g. `https://mail.atl.tools`. Do **not** include `/api` or `/api/v1`; the client appends these paths automatically. |
+| `MAILCOW_API_KEY`                   | Yes      | Read-write API key (from Mailcow: Configuration → Access → Edit administrator details → API). Use the read-write key, not read-only.                                    |
+| `MAILCOW_DOMAIN`                    | Yes      | Email domain for provisioning (e.g. `atl.tools`). Must already exist in Mailcow.                                                                                        |
+| `NEXT_PUBLIC_MAILCOW_WEB_URL`       | No       | Webmail UI URL for the "Open webmail" link on the Mail page. When unset, the link is hidden.                                                                            |
+| `MAILCOW_OAUTH_CLIENT_ID`           | No       | OAuth2 client ID for "Sign in with Mailcow". Create via Mailcow API or UI (see below).                                                                                  |
+| `MAILCOW_OAUTH_CLIENT_SECRET`       | No       | OAuth2 client secret for "Sign in with Mailcow".                                                                                                                        |
+| `NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED` | No       | Set to `"true"` to show "Sign in with Mailcow" on the auth page. Requires OAuth credentials above.                                                                      |
 
 **Example `.env`:**
+
 ```
 MAILCOW_API_URL=https://mail.atl.tools
 MAILCOW_API_KEY=your-read-write-api-key
@@ -48,6 +49,7 @@ NEXT_PUBLIC_MAILCOW_WEB_URL=https://mail.atl.tools
 ```
 
 **Troubleshooting:**
+
 - **401 / auth failed**: Check API key is read-write and your Portal server IP is in Mailcow's API allowed IP list (Configuration → Access → Edit administrator details → API).
 - **404 / wrong path**: Ensure `MAILCOW_API_URL` is the base URL only. Wrong: `https://mail.atl.tools/api/v1`. Correct: `https://mail.atl.tools`.
 - **Domain not found**: Create the domain in Mailcow first (E-Mail → Configuration → Domains).
@@ -64,6 +66,7 @@ Users can sign into the Portal using their Mailcow mailbox credentials — simil
    - Via Mailcow UI: Configuration → Access → OAuth2 (if available).
 
 2. **Set environment variables:**
+
    ```
    MAILCOW_OAUTH_CLIENT_ID=<client_id>
    MAILCOW_OAUTH_CLIENT_SECRET=<client_secret>

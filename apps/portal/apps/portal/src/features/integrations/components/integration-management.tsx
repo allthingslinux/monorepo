@@ -1,21 +1,5 @@
 "use client";
 
-import type { ComponentType, ReactNode } from "react";
-import { useState } from "react";
-import {
-  AlertCircle,
-  BookOpen,
-  Hash,
-  Loader2,
-  Mail,
-  Plug,
-  Plus,
-  Trash2,
-  Zap,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import type { ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
@@ -42,6 +26,22 @@ import { Input } from "@portal/ui/ui/input";
 import { Label } from "@portal/ui/ui/label";
 import { cn } from "@portal/utils/utils";
 import * as Sentry from "@sentry/nextjs";
+import {
+  AlertCircle,
+  BookOpen,
+  Hash,
+  Loader2,
+  Mail,
+  Plug,
+  Plus,
+  Trash2,
+  Zap,
+} from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ZodType } from "zod";
 
 import {
   useCreateIntegrationAccount,
@@ -58,25 +58,25 @@ const INTEGRATION_ICONS: Record<
   ComponentType<{ className?: string }>
 > = {
   irc: Hash,
-  xmpp: Zap,
   mailcow: Mail,
   mediawiki: BookOpen,
+  xmpp: Zap,
 };
 
 // Brand color classes per integration (bg for icon container)
 const INTEGRATION_COLORS: Record<string, string> = {
   irc: "bg-indigo-500",
-  xmpp: "bg-amber-500",
   mailcow: "bg-blue-500",
   mediawiki: "bg-emerald-500",
+  xmpp: "bg-amber-500",
 };
 
 // Subtle tint for the card top section background
 const INTEGRATION_TINTS: Record<string, string> = {
   irc: "bg-indigo-500/10",
-  xmpp: "bg-amber-500/10",
   mailcow: "bg-blue-500/10",
   mediawiki: "bg-emerald-500/10",
+  xmpp: "bg-amber-500/10",
 };
 
 function getIntegrationColor(integrationId: string): string {
@@ -178,11 +178,11 @@ function AccountCard<TAccount extends { id: string }>({
     try {
       await deleteMutation.mutateAsync(account.id);
       toast.success(`${title} account deleted`);
-    } catch (err) {
-      Sentry.captureException(err);
+    } catch (error) {
+      Sentry.captureException(error);
       toast.error(
-        err instanceof Error
-          ? err.message
+        error instanceof Error
+          ? error.message
           : `Failed to delete ${title.toLowerCase()} account`
       );
     }
@@ -476,9 +476,7 @@ function SetupDialog<TAccount extends { id: string }>({
   const Icon = icon ?? INTEGRATION_ICONS[integrationId] ?? Plug;
   const createMutation = useCreateIntegrationAccount<TAccount>(integrationId);
 
-  interface FormValues {
-    [key: string]: string;
-  }
+  type FormValues = Record<string, string>;
 
   const {
     register,
@@ -488,11 +486,11 @@ function SetupDialog<TAccount extends { id: string }>({
     setError,
   } = useForm<FormValues>({
     // biome-ignore lint/suspicious/noExplicitAny: Resolver type mismatch workaround
-    resolver: createSchema ? zodResolver(createSchema as any) : undefined,
     defaultValues: {
       [createInputName]: "",
       ...(createSecondInputName ? { [createSecondInputName]: "" } : {}),
     } as FormValues,
+    resolver: createSchema ? zodResolver(createSchema as any) : undefined,
   });
 
   const onSubmit = async (data: Record<string, string>) => {
@@ -502,8 +500,8 @@ function SetupDialog<TAccount extends { id: string }>({
 
       if (!(createSchema || createInputToPayload) && trimmed === "") {
         setError(createInputName, {
-          type: "manual",
           message: `${createInputLabel || "Input"} is required`,
+          type: "manual",
         });
         return;
       }
@@ -528,11 +526,11 @@ function SetupDialog<TAccount extends { id: string }>({
       reset();
       onOpenChange(false);
       onCreateSuccess?.(createdAccount);
-    } catch (err) {
-      Sentry.captureException(err);
+    } catch (error) {
+      Sentry.captureException(error);
       toast.error(
-        err instanceof Error
-          ? err.message
+        error instanceof Error
+          ? error.message
           : `Failed to create ${title.toLowerCase()} account`
       );
     }
@@ -558,8 +556,8 @@ function SetupDialog<TAccount extends { id: string }>({
             </DialogDescription>
           </DialogHeader>
           {renderCreateForm({
-            onSuccess: handleCustomSuccess,
             isPending: false,
+            onSuccess: handleCustomSuccess,
           })}
         </DialogContent>
       </Dialog>

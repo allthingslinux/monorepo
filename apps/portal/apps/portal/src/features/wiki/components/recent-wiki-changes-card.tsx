@@ -1,5 +1,5 @@
-import { ArrowUpRight, BookOpen } from "lucide-react";
 import { formatRelativeTime } from "@portal/utils/date";
+import { ArrowUpRight, BookOpen } from "lucide-react";
 
 import { env } from "@/env";
 import { fetchRecentWikiChanges } from "@/shared/wiki";

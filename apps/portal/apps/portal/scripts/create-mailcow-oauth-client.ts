@@ -16,7 +16,7 @@ import "dotenv/config";
  */
 
 const MAILCOW_API_URL = process.env.MAILCOW_API_URL?.replace(/\/$/, "");
-const MAILCOW_API_KEY = process.env.MAILCOW_API_KEY;
+const { MAILCOW_API_KEY } = process.env;
 const BETTER_AUTH_URL = process.env.BETTER_AUTH_URL?.replace(/\/$/, "");
 
 async function createMailcowOAuthClient() {
@@ -35,12 +35,12 @@ async function createMailcowOAuthClient() {
 
   // Add OAuth2 client
   const addRes = await fetch(`${MAILCOW_API_URL}/api/v1/add/oauth2-client`, {
-    method: "POST",
+    body: JSON.stringify({ redirect_uri: redirectUri }),
     headers: {
       "Content-Type": "application/json",
       "X-API-Key": MAILCOW_API_KEY,
     },
-    body: JSON.stringify({ redirect_uri: redirectUri }),
+    method: "POST",
   });
 
   if (!addRes.ok) {
@@ -48,10 +48,10 @@ async function createMailcowOAuthClient() {
     process.exit(1);
   }
 
-  const addData = (await addRes.json()) as Array<{
+  const addData = (await addRes.json()) as {
     type: string;
     msg?: string[];
-  }>;
+  }[];
   const first = addData[0];
   if (first?.type === "error" || first?.type === "danger") {
     console.error("❌ mailcow error:", first.msg?.join(" ") ?? addData);
@@ -73,11 +73,11 @@ async function createMailcowOAuthClient() {
     process.exit(1);
   }
 
-  const clients = (await getRes.json()) as Array<{
+  const clients = (await getRes.json()) as {
     client_id?: string;
     client_secret?: string;
     redirect_uri?: string;
-  }>;
+  }[];
 
   const client = Array.isArray(clients)
     ? (clients.find((c) => c.redirect_uri === redirectUri) ?? clients.at(-1))
@@ -98,7 +98,7 @@ async function createMailcowOAuthClient() {
   console.log("\nThen restart the app.");
 }
 
-createMailcowOAuthClient().catch((err) => {
-  console.error("❌", err);
+createMailcowOAuthClient().catch((error) => {
+  console.error("❌", error);
   process.exit(1);
 });

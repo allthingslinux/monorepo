@@ -1,7 +1,23 @@
 import path from "node:path";
+
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@/auth/client": path.resolve(
+        import.meta.dirname,
+        "./src/features/auth/lib/client.ts"
+      ),
+      "@/auth": path.resolve(import.meta.dirname, "./src/features/auth/lib"),
+      "@/config": path.resolve(import.meta.dirname, "./src/shared/config"),
+      "@": path.resolve(import.meta.dirname, "./src"),
+      "server-only": path.resolve(
+        import.meta.dirname,
+        "./vitest.server-only-mock.ts"
+      ),
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",
@@ -32,21 +48,6 @@ export default defineConfig({
         "coverage/**",
         "references/**",
       ],
-    },
-  },
-  resolve: {
-    alias: {
-      "@/auth/client": path.resolve(
-        import.meta.dirname,
-        "./src/features/auth/lib/client.ts"
-      ),
-      "@/auth": path.resolve(import.meta.dirname, "./src/features/auth/lib"),
-      "@/config": path.resolve(import.meta.dirname, "./src/shared/config"),
-      "@": path.resolve(import.meta.dirname, "./src"),
-      "server-only": path.resolve(
-        import.meta.dirname,
-        "./vitest.server-only-mock.ts"
-      ),
     },
   },
 });

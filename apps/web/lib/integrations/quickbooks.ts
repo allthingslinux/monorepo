@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 import { runtimeEnv as env } from "@/env";
@@ -682,12 +683,15 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
             );
             return parsed;
           }
-          console.warn("[QuickBooks] ⚠️ Tokens in KV missing required fields:", {
-            hasClientId: !!parsed.clientId,
-            hasClientSecret: !!parsed.clientSecret,
-            hasRefreshToken: !!parsed.refreshToken,
-            hasRealmId: !!parsed.realmId,
-          });
+          console.warn(
+            "[QuickBooks] ⚠️ Tokens in KV missing required fields:",
+            {
+              hasClientId: !!parsed.clientId,
+              hasClientSecret: !!parsed.clientSecret,
+              hasRefreshToken: !!parsed.refreshToken,
+              hasRealmId: !!parsed.realmId,
+            }
+          );
         } catch (parseError) {
           console.error(
             "[QuickBooks] ❌ Failed to parse tokens from KV:",
@@ -1171,7 +1175,9 @@ export async function fetchQuickBooksTransactions(
         } else {
           // Clear in-memory cache
           tokenCache = null;
-          console.log("[QuickBooks] 🗑️ Cleared expired token from memory cache");
+          console.log(
+            "[QuickBooks] 🗑️ Cleared expired token from memory cache"
+          );
         }
 
         const freshTokenResult = await getAccessToken(

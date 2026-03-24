@@ -88,7 +88,7 @@ export interface RawCreateAccountResponse {
 /** Raw response from action=query&list=users */
 export interface RawUserInfoResponse {
   query: {
-    users: Array<{
+    users: {
       userid?: number;
       name: string;
       editcount?: number;
@@ -96,19 +96,19 @@ export interface RawUserInfoResponse {
       groups?: string[];
       blockexpiry?: string;
       missing?: boolean;
-    }>;
+    }[];
   };
 }
 
 /** Raw response from action=query&list=usercontribs */
 export interface RawUserContribsResponse {
   query: {
-    usercontribs: Array<{
+    usercontribs: {
       title: string;
       timestamp: string;
       comment?: string;
       sizediff?: number;
-    }>;
+    }[];
   };
 }
 

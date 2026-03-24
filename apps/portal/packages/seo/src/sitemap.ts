@@ -17,11 +17,11 @@ function createSitemapEntry(
   }
 ): MetadataRoute.Sitemap[0] {
   return {
-    url: `${BASE_URL}${path}`,
-    lastModified: sitemap?.lastModified || new Date(),
     changeFrequency: (sitemap?.changeFrequency ||
       "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
+    lastModified: sitemap?.lastModified || new Date(),
     priority: sitemap?.priority || 0.5,
+    url: `${BASE_URL}${path}`,
   };
 }
 
@@ -49,10 +49,10 @@ function addChildRoutes(
     const childMetadata = child.metadata || parentMetadata;
     if (childMetadata.robots?.index) {
       routes.push({
-        url: `${BASE_URL}${child.path}`,
-        lastModified: new Date(),
         changeFrequency: "monthly",
+        lastModified: new Date(),
         priority: 0.4,
+        url: `${BASE_URL}${child.path}`,
       });
     }
   }

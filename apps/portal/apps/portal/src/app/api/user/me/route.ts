@@ -1,14 +1,14 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAuth } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import {
   enrichWideEventWithUser,
-  type WideEvent,
   withWideEvent,
 } from "@portal/observability/wide-events";
+import type { WideEvent } from "@portal/observability/wide-events";
 import { UpdateUserSelfSchema } from "@portal/schemas/user";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -25,22 +25,22 @@ export const GET = withWideEvent(
 
       // Enrich event with user context (high cardinality field)
       enrichWideEventWithUser(event, {
-        id: userId,
         email: session.user.email,
+        id: userId,
       });
 
       // DTO: Only return necessary fields, not entire user object
       // This prevents exposing sensitive data like internal IDs, timestamps, etc.
       const [userData] = await db
         .select({
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          image: user.image,
-          role: user.role,
-          emailVerified: user.emailVerified,
           createdAt: user.createdAt,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          id: user.id,
+          image: user.image,
+          name: user.name,
+          role: user.role,
+          username: user.username,
         })
         .from(user)
         .where(eq(user.id, userId))
@@ -50,7 +50,7 @@ export const GET = withWideEvent(
         // Enrich event with business context about the failure
         event.user_not_found = true;
         return Response.json(
-          { ok: false, error: "User not found" },
+          { error: "User not found", ok: false },
           { status: 404 }
         );
       }
@@ -83,8 +83,8 @@ export const PATCH = withWideEvent(
 
       // Enrich event with user context
       enrichWideEventWithUser(event, {
-        id: userId,
         email: session.user.email,
+        id: userId,
       });
 
       // Enrich event with request context
@@ -100,20 +100,20 @@ export const PATCH = withWideEvent(
         .where(eq(user.id, userId))
         .returning({
           // DTO: Only return necessary fields in response
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          image: user.image,
-          role: user.role,
-          emailVerified: user.emailVerified,
           createdAt: user.createdAt,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          id: user.id,
+          image: user.image,
+          name: user.name,
+          role: user.role,
+          username: user.username,
         });
 
       if (!updated) {
         event.user_not_found = true;
         return Response.json(
-          { ok: false, error: "User not found" },
+          { error: "User not found", ok: false },
           { status: 404 }
         );
       }

@@ -32,23 +32,23 @@ src/features/integrations/lib/irc/
 
 ### Atheme (Required for Provisioning)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `IRC_ATHEME_JSONRPC_URL` | Yes | Full URL to Atheme JSON-RPC endpoint (e.g. `https://irc.atl.chat:8081/jsonrpc`) |
+| Variable                 | Required | Description                                                                     |
+| ------------------------ | -------- | ------------------------------------------------------------------------------- |
+| `IRC_ATHEME_JSONRPC_URL` | Yes      | Full URL to Atheme JSON-RPC endpoint (e.g. `https://irc.atl.chat:8081/jsonrpc`) |
 
 > **Deployment note:** When Portal runs in a different deployment than atl.chat (e.g. separate containers or hosts), use a **publicly reachable** Atheme URL. atl.chat's internal hostname (e.g. `http://atl-irc-server:8081/jsonrpc`) is only valid within the atl.chat Docker network. Use the external hostname and port (e.g. `https://irc.atl.chat:8081/jsonrpc`) or a reverse-proxy path that resolves from Portal's network.
-| `IRC_ATHEME_INSECURE_SKIP_VERIFY` | No | `true` or `1` to skip TLS verification (internal/self-signed) |
-| `IRC_SERVER` | No | Server host for UI connect instructions (default: `irc.atl.chat`) |
-| `IRC_PORT` | No | Port for UI (default: `6697`, TLS) |
+> | `IRC_ATHEME_INSECURE_SKIP_VERIFY` | No | `true` or `1` to skip TLS verification (internal/self-signed) |
+> | `IRC_SERVER` | No | Server host for UI connect instructions (default: `irc.atl.chat`) |
+> | `IRC_PORT` | No | Port for UI (default: `6697`, TLS) |
 
 ### UnrealIRCd (Optional, Admin Only)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `IRC_UNREAL_JSONRPC_URL` | Yes* | Base URL to UnrealIRCd JSON-RPC (e.g. `https://irc.atl.chat/jsonrpc`) |
-| `IRC_UNREAL_RPC_USER` | Yes* | RPC username for Basic Auth |
-| `IRC_UNREAL_RPC_PASSWORD` | Yes* | RPC password for Basic Auth |
-| `IRC_UNREAL_INSECURE_SKIP_VERIFY` | No | `true` or `1` to skip TLS verification |
+| Variable                          | Required | Description                                                           |
+| --------------------------------- | -------- | --------------------------------------------------------------------- |
+| `IRC_UNREAL_JSONRPC_URL`          | Yes\*    | Base URL to UnrealIRCd JSON-RPC (e.g. `https://irc.atl.chat/jsonrpc`) |
+| `IRC_UNREAL_RPC_USER`             | Yes\*    | RPC username for Basic Auth                                           |
+| `IRC_UNREAL_RPC_PASSWORD`         | Yes\*    | RPC password for Basic Auth                                           |
+| `IRC_UNREAL_INSECURE_SKIP_VERIFY` | No       | `true` or `1` to skip TLS verification                                |
 
 \*All three (`*_URL`, `*_RPC_USER`, `*_RPC_PASSWORD`) must be set for Unreal to be considered configured.
 
@@ -110,13 +110,16 @@ Admin dashboard → **IRC Accounts** tab lists all IRC accounts with user email,
 When Unreal env vars are set, use `unrealRpcClient` from `@/features/integrations/lib/irc`:
 
 ```typescript
-import { unrealRpcClient, isUnrealConfigured } from "@/features/integrations/lib/irc";
+import {
+  unrealRpcClient,
+  isUnrealConfigured,
+} from "@/features/integrations/lib/irc";
 
 if (isUnrealConfigured()) {
-  const users = await unrealRpcClient.userList();        // All connected users
-  const user = await unrealRpcClient.userGet("mynick");  // Single user by nick
-  const channels = await unrealRpcClient.channelList();  // All channels
-  const channel = await unrealRpcClient.channelGet("#atl");  // Single channel
+  const users = await unrealRpcClient.userList(); // All connected users
+  const user = await unrealRpcClient.userGet("mynick"); // Single user by nick
+  const channels = await unrealRpcClient.channelList(); // All channels
+  const channel = await unrealRpcClient.channelGet("#atl"); // Single channel
 }
 ```
 
@@ -140,17 +143,17 @@ The atl.chat IRC network must have:
 
 Atheme returns fault codes on error (see `AthemeFaultCode` in `types.ts`):
 
-| Code | Meaning |
-|------|---------|
-| 1 | needmoreparams |
-| 2 | badparams (invalid nick or parameters) |
-| 5 | authfail |
-| 6 | noprivs (frozen) |
-| 8 | alreadyexists (nick already registered) |
-| 9 | toomany (too many registrations) |
-| 10 | emailfail |
-| 15 | badauthcookie |
-| 16 | internalerror |
+| Code | Meaning                                 |
+| ---- | --------------------------------------- |
+| 1    | needmoreparams                          |
+| 2    | badparams (invalid nick or parameters)  |
+| 5    | authfail                                |
+| 6    | noprivs (frozen)                        |
+| 8    | alreadyexists (nick already registered) |
+| 9    | toomany (too many registrations)        |
+| 10   | emailfail                               |
+| 15   | badauthcookie                           |
+| 16   | internalerror                           |
 
 The implementation maps these to user-friendly errors (e.g. 8 → "Nick is already registered on the IRC network").
 

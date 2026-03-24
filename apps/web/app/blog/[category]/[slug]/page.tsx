@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getPost } from "@/lib/blog";
-import { getBaseUrl } from "@/lib/utils";
 import { getDynamicMetadata } from "@/app/metadata";
 import { BackToAllPostsButton } from "@/components/blog/back-to-posts-button";
 import ClientScrollToTop from "@/components/blog/client-scroll-to-top";
 import { Mdx } from "@/components/mdx-components";
 import { ArticleSchema } from "@/components/structured-data";
+import { getPost } from "@/lib/blog";
+import { getBaseUrl } from "@/lib/utils";
 
 interface PostPageProps {
   params: Promise<{

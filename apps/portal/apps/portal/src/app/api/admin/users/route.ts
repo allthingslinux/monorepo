@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
@@ -8,6 +7,7 @@ import { mediawikiAccount } from "@portal/db/schema/mediawiki";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { UserSearchSchema } from "@portal/schemas/user";
 import { and, desc, eq, ilike, ne, or } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -44,28 +44,28 @@ export async function GET(request: NextRequest) {
       const [rows, [{ count }]] = await Promise.all([
         db
           .select({
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            image: user.image,
-            role: user.role,
-            banned: user.banned,
-            banReason: user.banReason,
             banExpires: user.banExpires,
+            banReason: user.banReason,
+            banned: user.banned,
             createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            email: user.email,
             emailVerified: user.emailVerified,
-            twoFactorEnabled: user.twoFactorEnabled,
+            id: user.id,
+            image: user.image,
             ircNick: ircAccount.nick,
             ircStatus: ircAccount.status,
-            xmppJid: xmppAccount.jid,
-            xmppUsername: xmppAccount.username,
-            xmppStatus: xmppAccount.status,
             mailcowEmail: mailcowAccount.email,
             mailcowStatus: mailcowAccount.status,
-            mediawikiWikiUsername: mediawikiAccount.wikiUsername,
             mediawikiStatus: mediawikiAccount.status,
+            mediawikiWikiUsername: mediawikiAccount.wikiUsername,
+            name: user.name,
+            role: user.role,
+            twoFactorEnabled: user.twoFactorEnabled,
+            updatedAt: user.updatedAt,
+            username: user.username,
+            xmppJid: xmppAccount.jid,
+            xmppStatus: xmppAccount.status,
+            xmppUsername: xmppAccount.username,
           })
           .from(user)
           .leftJoin(
@@ -107,28 +107,16 @@ export async function GET(request: NextRequest) {
       ]);
 
       const users = rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        username: row.username,
-        email: row.email,
-        image: row.image,
-        role: row.role,
-        banned: row.banned,
-        banReason: row.banReason,
         banExpires: row.banExpires,
+        banReason: row.banReason,
+        banned: row.banned,
         createdAt: row.createdAt,
-        updatedAt: row.updatedAt,
+        email: row.email,
         emailVerified: row.emailVerified,
-        twoFactorEnabled: row.twoFactorEnabled,
+        id: row.id,
+        image: row.image,
         ircAccount: row.ircNick
           ? { nick: row.ircNick, status: row.ircStatus }
-          : null,
-        xmppAccount: row.xmppJid
-          ? {
-              jid: row.xmppJid,
-              username: row.xmppUsername,
-              status: row.xmppStatus,
-            }
           : null,
         mailcowAccount: row.mailcowEmail
           ? { email: row.mailcowEmail, status: row.mailcowStatus }
@@ -139,16 +127,28 @@ export async function GET(request: NextRequest) {
               status: row.mediawikiStatus,
             }
           : null,
+        name: row.name,
+        role: row.role,
+        twoFactorEnabled: row.twoFactorEnabled,
+        updatedAt: row.updatedAt,
+        username: row.username,
+        xmppAccount: row.xmppJid
+          ? {
+              jid: row.xmppJid,
+              username: row.xmppUsername,
+              status: row.xmppStatus,
+            }
+          : null,
       }));
 
       return Response.json({
-        users,
         pagination: {
           total: count,
           limit,
           offset,
           hasMore: offset + limit < count,
         },
+        users,
       });
     }
 
@@ -167,13 +167,13 @@ export async function GET(request: NextRequest) {
     ]);
 
     return Response.json({
-      users,
       pagination: {
         total: count,
         limit,
         offset,
         hasMore: offset + limit < count,
       },
+      users,
     });
   } catch (error) {
     return handleAPIError(error);

@@ -24,7 +24,7 @@ function getWikiBaseUrl(): string {
 /** Build wiki page URL from title (atl.wiki uses article path /$1) */
 function pageUrl(title: string): string {
   const base = getWikiBaseUrl();
-  const encoded = encodeURIComponent(title.replace(/ /g, "_"));
+  const encoded = encodeURIComponent(title.replaceAll(/ /g, "_"));
   return `${base}/${encoded}`;
 }
 
@@ -39,12 +39,12 @@ export async function fetchRecentWikiChanges(): Promise<WikiChange[]> {
     });
 
     return changes.map((c) => ({
-      title: c.title,
-      user: c.user,
-      timestamp: c.timestamp,
-      pageId: c.pageId,
-      url: pageUrl(c.title),
       diff: c.diff,
+      pageId: c.pageId,
+      timestamp: c.timestamp,
+      title: c.title,
+      url: pageUrl(c.title),
+      user: c.user,
     }));
   } catch {
     return [];

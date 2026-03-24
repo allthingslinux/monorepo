@@ -2,8 +2,7 @@ import type React from "react";
 
 import { cn } from "@/lib/utils";
 
-export interface LoadingSpinnerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   size?: "small" | "medium" | "large";
 }

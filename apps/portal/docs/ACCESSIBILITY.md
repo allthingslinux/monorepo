@@ -336,7 +336,7 @@ Provide skip links for main content:
    ```bash
    # Run Lighthouse accessibility audit
    npm run lighthouse -- --only-categories=accessibility
-   
+
    # Run axe DevTools
    # Install browser extension and run audit
    ```

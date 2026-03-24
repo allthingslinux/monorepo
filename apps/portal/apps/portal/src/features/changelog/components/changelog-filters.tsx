@@ -1,11 +1,8 @@
-import { GitCommitHorizontal, Tag, X } from "lucide-react";
 import { cn } from "@portal/utils/utils";
+import { GitCommitHorizontal, Tag, X } from "lucide-react";
 
-import {
-  COMMIT_TYPE_COLORS,
-  type ConventionalCommitType,
-  type RepoSummary,
-} from "../lib/types";
+import { COMMIT_TYPE_COLORS } from "../lib/types";
+import type { ConventionalCommitType, RepoSummary } from "../lib/types";
 import { RepoIcon } from "./repo-icon";
 
 export type EntryTypeFilterValue = "all" | "releases" | "commits";

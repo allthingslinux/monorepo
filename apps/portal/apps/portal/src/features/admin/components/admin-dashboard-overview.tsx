@@ -1,25 +1,26 @@
 "use client";
 
-import { UserCheck, Users } from "lucide-react";
-import Link from "next/link";
 import { PageHeader } from "@portal/ui/layout/page/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
+import { UserCheck, Users } from "lucide-react";
+import Link from "next/link";
 
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
+
 import { AdminStats } from "./admin-stats";
 
 const QUICK_LINKS = [
   {
-    href: "/app/admin/users",
-    label: "Users",
     description: "Manage users and integration accounts",
+    href: "/app/admin/users",
     icon: Users,
+    label: "Users",
   },
   {
-    href: "/app/admin/sessions",
-    label: "Sessions",
     description: "View and manage active user sessions",
+    href: "/app/admin/sessions",
     icon: UserCheck,
+    label: "Sessions",
   },
 ] as const;
 

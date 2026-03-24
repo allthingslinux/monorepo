@@ -9,30 +9,28 @@ Analyze the provided code, architecture, or concept and generate a clear, well-s
 1. **Analyze the input** - Understand what the user wants to visualize (code flow, architecture, data relationships, state machines, sequences, etc).
 
 2. **Choose the appropriate diagram type**:
-
-    - `flowchart` - For process flows, decision trees, algorithms
-    - `sequenceDiagram` - For API calls, message passing, request/response flows
-    - `classDiagram` - For class structures, inheritance, interfaces
-    - `erDiagram` - For database schemas, entity relationships
-    - `stateDiagram-v2` - For state machines, lifecycle flows
-    - `graph TD/LR` - For dependency graphs, module relationships
-    - `gitgraph` - For git branching strategies
-    - `journey` - For user journeys
-    - `gantt` - For timelines and schedules
+   - `flowchart` - For process flows, decision trees, algorithms
+   - `sequenceDiagram` - For API calls, message passing, request/response flows
+   - `classDiagram` - For class structures, inheritance, interfaces
+   - `erDiagram` - For database schemas, entity relationships
+   - `stateDiagram-v2` - For state machines, lifecycle flows
+   - `graph TD/LR` - For dependency graphs, module relationships
+   - `gitgraph` - For git branching strategies
+   - `journey` - For user journeys
+   - `gantt` - For timelines and schedules
 
 3. **Generate the diagram** with these qualities:
-
-    - Clear, descriptive node labels
-    - Logical grouping with subgraphs where appropriate
-    - Consistent styling and direction
-    - Meaningful relationship labels on edges
-    - Not overly complex - split into multiple diagrams if needed
+   - Clear, descriptive node labels
+   - Logical grouping with subgraphs where appropriate
+   - Consistent styling and direction
+   - Meaningful relationship labels on edges
+   - Not overly complex - split into multiple diagrams if needed
 
 4. **Output format**: Always wrap the diagram in a mermaid code block:
 
-    ```mermaid
-    [diagram code here]
-    ```
+   ```mermaid
+   [diagram code here]
+   ```
 
 ## Diagram Style Guidelines
 

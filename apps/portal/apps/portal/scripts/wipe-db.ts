@@ -10,7 +10,6 @@
  *   pnpm db:wipe
  */
 import "dotenv/config";
-
 import { keys } from "@portal/db/keys";
 import { Pool } from "pg";
 
@@ -30,8 +29,8 @@ async function wipe() {
     await pool.query("CREATE SCHEMA public");
     await pool.query("GRANT ALL ON SCHEMA public TO public");
     console.log("✅ Database wiped. Run pnpm db:migrate to apply migrations.");
-  } catch (err) {
-    console.error("❌ Wipe failed:", err);
+  } catch (error) {
+    console.error("❌ Wipe failed:", error);
     process.exit(1);
   } finally {
     await pool.end();

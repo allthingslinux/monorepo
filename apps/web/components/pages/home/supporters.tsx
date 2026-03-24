@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { memo, useEffect, useRef, useState } from "react";
 
 const SUPPORTERS = [
   {

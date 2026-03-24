@@ -61,6 +61,7 @@ sequenceDiagram
 ## Output
 
 Render directly in chat (don't write files):
+
 1. 2-paragraph product description
 2. User journey diagram
 3. Architecture diagram

@@ -1,6 +1,6 @@
+import { keys } from "@portal/observability/keys";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { keys } from "@portal/observability/keys";
 
 /**
  * Sentry Tunnel Route Handler
@@ -53,21 +53,21 @@ export async function POST(request: NextRequest) {
     const sentryUrl = `https://${orgDomain}/api/${projectId}/envelope/`;
 
     const response = await fetch(sentryUrl, {
-      method: "POST",
+      body: envelope,
       headers: {
         "Content-Type": "application/x-sentry-envelope",
         "User-Agent": request.headers.get("user-agent") || "Sentry-Proxy",
       },
-      body: envelope,
+      method: "POST",
     });
 
     // Return the response from Sentry
     const responseText = await response.text();
     return new NextResponse(responseText, {
-      status: response.status,
       headers: {
         "Content-Type": response.headers.get("content-type") || "text/plain",
       },
+      status: response.status,
     });
   } catch (error) {
     console.error("Sentry tunnel error:", error);
@@ -80,5 +80,5 @@ export async function POST(request: NextRequest) {
 
 // Support GET for health checks (though Sentry only uses POST)
 export function GET() {
-  return NextResponse.json({ status: "ok", service: "sentry-tunnel" });
+  return NextResponse.json({ service: "sentry-tunnel", status: "ok" });
 }

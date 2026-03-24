@@ -1,7 +1,7 @@
 "use client";
 
-import { Ban, Shield, UserCheck, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
+import { Ban, Shield, UserCheck, Users } from "lucide-react";
 
 import { useAdminStats } from "@/features/admin/hooks/use-admin";
 

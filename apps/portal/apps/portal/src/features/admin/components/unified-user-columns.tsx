@@ -1,14 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Ban,
-  MoreHorizontal,
-  UserCircle,
-} from "lucide-react";
 import type { UserWithIntegrations } from "@portal/api/types";
 import {
   AlertDialog,
@@ -37,7 +28,17 @@ import {
   SelectValue,
 } from "@portal/ui/ui/select";
 import type { UseMutationResult } from "@tanstack/react-query";
-import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Ban,
+  MoreHorizontal,
+  UserCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 function getSortIcon(sorted: false | "asc" | "desc") {
   if (sorted === "asc") {
@@ -170,17 +171,6 @@ export function createUnifiedUserColumns(
 
   return [
     columnHelper.accessor("email", {
-      size: 220,
-      minSize: 180,
-      header: ({ column }) => {
-        const sorted = column.getIsSorted();
-        return (
-          <Button onClick={column.getToggleSortingHandler()} variant="ghost">
-            User
-            {getSortIcon(sorted)}
-          </Button>
-        );
-      },
       cell: ({ row, getValue }) => {
         const email = getValue();
         const user = row.original;
@@ -191,19 +181,19 @@ export function createUnifiedUserColumns(
           </div>
         );
       },
-    }),
-    columnHelper.accessor("role", {
-      size: 120,
-      minSize: 100,
       header: ({ column }) => {
         const sorted = column.getIsSorted();
         return (
           <Button onClick={column.getToggleSortingHandler()} variant="ghost">
-            Role
+            User
             {getSortIcon(sorted)}
           </Button>
         );
       },
+      minSize: 180,
+      size: 220,
+    }),
+    columnHelper.accessor("role", {
       cell: ({ row, getValue }) => {
         const role = getValue() || "user";
         const user = row.original;
@@ -229,11 +219,19 @@ export function createUnifiedUserColumns(
           </Select>
         );
       },
+      header: ({ column }) => {
+        const sorted = column.getIsSorted();
+        return (
+          <Button onClick={column.getToggleSortingHandler()} variant="ghost">
+            Role
+            {getSortIcon(sorted)}
+          </Button>
+        );
+      },
+      minSize: 100,
+      size: 120,
     }),
     columnHelper.accessor("banned", {
-      size: 90,
-      minSize: 80,
-      header: "Status",
       cell: ({ getValue }) => {
         const banned = getValue();
         return banned === true ? (
@@ -242,25 +240,24 @@ export function createUnifiedUserColumns(
           <Badge variant="secondary">Active</Badge>
         );
       },
+      header: "Status",
+      minSize: 80,
+      size: 90,
     }),
     columnHelper.accessor((row) => row.ircAccount?.nick ?? null, {
-      id: "irc",
-      size: 110,
-      minSize: 90,
-      header: "IRC",
       cell: ({ row }) => (
         <span className="font-mono text-sm">
           {row.original.ircAccount?.nick ?? EMPTY}
         </span>
       ),
+      header: "IRC",
+      id: "irc",
+      minSize: 90,
+      size: 110,
     }),
     columnHelper.accessor(
       (row) => row.xmppAccount?.jid ?? row.xmppAccount?.username ?? null,
       {
-        id: "xmpp",
-        size: 140,
-        minSize: 110,
-        header: "XMPP",
         cell: ({ row }) => (
           <span className="font-mono text-sm">
             {row.original.xmppAccount?.username ??
@@ -268,35 +265,36 @@ export function createUnifiedUserColumns(
               EMPTY}
           </span>
         ),
+        header: "XMPP",
+        id: "xmpp",
+        minSize: 110,
+        size: 140,
       }
     ),
     columnHelper.accessor((row) => row.mailcowAccount?.email ?? null, {
-      id: "mailcow",
-      size: 160,
-      minSize: 120,
-      header: "Mailcow",
       cell: ({ row }) => (
         <span className="font-mono text-sm">
           {row.original.mailcowAccount?.email ?? EMPTY}
         </span>
       ),
+      header: "Mailcow",
+      id: "mailcow",
+      minSize: 120,
+      size: 160,
     }),
     columnHelper.accessor((row) => row.mediawikiAccount?.wikiUsername ?? null, {
-      id: "mediawiki",
-      size: 120,
-      minSize: 100,
-      header: "MediaWiki",
       cell: ({ row }) => (
         <span className="font-mono text-sm">
           {row.original.mediawikiAccount?.wikiUsername ?? EMPTY}
         </span>
       ),
+      header: "MediaWiki",
+      id: "mediawiki",
+      minSize: 100,
+      size: 120,
     }),
     columnHelper.accessor("createdAt", {
-      size: 100,
-      minSize: 90,
-      sortingFn: "datetime",
-      meta: { align: "right" },
+      cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
       header: ({ column }) => {
         const sorted = column.getIsSorted();
         return (
@@ -310,17 +308,20 @@ export function createUnifiedUserColumns(
           </Button>
         );
       },
-      cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
+      meta: { align: "right" },
+      minSize: 90,
+      size: 100,
+      sortingFn: "datetime",
     }),
     columnHelper.display({
-      id: "actions",
-      size: 80,
-      minSize: 70,
-      meta: { align: "right" },
-      header: "Actions",
       cell: ({ row }) => (
         <UserActionsCell mutations={mutations} user={row.original} />
       ),
+      header: "Actions",
+      id: "actions",
+      meta: { align: "right" },
+      minSize: 70,
+      size: 80,
     }),
   ] as ColumnDef<UserWithIntegrations>[];
 }

@@ -1,8 +1,8 @@
 import { FileText } from "lucide-react";
 import Link from "next/link";
 
-import { getAllPostsAsPostType } from "@/lib/blog";
 import { Card, CardContent } from "@/components/ui/card";
+import { getAllPostsAsPostType } from "@/lib/blog";
 
 export async function UpdatesSection() {
   // Get the most recent blog posts (news/updates)

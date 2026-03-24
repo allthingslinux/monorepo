@@ -1,6 +1,7 @@
 import { cpus } from "node:os";
-import type { NextConfig } from "next";
+
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+import type { NextConfig } from "next";
 import { withContentlayer } from "next-contentlayer2";
 
 // Validate environment variables at build time

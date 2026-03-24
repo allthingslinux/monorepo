@@ -36,14 +36,14 @@ pnpm test:coverage
 ### Test Structure
 
 ```typescript
-import { describe, expect, it } from 'vitest'
-import { functionToTest } from './module'
+import { describe, expect, it } from "vitest";
+import { functionToTest } from "./module";
 
-describe('functionToTest', () => {
-  it('should do something', () => {
-    expect(functionToTest()).toBe(expected)
-  })
-})
+describe("functionToTest", () => {
+  it("should do something", () => {
+    expect(functionToTest()).toBe(expected);
+  });
+});
 ```
 
 ## Testing Patterns
@@ -55,14 +55,14 @@ describe('functionToTest', () => {
 **Example - Utils**:
 
 ```typescript
-import { describe, expect, it } from 'vitest'
-import { cn } from './utils'
+import { describe, expect, it } from "vitest";
+import { cn } from "./utils";
 
-describe('cn', () => {
-  it('should merge class names correctly', () => {
-    expect(cn('foo', 'bar')).toBe('foo bar')
-  })
-})
+describe("cn", () => {
+  it("should merge class names correctly", () => {
+    expect(cn("foo", "bar")).toBe("foo bar");
+  });
+});
 ```
 
 ### Component Tests
@@ -95,17 +95,17 @@ describe('Button', () => {
 **Example**:
 
 ```typescript
-import { renderHook } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { useIsMobile } from './use-mobile'
+import { renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { useIsMobile } from "./use-mobile";
 
-describe('useIsMobile', () => {
-  it('should return true for mobile viewport', () => {
+describe("useIsMobile", () => {
+  it("should return true for mobile viewport", () => {
     // Mock window.matchMedia
-    const { result } = renderHook(() => useIsMobile())
-    expect(result.current).toBe(true)
-  })
-})
+    const { result } = renderHook(() => useIsMobile());
+    expect(result.current).toBe(true);
+  });
+});
 ```
 
 ### API Route Tests
@@ -117,25 +117,25 @@ describe('useIsMobile', () => {
 **Example**:
 
 ```typescript
-import { describe, expect, it, vi } from 'vitest'
-import { NextRequest } from 'next/server'
-import { GET } from './route'
+import { describe, expect, it, vi } from "vitest";
+import { NextRequest } from "next/server";
+import { GET } from "./route";
 
-describe('GET /api/user/me', () => {
-  it('should return user data', async () => {
-    const request = new NextRequest('http://localhost/api/user/me', {
+describe("GET /api/user/me", () => {
+  it("should return user data", async () => {
+    const request = new NextRequest("http://localhost/api/user/me", {
       headers: {
-        cookie: 'session=...',
+        cookie: "session=...",
       },
-    })
-    
-    const response = await GET(request)
-    const data = await response.json()
-    
-    expect(response.status).toBe(200)
-    expect(data).toHaveProperty('user')
-  })
-})
+    });
+
+    const response = await GET(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data).toHaveProperty("user");
+  });
+});
 ```
 
 ### Testing with TanStack Query
@@ -168,17 +168,17 @@ const renderWithQuery = (ui: React.ReactElement) => {
 **Pattern**: Mock Better Auth client
 
 ```typescript
-import { vi } from 'vitest'
-import { authClient } from '@/auth/client'
+import { vi } from "vitest";
+import { authClient } from "@/auth/client";
 
-vi.mock('@/auth/client', () => ({
+vi.mock("@/auth/client", () => ({
   authClient: {
     useSession: vi.fn(() => ({
-      data: { user: { id: '1', role: 'admin' } },
+      data: { user: { id: "1", role: "admin" } },
       isPending: false,
     })),
   },
-}))
+}));
 ```
 
 ## Mocking
@@ -186,44 +186,44 @@ vi.mock('@/auth/client', () => ({
 ### Mocking Modules
 
 ```typescript
-import { vi } from 'vitest'
+import { vi } from "vitest";
 
-vi.mock('./module', () => ({
-  functionToMock: vi.fn(() => 'mocked'),
-}))
+vi.mock("./module", () => ({
+  functionToMock: vi.fn(() => "mocked"),
+}));
 ```
 
 ### Mocking Window/DOM APIs
 
 ```typescript
-import { vi, beforeEach, afterEach } from 'vitest'
+import { vi, beforeEach, afterEach } from "vitest";
 
 beforeEach(() => {
-  Object.defineProperty(window, 'innerWidth', {
+  Object.defineProperty(window, "innerWidth", {
     writable: true,
     configurable: true,
     value: 1024,
-  })
-})
+  });
+});
 
 afterEach(() => {
-  vi.restoreAllMocks()
-})
+  vi.restoreAllMocks();
+});
 ```
 
 ### Mocking Next.js APIs
 
 ```typescript
-import { vi } from 'vitest'
+import { vi } from "vitest";
 
-vi.mock('next/server', () => ({
+vi.mock("next/server", () => ({
   NextRequest: class MockRequest {
-    headers = new Headers()
+    headers = new Headers();
     async json() {
-      return {}
+      return {};
     }
   },
-}))
+}));
 ```
 
 ## Coverage Goals
@@ -249,17 +249,17 @@ vi.mock('next/server', () => ({
 4. **Arrange-Act-Assert Pattern**
 
    ```typescript
-   it('should merge classes', () => {
+   it("should merge classes", () => {
      // Arrange
-     const class1 = 'foo'
-     const class2 = 'bar'
-     
+     const class1 = "foo";
+     const class2 = "bar";
+
      // Act
-     const result = cn(class1, class2)
-     
+     const result = cn(class1, class2);
+
      // Assert
-     expect(result).toBe('foo bar')
-   })
+     expect(result).toBe("foo bar");
+   });
    ```
 
 5. **Test Edge Cases**
@@ -283,20 +283,20 @@ vi.mock('next/server', () => ({
 ### Testing Error Handling
 
 ```typescript
-it('should handle errors gracefully', () => {
+it("should handle errors gracefully", () => {
   expect(() => {
-    functionThatThrows()
-  }).toThrow('Expected error message')
-})
+    functionThatThrows();
+  }).toThrow("Expected error message");
+});
 ```
 
 ### Testing Async Code
 
 ```typescript
-it('should handle async operations', async () => {
-  const result = await asyncFunction()
-  expect(result).toBe(expected)
-})
+it("should handle async operations", async () => {
+  const result = await asyncFunction();
+  expect(result).toBe(expected);
+});
 ```
 
 ### Testing with User Interactions

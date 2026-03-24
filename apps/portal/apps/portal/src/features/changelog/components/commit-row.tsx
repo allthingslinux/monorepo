@@ -14,9 +14,9 @@ export function CommitRow({ entry }: CommitRowProps) {
   const parsed = parseConventionalCommit(entry.message);
 
   const formattedDate = new Date(entry.date).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
     day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 
   return (

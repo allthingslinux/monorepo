@@ -7,9 +7,9 @@ export function sendEmail(options: EmailOptions) {
   // TODO: Implement with your email provider
   // For development, just log the email
   console.log("📧 Email would be sent:", {
-    to: options.to,
-    subject: options.subject,
     content: options.html || options.text,
+    subject: options.subject,
+    to: options.to,
   });
 
   // Example implementations:

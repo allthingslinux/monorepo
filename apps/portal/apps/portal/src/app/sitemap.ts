@@ -1,5 +1,5 @@
-import type { MetadataRoute } from "next";
 import { generateSitemap } from "@portal/seo/sitemap";
+import type { MetadataRoute } from "next";
 
 import { routeConfig } from "@/features/routing/lib";
 

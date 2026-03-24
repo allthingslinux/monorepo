@@ -19,15 +19,16 @@ Users → Cloudflare (CDN/DDoS/SSL) → Hetzner VPS → Next.js App + PostgreSQL
    - SSH access configured
 
 2. **Install Docker and Docker Compose**:
+
    ```bash
    # Install Docker
    curl -fsSL https://get.docker.com -o get-docker.sh
    sudo sh get-docker.sh
-   
+
    # Install Docker Compose (plugin)
    sudo apt-get update
    sudo apt-get install docker-compose-plugin
-   
+
    # Add user to docker group (replace $USER with your username)
    sudo usermod -aG docker $USER
    ```
@@ -57,6 +58,7 @@ Configure the following secrets in your GitHub repository settings:
 - `VPS_SSH_KEY`: Private SSH key for authentication (generate with `ssh-keygen -t ed25519`)
 
 **Optional:**
+
 - `GITHUB_TOKEN`: Automatically provided, but can be overridden if needed
 
 ## Environment Variables
@@ -116,6 +118,7 @@ SENTRY_RELEASE=production
 ```
 
 **Security Notes:**
+
 - Use strong, unique passwords for production
 - Generate secure secrets: `openssl rand -base64 32`
 - Never commit `.env` files to git
@@ -161,6 +164,7 @@ docker compose --profile production exec portal-app-production pnpm db:migrate
 ```
 
 **Before production migrations:**
+
 1. Backup database: `docker compose --profile production exec portal-db-production pg_dump -U postgres portal > backup.sql`
 2. Test migrations on staging first
 3. Review migration files in `drizzle/` directory
@@ -183,9 +187,11 @@ docker compose --profile production logs -f
 ### Health Checks
 
 The application includes health check endpoints:
+
 - `/api/health` - Application health status
 
 Check container health:
+
 ```bash
 docker compose --profile production ps
 ```
@@ -237,7 +243,7 @@ If you want an additional reverse proxy on the VPS:
 server {
     listen 80;
     server_name atl.dev;
-    
+
     location / {
         proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
@@ -282,6 +288,7 @@ docker compose --profile production logs portal-db-production
 ### Port conflicts
 
 Staging and production use different ports (see `compose.yaml` profiles):
+
 - Staging: App on 3001, DB on 5433
 - Production: App on 3000, DB on 5432
 
@@ -353,6 +360,7 @@ portal-app-production:
 ## Support
 
 For issues or questions:
+
 - Check logs first
 - Review GitHub Actions workflow runs
 - Check Cloudflare analytics for traffic patterns

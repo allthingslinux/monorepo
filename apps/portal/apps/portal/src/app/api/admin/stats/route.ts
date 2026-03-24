@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { apikey } from "@portal/db/schema/api-keys";
 import { session, user } from "@portal/db/schema/auth";
 import { oauthClient } from "@portal/db/schema/oauth";
 import { count, sql } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -16,33 +16,45 @@ export async function GET(request: NextRequest) {
       await Promise.all([
         db
           .select({
-            total: count(user.id),
             admins: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'admin')`,
-            staff: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'staff')`,
             banned: sql<number>`COUNT(*) FILTER (WHERE ${user.banned} = true)`,
+            staff: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'staff')`,
+            total: count(user.id),
           })
           .from(user),
         db
           .select({
-            total: count(session.id),
             active: sql<number>`COUNT(*) FILTER (WHERE ${session.expiresAt} > NOW())`,
+            total: count(session.id),
           })
           .from(session),
         db
           .select({
-            total: count(apikey.id),
             enabled: sql<number>`COUNT(*) FILTER (WHERE ${apikey.enabled} = true)`,
+            total: count(apikey.id),
           })
           .from(apikey),
         db
           .select({
-            total: count(oauthClient.id),
             disabled: sql<number>`COUNT(*) FILTER (WHERE ${oauthClient.disabled} = true)`,
+            total: count(oauthClient.id),
           })
           .from(oauthClient),
       ]);
 
     return Response.json({
+      apiKeys: {
+        total: Number(apiKeyStats.total),
+        enabled: Number(apiKeyStats.enabled),
+      },
+      oauthClients: {
+        total: Number(oauthClientStats.total),
+        disabled: Number(oauthClientStats.disabled),
+      },
+      sessions: {
+        total: Number(sessionStats.total),
+        active: Number(sessionStats.active),
+      },
       users: {
         total: Number(userStats.total),
         admins: Number(userStats.admins),
@@ -52,18 +64,6 @@ export async function GET(request: NextRequest) {
           Number(userStats.total) -
           Number(userStats.admins) -
           Number(userStats.staff),
-      },
-      sessions: {
-        total: Number(sessionStats.total),
-        active: Number(sessionStats.active),
-      },
-      apiKeys: {
-        total: Number(apiKeyStats.total),
-        enabled: Number(apiKeyStats.enabled),
-      },
-      oauthClients: {
-        total: Number(oauthClientStats.total),
-        disabled: Number(oauthClientStats.disabled),
       },
     });
   } catch (error) {

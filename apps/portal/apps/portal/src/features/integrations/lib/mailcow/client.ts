@@ -1,5 +1,4 @@
 import "server-only";
-
 import { log } from "@portal/observability/utils";
 import { startSpan } from "@sentry/nextjs";
 
@@ -33,11 +32,11 @@ async function mailcowRequest<T = MailcowResponseEntry[]>(
   const method = options.method || "GET";
 
   log.debug(`Mailcow API request: ${method} ${path}`, {
-    url,
     method,
+    url,
   });
 
-  const apiKey = mailcowConfig.apiKey;
+  const { apiKey } = mailcowConfig;
   if (!apiKey) {
     throw new Error("MAILCOW_API_KEY is not configured");
   }
@@ -53,7 +52,7 @@ async function mailcowRequest<T = MailcowResponseEntry[]>(
     });
 
     if (response.status === 401) {
-      log.error("Mailcow API authentication failed", { path, method });
+      log.error("Mailcow API authentication failed", { method, path });
       throw new Error(
         "Mailcow API authentication failed (invalid or expired API key)"
       );
@@ -62,10 +61,10 @@ async function mailcowRequest<T = MailcowResponseEntry[]>(
     if (!response.ok) {
       const text = await response.text();
       log.error(`Mailcow API error (${response.status})`, {
-        path,
         method,
-        status: response.status,
+        path,
         response: text,
+        status: response.status,
       });
       throw new Error(`Mailcow API error (${response.status}): ${text}`);
     }
@@ -75,18 +74,18 @@ async function mailcowRequest<T = MailcowResponseEntry[]>(
     try {
       data = text ? (JSON.parse(text) as T) : ({} as T);
     } catch {
-      log.error("Failed to parse Mailcow API response", { path, method, text });
+      log.error("Failed to parse Mailcow API response", { method, path, text });
       data = {} as T;
     }
 
-    log.debug("Mailcow API response success", { path, method });
+    log.debug("Mailcow API response success", { method, path });
     return data;
   } catch (error) {
     if (!(error instanceof Error && error.message.includes("Mailcow API"))) {
       log.error("Mailcow API request failed", {
-        path,
-        method,
         error: error instanceof Error ? error.message : String(error),
+        method,
+        path,
       });
     }
     throw error;
@@ -119,12 +118,12 @@ export function createMailbox(
 ): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow createMailbox",
       attributes: {
         "mailcow.domain": domain,
         "mailcow.local_part": localPart,
       },
+      name: "mailcow createMailbox",
+      op: "http.client",
     },
     async () => {
       const body = {
@@ -139,8 +138,8 @@ export function createMailbox(
       };
 
       const result = await mailcowRequest("/api/v1/add/mailbox", {
-        method: "POST",
         body: JSON.stringify(body),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -154,16 +153,16 @@ export function createMailbox(
 export function deleteMailbox(username: string): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow deleteMailbox",
       attributes: {
         "mailcow.username": username,
       },
+      name: "mailcow deleteMailbox",
+      op: "http.client",
     },
     async () => {
       const result = await mailcowRequest("/api/v1/delete/mailbox", {
-        method: "POST",
         body: JSON.stringify([username]),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -180,19 +179,19 @@ export function updateMailbox(
 ): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow updateMailbox",
       attributes: {
         "mailcow.username": username,
       },
+      name: "mailcow updateMailbox",
+      op: "http.client",
     },
     async () => {
       const result = await mailcowRequest("/api/v1/edit/mailbox", {
-        method: "POST",
         body: JSON.stringify({
           items: [username],
           attr: data,
         }),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -230,11 +229,11 @@ export function getMailbox(
 ): Promise<Record<string, unknown> | null> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow getMailbox",
       attributes: {
         "mailcow.username": username,
       },
+      name: "mailcow getMailbox",
+      op: "http.client",
     },
     async () => {
       const encoded = encodeURIComponent(username);
@@ -255,11 +254,11 @@ export function getDomain(
 ): Promise<Record<string, unknown> | null> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow getDomain",
       attributes: {
         "mailcow.domain": domain,
       },
+      name: "mailcow getDomain",
+      op: "http.client",
     },
     async () => {
       const encoded = encodeURIComponent(domain);
@@ -285,11 +284,11 @@ export function getAppPasswords(
 ): Promise<MailcowAppPassword[]> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow getAppPasswords",
       attributes: {
         "mailcow.accountId": accountId,
       },
+      name: "mailcow getAppPasswords",
+      op: "http.client",
     },
     async () => {
       const encoded = encodeURIComponent(accountId);
@@ -307,24 +306,24 @@ export function createAppPassword(
 ): Promise<{ app_passwd: string }> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow createAppPassword",
       attributes: {
         "mailcow.accountId": accountId,
         "mailcow.name": name,
       },
+      name: "mailcow createAppPassword",
+      op: "http.client",
     },
     async () => {
       const body = {
-        items: [accountId],
         app_passwd_name: name,
+        items: [accountId],
       };
 
       const result = await mailcowRequest<MailcowResponseEntry[]>(
         "/api/v1/add/app-passwd",
         {
-          method: "POST",
           body: JSON.stringify(body),
+          method: "POST",
         }
       );
 
@@ -361,17 +360,17 @@ export function deleteAppPassword(
 ): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow deleteAppPassword",
       attributes: {
         "mailcow.accountId": accountId,
         "mailcow.passwordId": passwordId,
       },
+      name: "mailcow deleteAppPassword",
+      op: "http.client",
     },
     async () => {
       const result = await mailcowRequest("/api/v1/delete/app-passwd", {
-        method: "POST",
         body: JSON.stringify([passwordId]),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -386,11 +385,11 @@ export function deleteAppPassword(
 export function getAliases(accountId: string): Promise<MailcowAlias[]> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow getAliases",
       attributes: {
         "mailcow.accountId": accountId,
       },
+      name: "mailcow getAliases",
+      op: "http.client",
     },
     async () => {
       const encoded = encodeURIComponent(accountId);
@@ -410,24 +409,24 @@ export function createAlias(
 ): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow createAlias",
       attributes: {
         "mailcow.address": address,
         "mailcow.goto": goto,
       },
+      name: "mailcow createAlias",
+      op: "http.client",
     },
     async () => {
       const body = {
+        active: active ? 1 : 0,
         address,
         goto,
-        active: active ? 1 : 0,
         public_comment: publicComment,
       };
 
       const result = await mailcowRequest("/api/v1/add/alias", {
-        method: "POST",
         body: JSON.stringify(body),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -438,16 +437,16 @@ export function createAlias(
 export function deleteAlias(aliasId: string | number): Promise<void> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow deleteAlias",
       attributes: {
         "mailcow.aliasId": aliasId,
       },
+      name: "mailcow deleteAlias",
+      op: "http.client",
     },
     async () => {
       const result = await mailcowRequest("/api/v1/delete/alias", {
-        method: "POST",
         body: JSON.stringify([aliasId]),
+        method: "POST",
       });
 
       assertSuccess(result);
@@ -460,16 +459,16 @@ export function getMailboxUsage(
 ): Promise<Record<string, unknown>> {
   return startSpan(
     {
-      op: "http.client",
-      name: "mailcow getMailboxUsage",
       attributes: {
         "mailcow.accountId": accountId,
       },
+      name: "mailcow getMailboxUsage",
+      op: "http.client",
     },
     async () => {
       const mailbox = await getMailbox(accountId);
       if (!mailbox) {
-        return { quota: 0, quota_used: 0, percent_in_use: 0 };
+        return { percent_in_use: 0, quota: 0, quota_used: 0 };
       }
       return {
         quota: Number(mailbox.quota), // Already in Bytes from API

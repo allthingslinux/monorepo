@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   APIError,
   handleAPIError,
@@ -9,6 +8,7 @@ import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { mediawikiAccount } from "@portal/db/schema/mediawiki";
 import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 import { mediawikiIntegration } from "@/features/integrations/lib/mediawiki/implementation";
 
@@ -25,8 +25,8 @@ export async function GET(
       .select({
         mediawikiAccount,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })
@@ -37,17 +37,17 @@ export async function GET(
 
     if (!row) {
       return Response.json(
-        { ok: false, error: "MediaWiki account not found" },
+        { error: "MediaWiki account not found", ok: false },
         { status: 404 }
       );
     }
 
     return Response.json({
-      ok: true,
       mediawikiAccount: {
         ...row.mediawikiAccount,
         user: row.user?.id ? row.user : undefined,
       },
+      ok: true,
     });
   } catch (error) {
     return handleAPIError(error);
@@ -79,7 +79,7 @@ export async function PATCH(
 
     const updated = await mediawikiIntegration.updateAccount(id, body);
 
-    return Response.json({ ok: true, mediawikiAccount: updated });
+    return Response.json({ mediawikiAccount: updated, ok: true });
   } catch (error) {
     return handleAPIError(error);
   }
@@ -102,7 +102,7 @@ export async function DELETE(
 
     if (!existing) {
       return Response.json(
-        { ok: false, error: "MediaWiki account not found" },
+        { error: "MediaWiki account not found", ok: false },
         { status: 404 }
       );
     }

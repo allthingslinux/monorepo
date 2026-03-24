@@ -78,17 +78,17 @@ export function getTranslatedRouteConfig(
       return {
         ...route,
         ...(label ? { label } : {}),
-        metadata: {
-          ...route.metadata,
-          ...(title ? { title } : {}),
-          ...(description ? { description } : {}),
-        },
         breadcrumb: route.breadcrumb
           ? {
               ...route.breadcrumb,
               ...(breadcrumbLabel ? { label: breadcrumbLabel } : {}),
             }
           : undefined,
+        metadata: {
+          ...route.metadata,
+          ...(title ? { title } : {}),
+          ...(description ? { description } : {}),
+        },
       };
     }),
     // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: TODO
@@ -117,24 +117,17 @@ export function getTranslatedRouteConfig(
       return {
         ...route,
         ...(label ? { label } : {}),
-        metadata: {
-          ...route.metadata,
-          ...(title ? { title } : {}),
-          ...(description ? { description } : {}),
-        },
-        ui: route.ui
-          ? {
-              ...route.ui,
-              ...(uiTitle ? { title: uiTitle } : {}),
-              ...(uiDescription ? { description: uiDescription } : {}),
-            }
-          : undefined,
         breadcrumb: route.breadcrumb
           ? {
               ...route.breadcrumb,
               ...(breadcrumbLabel ? { label: breadcrumbLabel } : {}),
             }
           : undefined,
+        metadata: {
+          ...route.metadata,
+          ...(title ? { title } : {}),
+          ...(description ? { description } : {}),
+        },
         navigation: route.navigation
           ? {
               ...route.navigation,
@@ -165,6 +158,13 @@ export function getTranslatedRouteConfig(
                     : undefined,
                 };
               }),
+            }
+          : undefined,
+        ui: route.ui
+          ? {
+              ...route.ui,
+              ...(uiTitle ? { title: uiTitle } : {}),
+              ...(uiDescription ? { description: uiDescription } : {}),
             }
           : undefined,
       };
@@ -255,27 +255,27 @@ export function createRouteTranslationResolver(
           error.message.includes("Could not resolve"))
       ) {
         captureException(error, {
+          level: "warning",
           tags: {
             type: "missing_translation",
             routeId,
             translationKey,
-          },
-          level: "warning", // Missing translations are warnings, not errors
+          }, // Missing translations are warnings, not errors
         });
       } else {
         // For other errors, still capture but as error level
         captureException(error, {
           tags: {
-            type: "translation_error",
             routeId,
             translationKey,
+            type: "translation_error",
           },
         });
       }
       // Return undefined to fall back to original
     }
 
-    return undefined;
+    return;
   };
 }
 

@@ -54,8 +54,8 @@ vi.mock("@portal/api/utils", async () => {
     );
   return {
     ...actual,
-    requireAuth: vi.fn().mockResolvedValue(undefined),
     handleAPIError: vi.fn(actual.handleAPIError),
+    requireAuth: vi.fn().mockResolvedValue(undefined),
   };
 });
 
@@ -78,8 +78,8 @@ import { GET } from "@/app/api/bridge/identity/route";
 function mockSelect(rows: unknown[]) {
   const chain = {
     from: vi.fn(),
-    where: vi.fn(),
     limit: vi.fn(),
+    where: vi.fn(),
   };
   chain.from.mockReturnValue(chain);
   chain.where.mockReturnValue(chain);
@@ -96,8 +96,8 @@ function mockSelectSequence(...rowSets: unknown[][]) {
     call++;
     const chain = {
       from: vi.fn(),
-      where: vi.fn(),
       limit: vi.fn(),
+      where: vi.fn(),
     };
     chain.from.mockReturnValue(chain);
     chain.where.mockReturnValue(chain);
@@ -131,7 +131,7 @@ describe("Property 11: Identity API Accepts Valid Query Parameters", () => {
     await fc.assert(
       fc.asyncProperty(
         fc
-          .string({ minLength: 1, maxLength: 20 })
+          .string({ maxLength: 20, minLength: 1 })
           .filter((s) => s.trim().length > 0),
         async (discordId) => {
           // DB returns no account → 404
@@ -152,7 +152,7 @@ describe("Property 11: Identity API Accepts Valid Query Parameters", () => {
     await fc.assert(
       fc.asyncProperty(
         fc
-          .string({ minLength: 1, maxLength: 20 })
+          .string({ maxLength: 20, minLength: 1 })
           .filter((s) => s.trim().length > 0),
         async (ircNick) => {
           mockSelect([]);
@@ -172,7 +172,7 @@ describe("Property 11: Identity API Accepts Valid Query Parameters", () => {
     await fc.assert(
       fc.asyncProperty(
         fc
-          .string({ minLength: 1, maxLength: 30 })
+          .string({ maxLength: 30, minLength: 1 })
           .filter((s) => s.trim().length > 0),
         async (xmppJid) => {
           mockSelect([]);
@@ -216,18 +216,18 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          userId: fc.uuid(),
+          jid: fc.string({ minLength: 3, maxLength: 30 }),
           nick: fc.string({ minLength: 1, maxLength: 16 }),
           status: fc.constantFrom("active", "pending"),
-          jid: fc.string({ minLength: 3, maxLength: 30 }),
+          userId: fc.uuid(),
           username: fc.string({ minLength: 1, maxLength: 20 }),
         }),
         async ({ userId, nick, status, jid, username }) => {
           // Sequence: discordAccount, ircAccount, xmppAccount, user (avatar)
           mockSelectSequence(
             [{ userId }],
-            [{ nick, status, server: "irc.atl.chat" }],
-            [{ jid, username, status }],
+            [{ nick, server: "irc.atl.chat", status }],
+            [{ jid, status, username }],
             [{ image: null }]
           );
           const req = new NextRequest(
@@ -251,14 +251,14 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          userId: fc.uuid(),
           nick: fc.string({ minLength: 1, maxLength: 16 }),
           status: fc.constantFrom("active", "pending"),
+          userId: fc.uuid(),
         }),
         async ({ userId, nick, status }) => {
           // Sequence: ircAccount, xmppAccount, discordAccount, user (avatar)
           mockSelectSequence(
-            [{ userId, nick, status, server: "irc.atl.chat" }],
+            [{ nick, server: "irc.atl.chat", status, userId }],
             [],
             [],
             [{ image: null }]
@@ -284,15 +284,15 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          userId: fc.uuid(),
           jid: fc.string({ minLength: 3, maxLength: 30 }),
-          username: fc.string({ minLength: 1, maxLength: 20 }),
           status: fc.constantFrom("active", "pending"),
+          userId: fc.uuid(),
+          username: fc.string({ minLength: 1, maxLength: 20 }),
         }),
         async ({ userId, jid, username, status }) => {
           // Sequence: xmppAccount, ircAccount, discordAccount, user (avatar)
           mockSelectSequence(
-            [{ userId, jid, username, status }],
+            [{ jid, status, userId, username }],
             [],
             [],
             [{ image: null }]
@@ -349,13 +349,13 @@ describe("Property 13: Identity API Response Shape Completeness", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          userId: fc.uuid(),
           nick: fc.string({ minLength: 1, maxLength: 16 }),
           status: fc.constantFrom("active", "pending"),
+          userId: fc.uuid(),
         }),
         async ({ userId, nick, status }) => {
           mockSelectSequence(
-            [{ userId, nick, status, server: "irc.atl.chat" }],
+            [{ nick, server: "irc.atl.chat", status, userId }],
             [],
             [],
             [{ image: null }]
@@ -382,14 +382,14 @@ describe("Property 13: Identity API Response Shape Completeness", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          userId: fc.uuid(),
           jid: fc.string({ minLength: 3, maxLength: 30 }),
-          username: fc.string({ minLength: 1, maxLength: 20 }),
           status: fc.constantFrom("active", "pending"),
+          userId: fc.uuid(),
+          username: fc.string({ minLength: 1, maxLength: 20 }),
         }),
         async ({ userId, jid, username, status }) => {
           mockSelectSequence(
-            [{ userId, jid, username, status }],
+            [{ jid, status, userId, username }],
             [],
             [],
             [{ image: null }]

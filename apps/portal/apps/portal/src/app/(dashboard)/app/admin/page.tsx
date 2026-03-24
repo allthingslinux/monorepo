@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import { getServerQueryClient } from "@portal/api/hydration";
 import { queryKeys } from "@portal/api/query-keys";
 import { fetchAdminStatsServer } from "@portal/api/server-queries";
 import { getRouteMetadata } from "@portal/seo/metadata";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
 
 import { verifyAdminOrStaffSession } from "@/auth/dal";
 import { AdminDashboardOverview } from "@/features/admin/components/admin-dashboard-overview";
@@ -31,8 +31,8 @@ export default async function AdminPage() {
   const queryClient = getServerQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: queryKeys.admin.stats(),
     queryFn: fetchAdminStatsServer,
+    queryKey: queryKeys.admin.stats(),
   });
 
   return (

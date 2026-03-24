@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 /**
@@ -12,7 +13,7 @@ import { describe, expect, it } from "vitest";
 const PACKAGES_DIR = path.resolve(import.meta.dirname, "../../../../packages");
 
 /** Config-only packages that don't follow the standard library pattern */
-const CONFIG_PACKAGES = ["typescript-config"];
+const CONFIG_PACKAGES = new Set(["typescript-config"]);
 
 /** Read all package directory names under packages/ */
 function getPackageDirs(): string[] {
@@ -30,7 +31,7 @@ function readPackageJson(pkgDir: string): Record<string, unknown> {
 
 /** Non-config packages that should follow the standard library pattern */
 function getLibraryPackageDirs(): string[] {
-  return getPackageDirs().filter((d) => !CONFIG_PACKAGES.includes(d));
+  return getPackageDirs().filter((d) => !CONFIG_PACKAGES.has(d));
 }
 
 /**
@@ -45,29 +46,30 @@ function getLibraryPackageDirs(): string[] {
 describe("Property 4: JIT package exports point to TypeScript source", () => {
   const libraryPkgs = getLibraryPackageDirs();
 
-  it.each(
-    libraryPkgs
-  )("packages/%s — exports point to .ts source files", (pkgDir) => {
-    const pkg = readPackageJson(pkgDir);
-    const exports = pkg.exports as Record<
-      string,
-      Record<string, string> | string
-    >;
+  it.each(libraryPkgs)(
+    "packages/%s — exports point to .ts source files",
+    (pkgDir) => {
+      const pkg = readPackageJson(pkgDir);
+      const exports = pkg.exports as Record<
+        string,
+        Record<string, string> | string
+      >;
 
-    expect(exports).toBeDefined();
+      expect(exports).toBeDefined();
 
-    for (const [_subpath, target] of Object.entries(exports)) {
-      if (typeof target === "string") {
-        // Single string export (e.g. @portal/email "." → "./src/index.ts")
-        expect(target).toMatch(/\.tsx?$/);
-      } else if (typeof target === "object" && target !== null) {
-        // Conditional export with types/default conditions
-        for (const [_condition, value] of Object.entries(target)) {
-          expect(value).toMatch(/\.tsx?$/);
+      for (const [_subpath, target] of Object.entries(exports)) {
+        if (typeof target === "string") {
+          // Single string export (e.g. @portal/email "." → "./src/index.ts")
+          expect(target).toMatch(/\.tsx?$/);
+        } else if (typeof target === "object" && target !== null) {
+          // Conditional export with types/default conditions
+          for (const [_condition, value] of Object.entries(target)) {
+            expect(value).toMatch(/\.tsx?$/);
+          }
         }
       }
     }
-  });
+  );
 });
 
 /**
@@ -82,12 +84,13 @@ describe("Property 4: JIT package exports point to TypeScript source", () => {
 describe("Property 5: Package structure conformance (private: true, scripts)", () => {
   const libraryPkgs = getLibraryPackageDirs();
 
-  it.each(
-    libraryPkgs
-  )('packages/%s — package.json sets "private": true', (pkgDir) => {
-    const pkg = readPackageJson(pkgDir);
-    expect(pkg.private).toBe(true);
-  });
+  it.each(libraryPkgs)(
+    'packages/%s — package.json sets "private": true',
+    (pkgDir) => {
+      const pkg = readPackageJson(pkgDir);
+      expect(pkg.private).toBe(true);
+    }
+  );
 
   it.each(libraryPkgs)("packages/%s — declares type-check script", (pkgDir) => {
     const pkg = readPackageJson(pkgDir);
@@ -109,18 +112,19 @@ describe("Property 5: Package structure conformance (private: true, scripts)", (
 describe("Property 6: TypeScript config inheritance (extends library.json)", () => {
   const libraryPkgs = getLibraryPackageDirs();
 
-  it.each(
-    libraryPkgs
-  )("packages/%s — tsconfig.json extends @portal/typescript-config/library.json", (pkgDir) => {
-    const tsconfigPath = path.join(PACKAGES_DIR, pkgDir, "tsconfig.json");
-    expect(
-      fs.existsSync(tsconfigPath),
-      `tsconfig.json should exist in packages/${pkgDir}`
-    ).toBe(true);
+  it.each(libraryPkgs)(
+    "packages/%s — tsconfig.json extends @portal/typescript-config/library.json",
+    (pkgDir) => {
+      const tsconfigPath = path.join(PACKAGES_DIR, pkgDir, "tsconfig.json");
+      expect(
+        fs.existsSync(tsconfigPath),
+        `tsconfig.json should exist in packages/${pkgDir}`
+      ).toBe(true);
 
-    const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf-8"));
-    expect(tsconfig.extends).toBe("@portal/typescript-config/library.json");
-  });
+      const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
+      expect(tsconfig.extends).toBe("@portal/typescript-config/library.json");
+    }
+  );
 });
 
 /**
@@ -141,13 +145,14 @@ describe("Property 7: No barrel files in wildcard-export packages", () => {
     return exports && "./*" in exports;
   });
 
-  it.each(
-    wildcardPkgs
-  )("packages/%s — no index.ts barrel file in src/", (pkgDir) => {
-    const indexPath = path.join(PACKAGES_DIR, pkgDir, "src", "index.ts");
-    expect(
-      fs.existsSync(indexPath),
-      `packages/${pkgDir}/src/index.ts should not exist (barrel files are prohibited in wildcard-export packages)`
-    ).toBe(false);
-  });
+  it.each(wildcardPkgs)(
+    "packages/%s — no index.ts barrel file in src/",
+    (pkgDir) => {
+      const indexPath = path.join(PACKAGES_DIR, pkgDir, "src", "index.ts");
+      expect(
+        fs.existsSync(indexPath),
+        `packages/${pkgDir}/src/index.ts should not exist (barrel files are prohibited in wildcard-export packages)`
+      ).toBe(false);
+    }
+  );
 });

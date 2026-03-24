@@ -3,8 +3,8 @@
 // ============================================================================
 // Zod schemas for MediaWiki integration API validation
 
-import { z } from "zod";
 import { selectMediawikiAccountSchema } from "@portal/db/schema/mediawiki";
+import { z } from "zod";
 
 import { brandedString, metadataSchema } from "../utils";
 import { isValidWikiUsername, WIKI_USERNAME_MAX_LENGTH } from "./validation";
@@ -43,12 +43,12 @@ export const WikiUsernameSchema = brandedString<"WikiUsername">(
  * Schema for creating a MediaWiki account via API
  */
 export const CreateMediaWikiAccountRequestSchema = z.object({
-  wikiUsername: WikiUsernameSchema,
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .optional()
     .or(z.literal("")),
+  wikiUsername: WikiUsernameSchema,
 });
 
 /**
@@ -57,8 +57,8 @@ export const CreateMediaWikiAccountRequestSchema = z.object({
  */
 export const UpdateMediaWikiAccountRequestSchema =
   CreateMediaWikiAccountRequestSchema.partial().extend({
-    status: UpdateMediaWikiAccountStatusSchema.optional(),
     metadata: metadataSchema,
+    status: UpdateMediaWikiAccountStatusSchema.optional(),
   });
 
 /**
@@ -67,8 +67,8 @@ export const UpdateMediaWikiAccountRequestSchema =
  */
 export const MediaWikiAccountSchema = selectMediawikiAccountSchema.extend({
   integrationId: z.literal("mediawiki"),
-  temporaryPassword: z.string().optional(),
   metadata: metadataSchema,
+  temporaryPassword: z.string().optional(),
 });
 
 // Type exports

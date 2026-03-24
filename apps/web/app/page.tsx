@@ -6,6 +6,7 @@ import Projects from "@/components/pages/home/projects";
 import Stats from "@/components/pages/home/stats";
 import Supporters from "@/components/pages/home/supporters";
 import Testimonials from "@/components/pages/home/testimonials";
+
 import { getPageMetadata } from "./metadata";
 
 export const metadata: Metadata = getPageMetadata("home");

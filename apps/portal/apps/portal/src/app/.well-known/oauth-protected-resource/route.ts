@@ -8,11 +8,11 @@ import { BASE_URL } from "@/config/app";
 export async function GET(): Promise<NextResponse> {
   await connection();
   const metadata = await serverClient.getProtectedResourceMetadata({
-    resource: BASE_URL,
     authorization_servers: [BASE_URL],
-    scopes_supported: ["openid", "profile", "email", "offline_access"],
     bearer_methods_supported: ["header"],
+    resource: BASE_URL,
     resource_documentation: `${BASE_URL}/docs`,
+    scopes_supported: ["openid", "profile", "email", "offline_access"],
   });
 
   const headers = new Headers();

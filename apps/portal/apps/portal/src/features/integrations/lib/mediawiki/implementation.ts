@@ -1,5 +1,4 @@
 import "server-only";
-import type { z } from "zod";
 import { APIError } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { mediawikiAccount } from "@portal/db/schema/mediawiki";
@@ -10,10 +9,12 @@ import {
 } from "@portal/schemas/integrations/mediawiki";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
 
 import { IntegrationBase } from "@/features/integrations/lib/core/base";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
+
 import { mediawikiBotClient } from "./bot-client";
 import { isMediaWikiConfigured } from "./keys";
 import type { MediaWikiAccount, UpdateMediaWikiAccountRequest } from "./types";
@@ -22,16 +23,16 @@ function rowToAccount(
   row: typeof mediawikiAccount.$inferSelect
 ): MediaWikiAccount {
   return {
-    id: row.id,
-    userId: row.userId,
-    integrationId: "mediawiki",
-    wikiUsername: row.wikiUsername,
-    wikiUserId: row.wikiUserId,
-    status: row.status,
     createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
+    id: row.id,
+    integrationId: "mediawiki",
     metadata:
       (row.metadata as Record<string, unknown> | undefined) ?? undefined,
+    status: row.status,
+    updatedAt: row.updatedAt,
+    userId: row.userId,
+    wikiUserId: row.wikiUserId,
+    wikiUsername: row.wikiUsername,
   };
 }
 
@@ -42,16 +43,16 @@ export class MediaWikiIntegration extends IntegrationBase<
 > {
   constructor() {
     super({
-      id: "mediawiki",
-      name: "MediaWiki",
-      description:
-        "Create an account on atl.wiki and access the community wiki.",
-      enabled: isMediaWikiConfigured(),
-      createAccountSchema: CreateMediaWikiAccountRequestSchema,
-      updateAccountSchema: UpdateMediaWikiAccountRequestSchema,
       accountSchema: MediaWikiAccountSchema as unknown as z.ZodType<
         MediaWikiAccount & { temporaryPassword?: string }
       >,
+      createAccountSchema: CreateMediaWikiAccountRequestSchema,
+      description:
+        "Create an account on atl.wiki and access the community wiki.",
+      enabled: isMediaWikiConfigured(),
+      id: "mediawiki",
+      name: "MediaWiki",
+      updateAccountSchema: UpdateMediaWikiAccountRequestSchema,
     });
   }
 
@@ -121,14 +122,16 @@ export class MediaWikiIntegration extends IntegrationBase<
     try {
       [accountRow] = await db
         .insert(mediawikiAccount)
-        .values({ userId, wikiUsername, status: "pending" })
+        .values({ status: "pending", userId, wikiUsername })
         .returning();
     } catch (dbError) {
       Sentry.captureException(dbError, {
-        tags: { integration: "mediawiki", step: "db_insert_pending" },
         extra: { userId, wikiUsername },
+        tags: { integration: "mediawiki", step: "db_insert_pending" },
       });
-      throw new Error("Failed to initialize wiki account record");
+      throw new Error("Failed to initialize wiki account record", {
+        cause: dbError,
+      });
     }
 
     if (!accountRow) {
@@ -150,20 +153,22 @@ export class MediaWikiIntegration extends IntegrationBase<
           .where(eq(mediawikiAccount.id, accountRow.id));
       } catch (cleanupError) {
         Sentry.captureException(cleanupError, {
-          tags: { integration: "mediawiki", step: "cleanup_after_bot_failure" },
           extra: { userId, accountId: accountRow.id, originalError: botError },
+          tags: { integration: "mediawiki", step: "cleanup_after_bot_failure" },
         });
       }
 
       Sentry.captureException(botError, {
-        tags: { integration: "mediawiki", step: "bot_create_account" },
         extra: { userId, wikiUsername },
+        tags: { integration: "mediawiki", step: "bot_create_account" },
       });
 
       if (botError instanceof APIError) {
         throw botError;
       }
-      throw new Error("Failed to create wiki account. Please try again.");
+      throw new Error("Failed to create wiki account. Please try again.", {
+        cause: botError,
+      });
     }
 
     // Update to active with wiki user ID
@@ -171,8 +176,8 @@ export class MediaWikiIntegration extends IntegrationBase<
       .update(mediawikiAccount)
       .set({
         status: "active",
-        wikiUserId: botResult.userId,
         updatedAt: new Date(),
+        wikiUserId: botResult.userId,
       })
       .where(eq(mediawikiAccount.id, accountRow.id))
       .returning();
@@ -181,8 +186,8 @@ export class MediaWikiIntegration extends IntegrationBase<
       Sentry.captureException(
         new Error("Failed to activate MediaWiki account"),
         {
-          tags: { integration: "mediawiki", step: "db_activate" },
           extra: { userId, wikiUsername, accountId: accountRow.id },
+          tags: { integration: "mediawiki", step: "db_activate" },
         }
       );
       throw new Error(
@@ -234,7 +239,7 @@ export class MediaWikiIntegration extends IntegrationBase<
     if (!parsed.success) {
       throw new Error("Invalid update request");
     }
-    const data = parsed.data;
+    const { data } = parsed;
 
     const [account] = await db
       .select()
@@ -304,11 +309,11 @@ export class MediaWikiIntegration extends IntegrationBase<
         );
       } catch (blockError) {
         Sentry.captureException(blockError, {
-          tags: { integration: "mediawiki", step: "block_on_suspend" },
           extra: {
             accountId: account.id,
             wikiUsername: account.wikiUsername,
           },
+          tags: { integration: "mediawiki", step: "block_on_suspend" },
         });
       }
     } else if (newStatus === "active" && account.status === "suspended") {
@@ -319,11 +324,11 @@ export class MediaWikiIntegration extends IntegrationBase<
         );
       } catch (unblockError) {
         Sentry.captureException(unblockError, {
-          tags: { integration: "mediawiki", step: "unblock_on_reactivate" },
           extra: {
             accountId: account.id,
             wikiUsername: account.wikiUsername,
           },
+          tags: { integration: "mediawiki", step: "unblock_on_reactivate" },
         });
       }
     }
@@ -349,12 +354,12 @@ export class MediaWikiIntegration extends IntegrationBase<
       await mediawikiBotClient.blockUser(
         account.wikiUsername,
         "Account deleted via ATL Portal",
-        { nocreate: true, autoblock: true }
+        { autoblock: true, nocreate: true }
       );
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "mediawiki", step: "block_on_delete" },
         extra: { accountId, wikiUsername: account.wikiUsername },
+        tags: { integration: "mediawiki", step: "block_on_delete" },
       });
     }
 
@@ -397,8 +402,8 @@ export class MediaWikiIntegration extends IntegrationBase<
       await mediawikiBotClient.resetPassword(account.wikiUsername);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "mediawiki", operation: "resetPassword" },
         extra: { accountId, wikiUsername: account.wikiUsername },
+        tags: { integration: "mediawiki", operation: "resetPassword" },
       });
 
       if (error instanceof APIError) {

@@ -11,8 +11,8 @@ function formatDate(isoDate?: string, pubDate?: string): string {
   }
   try {
     return new Date(dateStr).toLocaleDateString(undefined, {
-      month: "short",
       day: "numeric",
+      month: "short",
       year: "numeric",
     });
   } catch {

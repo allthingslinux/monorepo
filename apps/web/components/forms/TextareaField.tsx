@@ -2,9 +2,9 @@
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
 import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export interface TextareaProps {
   className?: string;

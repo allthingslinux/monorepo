@@ -1,9 +1,9 @@
 "use client";
 
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 import type { IrcAccount } from "@/features/integrations/lib/irc/types";
 
@@ -31,9 +31,9 @@ export function IrcAccountDetails({ account }: IrcAccountDetailsProps) {
               onClick={async () => {
                 await startSpan(
                   {
+                    attributes: { integrationId: "irc" },
                     name: "Copy IRC connect string",
                     op: "ui.action",
-                    attributes: { integrationId: "irc" },
                   },
                   async () => {
                     try {
@@ -43,7 +43,7 @@ export function IrcAccountDetails({ account }: IrcAccountDetailsProps) {
                       } else {
                         const ta = document.createElement("textarea");
                         ta.value = text;
-                        document.body.appendChild(ta);
+                        document.body.append(ta);
                         ta.select();
                         if (!document.execCommand("copy")) {
                           throw new Error("execCommand copy failed");
@@ -53,8 +53,8 @@ export function IrcAccountDetails({ account }: IrcAccountDetailsProps) {
                       toast.success("Copied", {
                         description: "Connect string copied",
                       });
-                    } catch (err) {
-                      captureException(err);
+                    } catch (error) {
+                      captureException(error);
                       toast.error("Failed to copy");
                     }
                   }

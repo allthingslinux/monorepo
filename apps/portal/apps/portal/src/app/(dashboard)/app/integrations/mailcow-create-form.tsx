@@ -1,9 +1,5 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateMailboxRequestSchema } from "@portal/schemas/integrations/mailcow";
 import { Button } from "@portal/ui/ui/button";
@@ -12,6 +8,10 @@ import { DialogFooter } from "@portal/ui/ui/dialog";
 import { Input } from "@portal/ui/ui/input";
 import { Label } from "@portal/ui/ui/label";
 import { captureException } from "@sentry/nextjs";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 
 import {
   useCreateIntegrationAccount,
@@ -47,8 +47,8 @@ export function MailcowDialogCreateFields({
     formState: { errors },
     reset,
   } = useForm<FormValues>({
-    resolver: zodResolver(CreateMailboxRequestSchema),
     defaultValues: { local_part: "", password: "", password2: "" },
+    resolver: zodResolver(CreateMailboxRequestSchema),
   });
 
   const onSubmit = async (data: FormValues) => {
@@ -57,11 +57,11 @@ export function MailcowDialogCreateFields({
       toast.success(`${title} account created`);
       reset();
       onSuccess(account);
-    } catch (err) {
-      captureException(err);
+    } catch (error) {
+      captureException(error);
       toast.error(
-        err instanceof Error
-          ? err.message
+        error instanceof Error
+          ? error.message
           : `Failed to create ${title.toLowerCase()} account`
       );
     }
@@ -191,12 +191,12 @@ export function MailcowCreateForm({
     formState: { errors },
     reset,
   } = useForm<FormValues>({
-    resolver: zodResolver(CreateMailboxRequestSchema),
     defaultValues: {
       local_part: "",
       password: "",
       password2: "",
     },
+    resolver: zodResolver(CreateMailboxRequestSchema),
   });
 
   const onSubmit = async (data: FormValues) => {

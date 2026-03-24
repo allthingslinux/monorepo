@@ -1,14 +1,15 @@
 "use client";
 
+import { defineStepper } from "@stepperize/react";
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { defineStepper } from "@stepperize/react";
 
-import { generateFormSchema } from "@/lib/utils";
 import FormWrapper from "@/components/forms/FormWrapper";
 import { Button } from "@/components/ui/button";
+import { generateFormSchema } from "@/lib/utils";
 import type { FormQuestion, Role } from "@/types";
+
 import type { StepId } from "./StepIndicator";
 import StepIndicator from "./StepIndicator";
 

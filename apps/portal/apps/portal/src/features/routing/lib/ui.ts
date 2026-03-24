@@ -32,17 +32,17 @@ export function getUIDisplay(
       const child = r.navigation?.children?.find((c) => c.path === cleanPath);
       if (child) {
         return {
-          title: child.label ?? child.id,
           description: child.metadata?.description,
+          title: child.label ?? child.id,
         };
       }
     }
-    return { title: undefined, description: undefined };
+    return { description: undefined, title: undefined };
   }
 
   // Use UI display if provided, otherwise fall back to metadata
   return {
-    title: route.ui?.title ?? route.metadata.title,
     description: route.ui?.description ?? route.metadata.description,
+    title: route.ui?.title ?? route.metadata.title,
   };
 }

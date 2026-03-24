@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
@@ -19,7 +20,7 @@ const APP_SRC_DIR = path.join(ROOT_DIR, "apps/portal/src");
 const TURBO_JSON_PATH = path.join(ROOT_DIR, "turbo.json");
 
 /** Config-only packages that don't have src/ directories */
-const CONFIG_PACKAGES = ["typescript-config"];
+const CONFIG_PACKAGES = new Set(["typescript-config"]);
 
 /**
  * Packages that retain @/ app-internal imports by design.
@@ -39,13 +40,13 @@ function getPackageDirs(): string[] {
 
 /** Non-config packages that have src/ directories */
 function getLibraryPackageDirs(): string[] {
-  return getPackageDirs().filter((d) => !CONFIG_PACKAGES.includes(d));
+  return getPackageDirs().filter((d) => !CONFIG_PACKAGES.has(d));
 }
 
 /** Read and parse a package's package.json */
 function readPackageJson(pkgDir: string): Record<string, unknown> {
   const filePath = path.join(PACKAGES_DIR, pkgDir, "package.json");
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 /** Recursively collect all .ts/.tsx files under a directory */
@@ -107,7 +108,9 @@ function extractStrictImports(content: string): string[] {
 
 /** Strip single-line and multi-line comments from source content */
 function stripComments(content: string): string {
-  return content.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  return content
+    .replaceAll(/\/\*[\s\S]*?\*\//g, "")
+    .replaceAll(/\/\/.*$/gm, "");
 }
 
 /**
@@ -249,7 +252,7 @@ describe("Property 2: No stale imports remain", () => {
     const violations: { file: string; line: string; pattern: string }[] = [];
 
     for (const file of sourceFiles) {
-      const content = fs.readFileSync(file, "utf-8");
+      const content = fs.readFileSync(file, "utf8");
       const lines = content.split("\n");
 
       for (const line of lines) {
@@ -281,7 +284,7 @@ describe("Property 2: No stale imports remain", () => {
 
     fc.assert(
       fc.property(fc.constantFrom(...sourceFiles), (file) => {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         return STALE_PATTERNS.every((p) => !p.test(content));
       }),
       { numRuns: Math.min(sourceFiles.length, 100) }
@@ -316,7 +319,7 @@ describe("Property 3: Package boundary enforcement", () => {
       }
       const srcDir = path.join(PACKAGES_DIR, pkgDir, "src");
       for (const file of collectSourceFiles(srcDir)) {
-        results.push({ pkgDir, file });
+        results.push({ file, pkgDir });
       }
     }
     return results;
@@ -331,7 +334,7 @@ describe("Property 3: Package boundary enforcement", () => {
     for (const pkgDir of getLibraryPackageDirs()) {
       const srcDir = path.join(PACKAGES_DIR, pkgDir, "src");
       for (const file of collectSourceFiles(srcDir)) {
-        results.push({ pkgDir, file });
+        results.push({ file, pkgDir });
       }
     }
     return results;
@@ -342,14 +345,14 @@ describe("Property 3: Package boundary enforcement", () => {
     const violations: { pkg: string; file: string; line: string }[] = [];
 
     for (const { pkgDir, file } of files) {
-      const content = fs.readFileSync(file, "utf-8");
+      const content = fs.readFileSync(file, "utf8");
       const lines = content.split("\n");
       for (const line of lines) {
         if (/(?:from|import)\s+["']@\//.test(line)) {
           violations.push({
-            pkg: pkgDir,
             file: path.relative(ROOT_DIR, file),
             line: line.trim(),
+            pkg: pkgDir,
           });
         }
       }
@@ -368,7 +371,7 @@ describe("Property 3: Package boundary enforcement", () => {
     const violations: { pkg: string; file: string; line: string }[] = [];
 
     for (const { pkgDir, file } of files) {
-      const content = fs.readFileSync(file, "utf-8");
+      const content = fs.readFileSync(file, "utf8");
       const imports = extractImports(content);
       for (const imp of imports) {
         if (imp.startsWith("../") || imp.startsWith("../../")) {
@@ -376,9 +379,9 @@ describe("Property 3: Package boundary enforcement", () => {
           const pkgSrcDir = path.join(PACKAGES_DIR, pkgDir, "src");
           if (!resolved.startsWith(pkgSrcDir)) {
             violations.push({
-              pkg: pkgDir,
               file: path.relative(ROOT_DIR, file),
               line: imp,
+              pkg: pkgDir,
             });
           }
         }
@@ -401,7 +404,7 @@ describe("Property 3: Package boundary enforcement", () => {
 
     fc.assert(
       fc.property(fc.constantFrom(...files), ({ pkgDir, file }) => {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         if (/(?:from|import)\s+["']@\//.test(content)) {
           return false;
         }
@@ -435,7 +438,7 @@ describe("Property 3: Package boundary enforcement", () => {
 describe("Property 8: Environment variable completeness", () => {
   /** Extract env var names from a keys.ts file's runtimeEnv block */
   function extractEnvVarsFromKeysFile(filePath: string): string[] {
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = fs.readFileSync(filePath, "utf8");
     const vars: string[] = [];
     const processEnvRegex = /process\.env\.([A-Z_][A-Z0-9_]*)/g;
     let match: RegExpExecArray | null;
@@ -461,7 +464,7 @@ describe("Property 8: Environment variable completeness", () => {
 
   /** Get all declared env vars from turbo.json (all task env + globalEnv) */
   function getTurboEnvVars(): { exact: Set<string>; wildcards: string[] } {
-    const turboJson = JSON.parse(fs.readFileSync(TURBO_JSON_PATH, "utf-8"));
+    const turboJson = JSON.parse(fs.readFileSync(TURBO_JSON_PATH, "utf8"));
     const exact = new Set<string>();
     const wildcards: string[] = [];
 
@@ -578,7 +581,10 @@ describe("Property 9: No direct process.env access in packages", () => {
     // Skip process.env.NODE_ENV (standard runtime check, in globalEnv)
     if (/process\.env\.NODE_ENV\b/.test(trimmed)) {
       // Only flag if there's ANOTHER process.env on the same line
-      const withoutNodeEnv = trimmed.replace(/process\.env\.NODE_ENV\b/g, "");
+      const withoutNodeEnv = trimmed.replaceAll(
+        /process\.env\.NODE_ENV\b/g,
+        ""
+      );
       return /process\.env\b/.test(withoutNodeEnv);
     }
     return /process\.env\b/.test(trimmed);
@@ -601,15 +607,15 @@ describe("Property 9: No direct process.env access in packages", () => {
           continue;
         }
 
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         const strippedContent = stripComments(content);
         const lines = strippedContent.split("\n");
         for (let i = 0; i < lines.length; i++) {
           if (hasRealProcessEnvAccess(lines[i]!)) {
             violations.push({
-              pkg: pkgDir,
               file: path.relative(ROOT_DIR, file),
               line: `L${i + 1}: ${lines[i]?.trim()}`,
+              pkg: pkgDir,
             });
           }
         }
@@ -647,7 +653,7 @@ describe("Property 9: No direct process.env access in packages", () => {
 
     fc.assert(
       fc.property(fc.constantFrom(...nonKeysFiles), (file) => {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         const stripped = stripComments(content);
         const lines = stripped.split("\n");
         return lines.every((line) => !hasRealProcessEnvAccess(line));
@@ -667,7 +673,7 @@ describe("Property 9: No direct process.env access in packages", () => {
  * Validates: Requirement 6.2
  */
 describe("Property 10: Import path correctness", () => {
-  const BARE_IMPORT_ALLOWED = ["@portal/email"];
+  const BARE_IMPORT_ALLOWED = new Set(["@portal/email"]);
   const CONFIG_PACKAGE_IMPORTS = ["@portal/typescript-config"];
 
   function getAllSourceFiles(): string[] {
@@ -694,7 +700,7 @@ describe("Property 10: Import path correctness", () => {
         if (CONFIG_PACKAGE_IMPORTS.some((cp) => imp.startsWith(cp))) {
           continue;
         }
-        if (BARE_IMPORT_ALLOWED.includes(imp)) {
+        if (BARE_IMPORT_ALLOWED.has(imp)) {
           continue;
         }
 
@@ -734,7 +740,7 @@ describe("Property 10: Import path correctness", () => {
           if (CONFIG_PACKAGE_IMPORTS.some((cp) => imp.startsWith(cp))) {
             continue;
           }
-          if (BARE_IMPORT_ALLOWED.includes(imp)) {
+          if (BARE_IMPORT_ALLOWED.has(imp)) {
             continue;
           }
           if (imp.split("/").length <= 2) {
@@ -771,7 +777,7 @@ describe("Property 11: App-internal alias preservation", () => {
     let foundAppInternalImports = false;
 
     for (const file of appFiles) {
-      const content = fs.readFileSync(file, "utf-8");
+      const content = fs.readFileSync(file, "utf8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
@@ -796,7 +802,7 @@ describe("Property 11: App-internal alias preservation", () => {
 
     fc.assert(
       fc.property(fc.constantFrom(...appFiles), (file) => {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         const imports = extractImports(content);
         for (const imp of imports) {
           for (const pattern of APP_INTERNAL_PATTERNS) {
@@ -894,70 +900,71 @@ describe("Property 14: Package dependency completeness", () => {
     return specifier.split("/")[0]!;
   }
 
-  it.each(
-    getLibraryPackageDirs()
-  )("packages/%s - all runtime imports resolve to declared dependencies", (pkgDir) => {
-    const pkg = readPackageJson(pkgDir);
-    const declaredDeps = new Set<string>([
-      ...Object.keys((pkg.dependencies ?? {}) as Record<string, string>),
-      ...Object.keys((pkg.devDependencies ?? {}) as Record<string, string>),
-      ...Object.keys((pkg.peerDependencies ?? {}) as Record<string, string>),
-    ]);
+  it.each(getLibraryPackageDirs())(
+    "packages/%s - all runtime imports resolve to declared dependencies",
+    (pkgDir) => {
+      const pkg = readPackageJson(pkgDir);
+      const declaredDeps = new Set<string>([
+        ...Object.keys((pkg.dependencies ?? {}) as Record<string, string>),
+        ...Object.keys((pkg.devDependencies ?? {}) as Record<string, string>),
+        ...Object.keys((pkg.peerDependencies ?? {}) as Record<string, string>),
+      ]);
 
-    // For packages that retain @/ app imports, also include the app's
-    // dependencies since they resolve through the app's bundler
-    if (PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
-      const appPkgPath = path.join(ROOT_DIR, "apps/portal/package.json");
-      const appPkg = JSON.parse(fs.readFileSync(appPkgPath, "utf-8"));
-      for (const dep of Object.keys(
-        (appPkg.dependencies ?? {}) as Record<string, string>
-      )) {
-        declaredDeps.add(dep);
+      // For packages that retain @/ app imports, also include the app's
+      // dependencies since they resolve through the app's bundler
+      if (PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
+        const appPkgPath = path.join(ROOT_DIR, "apps/portal/package.json");
+        const appPkg = JSON.parse(fs.readFileSync(appPkgPath, "utf8"));
+        for (const dep of Object.keys(
+          (appPkg.dependencies ?? {}) as Record<string, string>
+        )) {
+          declaredDeps.add(dep);
+        }
+        for (const dep of Object.keys(
+          (appPkg.devDependencies ?? {}) as Record<string, string>
+        )) {
+          declaredDeps.add(dep);
+        }
       }
-      for (const dep of Object.keys(
-        (appPkg.devDependencies ?? {}) as Record<string, string>
-      )) {
-        declaredDeps.add(dep);
+
+      const srcDir = path.join(PACKAGES_DIR, pkgDir, "src");
+      const files = collectSourceFiles(srcDir);
+      const undeclared: { file: string; importPkg: string }[] = [];
+
+      for (const file of files) {
+        const content = fs.readFileSync(file, "utf8");
+        // Use strict imports (ES only) to skip optional require() in try/catch
+        const imports = extractStrictImports(content);
+
+        for (const imp of imports) {
+          // Skip @/ app-internal imports for packages that retain them
+          if (imp.startsWith("@/") && PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
+            continue;
+          }
+
+          const importPkg = getPackageName(imp);
+          if (importPkg === null) {
+            continue;
+          }
+          if (importPkg === pkg.name) {
+            continue;
+          }
+
+          if (!declaredDeps.has(importPkg)) {
+            undeclared.push({
+              file: path.relative(ROOT_DIR, file),
+              importPkg,
+            });
+          }
+        }
       }
+
+      expect(
+        undeclared,
+        `Found ${undeclared.length} undeclared dependency import(s) in ${pkgDir}:\n${undeclared
+          .map((u) => `  ${u.file}: "${u.importPkg}"`)
+          .join("\n")}`
+      ).toHaveLength(0);
     }
-
-    const srcDir = path.join(PACKAGES_DIR, pkgDir, "src");
-    const files = collectSourceFiles(srcDir);
-    const undeclared: { file: string; importPkg: string }[] = [];
-
-    for (const file of files) {
-      const content = fs.readFileSync(file, "utf-8");
-      // Use strict imports (ES only) to skip optional require() in try/catch
-      const imports = extractStrictImports(content);
-
-      for (const imp of imports) {
-        // Skip @/ app-internal imports for packages that retain them
-        if (imp.startsWith("@/") && PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
-          continue;
-        }
-
-        const importPkg = getPackageName(imp);
-        if (importPkg === null) {
-          continue;
-        }
-        if (importPkg === pkg.name) {
-          continue;
-        }
-
-        if (!declaredDeps.has(importPkg)) {
-          undeclared.push({
-            file: path.relative(ROOT_DIR, file),
-            importPkg,
-          });
-        }
-      }
-    }
-
-    expect(
-      undeclared,
-      `Found ${undeclared.length} undeclared dependency import(s) in ${pkgDir}:\n${undeclared
-        .map((u) => `  ${u.file}: "${u.importPkg}"`)
-        .join("\n")}`
-    ).toHaveLength(0);
-  });
+  );
 });

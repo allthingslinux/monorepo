@@ -45,16 +45,16 @@ import {
 // Users
 export function useUsersSuspense(filters?: UserListFilters) {
   return useSuspenseQuery({
-    queryKey: queryKeys.users.list(filters),
     queryFn: () => fetchUsers(filters),
+    queryKey: queryKeys.users.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useUserSuspense(userId: string) {
   return useSuspenseQuery({
-    queryKey: queryKeys.users.detail(userId),
     queryFn: () => fetchUserById(userId),
+    queryKey: queryKeys.users.detail(userId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -108,8 +108,8 @@ export function useDeleteUserSuspense() {
 // Sessions
 export function useSessionsSuspense(filters?: SessionListFilters) {
   return useSuspenseQuery({
-    queryKey: queryKeys.sessions.list(filters),
     queryFn: () => fetchSessions(filters),
+    queryKey: queryKeys.sessions.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -138,8 +138,8 @@ export function useDeleteSessionSuspense() {
 // Stats
 export function useAdminStatsSuspense() {
   return useSuspenseQuery({
-    queryKey: queryKeys.admin.stats(),
     queryFn: fetchAdminStats,
+    queryKey: queryKeys.admin.stats(),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -149,18 +149,18 @@ export function useAdminDashboardSuspense() {
   return useSuspenseQueries({
     queries: [
       {
-        queryKey: queryKeys.admin.stats(),
         queryFn: fetchAdminStats,
+        queryKey: queryKeys.admin.stats(),
         staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
       },
       {
-        queryKey: queryKeys.users.list({ limit: 50 }),
         queryFn: () => fetchUsers({ limit: 50 }),
+        queryKey: queryKeys.users.list({ limit: 50 }),
         staleTime: QUERY_CACHE.STALE_TIME_SHORT,
       },
       {
-        queryKey: queryKeys.sessions.list({ limit: 100 }),
         queryFn: () => fetchSessions({ limit: 100 }),
+        queryKey: queryKeys.sessions.list({ limit: 100 }),
         staleTime: QUERY_CACHE.STALE_TIME_SHORT,
       },
     ],
@@ -175,16 +175,16 @@ export function useAdminApiKeysSuspense(filters?: {
   offset?: number;
 }) {
   return useSuspenseQuery({
-    queryKey: queryKeys.apiKeys.list(filters?.userId),
     queryFn: () => fetchApiKeys(filters),
+    queryKey: queryKeys.apiKeys.list(filters?.userId),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useAdminApiKeySuspense(keyId: string) {
   return useSuspenseQuery({
-    queryKey: queryKeys.apiKeys.detail(keyId),
     queryFn: () => fetchApiKeyById(keyId),
+    queryKey: queryKeys.apiKeys.detail(keyId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -197,16 +197,16 @@ export function useAdminOAuthClientsSuspense(filters?: {
   offset?: number;
 }) {
   return useSuspenseQuery({
-    queryKey: queryKeys.oauthClients.list(filters),
     queryFn: () => fetchOAuthClients(filters),
+    queryKey: queryKeys.oauthClients.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useAdminOAuthClientSuspense(clientId: string) {
   return useSuspenseQuery({
-    queryKey: queryKeys.oauthClients.detail(clientId),
     queryFn: () => fetchOAuthClientById(clientId),
+    queryKey: queryKeys.oauthClients.detail(clientId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }

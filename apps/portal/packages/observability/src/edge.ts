@@ -5,7 +5,6 @@
  */
 
 import "server-only";
-
 import {
   consoleLoggingIntegration,
   httpIntegration,
@@ -65,18 +64,11 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     httpIntegration({
       spans: true, // Enable spans for outgoing HTTP requests
       breadcrumbs: true, // Enable breadcrumbs for HTTP requests
-      ignoreIncomingRequests: (urlPath) => {
-        // Ignore health checks and monitoring endpoints
-        return (
-          urlPath.includes("/health") ||
-          urlPath.includes("/api/health") ||
-          urlPath.includes("/monitoring")
-        );
-      },
-      ignoreOutgoingRequests: (url) => {
-        // Ignore requests to Sentry itself to prevent loops
-        return isSentryHost(url);
-      },
+      ignoreIncomingRequests: (urlPath) =>
+        urlPath.includes("/health") ||
+        urlPath.includes("/api/health") ||
+        urlPath.includes("/monitoring"),
+      ignoreOutgoingRequests: (url) => isSentryHost(url),
       maxIncomingRequestBodySize: "small", // 1KB limit for edge runtime
     }),
 

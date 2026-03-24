@@ -72,18 +72,18 @@ turbo.json                  # Turborepo pipeline configuration
 
 ## Workspace Packages
 
-| Package | Import | Purpose |
-|---------|--------|---------|
-| `@portal/portal` | N/A (app) | Next.js application |
-| `@portal/db` | `@portal/db/*` | Drizzle schema, client, relations, migrations |
-| `@portal/api` | `@portal/api/*` | TanStack Query setup, query keys, server queries |
-| `@portal/types` | `@portal/types/*` | Centralized TypeScript types |
-| `@portal/schemas` | `@portal/schemas/*` | Shared Zod validation schemas |
-| `@portal/utils` | `@portal/utils/*` | Shared utilities & constants |
-| `@portal/email` | `@portal/email/*` | Email service |
-| `@portal/observability` | `@portal/observability/*` | Sentry, OpenTelemetry |
-| `@portal/seo` | `@portal/seo/*` | Metadata helpers |
-| `@portal/ui` | `@portal/ui/*` | Shared UI components |
+| Package                 | Import                    | Purpose                                          |
+| ----------------------- | ------------------------- | ------------------------------------------------ |
+| `@portal/portal`        | N/A (app)                 | Next.js application                              |
+| `@portal/db`            | `@portal/db/*`            | Drizzle schema, client, relations, migrations    |
+| `@portal/api`           | `@portal/api/*`           | TanStack Query setup, query keys, server queries |
+| `@portal/types`         | `@portal/types/*`         | Centralized TypeScript types                     |
+| `@portal/schemas`       | `@portal/schemas/*`       | Shared Zod validation schemas                    |
+| `@portal/utils`         | `@portal/utils/*`         | Shared utilities & constants                     |
+| `@portal/email`         | `@portal/email/*`         | Email service                                    |
+| `@portal/observability` | `@portal/observability/*` | Sentry, OpenTelemetry                            |
+| `@portal/seo`           | `@portal/seo/*`           | Metadata helpers                                 |
+| `@portal/ui`            | `@portal/ui/*`            | Shared UI components                             |
 
 ## Common Tasks
 
@@ -126,20 +126,20 @@ All commands run from the monorepo root. Turborepo orchestrates cross-package bu
 Within `apps/portal/`, path aliases resolve to app-local code:
 
 ```typescript
-import { auth, authClient } from "@/auth"          // Auth module (features/auth/lib)
-import { db } from "@portal/db/client"              // Database client (packages/db)
-import { env } from "@/env"                         // Validated env vars
-import { BASE_URL } from "@/config"                 // App config
+import { auth, authClient } from "@/auth"; // Auth module (features/auth/lib)
+import { db } from "@portal/db/client"; // Database client (packages/db)
+import { env } from "@/env"; // Validated env vars
+import { BASE_URL } from "@/config"; // App config
 ```
 
 Workspace packages are imported directly:
 
 ```typescript
-import { user } from "@portal/db/schema"            // DB schema
-import type { SessionData } from "@portal/types/auth" // Types
-import { USER_ROLES } from "@portal/utils/constants"  // Constants
-import { queryKeys } from "@portal/api/query-keys"    // Query keys
-import { Button } from "@portal/ui/button"            // UI components
+import { user } from "@portal/db/schema"; // DB schema
+import type { SessionData } from "@portal/types/auth"; // Types
+import { USER_ROLES } from "@portal/utils/constants"; // Constants
+import { queryKeys } from "@portal/api/query-keys"; // Query keys
+import { Button } from "@portal/ui/button"; // UI components
 ```
 
 ## Types & Constants
@@ -195,10 +195,10 @@ Canonical reference: `docs/ENV_VARS.md`.
 
 ### Services
 
-| Service | How to start | Port | Required? |
-|---------|-------------|------|-----------|
-| PostgreSQL 18 | `docker compose up -d portal-db` | 5432 | Yes |
-| Next.js dev server | `pnpm dev` | 3000 | Yes |
+| Service            | How to start                     | Port | Required? |
+| ------------------ | -------------------------------- | ---- | --------- |
+| PostgreSQL 18      | `docker compose up -d portal-db` | 5432 | Yes       |
+| Next.js dev server | `pnpm dev`                       | 3000 | Yes       |
 
 ### Environment setup
 

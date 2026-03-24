@@ -41,8 +41,8 @@ class MediaWikiClient {
     const data = await this.request({
       action: "query",
       list: "recentchanges",
-      rcprop: "title|user|timestamp|comment|ids|sizes",
       rclimit: limit,
+      rcprop: "title|user|timestamp|comment|ids|sizes",
       ...(options?.namespace !== undefined && {
         rcnamespace: options.namespace,
       }),
@@ -58,16 +58,16 @@ class MediaWikiClient {
       const newlen = rc.newlen ?? 0;
       const diff = newlen - oldlen;
       return {
+        comment: rc.comment ?? "",
+        diff,
+        newlen,
+        oldlen,
         pageId: rc.pageid ?? 0,
         revId: rc.revid ?? 0,
-        title: rc.title ?? "",
-        user: rc.user ?? "",
         timestamp: rc.timestamp ?? "",
-        comment: rc.comment ?? "",
+        title: rc.title ?? "",
         type: rc.type ?? "edit",
-        oldlen,
-        newlen,
-        diff,
+        user: rc.user ?? "",
       };
     });
   }
@@ -85,11 +85,11 @@ class MediaWikiClient {
     const query = data.query as { statistics?: RawSiteStats } | undefined;
     const stats = query?.statistics ?? {};
     return {
-      pages: Number(stats.pages) || 0,
+      activeUsers: Number(stats.activeusers) || 0,
       articles: Number(stats.articles) || 0,
       edits: Number(stats.edits) || 0,
+      pages: Number(stats.pages) || 0,
       users: Number(stats.users) || 0,
-      activeUsers: Number(stats.activeusers) || 0,
     };
   }
 
@@ -99,10 +99,10 @@ class MediaWikiClient {
   async getPageInfo(title: string): Promise<PageInfo | null> {
     const data = await this.request({
       action: "query",
-      prop: "info|revisions",
       inprop: "url",
-      rvprop: "timestamp|user|comment",
+      prop: "info|revisions",
       rvlimit: 1,
+      rvprop: "timestamp|user|comment",
       titles: title,
     });
 
@@ -119,12 +119,12 @@ class MediaWikiClient {
 
     const rev = page.revisions?.[0];
     return {
-      pageId: page.pageid ?? 0,
-      title: page.title ?? title,
       fullUrl: page.fullurl ?? "",
-      lastRevId: rev?.revid,
       lastModified: rev?.timestamp,
       lastModifiedBy: rev?.user,
+      lastRevId: rev?.revid,
+      pageId: page.pageid ?? 0,
+      title: page.title ?? title,
     };
   }
 }
@@ -187,12 +187,12 @@ interface RawPage {
   fullurl?: string;
   missing?: boolean;
   pageid?: number;
-  revisions?: Array<{
+  revisions?: {
     revid?: number;
     timestamp?: string;
     user?: string;
     comment?: string;
-  }>;
+  }[];
   title?: string;
 }
 

@@ -1,11 +1,11 @@
-import type { NextRequest } from "next/server";
-import { z } from "zod";
 import {
   APIError,
   handleAPIError,
   parseRouteId,
   requireAuth,
 } from "@portal/api/utils";
+import type { NextRequest } from "next/server";
+import { z } from "zod";
 
 import { isAdmin } from "@/auth/check-role";
 import { registerIntegrations } from "@/features/integrations/lib";
@@ -80,8 +80,8 @@ export async function POST(
       }
       await xmppIntegration.resetPassword(id, parsed.data.password);
       return Response.json({
-        ok: true,
         message: "XMPP password reset successfully",
+        ok: true,
       });
     }
 

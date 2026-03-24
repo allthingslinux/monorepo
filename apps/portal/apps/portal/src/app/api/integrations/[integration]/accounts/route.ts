@@ -1,7 +1,7 @@
-import type { NextRequest } from "next/server";
-import { z } from "zod";
 import { APIError, handleAPIError, requireAuth } from "@portal/api/utils";
 import { captureException } from "@sentry/nextjs";
+import type { NextRequest } from "next/server";
+import { z } from "zod";
 
 import { registerIntegrations } from "../../../../../features/integrations/lib";
 import { getIntegrationRegistry } from "../../../../../features/integrations/lib/core/registry";
@@ -39,7 +39,7 @@ export async function GET(
     const account = await integration.getAccount(userId);
     if (!account) {
       return Response.json(
-        { ok: false, error: "Integration account not found" },
+        { error: "Integration account not found", ok: false },
         { status: 404 }
       );
     }
@@ -55,13 +55,13 @@ export async function GET(
         captureException(
           new Error(`Account schema validation failed for ${integrationId}`),
           {
-            extra: { integrationId, userId, issues: parsed.error.issues },
+            extra: { integrationId, issues: parsed.error.issues, userId },
           }
         );
       }
     }
 
-    return Response.json({ ok: true, account: data });
+    return Response.json({ account: data, ok: true });
   } catch (error) {
     return handleAPIError(error);
   }
@@ -105,11 +105,11 @@ export async function POST(
     if (integration.createAccountSchema) {
       const parsed = integration.createAccountSchema.safeParse(rawBody);
       if (!parsed.success) {
-        const error = parsed.error;
+        const { error } = parsed;
         const errorMessage = error.issues[0]?.message ?? "Validation failed";
         throw new APIError(errorMessage, 400, {
-          issues: error.issues,
           flattened: error.flatten(),
+          issues: error.issues,
         });
       }
       body = parsed.data;
@@ -137,13 +137,13 @@ export async function POST(
         captureException(
           new Error(`Account schema validation failed for ${integrationId}`),
           {
-            extra: { integrationId, userId, issues: parsed.error.issues },
+            extra: { integrationId, issues: parsed.error.issues, userId },
           }
         );
       }
     }
 
-    return Response.json({ ok: true, account: data }, { status: 201 });
+    return Response.json({ account: data, ok: true }, { status: 201 });
   } catch (error) {
     return handleAPIError(error);
   }

@@ -47,7 +47,7 @@ export function dehydrateQueryClient(
  * prefetches - they can be kicked off and streamed as they resolve.
  */
 export async function prefetchQueries<T>(
-  prefetchers: Array<() => Promise<T>>
+  prefetchers: (() => Promise<T>)[]
 ): Promise<void> {
   await Promise.all(prefetchers.map((prefetch) => prefetch()));
 }

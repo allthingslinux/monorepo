@@ -11,8 +11,8 @@ global.fetch = mockFetch as unknown as typeof fetch;
 
 // Mock Sentry
 vi.mock("@sentry/nextjs", () => ({
-  startSpan: vi.fn((_, cb) => cb()),
   captureException: vi.fn(),
+  startSpan: vi.fn((_, cb) => cb()),
 }));
 
 // Mock keys and config to avoid T3-Env validation errors
@@ -28,8 +28,8 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
       jsonrpcUrl: "http://mock-atheme/jsonrpc",
       insecureSkipVerify: false,
     },
-    server: "irc.mock.chat",
     port: 6697,
+    server: "irc.mock.chat",
   },
   isIrcConfigured: () => true,
   isUnrealConfigured: () => true,
@@ -48,8 +48,8 @@ describe("Atheme Client", () => {
       const email = "alice@example.com";
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
-        ok: true,
         json: async () => ({ jsonrpc: "2.0", result: "Success", id: "1" }),
+        ok: true,
       });
 
       // Act
@@ -59,7 +59,6 @@ describe("Atheme Client", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         "http://mock-atheme/jsonrpc",
         expect.objectContaining({
-          method: "POST",
           body: JSON.stringify({
             jsonrpc: "2.0",
             method: "atheme.command",
@@ -75,6 +74,7 @@ describe("Atheme Client", () => {
             ],
             id: "1",
           }),
+          method: "POST",
         })
       );
     });
@@ -85,24 +85,21 @@ describe("Atheme Client", () => {
       const email = "alice@example.com";
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
         json: async () => ({
           jsonrpc: "2.0",
           error: { code: 8, message: "Nick already registered" },
           id: "1",
         }),
+        ok: false,
+        status: 400,
       });
 
       // Act & Assert
       await expect(registerNick(nick, "pwd", email, ip)).rejects.toSatisfy(
-        (err: unknown) => {
-          return (
-            err instanceof AthemeFaultError &&
-            err.code === 8 &&
-            err.message === "Nick already registered"
-          );
-        }
+        (err: unknown) =>
+          err instanceof AthemeFaultError &&
+          err.code === 8 &&
+          err.message === "Nick already registered"
       );
     });
 
@@ -119,16 +116,15 @@ describe("Atheme Client", () => {
 
     it("uses undici dispatcher when insecureSkipVerify is true", async () => {
       // Arrange
-      const { ircConfig } = await import(
-        "@/features/integrations/lib/irc/config"
-      );
+      const { ircConfig } =
+        await import("@/features/integrations/lib/irc/config");
       const originalValue = ircConfig.atheme.insecureSkipVerify;
       (ircConfig.atheme as any).insecureSkipVerify = true;
 
       try {
         mockFetch.mockResolvedValueOnce({
-          ok: true,
           json: async () => ({ jsonrpc: "2.0", result: "Success", id: "1" }),
+          ok: true,
         });
 
         // Act

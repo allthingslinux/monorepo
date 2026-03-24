@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
 import { APIError, handleAPIError, requireAuth } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { account, user } from "@portal/db/schema/auth";
 import { ircAccount } from "@portal/db/schema/irc";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { and, eq, ne } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 import { env } from "@/env";
 
@@ -64,8 +64,8 @@ async function fetchXmppForUser(userId: string) {
   const [xmpp] = await db
     .select({
       jid: xmppAccount.jid,
-      username: xmppAccount.username,
       status: xmppAccount.status,
+      username: xmppAccount.username,
     })
     .from(xmppAccount)
     .where(
@@ -107,7 +107,7 @@ async function lookupByDiscordId(discordId: string) {
 
   if (!discordAccount) {
     return Response.json(
-      { ok: false, error: "Discord account not linked" },
+      { error: "Discord account not linked", ok: false },
       { status: 404 }
     );
   }
@@ -120,7 +120,6 @@ async function lookupByDiscordId(discordId: string) {
   ]);
 
   return Response.json({
-    ok: true,
     identity: {
       user_id: userId,
       username: profile.username,
@@ -132,6 +131,7 @@ async function lookupByDiscordId(discordId: string) {
       xmpp_status: xmpp?.status ?? null,
       avatar_url: profile.avatarUrl ?? null,
     },
+    ok: true,
   });
 }
 
@@ -144,7 +144,7 @@ async function lookupByIrcNick(ircNick: string) {
 
   if (!active) {
     return Response.json(
-      { ok: false, error: "IRC account not found" },
+      { error: "IRC account not found", ok: false },
       { status: 404 }
     );
   }
@@ -156,7 +156,6 @@ async function lookupByIrcNick(ircNick: string) {
   ]);
 
   return Response.json({
-    ok: true,
     identity: {
       user_id: active.userId,
       username: profile.username,
@@ -168,6 +167,7 @@ async function lookupByIrcNick(ircNick: string) {
       xmpp_status: xmpp?.status ?? null,
       avatar_url: profile.avatarUrl ?? null,
     },
+    ok: true,
   });
 }
 
@@ -180,7 +180,7 @@ async function lookupByXmppJid(xmppJid: string) {
 
   if (!xmpp) {
     return Response.json(
-      { ok: false, error: "XMPP account not found" },
+      { error: "XMPP account not found", ok: false },
       { status: 404 }
     );
   }
@@ -192,7 +192,6 @@ async function lookupByXmppJid(xmppJid: string) {
   ]);
 
   return Response.json({
-    ok: true,
     identity: {
       user_id: xmpp.userId,
       username: profile.username,
@@ -204,6 +203,7 @@ async function lookupByXmppJid(xmppJid: string) {
       xmpp_status: xmpp.status,
       avatar_url: profile.avatarUrl ?? null,
     },
+    ok: true,
   });
 }
 

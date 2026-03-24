@@ -27,7 +27,11 @@ Environment context (commit hash, version, service name, region) is automaticall
 Use the `withWideEvent` wrapper to automatically handle wide event creation, timing, and emission:
 
 ```typescript
-import { withWideEvent, enrichWideEventWithUser, type WideEvent } from "@/shared/observability";
+import {
+  withWideEvent,
+  enrichWideEventWithUser,
+  type WideEvent,
+} from "@/shared/observability";
 import { requireAuth } from "@/shared/api/utils";
 
 export const GET = withWideEvent(

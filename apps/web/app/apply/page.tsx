@@ -1,10 +1,9 @@
 "use client";
 
-import { memo, useCallback, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { memo, useCallback, useMemo, useState } from "react";
 
-import { getRolesByDepartment } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -16,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { generalQuestions } from "@/data/forms/questions/general";
 import { roles } from "@/data/forms/roles";
+import { getRolesByDepartment } from "@/lib/utils";
 import type { FormQuestion, Role } from "@/types";
 
 // Helper to filter out conditional questions

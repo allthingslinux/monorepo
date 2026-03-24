@@ -26,13 +26,13 @@ Implement a unified changelog page at `/app/changelog` that aggregates GitHub re
     - Return `type: null`, `scope: null`, full first line as `description` when no match
     - _Requirements: 5.1, 5.2, 5.5, 5.6_
 
-  - [ ]* 1.4 Write property tests for the conventional commit parser at `tests/features/changelog/parser.property.test.ts`
+  - [ ]\* 1.4 Write property tests for the conventional commit parser at `tests/features/changelog/parser.property.test.ts`
     - **Property 5: Conventional commit parser correctness**
     - **Property 6: Each conventional commit type has a unique color**
     - **Property 7: Conventional commit parse-format round trip**
     - **Validates: Requirements 5.1, 5.2, 5.4, 5.5, 5.6, 5.7**
 
-  - [ ]* 1.5 Write unit tests for the conventional commit parser at `tests/features/changelog/parser.test.ts`
+  - [ ]\* 1.5 Write unit tests for the conventional commit parser at `tests/features/changelog/parser.test.ts`
     - Test known conventional commit examples (`feat: add login`, `fix(auth): resolve token issue`, `feat!: breaking change`)
     - Test non-matching messages, empty strings, multi-line messages
     - _Requirements: 5.1, 5.2, 5.5, 5.6_
@@ -47,14 +47,14 @@ Implement a unified changelog page at `/app/changelog` that aggregates GitHub re
     - Handle non-success HTTP responses, network timeouts, and malformed JSON by returning empty entries with error info
     - _Requirements: 1.3, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 9.1, 9.2, 9.3, 9.4_
 
-  - [ ]* 2.2 Write property tests for the changelog service at `tests/features/changelog/service.property.test.ts`
+  - [ ]\* 2.2 Write property tests for the changelog service at `tests/features/changelog/service.property.test.ts`
     - **Property 1: Failed repos are excluded, successful repos are included**
     - **Property 2: Normalization produces complete entries**
     - **Property 3: Commit count is capped per repository**
     - **Property 4: Timeline entries are sorted by date descending**
     - **Validates: Requirements 1.3, 2.3, 3.3, 3.6, 4.1, 9.1, 9.2**
 
-  - [ ]* 2.3 Write unit tests for the changelog service at `tests/features/changelog/service.test.ts`
+  - [ ]\* 2.3 Write unit tests for the changelog service at `tests/features/changelog/service.test.ts`
     - Test specific GitHub API response shapes and normalization
     - Test empty response handling, all-repos-fail scenario, rate-limit behavior
     - _Requirements: 2.3, 3.3, 9.1, 9.2, 9.3_
@@ -121,13 +121,13 @@ Implement a unified changelog page at `/app/changelog` that aggregates GitHub re
     - Add `/app/changelog` to the route config in `features/routing/lib` with appropriate label, icon, and breadcrumb
     - _Requirements: 11.1, 11.2_
 
-  - [ ]* 5.4 Write property tests for filtering and pagination at `tests/features/changelog/filter.property.test.ts`
+  - [ ]\* 5.4 Write property tests for filtering and pagination at `tests/features/changelog/filter.property.test.ts`
     - **Property 8: Combined filtering returns the intersection of repo and type filters**
     - **Property 9: Repository entry counts are accurate**
     - **Property 10: Pagination displays correct number of entries**
     - **Validates: Requirements 6.2, 6.3, 6.4, 7.2, 7.3, 7.4, 7.5, 8.1, 8.2**
 
-  - [ ]* 5.5 Write unit tests for filtering logic at `tests/features/changelog/filter.test.ts`
+  - [ ]\* 5.5 Write unit tests for filtering logic at `tests/features/changelog/filter.test.ts`
     - Test empty entry list filtering, single repo selection, empty state display trigger
     - _Requirements: 4.6, 6.2, 6.3_
 

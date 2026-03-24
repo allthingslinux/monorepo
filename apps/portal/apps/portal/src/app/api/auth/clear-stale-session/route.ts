@@ -30,8 +30,8 @@ export async function GET() {
 
   try {
     const signOutRes = await auth.api.signOut({
-      headers: requestHeaders,
       asResponse: true,
+      headers: requestHeaders,
     });
 
     const setCookies = getSetCookieValues(signOutRes.headers);

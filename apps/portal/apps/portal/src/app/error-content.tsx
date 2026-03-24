@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
 import { Button } from "@portal/ui/ui/button";
 import {
   Card,
@@ -14,6 +12,8 @@ import {
 import { captureException } from "@sentry/nextjs";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useEffect } from "react";
 
 /**
  * Root error boundary content. Rendered lazily via app/error.tsx.

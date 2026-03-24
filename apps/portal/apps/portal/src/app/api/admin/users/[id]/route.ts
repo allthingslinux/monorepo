@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   handleAPIError,
   parseRouteId,
@@ -12,6 +11,7 @@ import { mediawikiAccount } from "@portal/db/schema/mediawiki";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { AdminUpdateUserSchema } from "@portal/schemas/user";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
 
@@ -34,7 +34,7 @@ export async function GET(
 
     if (!userData) {
       return Response.json(
-        { ok: false, error: "User not found" },
+        { error: "User not found", ok: false },
         { status: 404 }
       );
     }
@@ -60,11 +60,11 @@ export async function GET(
       ]);
 
     return Response.json({
-      user: userData,
       ircAccount: ircRow ?? null,
       mailcowAccount: mailcowRow ?? null,
-      xmppAccount: xmppRow ?? null,
       mediawikiAccount: mediawikiRow ?? null,
+      user: userData,
+      xmppAccount: xmppRow ?? null,
     });
   } catch (error) {
     return handleAPIError(error);
@@ -92,7 +92,7 @@ export async function PATCH(
 
     if (!updated) {
       return Response.json(
-        { ok: false, error: "User not found" },
+        { error: "User not found", ok: false },
         { status: 404 }
       );
     }

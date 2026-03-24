@@ -4,22 +4,22 @@
 
 ## What Lives Here
 
-| Directory | Purpose |
-|-----------|---------|
-| `lib/` | User-specific business logic |
+| Directory     | Purpose                            |
+| ------------- | ---------------------------------- |
+| `lib/`        | User-specific business logic       |
 | `components/` | Profile and settings UI components |
-| `hooks/` | TanStack Query hooks for user data |
-| `api/` | User API route handler wrappers |
+| `hooks/`      | TanStack Query hooks for user data |
+| `api/`        | User API route handler wrappers    |
 
 ## Data Patterns
 
 User data flows through the DTO layer — never expose raw Drizzle query results to the UI:
 
 ```typescript
-import type { UserDTO } from "@portal/types/common"
+import type { UserDTO } from "@portal/types/common";
 
 // Hooks return typed DTOs
-const { data: user } = useCurrentUser() // returns UserDTO | undefined
+const { data: user } = useCurrentUser(); // returns UserDTO | undefined
 ```
 
 ## TanStack Query
@@ -27,8 +27,8 @@ const { data: user } = useCurrentUser() // returns UserDTO | undefined
 User query keys are defined in the factory at `@portal/api/query-keys`:
 
 ```typescript
-import { queryKeys } from "@portal/api/query-keys"
-queryClient.invalidateQueries({ queryKey: queryKeys.users.current() })
+import { queryKeys } from "@portal/api/query-keys";
+queryClient.invalidateQueries({ queryKey: queryKeys.users.current() });
 ```
 
 ## Common Tasks

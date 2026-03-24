@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
 import { useMDXComponent } from "next-contentlayer2/hooks";
+import Image from "next/image";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Alert } from "@/components/mdx/alert";
+import { cn } from "@/lib/utils";
 
 // Simple components without memoization
 const Heading1 = ({

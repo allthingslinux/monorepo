@@ -83,6 +83,7 @@ flowchart TB
 ## Output
 
 Render directly in chat (don't write files):
+
 1. Brief assessment of current codebase state
 2. Prioritized feature list (5-8 items with rationale)
 3. Timeline diagram (phased overview)

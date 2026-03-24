@@ -72,9 +72,9 @@ export const setFeatureContext = (context: PortalEventContext): void => {
   try {
     const { setContext, setTag } = require("@sentry/nextjs");
     setContext("portal_feature", {
-      feature: context.feature,
-      component: context.component,
       action: context.action,
+      component: context.component,
+      feature: context.feature,
       route: context.route,
       timestamp: new Date().toISOString(),
     });
@@ -99,13 +99,13 @@ export const setBrowserContext = (): void => {
   try {
     const { setContext } = require("@sentry/nextjs");
     setContext("browser_info", {
-      viewport: `${window.innerWidth}x${window.innerHeight}`,
-      screen: `${window.screen.width}x${window.screen.height}`,
-      pixelRatio: window.devicePixelRatio,
-      online: navigator.onLine,
       cookieEnabled: navigator.cookieEnabled,
       language: navigator.language,
+      online: navigator.onLine,
+      pixelRatio: window.devicePixelRatio,
       platform: navigator.platform,
+      screen: `${window.screen.width}x${window.screen.height}`,
+      viewport: `${window.innerWidth}x${window.innerHeight}`,
     });
   } catch {
     // Sentry not available
@@ -120,8 +120,8 @@ export const setDeploymentContext = (): void => {
     const { setContext, setTag } = require("@sentry/nextjs");
     setContext("deployment", {
       buildId: process.env.BUILD_ID,
-      gitHash: process.env.GIT_HASH,
       deployTime: process.env.DEPLOY_TIME,
+      gitHash: process.env.GIT_HASH,
       region: process.env.VERCEL_REGION || process.env.AWS_REGION,
     });
     const region = process.env.VERCEL_REGION || process.env.AWS_REGION;
@@ -143,8 +143,8 @@ export const initializePortalContext = (user?: PortalUserContext): void => {
   setBrowserContext();
   setDeploymentContext();
   const hostname =
-    typeof window !== "undefined" ? window.location.hostname : "server";
-  setPortalTags({ service: "portal", domain: hostname });
+    typeof window === "undefined" ? "server" : window.location.hostname;
+  setPortalTags({ domain: hostname, service: "portal" });
 };
 
 /**
@@ -158,10 +158,10 @@ export const addActionBreadcrumb = (
   try {
     const { addBreadcrumb } = require("@sentry/nextjs");
     addBreadcrumb({
-      message: action,
       category: `portal.${category}`,
-      level: "info",
       data: { timestamp: new Date().toISOString(), ...data },
+      level: "info",
+      message: action,
     });
   } catch {
     // Sentry not available
@@ -283,11 +283,6 @@ export const withLocalScope = <T>(
  * Common scope patterns for Portal
  */
 export const scopePatterns = {
-  userContext: <T>(
-    user: { id: string; email?: string; tier?: string },
-    fn: () => T
-  ): T => withIsolatedScope({ user }, fn),
-
   apiContext: <T>(
     endpoint: string,
     method: string,
@@ -310,6 +305,11 @@ export const scopePatterns = {
       },
       fn
     ),
+
+  userContext: <T>(
+    user: { id: string; email?: string; tier?: string },
+    fn: () => T
+  ): T => withIsolatedScope({ user }, fn),
 };
 
 // ============================================================================
@@ -333,7 +333,7 @@ interface CacheGetOptions extends CacheOptions {
 
 const normalizeKey = (key: string | string[]) => {
   const keys = Array.isArray(key) ? key : [key];
-  return { primaryKey: keys[0], keys };
+  return { keys, primaryKey: keys[0] };
 };
 
 const baseCacheAttributes = (options: CacheOptions) => {
@@ -357,12 +357,12 @@ export const instrumentCacheSet = async <T>(
     const { primaryKey } = normalizeKey(options.key);
     return await startSpan(
       {
-        name: `cache.set ${primaryKey}`,
-        op: "cache.put",
         attributes: {
           ...baseCacheAttributes(options),
           ...(options.itemSize && { "cache.item_size": options.itemSize }),
         },
+        name: `cache.set ${primaryKey}`,
+        op: "cache.put",
       },
       setter
     );
@@ -383,9 +383,9 @@ export const instrumentCacheGet = async <T>(
     const { primaryKey } = normalizeKey(options.key);
     return await startSpan(
       {
+        attributes: baseCacheAttributes(options),
         name: `cache.get ${primaryKey}`,
         op: "cache.get",
-        attributes: baseCacheAttributes(options),
       },
       async (span: { setAttribute: (key: string, value: unknown) => void }) => {
         const result = await getter();
@@ -426,9 +426,9 @@ export const calculateCacheItemSize = (value: unknown): number => {
  * Common cache configurations
  */
 export const cacheConfigs = {
-  redis: (host = "localhost", port = 6379) => ({ address: host, port }),
   memory: () => ({ address: "in-memory" }),
   nextjs: () => ({ address: "next-cache" }),
+  redis: (host = "localhost", port = 6379) => ({ address: host, port }),
 };
 
 // ============================================================================
@@ -462,9 +462,9 @@ interface QueueConsumerOptions {
 }
 
 const buildQueueConsumerAttributes = (options: QueueConsumerOptions) => ({
-  "messaging.message.id": options.messageId,
   "messaging.destination.name": options.queueName,
   "messaging.message.body.size": options.messageSize,
+  "messaging.message.id": options.messageId,
   ...(options.retryCount !== undefined && {
     "messaging.message.retry.count": options.retryCount,
   }),
@@ -484,13 +484,13 @@ export const instrumentQueueProducer = async <T>(
     const { startSpan, getTraceData } = require("@sentry/nextjs");
     return await startSpan(
       {
-        name: "queue_producer",
-        op: "queue.publish",
         attributes: {
           "messaging.message.id": options.messageId,
           "messaging.destination.name": options.queueName,
           "messaging.message.body.size": options.messageSize,
         },
+        name: "queue_producer",
+        op: "queue.publish",
       },
       async () => {
         const traceHeaders = getTraceData();
@@ -515,11 +515,11 @@ export const instrumentQueueConsumer = async <T>(
     const { continueTrace, startSpan } = require("@sentry/nextjs");
     return await continueTrace(
       {
-        sentryTrace: traceHeaders["sentry-trace"],
         baggage: traceHeaders.baggage,
+        sentryTrace: traceHeaders["sentry-trace"],
       },
-      async () => {
-        return await startSpan(
+      async () =>
+        await startSpan(
           { name: "queue_consumer_transaction" },
           async (parent: {
             setStatus?: (status: { code: number; message: string }) => void;
@@ -543,8 +543,7 @@ export const instrumentQueueConsumer = async <T>(
               throw error;
             }
           }
-        );
-      }
+        )
     );
   } catch (error) {
     if (!consumerExecuted) {
@@ -562,11 +561,11 @@ export const createQueueMessage = (
   body: unknown,
   traceHeaders: TraceHeaders
 ): QueueMessage & { sentryTrace?: string; sentryBaggage?: string } => ({
-  id,
   body,
-  timestamp: Date.now(),
-  sentryTrace: traceHeaders["sentry-trace"],
+  id,
   sentryBaggage: traceHeaders.baggage,
+  sentryTrace: traceHeaders["sentry-trace"],
+  timestamp: Date.now(),
 });
 
 /**
@@ -614,14 +613,14 @@ export const instrumentHttpRequest = async <T>(
     const { startSpan } = require("@sentry/nextjs");
     return await startSpan(
       {
-        op: "http.client",
-        name: `${options.method} ${options.url}`,
         attributes: {
           "http.request.method": options.method,
           ...(options.requestSize && {
             "http.request.body.size": options.requestSize,
           }),
         },
+        name: `${options.method} ${options.url}`,
+        op: "http.client",
       },
       async (span: {
         setAttribute: (key: string, value: unknown) => void;
@@ -630,7 +629,7 @@ export const instrumentHttpRequest = async <T>(
         try {
           const parsedURL = new URL(
             options.url,
-            typeof window !== "undefined" ? window.location.origin : undefined
+            typeof window === "undefined" ? undefined : window.location.origin
           );
           span.setAttribute("server.address", parsedURL.hostname);
           if (parsedURL.port) {
@@ -669,6 +668,9 @@ export const instrumentHttpRequest = async <T>(
  * HTTP client with automatic Sentry instrumentation
  */
 export const httpClient = {
+  delete: <T>(url: string, fetcher: () => Promise<T>) =>
+    instrumentHttpRequest(buildHttpOptions("DELETE", url), fetcher),
+
   get: <T>(url: string, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("GET", url), fetcher),
 
@@ -677,18 +679,16 @@ export const httpClient = {
 
   put: <T>(url: string, body: unknown, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("PUT", url, body), fetcher),
-
-  delete: <T>(url: string, fetcher: () => Promise<T>) =>
-    instrumentHttpRequest(buildHttpOptions("DELETE", url), fetcher),
 };
 
 // ============================================================================
 // Span Utilities
 // ============================================================================
 
-interface SpanAttributes {
-  [key: string]: string | number | boolean | (string | number | boolean)[];
-}
+type SpanAttributes = Record<
+  string,
+  string | number | boolean | (string | number | boolean)[]
+>;
 
 /**
  * Add metrics to the currently active span
@@ -716,7 +716,7 @@ export const createMetricSpan = <T>(
 ): T => {
   try {
     const { startSpan } = require("@sentry/nextjs");
-    return startSpan({ name, op, attributes }, fn);
+    return startSpan({ attributes, name, op }, fn);
   } catch {
     return fn();
   }
@@ -732,9 +732,12 @@ export const createManualSpan = (
 ) => {
   try {
     const { startInactiveSpan } = require("@sentry/nextjs");
-    return startInactiveSpan({ name, op, attributes });
+    return startInactiveSpan({ attributes, name, op });
   } catch {
     return {
+      end: () => {
+        // Mock implementation
+      },
       setAttribute: () => {
         // Mock implementation
       },
@@ -742,9 +745,6 @@ export const createManualSpan = (
         // Mock implementation
       },
       setStatus: () => {
-        // Mock implementation
-      },
-      end: () => {
         // Mock implementation
       },
     };
@@ -775,18 +775,6 @@ export const updateSpanName = (span: Span, name: string): void => {
  * Common span metrics for Portal operations
  */
 export const spanMetrics = {
-  database: (
-    operation: string,
-    table: string,
-    duration: number,
-    rows?: number
-  ) => ({
-    "db.operation": operation,
-    "db.table": table,
-    "db.duration_ms": duration,
-    ...(rows !== undefined && { "db.rows_affected": rows }),
-  }),
-
   api: (
     endpoint: string,
     method: string,
@@ -809,6 +797,18 @@ export const spanMetrics = {
     "auth.provider": provider,
     "auth.duration_ms": duration,
     "auth.success": success,
+  }),
+
+  database: (
+    operation: string,
+    table: string,
+    duration: number,
+    rows?: number
+  ) => ({
+    "db.operation": operation,
+    "db.table": table,
+    "db.duration_ms": duration,
+    ...(rows !== undefined && { "db.rows_affected": rows }),
   }),
 };
 
@@ -842,8 +842,8 @@ export const continueTrace = <T>(
     const { continueTrace } = require("@sentry/nextjs");
     return continueTrace(
       {
-        sentryTrace: headers["sentry-trace"],
         baggage: headers.baggage,
+        sentryTrace: headers["sentry-trace"],
       },
       callback
     );
@@ -868,9 +868,7 @@ export const startNewTrace = <T>(callback: () => T): T => {
 // Metrics
 // ============================================================================
 
-interface MetricAttributes {
-  [key: string]: string | number | boolean;
-}
+type MetricAttributes = Record<string, string | number | boolean>;
 
 interface MetricOptions {
   attributes?: MetricAttributes;
@@ -929,11 +927,6 @@ export const recordDistribution = (
  * Common Portal metrics
  */
 export const portalMetrics = {
-  userAction: (action: string, userId?: string) =>
-    incrementCounter("user.action", 1, {
-      attributes: { action, ...(userId && { user_id: userId }) },
-    }),
-
   apiRequest: (
     endpoint: string,
     method: string,
@@ -948,31 +941,6 @@ export const portalMetrics = {
       unit: "millisecond",
     });
   },
-
-  dbQuery: (
-    table: string,
-    operation: string,
-    duration: number,
-    rows?: number
-  ) => {
-    incrementCounter("db.query", 1, {
-      attributes: { table, operation },
-    });
-    recordDistribution("db.duration", duration, {
-      attributes: { table, operation },
-      unit: "millisecond",
-    });
-    if (rows !== undefined) {
-      recordDistribution("db.rows", rows, {
-        attributes: { table, operation },
-      });
-    }
-  },
-
-  cacheOperation: (operation: "hit" | "miss" | "set", key: string) =>
-    incrementCounter(`cache.${operation}`, 1, {
-      attributes: { cache_key: key },
-    }),
 
   authEvent: (
     event: "login" | "logout" | "signup" | "failed_login",
@@ -997,8 +965,38 @@ export const portalMetrics = {
     }
   },
 
+  cacheOperation: (operation: "hit" | "miss" | "set", key: string) =>
+    incrementCounter(`cache.${operation}`, 1, {
+      attributes: { cache_key: key },
+    }),
+
+  dbQuery: (
+    table: string,
+    operation: string,
+    duration: number,
+    rows?: number
+  ) => {
+    incrementCounter("db.query", 1, {
+      attributes: { table, operation },
+    });
+    recordDistribution("db.duration", duration, {
+      attributes: { table, operation },
+      unit: "millisecond",
+    });
+    if (rows !== undefined) {
+      recordDistribution("db.rows", rows, {
+        attributes: { table, operation },
+      });
+    }
+  },
+
   systemMetric: (metric: string, value: number, unit?: string) =>
     setGauge(`system.${metric}`, value, { unit }),
+
+  userAction: (action: string, userId?: string) =>
+    incrementCounter("user.action", 1, {
+      attributes: { action, ...(userId && { user_id: userId }) },
+    }),
 };
 
 // ============================================================================
@@ -1056,9 +1054,9 @@ export const captureExceptionWithLevel = (
  * Common level patterns for Portal
  */
 export const levelPatterns = {
-  fatal: (error: unknown) => captureExceptionWithLevel(error, "fatal"),
-  error: (error: unknown) => captureExceptionWithLevel(error, "error"),
-  warning: (message: string) => captureMessageWithLevel(message, "warning"),
-  info: (message: string) => captureMessageWithLevel(message, "info"),
   debug: (message: string) => captureMessageWithLevel(message, "debug"),
+  error: (error: unknown) => captureExceptionWithLevel(error, "error"),
+  fatal: (error: unknown) => captureExceptionWithLevel(error, "fatal"),
+  info: (message: string) => captureMessageWithLevel(message, "info"),
+  warning: (message: string) => captureMessageWithLevel(message, "warning"),
 };

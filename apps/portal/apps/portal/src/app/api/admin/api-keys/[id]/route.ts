@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   handleAPIError,
   parseRouteId,
@@ -8,6 +7,7 @@ import { db } from "@portal/db/client";
 import { apikey } from "@portal/db/schema/api-keys";
 import { user } from "@portal/db/schema/auth";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -25,8 +25,8 @@ export async function GET(
       .select({
         apikey,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })
@@ -37,7 +37,7 @@ export async function GET(
 
     if (!apiKeyData) {
       return Response.json(
-        { ok: false, error: "API key not found" },
+        { error: "API key not found", ok: false },
         { status: 404 }
       );
     }
@@ -70,7 +70,7 @@ export async function DELETE(
 
     if (!deleted) {
       return Response.json(
-        { ok: false, error: "API key not found" },
+        { error: "API key not found", ok: false },
         { status: 404 }
       );
     }

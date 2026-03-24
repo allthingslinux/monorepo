@@ -1,9 +1,9 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { mediawikiAccount } from "@portal/db/schema/mediawiki";
 import { and, count, desc, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
@@ -45,8 +45,8 @@ export async function GET(request: NextRequest) {
         .select({
           mediawikiAccount,
           user: {
-            id: user.id,
             email: user.email,
+            id: user.id,
             name: user.name,
           },
         })
@@ -69,10 +69,10 @@ export async function GET(request: NextRequest) {
     return Response.json({
       mediawikiAccounts,
       pagination: {
-        total,
+        hasMore: offset + limit < total,
         limit,
         offset,
-        hasMore: offset + limit < total,
+        total,
       },
     });
   } catch (error) {

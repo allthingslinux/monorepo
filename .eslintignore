@@ -1,0 +1,31 @@
+# Dependencies & build
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.turbo/
+
+# Minified / generated
+**/*.min.js
+**/next-env.d.ts
+**/cloudflare-env.d.ts
+**/worker-configuration.d.ts
+
+# Contentlayer / OpenNext / Wrangler (web)
+apps/web/.contentlayer/
+apps/web/.open-next/
+apps/web/.wrangler/
+
+# Deferred lint (marketing site) — format via oxfmt still applies via .prettierignore exclusions
+apps/web/**
+
+# Mintlify docs — validated by `mint`; skip lint + format
+apps/docs/**
+
+# Portal: vendored / generated / references
+apps/portal/references/
+apps/portal/packages/ui/src/ui/
+apps/portal/drizzle/
+apps/portal/.cursor/skills/

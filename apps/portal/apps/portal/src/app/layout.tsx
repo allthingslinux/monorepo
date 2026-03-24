@@ -1,19 +1,17 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import { connection } from "next/server";
+import { createPageMetadata } from "@portal/seo/metadata";
 import { DevTools } from "@portal/ui/dev-tools";
+import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { connection } from "next/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-
-import { Providers } from "./providers";
-import { WebVitalsReporter } from "./web-vitals";
-
-import "@/styles/globals.css";
-
-import { createPageMetadata } from "@portal/seo/metadata";
+import { Suspense } from "react";
 
 import { geistMono, geistSans, inter } from "./fonts";
+
+import "@/styles/globals.css";
+import { Providers } from "./providers";
+import { WebVitalsReporter } from "./web-vitals";
 
 /** Default lang for prerender shell when locale is not yet resolved. */
 const DEFAULT_LANG = "en";

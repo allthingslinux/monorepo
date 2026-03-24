@@ -174,6 +174,7 @@ export async function generateMetadata() {
 The `PageHeader` component accepts an optional `resolver` prop:
 
 **Server Component:**
+
 ```tsx
 export default async function Page() {
   const resolver = await getServerRouteResolver();
@@ -182,14 +183,17 @@ export default async function Page() {
 ```
 
 **Client Component:**
+
 ```tsx
 "use client";
 import { useTranslatedRoutes } from "@/hooks/use-translated-routes";
 
 export function Component() {
   const translatedConfig = useTranslatedRoutes();
-  const route = translatedConfig.protected.find(r => r.path === "/app");
-  return <PageHeader title={route?.ui?.title} description={route?.ui?.description} />;
+  const route = translatedConfig.protected.find((r) => r.path === "/app");
+  return (
+    <PageHeader title={route?.ui?.title} description={route?.ui?.description} />
+  );
 }
 ```
 
@@ -230,6 +234,7 @@ All these functions accept an optional `resolver` parameter:
 ## Current Implementation
 
 ✅ **Already Using Translations:**
+
 - `SidebarContainer` - Uses `useTranslatedRoutes()` hook
 - Page metadata - Uses `getServerRouteResolver()` in `generateMetadata()`
 - `PageHeader` - Accepts optional `resolver` prop

@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { LoadingSpinner } from "../../components/ui/loading-spinner";
 import { getPageMetadata } from "../metadata";

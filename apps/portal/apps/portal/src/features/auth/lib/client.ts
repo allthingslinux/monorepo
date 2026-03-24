@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { apiKeyClient } from "@better-auth/api-key/client";
 import { oauthProviderClient } from "@better-auth/oauth-provider/client";
 import { passkeyClient } from "@better-auth/passkey/client";
@@ -13,6 +12,7 @@ import {
   usernameClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
+import { toast } from "sonner";
 
 import {
   ac,

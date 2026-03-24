@@ -33,9 +33,9 @@ Base UI components are built on top of [shadcn/ui](https://ui.shadcn.com/) and R
 **Import Pattern**:
 
 ```typescript
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 ```
 
 **Composition Example**:
@@ -198,8 +198,8 @@ function Component({
 
 ```typescript
 interface UserCardProps extends React.ComponentProps<"div"> {
-  user: User
-  onEdit?: (user: User) => void
+  user: User;
+  onEdit?: (user: User) => void;
 }
 
 function UserCard({ user, onEdit, ...props }: UserCardProps) {
@@ -224,10 +224,10 @@ function UserCard({ user, onEdit, ...props }: UserCardProps) {
 ```typescript
 function UserProfile({ userId }: { userId: string }) {
   const { data: user, isLoading } = useUser(userId)
-  
+
   if (isLoading) return <Skeleton />
   if (!user) return <Empty />
-  
+
   return <Card>{/* user data */}</Card>
 }
 ```
@@ -534,11 +534,11 @@ Toast notifications via Sonner.
 **Example:**
 
 ```typescript
-import { toast } from "sonner"
+import { toast } from "sonner";
 
-toast.success("Success message")
-toast.error("Error message")
-toast("Info message")
+toast.success("Success message");
+toast.error("Error message");
+toast("Info message");
 ```
 
 #### Badge
@@ -772,43 +772,43 @@ Portal uses CSS variables (OKLCH color space) for theming. Customize in `src/sty
   /* Base colors */
   --background: oklch(0.9135 0.0068 277.1562);
   --foreground: oklch(0.4355 0.043 279.325);
-  
+
   /* Card colors */
   --card: oklch(0.967 0.003 264.542);
   --card-foreground: oklch(0.4355 0.043 279.325);
-  
+
   /* Primary colors */
   --primary: oklch(0.5999 0.1804 257.5267);
   --primary-foreground: oklch(0.4297 0.0471 193.5404);
-  
+
   /* Secondary colors */
   --secondary: oklch(0.8143 0.0492 272.3606);
   --secondary-foreground: oklch(0.4355 0.043 279.325);
-  
+
   /* Muted colors */
   --muted: oklch(0.906 0.0117 264.5071);
   --muted-foreground: oklch(0.5653 0.0983 271.3204);
-  
+
   /* Accent colors */
   --accent: oklch(0.8352 0.0254 275.8484);
   --accent-foreground: oklch(0.4355 0.043 279.325);
-  
+
   /* Destructive colors */
   --destructive: oklch(0.6337 0.2326 11.5662);
   --destructive-foreground: oklch(0.5527 0.0749 75.1934);
-  
+
   /* Border and input */
   --border: oklch(0.7735 0.0057 274.9433);
   --input: oklch(0.9135 0.0068 277.1562);
   --ring: oklch(0.5121 0.1563 264.096);
-  
+
   /* Chart colors */
   --chart-1: oklch(0.5547 0.2503 297.0156);
   --chart-2: oklch(0.682 0.1448 235.3822);
   --chart-3: oklch(0.625 0.1772 140.4448);
   --chart-4: oklch(0.692 0.2041 42.4293);
   --chart-5: oklch(0.7141 0.1045 33.0967);
-  
+
   /* Sidebar colors */
   --sidebar: oklch(0.8734 0.02 270.1891);
   --sidebar-foreground: oklch(0.4355 0.043 279.325);
@@ -818,22 +818,32 @@ Portal uses CSS variables (OKLCH color space) for theming. Customize in `src/sty
   --sidebar-accent-foreground: oklch(0.4355 0.043 279.325);
   --sidebar-border: oklch(0.4355 0.043 279.325);
   --sidebar-ring: oklch(0.5547 0.2503 297.0156);
-  
+
   /* Typography */
   --font-sans: var(--font-inter);
   --font-serif: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
   /* Border radius */
   --radius: 0.6rem;
-  
+
   /* Shadows */
   --shadow-xs: 0px 4px 6px 0px hsl(240 30% 25% / 0.06);
-  --shadow-sm: 0px 4px 6px 0px hsl(240 30% 25% / 0.12), 0px 1px 2px -1px hsl(240 30% 25% / 0.12);
-  --shadow: 0px 4px 6px 0px hsl(240 30% 25% / 0.12), 0px 1px 2px -1px hsl(240 30% 25% / 0.12);
-  --shadow-md: 0px 4px 6px 0px hsl(240 30% 25% / 0.12), 0px 2px 4px -1px hsl(240 30% 25% / 0.12);
-  --shadow-lg: 0px 4px 6px 0px hsl(240 30% 25% / 0.12), 0px 4px 6px -1px hsl(240 30% 25% / 0.12);
-  --shadow-xl: 0px 4px 6px 0px hsl(240 30% 25% / 0.12), 0px 8px 10px -1px hsl(240 30% 25% / 0.12);
+  --shadow-sm:
+    0px 4px 6px 0px hsl(240 30% 25% / 0.12),
+    0px 1px 2px -1px hsl(240 30% 25% / 0.12);
+  --shadow:
+    0px 4px 6px 0px hsl(240 30% 25% / 0.12),
+    0px 1px 2px -1px hsl(240 30% 25% / 0.12);
+  --shadow-md:
+    0px 4px 6px 0px hsl(240 30% 25% / 0.12),
+    0px 2px 4px -1px hsl(240 30% 25% / 0.12);
+  --shadow-lg:
+    0px 4px 6px 0px hsl(240 30% 25% / 0.12),
+    0px 4px 6px -1px hsl(240 30% 25% / 0.12);
+  --shadow-xl:
+    0px 4px 6px 0px hsl(240 30% 25% / 0.12),
+    0px 8px 10px -1px hsl(240 30% 25% / 0.12);
   --shadow-2xl: 0px 4px 6px 0px hsl(240 30% 25% / 0.3);
 }
 ```

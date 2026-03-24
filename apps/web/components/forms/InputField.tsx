@@ -2,9 +2,9 @@
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
 import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export interface InputProps {
   className?: string;

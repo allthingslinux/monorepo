@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import Image from "next/image";
+import { Suspense } from "react";
 
 import { env } from "@/env";
 import { discord } from "@/features/integrations/lib/discord/client";

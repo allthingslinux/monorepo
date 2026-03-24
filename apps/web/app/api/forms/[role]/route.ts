@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-import { formSubmissionRateLimit } from "@/lib/rate-limit";
-import type { FormData, Role, SubmissionPayload } from "@/lib/types";
 import { generalQuestions } from "@/data/forms/questions/general";
 import { roles } from "@/data/forms/roles";
 import { env } from "@/env";
+import { formSubmissionRateLimit } from "@/lib/rate-limit";
+import type { FormData, Role, SubmissionPayload } from "@/lib/types";
 import { submitApplicationTask } from "@/trigger/jobs/submitApplication";
 
 // Add dynamic and cache controls for better Cloudflare compatibility

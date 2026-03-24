@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 import { user } from "@portal/db/schema/auth";
 import { ircAccount } from "@portal/db/schema/irc";
 import { xmppAccount } from "@portal/db/schema/xmpp";
@@ -66,19 +65,19 @@ async function seedIntegrationAccounts() {
     const ircStatus = ircStatuses[i % ircStatuses.length];
 
     await db.insert(ircAccount).values({
-      userId: u.id,
       nick,
-      server: IRC_SERVER,
       port: IRC_PORT,
+      server: IRC_SERVER,
       status: ircStatus,
+      userId: u.id,
     });
 
     await db.insert(xmppAccount).values({
       id: crypto.randomUUID(),
-      userId: u.id,
       jid,
-      username: xmppUsername,
       status,
+      userId: u.id,
+      username: xmppUsername,
     });
   }
 
@@ -105,18 +104,18 @@ async function seedUsers() {
     const id = crypto.randomUUID();
     const email = `user${i + 1}@example.com`;
     return {
-      id,
-      name,
+      banExpires: null,
+      banReason: null,
+      banned: false,
+      createdAt: now,
       email,
       emailVerified: false,
+      id,
       image: null,
-      createdAt: now,
-      updatedAt: now,
-      twoFactorEnabled: null,
+      name,
       role: i === 0 ? "admin" : "user",
-      banned: false,
-      banReason: null,
-      banExpires: null,
+      twoFactorEnabled: null,
+      updatedAt: now,
     };
   });
   await db.insert(user).values(users);

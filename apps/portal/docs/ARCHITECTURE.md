@@ -91,12 +91,12 @@ src/
 **Pattern:**
 
 ```typescript
-import "server-only"
-import { auth } from "@/auth"
-import { db } from "@/db"
+import "server-only";
+import { auth } from "@/auth";
+import { db } from "@/db";
 
 export async function getServerData() {
-  const session = await auth.api.getSession()
+  const session = await auth.api.getSession();
   // Server-only code
 }
 ```
@@ -117,12 +117,12 @@ export async function getServerData() {
 **Pattern:**
 
 ```typescript
-"use client"
-import { authClient } from "@/auth/client"
-import { useState } from "react"
+"use client";
+import { authClient } from "@/auth/client";
+import { useState } from "react";
 
 export function ClientComponent() {
-  const { data: session } = authClient.useSession()
+  const { data: session } = authClient.useSession();
   // Client-side code
 }
 ```
@@ -169,12 +169,12 @@ export function ClientComponent() {
 
 **Caching layers**
 
-| Layer                   | Scope                         | Where                                                                 |
-| ----------------------- | ----------------------------- | --------------------------------------------------------------------- |
-| React `cache()`         | Request (single render pass)  | DAL `verifySession`, `getUser`, etc.                                  |
-| `"use cache"`           | Persistent (cacheLife/cacheTag) | `getStaticRouteMetadataCached` in `src/shared/seo/metadata.ts` only   |
-| TanStack Query (server) | Per-request `QueryClient`     | Prefetch in Server Components, then dehydrate                         |
-| TanStack Query (client)  | Singleton `QueryClient`       | Hooks in Client Components, hydrated from server                      |
+| Layer                   | Scope                           | Where                                                               |
+| ----------------------- | ------------------------------- | ------------------------------------------------------------------- |
+| React `cache()`         | Request (single render pass)    | DAL `verifySession`, `getUser`, etc.                                |
+| `"use cache"`           | Persistent (cacheLife/cacheTag) | `getStaticRouteMetadataCached` in `src/shared/seo/metadata.ts` only |
+| TanStack Query (server) | Per-request `QueryClient`       | Prefetch in Server Components, then dehydrate                       |
+| TanStack Query (client) | Singleton `QueryClient`         | Hooks in Client Components, hydrated from server                    |
 
 ## Integration Framework
 
@@ -204,13 +204,13 @@ Portal uses a registry pattern for integrations. The framework lives under `src/
 2. **Implement the integration interface** (see `src/features/integrations/lib/core/types.ts`)
 
    ```typescript
-   import type { Integration } from "@/features/integrations/lib/core/types"
-   
+   import type { Integration } from "@/features/integrations/lib/core/types";
+
    export const xmppIntegration: Integration = {
      id: "xmpp",
      name: "XMPP",
      // Implement required methods
-   }
+   };
    ```
 
 3. **Register in your implementation** (e.g. call `getIntegrationRegistry().register(xmppIntegration)` from the module that creates the instance), and ensure `registerIntegrations()` is called where integrations are used (API routes, etc.).
@@ -239,7 +239,7 @@ Response.json({ ok: true, data: {...} })
 **Error Response:**
 
 ```typescript
-Response.json({ ok: false, error: "Error message" }, { status: 400 })
+Response.json({ ok: false, error: "Error message" }, { status: 400 });
 ```
 
 ### Error Handling
@@ -247,20 +247,20 @@ Response.json({ ok: false, error: "Error message" }, { status: 400 })
 **Use `APIError` class:**
 
 ```typescript
-import { APIError } from "@/shared/api/utils"
+import { APIError } from "@/shared/api/utils";
 
-throw new APIError("Resource not found", 404)
+throw new APIError("Resource not found", 404);
 ```
 
 **Use `handleAPIError()` wrapper:**
 
 ```typescript
-import { handleAPIError } from "@/shared/api/utils"
+import { handleAPIError } from "@/shared/api/utils";
 
 try {
   // API logic
 } catch (error) {
-  return handleAPIError(error)
+  return handleAPIError(error);
 }
 ```
 
@@ -286,14 +286,14 @@ try {
 **Use Zod for validation:**
 
 ```typescript
-import { z } from "zod"
+import { z } from "zod";
 
 const bodySchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
-})
+});
 
-const body = bodySchema.parse(await request.json())
+const body = bodySchema.parse(await request.json());
 ```
 
 ### Data Transfer Objects (DTOs)
@@ -308,7 +308,7 @@ const userData = await db
     email: user.email,
     // Only select needed fields
   })
-  .from(user)
+  .from(user);
 ```
 
 See [docs/API.md](./API.md) for complete API documentation.
@@ -320,25 +320,25 @@ See [docs/API.md](./API.md) for complete API documentation.
 **`requireAuth()`** - Requires any authenticated user:
 
 ```typescript
-import { requireAuth } from "@/shared/api/utils"
+import { requireAuth } from "@/shared/api/utils";
 
-const { userId, session } = await requireAuth(request)
+const { userId, session } = await requireAuth(request);
 ```
 
 **`requireAdmin()`** - Requires admin role:
 
 ```typescript
-import { requireAdmin } from "@/shared/api/utils"
+import { requireAdmin } from "@/shared/api/utils";
 
-const { userId, session } = await requireAdmin(request)
+const { userId, session } = await requireAdmin(request);
 ```
 
 **`requireAdminOrStaff()`** - Requires admin or staff role:
 
 ```typescript
-import { requireAdminOrStaff } from "@/shared/api/utils"
+import { requireAdminOrStaff } from "@/shared/api/utils";
 
-const { userId, session } = await requireAdminOrStaff(request)
+const { userId, session } = await requireAdminOrStaff(request);
 ```
 
 ### Usage Pattern
@@ -346,11 +346,11 @@ const { userId, session } = await requireAdminOrStaff(request)
 ```typescript
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth(request)
+    const { userId } = await requireAuth(request);
     // Protected logic here
-    return Response.json({ ok: true, data })
+    return Response.json({ ok: true, data });
   } catch (error) {
-    return handleAPIError(error)
+    return handleAPIError(error);
   }
 }
 ```
@@ -368,9 +368,9 @@ Portal uses three roles:
 Granular permissions are available via `@/auth/permissions` (`src/features/auth/lib/permissions.ts`):
 
 ```typescript
-import { checkPermission } from "@/auth/permissions"
+import { checkPermission } from "@/auth/permissions";
 
-const canManageUsers = await checkPermission(userId, "user:manage")
+const canManageUsers = await checkPermission(userId, "user:manage");
 ```
 
 ## Feature Module Conventions
@@ -436,33 +436,33 @@ src/
 **Prefer direct imports for performance:**
 
 ```typescript
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 ```
 
 **Use barrel exports for core modules:**
 
 ```typescript
-import { auth } from "@/auth"
-import { db } from "@/db"
+import { auth } from "@/auth";
+import { db } from "@/db";
 ```
 
 **Group imports:**
 
 ```typescript
 // External dependencies
-import { useState } from "react"
-import { z } from "zod"
+import { useState } from "react";
+import { z } from "zod";
 
 // Internal modules
-import { auth } from "@/auth"
-import { db } from "@/db"
+import { auth } from "@/auth";
+import { db } from "@/db";
 
 // UI components
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 // Relative imports
-import { UserCard } from "./user-card"
+import { UserCard } from "./user-card";
 ```
 
 ### Barrel Exports vs Direct Imports
@@ -521,14 +521,14 @@ const users = await db
     name: user.name,
     email: user.email,
   })
-  .from(user)
+  .from(user);
 ```
 
 **Avoid selecting entire tables:**
 
 ```typescript
 // ❌ Bad
-const users = await db.select().from(user)
+const users = await db.select().from(user);
 
 // ✅ Good
 const users = await db
@@ -536,7 +536,7 @@ const users = await db
     id: user.id,
     name: user.name,
   })
-  .from(user)
+  .from(user);
 ```
 
 **Use transactions for multi-step operations:**
@@ -552,11 +552,11 @@ await db.transaction(async (tx) => {
 
 ```typescript
 try {
-  const result = await db.select().from(user)
+  const result = await db.select().from(user);
 } catch (error) {
   // Handle database errors
-  log.error("Database query failed", error)
-  throw new APIError("Failed to fetch users", 500)
+  log.error("Database query failed", error);
+  throw new APIError("Failed to fetch users", 500);
 }
 ```
 

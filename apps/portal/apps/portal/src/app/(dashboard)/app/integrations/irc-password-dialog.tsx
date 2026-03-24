@@ -1,7 +1,5 @@
 "use client";
 
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import {
   Dialog,
@@ -13,6 +11,8 @@ import {
 } from "@portal/ui/ui/dialog";
 import { Label } from "@portal/ui/ui/label";
 import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export interface IrcPasswordDialogData {
   nick: string;
@@ -53,9 +53,9 @@ export function IrcPasswordDialog({ data, onClose }: IrcPasswordDialogProps) {
                 onClick={async () => {
                   await startSpan(
                     {
+                      attributes: { integrationId: "irc" },
                       name: "Copy IRC password",
                       op: "ui.action",
-                      attributes: { integrationId: "irc" },
                     },
                     async () => {
                       try {
@@ -66,7 +66,7 @@ export function IrcPasswordDialog({ data, onClose }: IrcPasswordDialogProps) {
                         } else {
                           const ta = document.createElement("textarea");
                           ta.value = data.temporaryPassword;
-                          document.body.appendChild(ta);
+                          document.body.append(ta);
                           ta.select();
                           const success = document.execCommand("copy");
                           document.body.removeChild(ta);
@@ -77,8 +77,8 @@ export function IrcPasswordDialog({ data, onClose }: IrcPasswordDialogProps) {
                         toast.success("Copied", {
                           description: "Password copied to clipboard",
                         });
-                      } catch (err) {
-                        captureException(err);
+                      } catch (error) {
+                        captureException(error);
                         toast.error("Failed to copy");
                       }
                     }

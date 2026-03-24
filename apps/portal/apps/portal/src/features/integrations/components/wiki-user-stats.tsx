@@ -1,9 +1,9 @@
 "use client";
 
-import { BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@portal/ui/ui/card";
 import { Skeleton } from "@portal/ui/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { BookOpen } from "lucide-react";
 
 import type {
   UserContrib,
@@ -32,9 +32,9 @@ function formatDate(dateStr: string): string {
   }
   try {
     return new Date(dateStr).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
       day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   } catch {
     return "—";
@@ -43,10 +43,10 @@ function formatDate(dateStr: string): string {
 
 export function WikiUserStatsCard() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["integrations", "mediawiki", "user-stats"],
     queryFn: fetchWikiUserStats,
-    staleTime: 60_000,
+    queryKey: ["integrations", "mediawiki", "user-stats"],
     retry: 1,
+    staleTime: 60_000,
   });
 
   return (

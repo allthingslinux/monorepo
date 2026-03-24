@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { Users } from "lucide-react";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Users } from "lucide-react";
+import { Suspense } from "react";
 
 import { env } from "@/env";
 import { discord } from "@/features/integrations/lib/discord/client";

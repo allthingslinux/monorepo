@@ -2,7 +2,6 @@
 // biome-ignore-all lint/correctness/noUnusedVariables: Type parameters in module augmentation must match original signature
 "use client";
 
-import React from "react";
 import { Button } from "@portal/ui/ui/button";
 import {
   DropdownMenu,
@@ -29,17 +28,20 @@ import {
 } from "@portal/ui/ui/table";
 import { cn } from "@portal/utils/utils";
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  type SortingState,
   useReactTable,
-  type VisibilityState,
 } from "@tanstack/react-table";
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+import React from "react";
 
 // Type augmentation for TanStack Table column meta
 declare module "@tanstack/react-table" {
@@ -80,15 +82,15 @@ function DataTableInner<TData, TValue>({
     React.useState<VisibilityState>({});
 
   const table = useReactTable({
-    data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    data,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
     state: {
       sorting,
       columnFilters,
@@ -160,20 +162,18 @@ function DataTableInner<TData, TValue>({
                 {table
                   .getAllColumns()
                   .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        checked={column.getIsVisible()}
-                        className="capitalize"
-                        key={column.id}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      checked={column.getIsVisible()}
+                      className="capitalize"
+                      key={column.id}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -196,11 +196,11 @@ function DataTableInner<TData, TValue>({
                       )}
                       key={header.id}
                       style={{
-                        width: size !== 150 ? `${size}px` : undefined,
-                        minWidth: `${header.column.columnDef.minSize ?? header.column.columnDef.size ?? 150}px`,
                         maxWidth: header.column.columnDef.maxSize
                           ? `${header.column.columnDef.maxSize}px`
                           : undefined,
+                        minWidth: `${header.column.columnDef.minSize ?? header.column.columnDef.size ?? 150}px`,
+                        width: size === 150 ? undefined : `${size}px`,
                       }}
                     >
                       {header.isPlaceholder
@@ -235,11 +235,11 @@ function DataTableInner<TData, TValue>({
                         )}
                         key={cell.id}
                         style={{
-                          width: size !== 150 ? `${size}px` : undefined,
-                          minWidth: `${cell.column.columnDef.minSize ?? cell.column.columnDef.size ?? 150}px`,
                           maxWidth: cell.column.columnDef.maxSize
                             ? `${cell.column.columnDef.maxSize}px`
                             : undefined,
+                          minWidth: `${cell.column.columnDef.minSize ?? cell.column.columnDef.size ?? 150}px`,
+                          width: size === 150 ? undefined : `${size}px`,
                         }}
                       >
                         {flexRender(

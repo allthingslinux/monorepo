@@ -1,8 +1,8 @@
 import "server-only";
-import { cache } from "react";
+import type { SessionData } from "@portal/types/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import type { SessionData } from "@portal/types/auth";
+import { cache } from "react";
 
 import { auth } from "@/auth";
 import { getUserRole, isAdmin, isAdminOrStaff } from "@/auth/check-role";
@@ -61,8 +61,8 @@ export const verifySession = cache(async (): Promise<SessionData> => {
 
   return {
     isAuth: true,
-    userId: session.user.id,
     session,
+    userId: session.user.id,
   };
 });
 
@@ -134,14 +134,14 @@ export const getUser = cache(async () => {
     const [userData] = await db
       .select({
         // DTO: Only return necessary fields, not entire user object
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        image: user.image,
-        emailVerified: user.emailVerified,
         createdAt: user.createdAt,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        id: user.id,
+        image: user.image,
+        name: user.name,
+        role: user.role,
+        username: user.username,
       })
       .from(user)
       .where(eq(user.id, sessionData.userId))

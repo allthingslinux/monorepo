@@ -27,9 +27,9 @@ export function generateRobots(config: RouteConfig): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: "*",
         allow: "/",
         disallow: disallowedPaths,
+        userAgent: "*",
       },
       // Block specific bots if needed
       // {

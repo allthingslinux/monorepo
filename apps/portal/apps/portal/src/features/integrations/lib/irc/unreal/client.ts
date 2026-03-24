@@ -1,5 +1,4 @@
 import "server-only";
-
 import * as Sentry from "@sentry/nextjs";
 
 import { ircConfig } from "../config";
@@ -68,7 +67,7 @@ function extractList<T>(result: { list?: T[] } | T[] | null | undefined): T[] {
     return result;
   }
   if (result && typeof result === "object" && "list" in result) {
-    const list = (result as { list?: T[] }).list;
+    const { list } = result as { list?: T[] };
     return Array.isArray(list) ? list : [];
   }
   return [];
@@ -82,10 +81,10 @@ async function unrealRequest<T>(
   const id = sanitizeRpcId(Date.now());
 
   const body = {
+    id,
     jsonrpc: "2.0",
     method,
     params: Object.keys(params).length > 0 ? params : undefined,
-    id,
   };
 
   const controller = new AbortController();
@@ -94,18 +93,18 @@ async function unrealRequest<T>(
   try {
     return await Sentry.startSpan(
       {
-        op: "http.client",
-        name: `UnrealIRCd RPC ${method}`,
         attributes: { "rpc.method": method },
+        name: `UnrealIRCd RPC ${method}`,
+        op: "http.client",
       },
       async () => {
         const fetchOptions: RequestInit = {
-          method: "POST",
+          body: JSON.stringify(body),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Basic ${getBasicAuth()}`,
           },
-          body: JSON.stringify(body),
+          method: "POST",
           signal: controller.signal,
         };
 
@@ -166,8 +165,8 @@ export const unrealRpcClient = {
         { list?: UnrealClient[] } | UnrealClient[]
       >("user.list", params);
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "user.list" },
       });
       return [];
@@ -193,10 +192,10 @@ export const unrealRpcClient = {
         return (result as { client?: UnrealClient }).client ?? null;
       }
       return (result as UnrealClient) ?? null;
-    } catch (err) {
-      Sentry.captureException(err, {
-        tags: { integration: "irc-unreal", method: "user.get" },
+    } catch (error) {
+      Sentry.captureException(error, {
         extra: { nick },
+        tags: { integration: "irc-unreal", method: "user.get" },
       });
       return null;
     }
@@ -205,26 +204,26 @@ export const unrealRpcClient = {
   /** Force-rename a connected user's nick. */
   async userSetNick(nick: string, newNick: string): Promise<void> {
     await unrealRequest("user.set_nick", {
-      nick: sanitize(nick),
       newnick: sanitize(newNick),
+      nick: sanitize(nick),
     });
   },
 
   /** Force a user to join a channel. */
   async userJoin(nick: string, channel: string, force = false): Promise<void> {
     await unrealRequest("user.join", {
-      nick: sanitize(nick),
       channel: sanitize(channel),
       force,
+      nick: sanitize(nick),
     });
   },
 
   /** Force a user to part a channel. */
   async userPart(nick: string, channel: string, force = false): Promise<void> {
     await unrealRequest("user.part", {
-      nick: sanitize(nick),
       channel: sanitize(channel),
       force,
+      nick: sanitize(nick),
     });
   },
 
@@ -261,8 +260,8 @@ export const unrealRpcClient = {
         { list?: UnrealChannel[] } | UnrealChannel[]
       >("channel.list", params);
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "channel.list" },
       });
       return [];
@@ -288,10 +287,10 @@ export const unrealRpcClient = {
         return (result as { channel?: UnrealChannel }).channel ?? null;
       }
       return (result as UnrealChannel) ?? null;
-    } catch (err) {
-      Sentry.captureException(err, {
-        tags: { integration: "irc-unreal", method: "channel.get" },
+    } catch (error) {
+      Sentry.captureException(error, {
         extra: { channel },
+        tags: { integration: "irc-unreal", method: "channel.get" },
       });
       return null;
     }
@@ -358,10 +357,10 @@ export const unrealRpcClient = {
     duration = "1d"
   ): Promise<UnrealTkl | null> {
     const result = await unrealRequest<{ tkl?: UnrealTkl }>("server_ban.add", {
-      name: sanitize(name),
-      type,
-      reason: sanitize(reason),
       duration_string: duration,
+      name: sanitize(name),
+      reason: sanitize(reason),
+      type,
     });
     return result?.tkl ?? null;
   },
@@ -385,8 +384,8 @@ export const unrealRpcClient = {
         "server_ban.list"
       );
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "server_ban.list" },
       });
       return [];
@@ -421,9 +420,9 @@ export const unrealRpcClient = {
     setBy?: string
   ): Promise<UnrealTkl | null> {
     const params: Record<string, unknown> = {
+      duration_string: duration,
       name: sanitize(name),
       reason: sanitize(reason),
-      duration_string: duration,
     };
     if (setBy) {
       params.set_by = sanitize(setBy);
@@ -450,8 +449,8 @@ export const unrealRpcClient = {
         "name_ban.list"
       );
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "name_ban.list" },
       });
       return [];
@@ -483,8 +482,8 @@ export const unrealRpcClient = {
     duration?: string
   ): Promise<UnrealTkl | null> {
     const params: Record<string, unknown> = {
-      name: sanitize(name),
       exception_types: sanitize(types),
+      name: sanitize(name),
       reason: sanitize(reason),
     };
     if (setBy) {
@@ -516,8 +515,8 @@ export const unrealRpcClient = {
         "server_ban_exception.list"
       );
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: {
           integration: "irc-unreal",
           method: "server_ban_exception.list",
@@ -551,8 +550,8 @@ export const unrealRpcClient = {
         object_detail_level: objectDetailLevel,
       });
       return result ?? null;
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "stats.get" },
       });
       return null;
@@ -583,8 +582,8 @@ export const unrealRpcClient = {
         { list?: UnrealWhowas[] } | UnrealWhowas[]
       >("whowas.get", params);
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "whowas.get" },
       });
       return [];
@@ -602,8 +601,8 @@ export const unrealRpcClient = {
         { list?: UnrealServer[] } | UnrealServer[]
       >("server.list");
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "server.list" },
       });
       return [];
@@ -624,8 +623,8 @@ export const unrealRpcClient = {
         return (result as { server?: UnrealServer }).server ?? null;
       }
       return (result as UnrealServer) ?? null;
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "server.get" },
       });
       return null;
@@ -648,16 +647,16 @@ export const unrealRpcClient = {
   /** Send a PRIVMSG to a connected user. */
   async messageSendPrivmsg(nick: string, message: string): Promise<void> {
     await unrealRequest("message.send_privmsg", {
-      nick: sanitize(nick),
       message: sanitize(message),
+      nick: sanitize(nick),
     });
   },
 
   /** Send a NOTICE to a connected user. */
   async messageSendNotice(nick: string, message: string): Promise<void> {
     await unrealRequest("message.send_notice", {
-      nick: sanitize(nick),
       message: sanitize(message),
+      nick: sanitize(nick),
     });
   },
 
@@ -692,8 +691,8 @@ export const unrealRpcClient = {
   /** Change user modes (e.g. "+i-w"). */
   async userSetMode(nick: string, modes: string): Promise<void> {
     await unrealRequest("user.set_mode", {
-      nick: sanitize(nick),
       modes: sanitize(modes),
+      nick: sanitize(nick),
     });
   },
 
@@ -761,8 +760,8 @@ export const unrealRpcClient = {
         { list?: UnrealSpamfilter[] } | UnrealSpamfilter[]
       >("spamfilter.list");
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "spamfilter.list" },
       });
       return [];
@@ -799,11 +798,11 @@ export const unrealRpcClient = {
     const result = await unrealRequest<{ spamfilter?: UnrealSpamfilter }>(
       "spamfilter.add",
       {
-        match: sanitize(match),
-        target: sanitize(target),
         action: sanitize(action),
-        reason: sanitize(reason),
         duration_string: duration,
+        match: sanitize(match),
+        reason: sanitize(reason),
+        target: sanitize(target),
       }
     );
     return result?.spamfilter ?? null;
@@ -830,10 +829,10 @@ export const unrealRpcClient = {
     msg: string
   ): Promise<void> {
     await unrealRequest("log.send", {
-      level: sanitize(level),
-      subsystem: sanitize(subsystem),
       event_id: sanitize(eventId),
+      level: sanitize(level),
       msg: sanitize(msg),
+      subsystem: sanitize(subsystem),
     });
   },
 
@@ -844,8 +843,8 @@ export const unrealRpcClient = {
         { list?: UnrealLogEntry[] } | UnrealLogEntry[]
       >("log.list");
       return extractList(result);
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "log.list" },
       });
       return [];
@@ -881,8 +880,8 @@ export const unrealRpcClient = {
     try {
       const result = await unrealRequest<UnrealRpcInfo>("rpc.info");
       return result ?? null;
-    } catch (err) {
-      Sentry.captureException(err, {
+    } catch (error) {
+      Sentry.captureException(error, {
         tags: { integration: "irc-unreal", method: "rpc.info" },
       });
       return null;
@@ -908,9 +907,9 @@ export const unrealRpcClient = {
     every: number
   ): Promise<void> {
     await unrealRequest("rpc.add_timer", {
-      timer_name: sanitize(name),
-      request,
       every,
+      request,
+      timer_name: sanitize(name),
     });
   },
 

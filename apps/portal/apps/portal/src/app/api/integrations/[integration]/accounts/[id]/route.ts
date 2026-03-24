@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
 import {
   APIError,
   handleAPIError,
   parseRouteId,
   requireAuth,
 } from "@portal/api/utils";
+import type { NextRequest } from "next/server";
 
 import { isAdmin } from "@/auth/check-role";
 import { registerIntegrations } from "@/features/integrations/lib";
@@ -48,7 +48,7 @@ export async function GET(
     const account = await integration.getAccountById(id);
     if (!account) {
       return Response.json(
-        { ok: false, error: "Integration account not found" },
+        { error: "Integration account not found", ok: false },
         { status: 404 }
       );
     }
@@ -56,12 +56,12 @@ export async function GET(
     const isAdminUser = await isAdmin(userId);
     if (account.userId !== userId && !isAdminUser) {
       return Response.json(
-        { ok: false, error: "Forbidden - Access denied" },
+        { error: "Forbidden - Access denied", ok: false },
         { status: 403 }
       );
     }
 
-    return Response.json({ ok: true, account });
+    return Response.json({ account, ok: true });
   } catch (error) {
     return handleAPIError(error);
   }
@@ -106,7 +106,7 @@ export async function PATCH(
     const account = await integration.getAccountById(id);
     if (!account) {
       return Response.json(
-        { ok: false, error: "Integration account not found" },
+        { error: "Integration account not found", ok: false },
         { status: 404 }
       );
     }
@@ -114,7 +114,7 @@ export async function PATCH(
     const isAdminUser = await isAdmin(userId);
     if (account.userId !== userId && !isAdminUser) {
       return Response.json(
-        { ok: false, error: "Forbidden - Access denied" },
+        { error: "Forbidden - Access denied", ok: false },
         { status: 403 }
       );
     }
@@ -135,7 +135,7 @@ export async function PATCH(
 
     const updated = await integration.updateAccount(id, body);
 
-    return Response.json({ ok: true, account: updated });
+    return Response.json({ account: updated, ok: true });
   } catch (error) {
     return handleAPIError(error);
   }
@@ -180,7 +180,7 @@ export async function DELETE(
     const account = await integration.getAccountById(id);
     if (!account) {
       return Response.json(
-        { ok: false, error: "Integration account not found" },
+        { error: "Integration account not found", ok: false },
         { status: 404 }
       );
     }
@@ -188,7 +188,7 @@ export async function DELETE(
     const isAdminUser = await isAdmin(userId);
     if (account.userId !== userId && !isAdminUser) {
       return Response.json(
-        { ok: false, error: "Forbidden - Access denied" },
+        { error: "Forbidden - Access denied", ok: false },
         { status: 403 }
       );
     }
@@ -196,8 +196,8 @@ export async function DELETE(
     await integration.deleteAccount(id);
 
     return Response.json({
-      ok: true,
       message: "Integration account deleted successfully",
+      ok: true,
     });
   } catch (error) {
     return handleAPIError(error);

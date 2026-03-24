@@ -1,6 +1,6 @@
+import { AppLayout } from "@portal/ui/layout/app-layout";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
-import { AppLayout } from "@portal/ui/layout/app-layout";
 
 import { isAdminOrStaff } from "@/auth/check-role";
 import { verifySession } from "@/auth/dal";
@@ -20,13 +20,13 @@ export default async function DashboardLayout({
   let canViewAdmin = false;
   try {
     canViewAdmin = await isAdminOrStaff(sessionData.userId);
-  } catch (err) {
+  } catch (error) {
     // DB unreachable (e.g. ETIMEDOUT): assume non-admin so layout still renders
     if (process.env.NODE_ENV === "development") {
       // eslint-disable-next-line no-console
       console.warn(
         "[DashboardLayout] isAdminOrStaff failed, assuming canViewAdmin=false:",
-        err
+        error
       );
     }
   }

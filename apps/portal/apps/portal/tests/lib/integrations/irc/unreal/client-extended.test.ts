@@ -23,8 +23,8 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch as unknown as typeof fetch;
 
 vi.mock("@sentry/nextjs", () => ({
-  startSpan: vi.fn((_, cb) => cb()),
   captureException: vi.fn(),
+  startSpan: vi.fn((_, cb) => cb()),
 }));
 
 vi.mock("@/features/integrations/lib/irc/keys", () => ({
@@ -34,10 +34,10 @@ vi.mock("@/features/integrations/lib/irc/keys", () => ({
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: {
     unreal: {
-      jsonrpcUrl: "http://mock-unreal/jsonrpc",
-      rpcUser: "rpcuser",
-      rpcPassword: "rpcpassword",
       insecureSkipVerify: false,
+      jsonrpcUrl: "http://mock-unreal/jsonrpc",
+      rpcPassword: "rpcpassword",
+      rpcUser: "rpcuser",
     },
   },
   isIrcConfigured: () => true,
@@ -51,28 +51,27 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
 /** Mock a successful JSON-RPC response. */
 function mockOk(result: unknown) {
   mockFetch.mockResolvedValueOnce({
-    ok: true,
     json: async () => ({ jsonrpc: "2.0", result, id: 1 }),
+    ok: true,
   });
 }
 
 /** Mock a failed HTTP response (non-2xx). */
 function mockErr(message = "Internal Server Error", status = 500) {
   mockFetch.mockResolvedValueOnce({
+    json: async () => ({ error: { message } }),
     ok: false,
     status,
-    json: async () => ({ error: { message } }),
   });
 }
 
 /** Assert the last fetch call sent the given RPC method. */
 function expectMethod(method: string) {
-  // biome-ignore lint/suspicious/noMisplacedAssertion: intentional test helper
   expect(mockFetch).toHaveBeenCalledWith(
     "http://mock-unreal/jsonrpc/api",
     expect.objectContaining({
-      method: "POST",
       body: expect.stringContaining(`"method":"${method}"`),
+      method: "POST",
     })
   );
 }
@@ -84,7 +83,6 @@ function expectParam(key: string, value: unknown) {
   const lastCall = allCalls.at(-1) ?? (["", { body: "{}" }] as FetchCall);
   const body = JSON.parse(lastCall[1].body) as Record<string, unknown>;
   const params = body.params as Record<string, unknown>;
-  // biome-ignore lint/suspicious/noMisplacedAssertion: intentional test helper
   expect(params[key]).toEqual(value);
 }
 
@@ -258,7 +256,7 @@ describe("serverDisconnect", () => {
 
 describe("spamfilterList", () => {
   it("returns list of spamfilters", async () => {
-    const filters = [{ id: "sf1", match: "badword", action: "block" }];
+    const filters = [{ action: "block", id: "sf1", match: "badword" }];
     mockOk(filters);
     const result = await unrealRpcClient.spamfilterList();
     expect(result).toEqual(filters);
@@ -297,7 +295,7 @@ describe("spamfilterGet", () => {
 
 describe("spamfilterAdd", () => {
   it("sends spamfilter.add with all required params", async () => {
-    const filter = { id: "sf2", match: "spam", action: "block" };
+    const filter = { action: "block", id: "sf2", match: "spam" };
     mockOk({ spamfilter: filter });
     const result = await unrealRpcClient.spamfilterAdd(
       "spam",
@@ -470,7 +468,7 @@ describe("logUnsubscribe", () => {
 
 describe("rpcInfo", () => {
   it("returns RPC info object", async () => {
-    const info = { version: "1.0", modules: ["rpc.user", "rpc.channel"] };
+    const info = { modules: ["rpc.user", "rpc.channel"], version: "1.0" };
     mockOk(info);
     const result = await unrealRpcClient.rpcInfo();
     expect(result).toEqual(info);

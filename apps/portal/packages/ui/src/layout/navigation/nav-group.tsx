@@ -4,6 +4,7 @@ import type {
   NavigationGroup,
   ProtectedRoute,
 } from "@/features/routing/lib/types";
+
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu } from "../../ui/sidebar";
 import { NavCollapsible } from "./nav-collapsible";
 import { NavItem } from "./nav-item";

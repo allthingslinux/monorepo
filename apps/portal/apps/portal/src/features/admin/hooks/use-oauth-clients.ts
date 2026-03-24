@@ -17,7 +17,6 @@ import { authClient } from "@/auth/client";
  */
 export function useOAuthClients() {
   return useQuery({
-    queryKey: queryKeys.oauthClients.list(),
     queryFn: async () => {
       const result = await authClient.oauth2.getClients({});
       if (result.error) {
@@ -25,6 +24,7 @@ export function useOAuthClients() {
       }
       return result.data ?? [];
     },
+    queryKey: queryKeys.oauthClients.list(),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -34,7 +34,7 @@ export function useOAuthClients() {
  */
 export function useOAuthClient(clientId: string) {
   return useQuery({
-    queryKey: queryKeys.oauthClients.detail(clientId),
+    enabled: !!clientId,
     queryFn: async () => {
       const result = await authClient.oauth2.getClient({
         query: { client_id: clientId },
@@ -44,7 +44,7 @@ export function useOAuthClient(clientId: string) {
       }
       return result.data ?? null;
     },
-    enabled: !!clientId,
+    queryKey: queryKeys.oauthClients.detail(clientId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -54,7 +54,7 @@ export function useOAuthClient(clientId: string) {
  */
 export function useOAuthClientPublic(clientId: string) {
   return useQuery({
-    queryKey: [...queryKeys.oauthClients.detail(clientId), "public"],
+    enabled: !!clientId,
     queryFn: async () => {
       const result = await authClient.oauth2.publicClient({
         query: { client_id: clientId },
@@ -64,7 +64,7 @@ export function useOAuthClientPublic(clientId: string) {
       }
       return result.data ?? null;
     },
-    enabled: !!clientId,
+    queryKey: [...queryKeys.oauthClients.detail(clientId), "public"],
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }

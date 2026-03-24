@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 /**
  * Get validated mailcow environment variables.
@@ -14,13 +14,6 @@ import { createEnv } from "@t3-oss/env-nextjs";
  */
 export const keys = () =>
   createEnv({
-    server: {
-      MAILCOW_API_URL: z.url().optional(),
-      MAILCOW_API_KEY: z.string().optional(),
-      MAILCOW_DOMAIN: z.string().optional(),
-      MAILCOW_OAUTH_CLIENT_ID: z.string().min(1).optional(),
-      MAILCOW_OAUTH_CLIENT_SECRET: z.string().min(1).optional(),
-    },
     client: {
       /** Webmail UI URL for "Open webmail" link. When unset, the link is hidden. */
       NEXT_PUBLIC_MAILCOW_WEB_URL: z.url().optional(),
@@ -42,5 +35,12 @@ export const keys = () =>
       NEXT_PUBLIC_MAILCOW_WEB_URL: process.env.NEXT_PUBLIC_MAILCOW_WEB_URL,
       NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED:
         process.env.NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED,
+    },
+    server: {
+      MAILCOW_API_URL: z.url().optional(),
+      MAILCOW_API_KEY: z.string().optional(),
+      MAILCOW_DOMAIN: z.string().optional(),
+      MAILCOW_OAUTH_CLIENT_ID: z.string().min(1).optional(),
+      MAILCOW_OAUTH_CLIENT_SECRET: z.string().min(1).optional(),
     },
   });

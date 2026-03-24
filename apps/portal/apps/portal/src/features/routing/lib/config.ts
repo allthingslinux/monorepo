@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import type { IntegrationPublicInfo } from "@/features/integrations/lib/core/types";
+
 import type { ProtectedRoute, RouteConfig } from "./types";
 
 /**
@@ -27,10 +28,10 @@ export const routeConfig = {
   public: [
     {
       id: "home",
-      path: "/",
       metadata: {
         robots: { index: true, follow: true },
       },
+      path: "/",
       sitemap: {
         priority: 1,
         changeFrequency: "weekly",
@@ -38,10 +39,10 @@ export const routeConfig = {
     },
     {
       id: "sign-in",
-      path: "/auth/sign-in",
       metadata: {
         robots: { index: false, follow: false },
       },
+      path: "/auth/sign-in",
       sitemap: {
         priority: 0.8,
         changeFrequency: "monthly",
@@ -49,10 +50,10 @@ export const routeConfig = {
     },
     {
       id: "sign-up",
-      path: "/auth/sign-up",
       metadata: {
         robots: { index: false, follow: false },
       },
+      path: "/auth/sign-up",
       sitemap: {
         priority: 0.8,
         changeFrequency: "monthly",
@@ -63,24 +64,23 @@ export const routeConfig = {
   // Protected routes (require authentication)
   protected: [
     {
-      id: "dashboard",
-      path: "/app",
-      icon: SquareTerminal,
-      metadata: {
-        robots: { index: false, follow: false },
-      },
       breadcrumb: {
         exact: true,
+      },
+      icon: SquareTerminal,
+      id: "dashboard",
+      metadata: {
+        robots: { index: false, follow: false },
       },
       navigation: {
         group: "platform",
         order: 1,
       },
+      path: "/app",
     },
     {
-      id: "connect",
-      path: "/app/connect",
       icon: Globe,
+      id: "connect",
       metadata: {
         robots: { index: false, follow: false },
       },
@@ -88,58 +88,58 @@ export const routeConfig = {
         group: "platform",
         order: 3,
       },
+      path: "/app/connect",
     },
     {
-      id: "settings",
-      path: "/app/settings",
       icon: Settings2,
+      id: "settings",
       metadata: {
         robots: { index: false, follow: false },
       },
+      path: "/app/settings",
     },
     {
-      id: "mail",
-      path: "/app/mail",
+      breadcrumb: {},
       icon: Mail,
+      id: "mail",
       metadata: {
         robots: { index: false, follow: false },
       },
-      breadcrumb: {},
       navigation: {
         group: "platform",
         order: 5,
       },
+      path: "/app/mail",
     },
     {
-      id: "feed",
-      path: "/app/feed",
+      breadcrumb: {},
       icon: Rss,
+      id: "feed",
       metadata: {
         robots: { index: false, follow: false },
       },
-      breadcrumb: {},
       navigation: {
         group: "platform",
         order: 6,
       },
+      path: "/app/feed",
     },
     {
-      id: "changelog",
-      path: "/app/changelog",
+      breadcrumb: {},
       icon: History,
+      id: "changelog",
       metadata: {
         robots: { index: false, follow: false },
       },
-      breadcrumb: {},
       navigation: {
         group: "platform",
         order: 7,
       },
+      path: "/app/changelog",
     },
     {
-      id: "integrations",
-      path: "/app/integrations",
       icon: MessageSquare,
+      id: "integrations",
       metadata: {
         robots: { index: false, follow: false },
       },
@@ -147,24 +147,24 @@ export const routeConfig = {
         group: "platform",
         order: 8,
       },
+      path: "/app/integrations",
     },
     {
-      id: "donate",
-      path: "/app/donate",
+      breadcrumb: {},
       icon: DollarSign,
+      id: "donate",
       metadata: {
         robots: { index: true, follow: true },
       },
-      breadcrumb: {},
       navigation: {
         group: "platform",
         order: 9,
       },
+      path: "/app/donate",
     },
     {
-      id: "admin",
-      path: "/app/admin",
       icon: Shield,
+      id: "admin",
       metadata: {
         robots: { index: false, follow: false },
       },
@@ -177,6 +177,7 @@ export const routeConfig = {
           { id: "admin-sessions", path: "/app/admin/sessions" },
         ],
       },
+      path: "/app/admin",
     },
   ],
 
@@ -191,20 +192,20 @@ export const routeConfig = {
   // Footer actions (user actions in sidebar)
   footerActions: [
     {
-      id: "settings",
       icon: Settings2,
-      path: "/app/settings",
+      id: "settings",
       metadata: {
         robots: { index: false, follow: false },
       },
+      path: "/app/settings",
     },
     {
-      id: "support",
       icon: HelpCircle,
-      path: "/support",
+      id: "support",
       metadata: {
         robots: { index: true, follow: true },
       },
+      path: "/support",
     },
     {
       id: "logout",
@@ -231,9 +232,8 @@ export function buildIntegrationRoutes(
   const pathOverrides = options.pathOverrides ?? {};
 
   return integrations.map((integration) => ({
-    id: `integration-${integration.id}`,
-    path: pathOverrides[integration.id] ?? `${basePath}/${integration.id}`,
     icon: MessageSquare,
+    id: `integration-${integration.id}`,
     metadata: {
       robots: { index: false, follow: false },
     },
@@ -241,6 +241,7 @@ export function buildIntegrationRoutes(
       group: "platform",
       order: 99,
     },
+    path: pathOverrides[integration.id] ?? `${basePath}/${integration.id}`,
   }));
 }
 

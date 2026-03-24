@@ -1,11 +1,12 @@
-import { createElement, type ReactNode } from "react";
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { usePermissions } from "@/hooks/use-permissions";
 import { authClient } from "@/auth/client";
 import { SessionProvider } from "@/auth/session-context";
 import { useAuthSession } from "@/features/auth/lib/auth-hooks";
+import { usePermissions } from "@/hooks/use-permissions";
 
 vi.mock("@/auth/client", () => ({
   authClient: {
@@ -31,8 +32,8 @@ describe("usePermissions", () => {
   it("should return loading state when session is pending", () => {
     vi.mocked(useAuthSession).mockReturnValue({
       data: null,
-      isPending: true,
       error: null,
+      isPending: true,
     } as never);
 
     const { result } = renderHook(() => usePermissions(), {
@@ -49,8 +50,8 @@ describe("usePermissions", () => {
   it("should return loading state when session is null", () => {
     vi.mocked(useAuthSession).mockReturnValue({
       data: null,
-      isPending: false,
       error: null,
+      isPending: false,
     } as never);
 
     const { result } = renderHook(() => usePermissions(), {
@@ -72,8 +73,8 @@ describe("usePermissions", () => {
           role: "admin",
         },
       },
-      isPending: false,
       error: null,
+      isPending: false,
     } as never);
 
     vi.mocked(authClient.admin.checkRolePermission).mockReturnValue(true);
@@ -89,10 +90,10 @@ describe("usePermissions", () => {
     });
 
     expect(authClient.admin.checkRolePermission).toHaveBeenCalledWith({
-      role: "admin",
       permissions: {
         user: ["list"],
       },
+      role: "admin",
     });
   });
 
@@ -104,8 +105,8 @@ describe("usePermissions", () => {
           role: "user",
         },
       },
-      isPending: false,
       error: null,
+      isPending: false,
     } as never);
 
     vi.mocked(authClient.admin.checkRolePermission).mockReturnValue(false);
@@ -129,8 +130,8 @@ describe("usePermissions", () => {
           role: "user",
         },
       },
-      isPending: false,
       error: null,
+      isPending: false,
     } as never);
 
     vi.mocked(authClient.admin.checkRolePermission).mockImplementation(() => {
@@ -168,8 +169,8 @@ describe("usePermissions", () => {
           role: undefined,
         },
       },
-      isPending: false,
       error: null,
+      isPending: false,
     } as never);
 
     vi.mocked(authClient.admin.checkRolePermission).mockReturnValue(false);
@@ -179,10 +180,10 @@ describe("usePermissions", () => {
     });
 
     expect(authClient.admin.checkRolePermission).toHaveBeenCalledWith({
-      role: "user",
       permissions: {
         user: ["list"],
       },
+      role: "user",
     });
 
     expect(result.current.loading).toBe(false);

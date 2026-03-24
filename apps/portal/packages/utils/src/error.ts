@@ -36,8 +36,8 @@ export function getErrorDetails(error: unknown): {
   if (error instanceof Error) {
     return {
       message: error.message,
-      stack: error.stack,
       name: error.name,
+      stack: error.stack,
     };
   }
   return {

@@ -1,8 +1,8 @@
 import "server-only";
-
 import { captureException } from "@sentry/nextjs";
 
 import { registerIntegrations } from "@/features/integrations/lib";
+
 import { getIntegrationRegistry } from "./registry";
 
 /**

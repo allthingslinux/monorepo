@@ -1,5 +1,4 @@
 import "server-only";
-
 import { ircConfig } from "../config";
 import type { AnyAthemeFaultCode, AthemeFault } from "../types";
 
@@ -72,10 +71,10 @@ async function athemeRpc<T = string>(
   }
 
   const body: JsonRpcRequest = {
+    id: "1",
     jsonrpc: "2.0",
     method,
     params,
-    id: "1",
   };
 
   const controller = new AbortController();
@@ -83,9 +82,9 @@ async function athemeRpc<T = string>(
 
   try {
     const fetchOptions: RequestInit = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
       signal: controller.signal,
     };
 

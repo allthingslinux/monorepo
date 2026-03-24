@@ -13,6 +13,9 @@ module.exports = {
     },
   ],
   rules: {
+    "body-max-length": [2, "always", 1000],
+    "body-max-line-length": [2, "always", 200],
+    "subject-case": [2, "never", ["start-case", "pascal-case", "upper-case"]],
     "type-enum": [
       2,
       "always",
@@ -30,8 +33,5 @@ module.exports = {
         "revert",
       ],
     ],
-    "subject-case": [2, "never", ["start-case", "pascal-case", "upper-case"]],
-    "body-max-length": [2, "always", 1000],
-    "body-max-line-length": [2, "always", 200],
   },
 };

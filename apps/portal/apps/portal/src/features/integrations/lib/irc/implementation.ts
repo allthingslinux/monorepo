@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import type { z } from "zod";
+
 import { APIError } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
@@ -13,10 +13,12 @@ import {
 import { isValidCanonicalUsername } from "@portal/schemas/integrations/validation";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
 
 import { IntegrationBase } from "@/features/integrations/lib/core/base";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
+
 import {
   AthemeFaultError,
   fdropNick,
@@ -98,8 +100,8 @@ export class IrcIntegration extends IntegrationBase<
           .update(ircAccount)
           .set({
             nick,
-            server: ircConfig.server,
             port: ircConfig.port,
+            server: ircConfig.server,
             status: "pending",
             updatedAt: new Date(),
           })
@@ -110,20 +112,22 @@ export class IrcIntegration extends IntegrationBase<
           .insert(ircAccount)
           .values({
             id: randomUUID(),
-            userId,
             nick,
-            server: ircConfig.server,
             port: ircConfig.port,
+            server: ircConfig.server,
             status: "pending",
+            userId,
           })
           .returning();
       }
     } catch (dbError) {
       Sentry.captureException(dbError, {
-        tags: { integration: "irc", step: "db_insert_pending" },
         extra: { userId, nick },
+        tags: { integration: "irc", step: "db_insert_pending" },
       });
-      throw new Error("Failed to initialize IRC account record");
+      throw new Error("Failed to initialize IRC account record", {
+        cause: dbError,
+      });
     }
 
     if (!accountRow) {
@@ -146,8 +150,8 @@ export class IrcIntegration extends IntegrationBase<
         await db.delete(ircAccount).where(eq(ircAccount.id, accountId));
       } catch (cleanupError) {
         Sentry.captureException(cleanupError, {
-          tags: { integration: "irc", step: "cleanup_after_atheme_failure" },
           extra: { userId, accountId, originalError: athemeError },
+          tags: { integration: "irc", step: "cleanup_after_atheme_failure" },
         });
       }
       throw athemeError;
@@ -160,8 +164,8 @@ export class IrcIntegration extends IntegrationBase<
         await setVhost(nick, `${nick}@${domain}`);
       } catch (vhostError) {
         Sentry.captureException(vhostError, {
-          tags: { integration: "irc", step: "set_vhost" },
           extra: { userId, nick },
+          tags: { integration: "irc", step: "set_vhost" },
         });
       }
     }
@@ -177,15 +181,15 @@ export class IrcIntegration extends IntegrationBase<
       finalRow = await this.activateAccountRecord(accountId, userId, nick);
     } catch (activationError) {
       Sentry.captureException(activationError, {
-        tags: { integration: "irc", step: "db_activate_exception" },
         extra: { userId, nick, accountId },
+        tags: { integration: "irc", step: "db_activate_exception" },
       });
     }
 
     if (!finalRow) {
       Sentry.captureException(new Error("Failed to activate IRC account"), {
-        tags: { integration: "irc", step: "db_activate" },
         extra: { userId, nick, accountId },
+        tags: { integration: "irc", step: "db_activate" },
       });
       throw new Error(
         "IRC account registration partially succeeded but failed to activate. Please contact an administrator."
@@ -316,12 +320,12 @@ export class IrcIntegration extends IntegrationBase<
     try {
       await Sentry.startSpan(
         {
-          op: "rpc.client",
-          name: "Atheme registerNick",
           attributes: {
             "irc.server": ircConfig.server,
             "irc.nick_length": String(nick.length),
           },
+          name: "Atheme registerNick",
+          op: "rpc.client",
         },
         async () => {
           await registerNick(nick, password, email);
@@ -329,11 +333,11 @@ export class IrcIntegration extends IntegrationBase<
       );
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc", operation: "registerNick" },
         extra: {
           nick,
           faultCode: error instanceof AthemeFaultError ? error.code : undefined,
         },
+        tags: { integration: "irc", operation: "registerNick" },
       });
       if (error instanceof AthemeFaultError) {
         // Map Atheme fault codes to user-friendly 400 errors.
@@ -341,35 +345,42 @@ export class IrcIntegration extends IntegrationBase<
         // messages are dropped by the JSONRPC transport's sent_reply flag).
         const msg = error.fault.message || "IRC registration failed";
         switch (error.code) {
-          case 8:
+          case 8: {
             throw new APIError(
               "Nick is already registered on the IRC network",
               409
             );
-          case 2:
+          }
+          case 2: {
             // Atheme returns specific messages for code 2 (e.g. "You cannot
             // use your nickname as a password", "The account name is invalid")
             // — pass them through instead of a generic fallback.
             throw new APIError(msg, 400);
-          case 9:
+          }
+          case 9: {
             throw new APIError("Too many registrations; try again later", 429);
-          case 6:
+          }
+          case 6: {
             throw new APIError(
               "Account is frozen or you don't have permission to register",
               403
             );
-          case 10:
+          }
+          case 10: {
             throw new APIError(
               "Failed to send verification email; please try again later",
               502
             );
-          case 11:
+          }
+          case 11: {
             throw new APIError(
               "Account requires email verification before it can be used",
               400
             );
-          default:
+          }
+          default: {
             throw new APIError(msg, 400);
+          }
         }
       }
       throw error instanceof Error
@@ -477,8 +488,8 @@ export class IrcIntegration extends IntegrationBase<
         await fdropNick(account.nick);
       } catch (error) {
         Sentry.captureException(error, {
-          tags: { integration: "irc", step: "fdrop_on_delete" },
           extra: { accountId, nick: account.nick },
+          tags: { integration: "irc", step: "fdrop_on_delete" },
         });
       }
     }
@@ -533,21 +544,24 @@ export class IrcIntegration extends IntegrationBase<
       return await resetNickPassword(account.nick, newPassword);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { integration: "irc", operation: "resetPassword" },
         extra: { accountId, nick: account.nick },
+        tags: { integration: "irc", operation: "resetPassword" },
       });
       if (error instanceof AthemeFaultError) {
         const msg = error.fault.message || "Failed to reset IRC password";
         switch (error.code) {
-          case 3:
+          case 3: {
             throw new APIError(
               "Nick is not registered on the IRC network",
               404
             );
-          case 2:
+          }
+          case 2: {
             throw new APIError(msg, 400);
-          default:
+          }
+          default: {
             throw new APIError(msg, 400);
+          }
         }
       }
       if (error instanceof APIError) {
@@ -560,17 +574,17 @@ export class IrcIntegration extends IntegrationBase<
 
 function rowToAccount(row: typeof ircAccount.$inferSelect): IrcAccount {
   return {
-    id: row.id,
-    userId: row.userId,
-    integrationId: "irc",
-    nick: row.nick,
-    server: row.server,
-    port: row.port,
-    status: row.status,
     createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
+    id: row.id,
+    integrationId: "irc",
     metadata:
       (row.metadata as Record<string, unknown> | undefined) ?? undefined,
+    nick: row.nick,
+    port: row.port,
+    server: row.server,
+    status: row.status,
+    updatedAt: row.updatedAt,
+    userId: row.userId,
   };
 }
 

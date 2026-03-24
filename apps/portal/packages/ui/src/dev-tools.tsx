@@ -1,8 +1,8 @@
 "use client";
 
+import Script from "next/script";
 import type React from "react";
 import { useEffect, useState } from "react";
-import Script from "next/script";
 
 import { useIsClient } from "@/hooks/use-is-client";
 

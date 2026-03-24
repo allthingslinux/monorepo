@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { BookOpen, Hash, Mail, Zap } from "lucide-react";
-import { z } from "zod";
 import { CreateMediaWikiAccountRequestSchema } from "@portal/schemas/integrations/mediawiki";
+import { BookOpen, Hash, Mail, Zap } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
 
 import { useSession } from "@/auth/session-context";
 import { IntegrationManagement } from "@/features/integrations/components/integration-management";
@@ -13,24 +13,19 @@ import type { IrcAccount } from "@/features/integrations/lib/irc/types";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
 import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
 import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
+
 import { IrcAccountDetails } from "./irc-account-details";
-import {
-  IrcPasswordDialog,
-  type IrcPasswordDialogData,
-} from "./irc-password-dialog";
+import { IrcPasswordDialog } from "./irc-password-dialog";
+import type { IrcPasswordDialogData } from "./irc-password-dialog";
 import { MailcowAccountDetails } from "./mailcow-account-details";
 import { MailcowDialogCreateFields } from "./mailcow-create-form";
 import { MediaWikiAccountDetails } from "./mediawiki-account-details";
-import {
-  MediaWikiPasswordDialog,
-  type MediaWikiPasswordDialogData,
-} from "./mediawiki-password-dialog";
+import { MediaWikiPasswordDialog } from "./mediawiki-password-dialog";
+import type { MediaWikiPasswordDialogData } from "./mediawiki-password-dialog";
 import { MediaWikiResetPassword } from "./mediawiki-reset-password";
 import { XmppAccountDetails } from "./xmpp-account-details";
-import {
-  XmppPasswordDialog,
-  type XmppPasswordDialogData,
-} from "./xmpp-password-dialog";
+import { XmppPasswordDialog } from "./xmpp-password-dialog";
+import type { XmppPasswordDialogData } from "./xmpp-password-dialog";
 
 const PasswordOnlyCreateSchema = z.object({
   password: z
@@ -38,7 +33,7 @@ const PasswordOnlyCreateSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password must be 128 characters or less")
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .or(z.literal("").transform(() => {})),
 });
 
 export function IntegrationsContent() {
@@ -250,8 +245,8 @@ export function IntegrationsContent() {
                     "wikiUsername" in account
                   ) {
                     setMediawikiPasswordDialog({
-                      wikiUsername: account.wikiUsername,
                       temporaryPassword: account.temporaryPassword,
+                      wikiUsername: account.wikiUsername,
                     });
                   }
                 }}

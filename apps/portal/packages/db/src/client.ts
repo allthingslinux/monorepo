@@ -1,7 +1,7 @@
 import "server-only";
-
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool, type PoolConfig } from "pg";
+import { Pool } from "pg";
+import type { PoolConfig } from "pg";
 
 import { keys } from "./keys";
 import { relations } from "./relations";
@@ -86,4 +86,4 @@ if (process.env.NODE_ENV !== "production") {
 //   // Count query
 //   const count = await db.$count(user);
 
-export const db = drizzle({ client: pool, schema, relations });
+export const db = drizzle({ client: pool, relations, schema });

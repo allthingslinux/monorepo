@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 /**
  * Bridge integration env vars (atl.chat bridge ↔ Portal identity API).
@@ -8,10 +8,10 @@ import { createEnv } from "@t3-oss/env-nextjs";
  */
 export const keys = () =>
   createEnv({
-    server: {
-      BRIDGE_SERVICE_TOKEN: z.string().optional(),
-    },
     runtimeEnv: {
       BRIDGE_SERVICE_TOKEN: process.env.BRIDGE_SERVICE_TOKEN,
+    },
+    server: {
+      BRIDGE_SERVICE_TOKEN: z.string().optional(),
     },
   });

@@ -1,5 +1,4 @@
 import "server-only";
-
 import type {
   Integration,
   IntegrationId,
@@ -31,7 +30,7 @@ export class IntegrationRegistry {
    * Retrieve all integrations.
    */
   getAll(): Integration[] {
-    return Array.from(this.integrations.values());
+    return [...this.integrations.values()];
   }
 
   /**
@@ -53,10 +52,10 @@ export class IntegrationRegistry {
    */
   getPublicInfo(): IntegrationPublicInfo[] {
     return this.getAll().map((integration) => ({
-      id: integration.id,
-      name: integration.name,
       description: integration.description,
       enabled: integration.enabled,
+      id: integration.id,
+      name: integration.name,
     }));
   }
 }

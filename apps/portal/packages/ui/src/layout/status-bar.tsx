@@ -7,14 +7,13 @@ import { APP_VERSION } from "@/config";
 function useLiveTime(intervalMs = 1000) {
   const [time, setTime] = useState<string>("");
   useEffect(() => {
-    const format = () => {
-      return new Date().toLocaleTimeString(undefined, {
+    const format = () =>
+      new Date().toLocaleTimeString(undefined, {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
         hour12: false,
       });
-    };
     setTime(format());
     const id = setInterval(() => setTime(format()), intervalMs);
     return () => clearInterval(id);

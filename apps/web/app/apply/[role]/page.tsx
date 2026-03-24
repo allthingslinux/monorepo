@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
+import { useState } from "react";
 import type { z } from "zod";
 
-import { generateFormSchema } from "@/lib/utils";
 import StepperForm from "@/components/multi-step-form/StepperForm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { generalQuestions } from "@/data/forms/questions/general";
 import { roles } from "@/data/forms/roles";
+import { generateFormSchema } from "@/lib/utils";
 
 export default function RoleApplicationPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);

@@ -7,22 +7,22 @@ Add comprehensive documentation for the current code/feature and format it accor
 ## Steps
 
 1. **Overview**
-    - What this code/feature does
-    - Why it exists and its purpose
-    - Key concepts and terminology
+   - What this code/feature does
+   - Why it exists and its purpose
+   - Key concepts and terminology
 2. **API Documentation**
-    - Function/method signatures
-    - Parameters and return values
-    - Example usage with code snippets
-    - Error handling and edge cases
+   - Function/method signatures
+   - Parameters and return values
+   - Example usage with code snippets
+   - Error handling and edge cases
 3. **Implementation Details**
-    - Architecture overview
-    - Important design decisions
-    - Dependencies and integrations
+   - Architecture overview
+   - Important design decisions
+   - Dependencies and integrations
 4. **Examples**
-    - Common use cases with full examples
-    - Best practices and patterns
-    - Common pitfalls to avoid
+   - Common use cases with full examples
+   - Best practices and patterns
+   - Common pitfalls to avoid
 
 ## Add Documentation Checklist
 

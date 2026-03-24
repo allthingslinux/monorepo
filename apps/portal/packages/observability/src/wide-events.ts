@@ -10,8 +10,8 @@
  */
 
 import "server-only";
-
 import { randomUUID } from "node:crypto";
+
 import type { NextRequest } from "next/server";
 
 import { log } from "./utils";
@@ -68,17 +68,17 @@ export function createWideEvent(request: NextRequest): WideEvent {
     randomUUID();
 
   return {
-    request_id: requestId,
-    timestamp: new Date().toISOString(),
-    method: request.method,
-    path: request.url,
-    pathname: url.pathname,
-    search: url.search || undefined,
-    user_agent: request.headers.get("user-agent") || undefined,
     ip:
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       request.headers.get("x-real-ip") ||
       undefined,
+    method: request.method,
+    path: request.url,
+    pathname: url.pathname,
+    request_id: requestId,
+    search: url.search || undefined,
+    timestamp: new Date().toISOString(),
+    user_agent: request.headers.get("user-agent") || undefined,
   };
 }
 
@@ -115,14 +115,14 @@ export function enrichWideEventWithError(
 ): void {
   if (error instanceof Error) {
     event.error = {
-      type: error.name,
       message: error.message,
+      type: error.name,
       ...(error.stack && { stack: error.stack }),
     };
   } else {
     event.error = {
-      type: "UnknownError",
       message: String(error),
+      type: "UnknownError",
     };
   }
   event.outcome = "error";

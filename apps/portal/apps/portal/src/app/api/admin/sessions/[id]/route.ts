@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   handleAPIError,
   parseRouteId,
@@ -7,6 +6,7 @@ import {
 import { db } from "@portal/db/client";
 import { session, user } from "@portal/db/schema/auth";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -24,8 +24,8 @@ export async function GET(
       .select({
         session,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })
@@ -36,7 +36,7 @@ export async function GET(
 
     if (!sessionData) {
       return Response.json(
-        { ok: false, error: "Session not found" },
+        { error: "Session not found", ok: false },
         { status: 404 }
       );
     }
@@ -69,7 +69,7 @@ export async function DELETE(
 
     if (!deleted) {
       return Response.json(
-        { ok: false, error: "Session not found" },
+        { error: "Session not found", ok: false },
         { status: 404 }
       );
     }

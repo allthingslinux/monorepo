@@ -4,6 +4,7 @@ import type {
   NavigationGroup,
   ProtectedRoute,
 } from "@/features/routing/lib/types";
+
 import { NavGroup } from "../navigation/nav-group";
 
 interface SidebarNavigationProps {

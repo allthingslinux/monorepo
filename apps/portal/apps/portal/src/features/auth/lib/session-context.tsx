@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, type ReactNode, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
+import type { ReactNode } from "react";
 
 import type { useAuthSession as UseAuthSessionFn } from "./auth-hooks";
 import { useAuthSession } from "./auth-hooks";
@@ -49,10 +50,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       const userRole = session.user.role || "user";
 
       const canManageUsers = authClient.admin.checkRolePermission({
-        role: userRole as "user" | "admin" | "staff",
         permissions: {
           user: ["list"],
         },
+        role: userRole as "user" | "admin" | "staff",
       });
 
       return {
@@ -72,9 +73,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      session,
       isPending,
       permissions,
+      session,
     }),
     [session, isPending, permissions]
   );

@@ -1,4 +1,3 @@
-import { memo } from "react";
 import {
   ArrowUpRight,
   FileText,
@@ -12,6 +11,7 @@ import {
   Users2,
 } from "lucide-react";
 import Link from "next/link";
+import { memo } from "react";
 
 import { Card } from "@/components/ui/card";
 

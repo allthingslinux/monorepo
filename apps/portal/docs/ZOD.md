@@ -59,6 +59,7 @@ This ensures type safety at both compile-time and runtime while maintaining a si
 **Purpose**: Define the structure of your data
 
 **Example**:
+
 ```typescript
 // src/shared/db/schema/irc.ts
 import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
@@ -84,6 +85,7 @@ export const insertIrcAccountSchema = createInsertSchema(ircAccount);
 **Purpose**: Validate data at API boundaries and add custom validation rules
 
 **Example**:
+
 ```typescript
 // src/shared/schemas/integrations/irc.ts
 import { selectIrcAccountSchema } from "@/db/schema/irc";
@@ -116,6 +118,7 @@ export const IrcAccountSchema = selectIrcAccountSchema
 **Purpose**: Provide compile-time type checking
 
 **Example**:
+
 ```typescript
 // src/features/integrations/lib/irc/types.ts
 import type { z } from "zod";
@@ -157,21 +160,26 @@ src/
 We follow the "Total TypeScript" philosophy on when to use Zod based on trust levels:
 
 ### 1. Untrusted Inputs (⚠️ MUST USE ZOD)
+
 Any data entering the system from outside must be treated as hostile and validated immediately.
-*   **API Requests**: Bodies, Headers, Query Parameters.
-*   **CLI Arguments**: `process.argv`
-*   **Webhooks**: Payloads from external services.
+
+- **API Requests**: Bodies, Headers, Query Parameters.
+- **CLI Arguments**: `process.argv`
+- **Webhooks**: Payloads from external services.
 
 ### 2. "Sort-of" Trusted Inputs (✅ SHOULD USE ZOD)
+
 Data sources we generally trust but don't control, where drift or bugs could cause issues.
-*   **Response Validation**: We validate our own API responses to prevent accidental data leaks (security).
-*   **Third-party APIs**: Validate upstream responses to fail fast if their contract changes.
+
+- **Response Validation**: We validate our own API responses to prevent accidental data leaks (security).
+- **Third-party APIs**: Validate upstream responses to fail fast if their contract changes.
 
 ### 3. Trusted & Controlled Inputs (🚫 SKIP ZOD)
-Data where we control both the producer and consumer, and they are deployed together.
-*   **Internal Function Calls**: Use TypeScript types.
-*   **Frontend Data Fetching**: If the frontend and backend are in the same repo/deployment and types are shared, client-side validation of API responses is optional (unless version drift is a major concern). Validating *user input* (forms) on the client is still recommended for UX.
 
+Data where we control both the producer and consumer, and they are deployed together.
+
+- **Internal Function Calls**: Use TypeScript types.
+- **Frontend Data Fetching**: If the frontend and backend are in the same repo/deployment and types are shared, client-side validation of API responses is optional (unless version drift is a major concern). Validating _user input_ (forms) on the client is still recommended for UX.
 
 ## When to Use What
 
@@ -207,6 +215,7 @@ Data where we control both the producer and consumer, and they are deployed toge
 ### 1. Single Source of Truth
 
 **❌ Don't**: Define the same structure in multiple places
+
 ```typescript
 // Bad: Manual interface duplicates database schema
 export interface IrcAccount {
@@ -218,6 +227,7 @@ export interface IrcAccount {
 ```
 
 **✅ Do**: Infer types from schemas
+
 ```typescript
 // Good: Type inferred from Zod schema
 export type IrcAccount = z.infer<typeof IrcAccountSchema>;
@@ -226,6 +236,7 @@ export type IrcAccount = z.infer<typeof IrcAccountSchema>;
 ### 2. Use drizzle-orm/zod for Base Schemas
 
 **❌ Don't**: Manually recreate database schemas in Zod
+
 ```typescript
 // Bad: Duplicating database structure
 const IrcAccountSchema = z.object({
@@ -237,6 +248,7 @@ const IrcAccountSchema = z.object({
 ```
 
 **✅ Do**: Generate from database schema
+
 ```typescript
 // Good: Generated from Drizzle table
 export const selectIrcAccountSchema = createSelectSchema(ircAccount);
@@ -245,6 +257,7 @@ export const selectIrcAccountSchema = createSelectSchema(ircAccount);
 ### 3. Extend, Don't Duplicate
 
 **❌ Don't**: Create entirely new schemas for variations
+
 ```typescript
 // Bad: Duplicating fields
 const UpdateIrcAccountSchema = z.object({
@@ -256,6 +269,7 @@ const UpdateIrcAccountSchema = z.object({
 ```
 
 **✅ Do**: Use `.pick()`, `.omit()`, `.partial()`, `.extend()`
+
 ```typescript
 // Good: Extending base schema
 const UpdateIrcAccountSchema = selectIrcAccountSchema
@@ -301,14 +315,11 @@ drizzle-orm/zod generates `unknown` for JSONB fields. Use `.transform()` and `me
 ```typescript
 import { metadataSchema } from "@/shared/schemas/utils";
 
-export const IrcAccountSchema = selectIrcAccountSchema
-  .transform((data) => ({
-    ...data,
-    // Validate and type the JSONB metadata field
-    metadata: data.metadata 
-      ? metadataSchema.parse(data.metadata) 
-      : undefined,
-  }));
+export const IrcAccountSchema = selectIrcAccountSchema.transform((data) => ({
+  ...data,
+  // Validate and type the JSONB metadata field
+  metadata: data.metadata ? metadataSchema.parse(data.metadata) : undefined,
+}));
 ```
 
 ### 7. Use Branded Types for Domain Primitives
@@ -350,7 +361,9 @@ const mutation = useCreateIntegrationAccount<Account, CreateAccountInput>(
 // Type-safe at call site
 mutation.mutate({ username: "alice" });
 ```
+
 ### 9. API Response Validation
+
 Every API endpoint must validate its response to ensure no internal data (like passwords or PII) leaks and to guarantee the API contract.
 
 ```typescript
@@ -364,7 +377,10 @@ export const UserResponseSchema = z.object({
 export type UserResponse = z.infer<typeof UserResponseSchema>;
 
 // Internal type (has more fields)
-type InternalUser = UserResponse & { passwordHash: string; internalFlag: boolean };
+type InternalUser = UserResponse & {
+  passwordHash: string;
+  internalFlag: boolean;
+};
 
 export async function GET() {
   const internalUser: InternalUser = await db.getUser();
@@ -379,6 +395,7 @@ export async function GET() {
 ```
 
 ### 10. Structured Error Handling
+
 We use a structured `APIError` that aligns with Zod's `flatten()` output to provide detailed validation feedback.
 
 ```typescript
@@ -392,6 +409,7 @@ if (!parsed.success) {
 ```
 
 ### 11. Human-Readable Validation Errors
+
 We use `zod-validation-error` to transform raw Zod issues into user-friendly strings that can be returned in API responses.
 
 ```typescript
@@ -401,16 +419,20 @@ import { fromError } from "zod-validation-error";
 export function handleAPIError(error: unknown) {
   if (isZodError(error)) {
     const validationError = fromError(error);
-    return Response.json({
-      ok: false,
-      error: validationError.message, // "Validation error: Name is required at 'name'"
-      details: error.format()
-    }, { status: 400 });
+    return Response.json(
+      {
+        ok: false,
+        error: validationError.message, // "Validation error: Name is required at 'name'"
+        details: error.format(),
+      },
+      { status: 400 }
+    );
   }
 }
 ```
 
 ### 12. Client-Side Form Validation
+
 Standardize on `react-hook-form` with the `@hookform/resolvers/zod` for all dashboard forms.
 
 ```tsx
@@ -418,7 +440,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateUserSchema } from "@/shared/schemas/user";
 
-const { register, handleSubmit, formState: { errors } } = useForm({
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
   resolver: zodResolver(CreateUserSchema),
 });
 ```
@@ -483,13 +509,10 @@ export const CreateIrcAccountRequestSchema = z.object({
       (nick) => /^[a-zA-Z0-9\[\]\\^_`{|}~-]+$/.test(nick),
       "Invalid IRC nick format"
     )
-    .refine(
-      async (nick) => {
-        const existing = await checkNickAvailability(nick);
-        return !existing;
-      },
-      "Nick already taken"
-    ),
+    .refine(async (nick) => {
+      const existing = await checkNickAvailability(nick);
+      return !existing;
+    }, "Nick already taken"),
 });
 ```
 
@@ -500,15 +523,19 @@ export const CreateIrcAccountRequestSchema = z.object({
 
 ```typescript
 export const IntegrationConfigSchema = z.object({
-  irc: z.object({
-    server: z.string().url(),
-    port: z.number().int().min(1).max(65535),
-    ssl: z.boolean().default(true),
-  }).optional(),
-  xmpp: z.object({
-    domain: z.string(),
-    adminJid: z.string().email(),
-  }).optional(),
+  irc: z
+    .object({
+      server: z.string().url(),
+      port: z.number().int().min(1).max(65535),
+      ssl: z.boolean().default(true),
+    })
+    .optional(),
+  xmpp: z
+    .object({
+      domain: z.string(),
+      adminJid: z.string().email(),
+    })
+    .optional(),
 });
 ```
 

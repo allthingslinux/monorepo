@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Globe, Loader2, Mail, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import { Badge } from "@portal/ui/ui/badge";
 import { Button } from "@portal/ui/ui/button";
 import {
@@ -16,6 +13,9 @@ import {
 } from "@portal/ui/ui/dialog";
 import { Input } from "@portal/ui/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Globe, Loader2, Mail, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   createAlias,
@@ -39,8 +39,8 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
   const [comment, setComment] = useState("");
 
   const { data: aliases = [], isLoading } = useQuery({
-    queryKey: ["mailcow", "aliases", accountId],
     queryFn: () => getAliases(accountId),
+    queryKey: ["mailcow", "aliases", accountId],
   });
 
   const handleCreate = async () => {
@@ -50,10 +50,10 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
     try {
       setIsCreating(true);
       await createAlias(accountId, {
+        active: true,
         address,
         goto,
         public_comment: comment,
-        active: true,
       });
       toast.success("Alias created");
       setAddress("");
@@ -63,8 +63,8 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
       queryClient.invalidateQueries({
         queryKey: ["mailcow", "aliases", accountId],
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to create alias");
     } finally {
       setIsCreating(false);
@@ -78,8 +78,8 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
       queryClient.invalidateQueries({
         queryKey: ["mailcow", "aliases", accountId],
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to delete alias");
     }
   };

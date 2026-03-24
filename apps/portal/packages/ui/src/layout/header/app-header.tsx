@@ -1,13 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 import {
   createRouteTranslationResolver,
   generateBreadcrumbs,
   routeConfig,
 } from "@/features/routing/lib";
+
 import { Separator } from "../../ui/separator";
 import { SidebarTrigger } from "../../ui/sidebar";
 import { BreadcrumbTrail } from "./breadcrumb-trail";

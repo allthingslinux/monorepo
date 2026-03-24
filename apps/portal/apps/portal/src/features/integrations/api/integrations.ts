@@ -91,9 +91,9 @@ export async function createIntegrationAccount<
   TCreateInput = Record<string, unknown>,
 >(integrationId: string, input: TCreateInput): Promise<TAccount> {
   const response = await fetch(`/api/integrations/${integrationId}/accounts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
   });
 
   if (!response.ok) {
@@ -125,9 +125,9 @@ export async function updateIntegrationAccount<
   const response = await fetch(
     `/api/integrations/${integrationId}/accounts/${id}`,
     {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
+      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
     }
   );
 
@@ -195,9 +195,9 @@ export async function resetIntegrationPassword(
   const response = await fetch(
     `/api/integrations/${integrationId}/accounts/${id}/reset-password`,
     {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(password ? { password } : {}),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
     }
   );
 

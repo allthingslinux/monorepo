@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
+import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";
 import { env } from "@/env";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+
 import { MailContent } from "./mail-content";
 
 export async function generateMetadata(): Promise<Metadata> {

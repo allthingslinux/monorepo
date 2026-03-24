@@ -1,6 +1,6 @@
 onlyBuiltDependencies:
-  - '@depot/cli'
-  - '@tailwindcss/oxide'
+  - "@depot/cli"
+  - "@tailwindcss/oxide"
   - contentlayer2
   - esbuild
   - protobufjs

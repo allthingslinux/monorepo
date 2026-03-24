@@ -91,4 +91,4 @@ const Security = () => {
 //   );
 // };
 
-export { Privacy, Cookies, Terms, Security };
+export { Cookies, Privacy, Security, Terms };

@@ -8,12 +8,12 @@ For the canonical full variable inventory, use `docs/ENV_VARS.md`.
 
 ### Portal (`apps/portal/.env`)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
+| Variable               | Required              | Description                                                                                                             |
+| ---------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `BRIDGE_SERVICE_TOKEN` | Yes (for bridge auth) | Bearer token for bridge→Portal API. **Must match** atl.chat's `BRIDGE_PORTAL_TOKEN` (same secret, different env names). |
-| `DATABASE_URL` | Yes | PostgreSQL connection (identity lookups use `irc_account`, `xmpp_account`, `account` tables). |
-| `BETTER_AUTH_SECRET` | Yes | Better Auth secret. |
-| `BETTER_AUTH_URL` | Yes | Portal base URL (e.g. `http://localhost:3000`). |
+| `DATABASE_URL`         | Yes                   | PostgreSQL connection (identity lookups use `irc_account`, `xmpp_account`, `account` tables).                           |
+| `BETTER_AUTH_SECRET`   | Yes                   | Better Auth secret.                                                                                                     |
+| `BETTER_AUTH_URL`      | Yes                   | Portal base URL (e.g. `http://localhost:3000`).                                                                         |
 
 **Optional (for full identity data):**
 
@@ -26,20 +26,20 @@ The bridge identity API works with whatever accounts exist in the DB; XMPP/IRC p
 
 ### atl.chat Bridge (`.env` or `.env.dev`)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BRIDGE_PORTAL_BASE_URL` | Yes | Portal API base URL (e.g. `http://host.docker.internal:3000` for local, `https://portal.atl.tools` for prod). |
-| `BRIDGE_PORTAL_TOKEN` | Yes | **Must match** Portal's `BRIDGE_SERVICE_TOKEN`. Bridge sends as Bearer credential. |
-| `BRIDGE_DISCORD_TOKEN` | Yes | Discord bot token. |
-| `BRIDGE_DISCORD_CHANNEL_ID` | Yes | Discord channel snowflake to bridge. |
-| `IRC_BRIDGE_SERVER` | Yes | IRC server hostname (e.g. `atl-irc-server` in Docker). |
-| `BRIDGE_XMPP_COMPONENT_JID` | Yes | XMPP component JID (e.g. `bridge.xmpp.localhost` for dev). |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | Yes | Shared secret with Prosody component config. |
-| `BRIDGE_XMPP_COMPONENT_SERVER` | Yes | XMPP server hostname (e.g. `atl-xmpp-server`). |
-| `BRIDGE_XMPP_COMPONENT_PORT` | No | Default `5347`. |
-| `BRIDGE_IRC_NICK` | No | Main IRC nick (default `bridge`). |
-| `BRIDGE_IRC_OPER_PASSWORD` | No | IRC oper password for bridge bot. |
-| `BRIDGE_IRC_TLS_VERIFY` | No | `false` for dev with self-signed certs. |
+| Variable                       | Required | Description                                                                                                   |
+| ------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `BRIDGE_PORTAL_BASE_URL`       | Yes      | Portal API base URL (e.g. `http://host.docker.internal:3000` for local, `https://portal.atl.tools` for prod). |
+| `BRIDGE_PORTAL_TOKEN`          | Yes      | **Must match** Portal's `BRIDGE_SERVICE_TOKEN`. Bridge sends as Bearer credential.                            |
+| `BRIDGE_DISCORD_TOKEN`         | Yes      | Discord bot token.                                                                                            |
+| `BRIDGE_DISCORD_CHANNEL_ID`    | Yes      | Discord channel snowflake to bridge.                                                                          |
+| `IRC_BRIDGE_SERVER`            | Yes      | IRC server hostname (e.g. `atl-irc-server` in Docker).                                                        |
+| `BRIDGE_XMPP_COMPONENT_JID`    | Yes      | XMPP component JID (e.g. `bridge.xmpp.localhost` for dev).                                                    |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | Yes      | Shared secret with Prosody component config.                                                                  |
+| `BRIDGE_XMPP_COMPONENT_SERVER` | Yes      | XMPP server hostname (e.g. `atl-xmpp-server`).                                                                |
+| `BRIDGE_XMPP_COMPONENT_PORT`   | No       | Default `5347`.                                                                                               |
+| `BRIDGE_IRC_NICK`              | No       | Main IRC nick (default `bridge`).                                                                             |
+| `BRIDGE_IRC_OPER_PASSWORD`     | No       | IRC oper password for bridge bot.                                                                             |
+| `BRIDGE_IRC_TLS_VERIFY`        | No       | `false` for dev with self-signed certs.                                                                       |
 
 ---
 

@@ -11,9 +11,9 @@
  * User roles
  */
 export const USER_ROLES = {
-  USER: "user",
-  STAFF: "staff",
   ADMIN: "admin",
+  STAFF: "staff",
+  USER: "user",
 } as const;
 
 export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
@@ -22,12 +22,12 @@ export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
  * Permission scopes
  */
 export const PERMISSIONS = {
-  USER_LIST: "user:list",
-  USER_VIEW: "user:view",
-  USER_CREATE: "user:create",
-  USER_UPDATE: "user:update",
-  USER_DELETE: "user:delete",
   ADMIN_VIEW: "admin:view",
+  USER_CREATE: "user:create",
+  USER_DELETE: "user:delete",
+  USER_LIST: "user:list",
+  USER_UPDATE: "user:update",
+  USER_VIEW: "user:view",
 } as const;
 
 // ============================================================================
@@ -38,28 +38,28 @@ export const PERMISSIONS = {
  * HTTP status codes
  */
 export const HTTP_STATUS = {
-  OK: 200,
-  CREATED: 201,
-  NO_CONTENT: 204,
   BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
   CONFLICT: 409,
+  CREATED: 201,
+  FORBIDDEN: 403,
   INTERNAL_SERVER_ERROR: 500,
+  NOT_FOUND: 404,
+  NO_CONTENT: 204,
+  OK: 200,
   SERVICE_UNAVAILABLE: 503,
+  UNAUTHORIZED: 401,
 } as const;
 
 /**
  * Common API error codes
  */
 export const API_ERROR_CODES = {
-  UNAUTHORIZED: "UNAUTHORIZED",
   FORBIDDEN: "FORBIDDEN",
-  NOT_FOUND: "NOT_FOUND",
-  VALIDATION_ERROR: "VALIDATION_ERROR",
   INTERNAL_ERROR: "INTERNAL_ERROR",
+  NOT_FOUND: "NOT_FOUND",
   RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  VALIDATION_ERROR: "VALIDATION_ERROR",
 } as const;
 
 export type APIErrorCode =
@@ -121,9 +121,9 @@ export type IntegrationStatus = (typeof INTEGRATION_STATUSES)[number];
  * Pagination defaults
  */
 export const PAGINATION = {
+  DEFAULT_PAGE: 1,
   DEFAULT_PAGE_SIZE: 20,
   MAX_PAGE_SIZE: 100,
-  DEFAULT_PAGE: 1,
 } as const;
 
 // ============================================================================
@@ -135,8 +135,8 @@ export const PAGINATION = {
  */
 export const VALIDATION_PATTERNS = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  URL: /^https?:\/\/.+/,
   SLUG: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  URL: /^https?:\/\/.+/,
 } as const;
 
 // ============================================================================

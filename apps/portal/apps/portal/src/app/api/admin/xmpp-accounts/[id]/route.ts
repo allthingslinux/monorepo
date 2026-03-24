@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   APIError,
   handleAPIError,
@@ -9,6 +8,7 @@ import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 import { xmppIntegration } from "@/features/integrations/lib/xmpp/implementation";
 
@@ -25,12 +25,12 @@ export async function GET(
 
     const [row] = await db
       .select({
-        xmppAccount,
         user: {
           id: user.id,
           email: user.email,
           name: user.name,
         },
+        xmppAccount,
       })
       .from(xmppAccount)
       .leftJoin(user, eq(xmppAccount.userId, user.id))
@@ -39,7 +39,7 @@ export async function GET(
 
     if (!row) {
       return Response.json(
-        { ok: false, error: "XMPP account not found" },
+        { error: "XMPP account not found", ok: false },
         { status: 404 }
       );
     }
@@ -104,7 +104,7 @@ export async function DELETE(
 
     if (!existing) {
       return Response.json(
-        { ok: false, error: "XMPP account not found" },
+        { error: "XMPP account not found", ok: false },
         { status: 404 }
       );
     }

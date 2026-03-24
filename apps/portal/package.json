@@ -36,22 +36,22 @@
     "clean": "find . -type d \\( -name .turbo -o -name .next \\) -prune -exec rm -rf {} + && find . -path '*/node_modules/.cache' -type d -prune -exec rm -rf {} +"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.6",
-    "@commitlint/cli": "^20.4.3",
-    "@commitlint/config-conventional": "^20.4.3",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.3.2",
+    "lint-staged": "^16.4.0",
     "semantic-release": "^25.0.3",
     "semantic-release-major-tag": "^0.3.2",
-    "turbo": "^2.8.14",
-    "ultracite": "7.2.5"
+    "turbo": "^2.8.20",
+    "typescript": "^5.9.3",
+    "ultracite": "7.3.2"
   },
-  "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": ">=24.0.0",
     "pnpm": ">=10.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.28.2"
 }

@@ -38,12 +38,12 @@ Don't fix what you think is wrong — verify it first. Cross-reference code, not
 
 Replace legacy `@/lib/*` with canonical paths:
 
-| Fix | Replacement |
-|-----|-------------|
-| `@/lib/api/query-keys` | `@/shared/api/query-keys` |
-| `@/lib/utils/constants` | `@/shared/utils/constants` |
-| `@/lib/observability/server` | `@/shared/observability/server` |
-| `@/lib/observability/client` | `@/shared/observability/client` |
+| Fix                           | Replacement                      |
+| ----------------------------- | -------------------------------- |
+| `@/lib/api/query-keys`        | `@/shared/api/query-keys`        |
+| `@/lib/utils/constants`       | `@/shared/utils/constants`       |
+| `@/lib/observability/server`  | `@/shared/observability/server`  |
+| `@/lib/observability/client`  | `@/shared/observability/client`  |
 | `@/lib/observability/helpers` | `@/shared/observability/helpers` |
 
 Prefer `@/auth` over `@/hooks/use-permissions` for `usePermissions`.
@@ -77,12 +77,12 @@ Prefer `@/auth` over `@/hooks/use-permissions` for `usePermissions`.
 
 ## Error Handling
 
-| Situation | Action |
-|-----------|--------|
+| Situation                                           | Action                                                            |
+| --------------------------------------------------- | ----------------------------------------------------------------- |
 | AGENTS.md missing for a module that should have one | Create minimal AGENTS.md if structure warrants it; otherwise skip |
-| Broken link to non-existent AGENTS.md | Fix path or remove link; don't create placeholder files |
-| Ambiguous import path (could resolve multiple ways) | Verify in `tsconfig.json` and actual usage in codebase |
-| Generated block (`<!-- *-AGENTS-MD-* -->`) | Don't modify; leave as-is |
+| Broken link to non-existent AGENTS.md               | Fix path or remove link; don't create placeholder files           |
+| Ambiguous import path (could resolve multiple ways) | Verify in `tsconfig.json` and actual usage in codebase            |
+| Generated block (`<!-- *-AGENTS-MD-* -->`)          | Don't modify; leave as-is                                         |
 
 ## Self-Audit (Before Summarizing)
 

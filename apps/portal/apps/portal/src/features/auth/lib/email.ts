@@ -1,5 +1,4 @@
 import "server-only";
-
 import { sendEmail } from "@portal/utils/email";
 
 // ============================================================================
@@ -20,14 +19,14 @@ export function sendResetPasswordEmail(
   // Fire and forget - don't await to prevent timing attacks
   return Promise.resolve(
     sendEmail({
-      to: user.email,
-      subject: "Reset your password - Portal",
       html: `
         <h2>Reset Your Password</h2>
         <p>Click the link below to reset your password:</p>
         <a href="${url}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
         <p>This link will expire in 1 hour.</p>
       `,
+      subject: "Reset your password - Portal",
+      to: user.email,
     })
   ).catch((error: unknown) => {
     // Log error but don't throw to prevent timing attacks
@@ -47,13 +46,13 @@ export function sendVerificationEmail(
   // Fire and forget - don't await to prevent timing attacks
   return Promise.resolve(
     sendEmail({
-      to: user.email,
-      subject: "Verify your email - Portal",
       html: `
         <h2>Verify Your Email</h2>
         <p>Welcome to Portal! Click the link below to verify your email:</p>
         <a href="${url}" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
       `,
+      subject: "Verify your email - Portal",
+      to: user.email,
     })
   ).catch((error: unknown) => {
     // Log error but don't throw to prevent timing attacks
@@ -73,13 +72,13 @@ export function sendOTPEmail(
 ): Promise<void> {
   return Promise.resolve(
     sendEmail({
-      to: user.email,
-      subject: "Your OTP - Portal",
       html: `
         <h2>Your One-Time Password</h2>
         <p>Your OTP is: <strong>${otp}</strong></p>
         <p>This code will expire in 3 minutes.</p>
       `,
+      subject: "Your OTP - Portal",
+      to: user.email,
     })
   ).catch((error: unknown) => {
     console.error("Failed to send OTP email:", error);

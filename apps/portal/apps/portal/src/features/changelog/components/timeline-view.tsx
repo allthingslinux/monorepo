@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { History } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import type { TimelineEntry } from "../lib/types";
 import { CommitRow } from "./commit-row";

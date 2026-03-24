@@ -4,11 +4,10 @@
 // Shared utilities for API route handlers
 
 import "server-only";
-
-import type { NextRequest } from "next/server";
-import { z } from "zod";
 import { captureError, log, parseError } from "@portal/observability/utils";
 import type { AuthResult } from "@portal/types/auth";
+import type { NextRequest } from "next/server";
+import { z } from "zod";
 import { fromError, isZodErrorLike } from "zod-validation-error";
 
 import { auth } from "@/auth";
@@ -125,9 +124,9 @@ export function handleAPIError(error: unknown): Response {
   if (error instanceof APIError) {
     return Response.json(
       {
-        ok: false,
-        error: error.message,
         details: error.details,
+        error: error.message,
+        ok: false,
       },
       { status: error.status }
     );
@@ -138,9 +137,9 @@ export function handleAPIError(error: unknown): Response {
     const validationError = fromError(error);
     return Response.json(
       {
-        ok: false,
+        details: error.issues,
         error: validationError.toString(),
-        details: error.issues, // Expose raw issues for debug/advanced client handling
+        ok: false, // Expose raw issues for debug/advanced client handling
       },
       { status: 400 }
     );
@@ -157,7 +156,7 @@ export function handleAPIError(error: unknown): Response {
   // Return generic error message to prevent leaking internal details
   // Detailed error information is captured in Sentry for debugging
   return Response.json(
-    { ok: false, error: "Internal server error" },
+    { error: "Internal server error", ok: false },
     { status: 500 }
   );
 }

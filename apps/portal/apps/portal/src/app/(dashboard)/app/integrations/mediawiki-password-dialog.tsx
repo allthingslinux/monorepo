@@ -1,7 +1,5 @@
 "use client";
 
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import {
   Dialog,
@@ -13,6 +11,8 @@ import {
 } from "@portal/ui/ui/dialog";
 import { Label } from "@portal/ui/ui/label";
 import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export interface MediaWikiPasswordDialogData {
   temporaryPassword: string;
@@ -59,9 +59,9 @@ export function MediaWikiPasswordDialog({
                 onClick={async () => {
                   await startSpan(
                     {
+                      attributes: { integrationId: "mediawiki" },
                       name: "Copy MediaWiki password",
                       op: "ui.action",
-                      attributes: { integrationId: "mediawiki" },
                     },
                     async () => {
                       try {
@@ -72,7 +72,7 @@ export function MediaWikiPasswordDialog({
                         } else {
                           const ta = document.createElement("textarea");
                           ta.value = data.temporaryPassword;
-                          document.body.appendChild(ta);
+                          document.body.append(ta);
                           ta.select();
                           const success = document.execCommand("copy");
                           document.body.removeChild(ta);
@@ -83,8 +83,8 @@ export function MediaWikiPasswordDialog({
                         toast.success("Copied", {
                           description: "Password copied to clipboard",
                         });
-                      } catch (err) {
-                        captureException(err);
+                      } catch (error) {
+                        captureException(error);
                         toast.error("Failed to copy");
                       }
                     }

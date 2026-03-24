@@ -1,5 +1,4 @@
 import "server-only";
-
 import { captureException } from "@sentry/nextjs";
 
 import { keys } from "./keys";
@@ -7,8 +6,8 @@ import { keys } from "./keys";
 const env = keys();
 
 export const mailcowConfig = {
-  apiUrl: env.MAILCOW_API_URL,
   apiKey: env.MAILCOW_API_KEY,
+  apiUrl: env.MAILCOW_API_URL,
   domain: env.MAILCOW_DOMAIN || "",
 } as const;
 
@@ -21,7 +20,7 @@ export function validateMailcowConfig(): void {
     const error = new Error("MAILCOW_API_URL environment variable is required");
     try {
       captureException(error, {
-        tags: { type: "configuration_error", module: "mailcow_config" },
+        tags: { module: "mailcow_config", type: "configuration_error" },
       });
     } catch {
       // Ignore Sentry failures
@@ -33,7 +32,7 @@ export function validateMailcowConfig(): void {
     const error = new Error("MAILCOW_API_KEY environment variable is required");
     try {
       captureException(error, {
-        tags: { type: "configuration_error", module: "mailcow_config" },
+        tags: { module: "mailcow_config", type: "configuration_error" },
       });
     } catch {
       // Ignore Sentry failures
@@ -45,7 +44,7 @@ export function validateMailcowConfig(): void {
     const error = new Error("MAILCOW_DOMAIN environment variable is required");
     try {
       captureException(error, {
-        tags: { type: "configuration_error", module: "mailcow_config" },
+        tags: { module: "mailcow_config", type: "configuration_error" },
       });
     } catch {
       // Ignore Sentry failures

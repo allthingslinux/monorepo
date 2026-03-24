@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   handleAPIError,
   parseRouteId,
@@ -8,6 +7,7 @@ import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { oauthClient } from "@portal/db/schema/oauth";
 import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -27,8 +27,8 @@ export async function GET(
       .select({
         oauthClient,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })

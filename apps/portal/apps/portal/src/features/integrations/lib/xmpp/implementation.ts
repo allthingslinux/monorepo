@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import type { z } from "zod";
+
 import { APIError } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
@@ -11,9 +11,11 @@ import {
   XmppAccountSchema,
 } from "@portal/schemas/integrations/xmpp";
 import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
 
 import { IntegrationBase } from "@/features/integrations/lib/core/base";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
+
 import {
   checkProsodyAccountExists,
   createProsodyAccount,
@@ -175,10 +177,10 @@ export class XmppIntegration extends IntegrationBase<
       .insert(xmppAccount)
       .values({
         id: randomUUID(),
-        userId,
         jid,
-        username,
         status: "active",
+        userId,
+        username,
       })
       .returning();
 
@@ -267,7 +269,7 @@ export class XmppIntegration extends IntegrationBase<
     if (!parsed.success) {
       throw new APIError("Invalid update request", 400);
     }
-    const data = parsed.data;
+    const { data } = parsed;
 
     const [account] = await db
       .select()

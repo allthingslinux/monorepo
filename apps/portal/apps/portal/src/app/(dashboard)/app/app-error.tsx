@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
 import { Button } from "@portal/ui/ui/button";
 import {
   Card,
@@ -12,6 +10,8 @@ import {
   CardTitle,
 } from "@portal/ui/ui/card";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useEffect } from "react";
 
 /**
  * Dashboard app-segment error boundary content. Rendered lazily via app/(dashboard)/app/error.tsx.

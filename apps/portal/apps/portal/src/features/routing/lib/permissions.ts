@@ -16,9 +16,9 @@ export function hasPermission(
 ): boolean {
   const permissions = Array.isArray(required) ? required : [required];
 
-  return permissions.every((permission) => {
-    return userPermissions[permission] === true;
-  });
+  return permissions.every(
+    (permission) => userPermissions[permission] === true
+  );
 }
 
 /**

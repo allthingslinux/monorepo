@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -141,12 +142,12 @@ export const config = {
     {
       // Match /app routes but exclude static files, Next.js internals, opengraph-image
       // Note: /monitoring is automatically excluded as it's not under /app
-      source:
-        "/app/((?!_next|.*opengraph-image|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
       ],
+      source:
+        "/app/((?!_next|.*opengraph-image|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     },
   ],
 };

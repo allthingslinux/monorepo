@@ -19,8 +19,8 @@ import {
  */
 export function useIntegrations() {
   return useQuery({
-    queryKey: queryKeys.integrations.list(),
     queryFn: fetchIntegrations,
+    queryKey: queryKeys.integrations.list(),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -30,9 +30,9 @@ export function useIntegrations() {
  */
 export function useIntegrationAccount<TAccount>(integrationId: string) {
   return useQuery({
-    queryKey: queryKeys.integrations.accounts.current(integrationId),
-    queryFn: () => fetchIntegrationAccount<TAccount>(integrationId),
     enabled: !!integrationId,
+    queryFn: () => fetchIntegrationAccount<TAccount>(integrationId),
+    queryKey: queryKeys.integrations.accounts.current(integrationId),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -45,9 +45,9 @@ export function useIntegrationAccountById<TAccount>(
   id: string
 ) {
   return useQuery({
-    queryKey: queryKeys.integrations.accounts.detail(integrationId, id),
-    queryFn: () => fetchIntegrationAccountById<TAccount>(integrationId, id),
     enabled: !!integrationId && !!id,
+    queryFn: () => fetchIntegrationAccountById<TAccount>(integrationId, id),
+    queryKey: queryKeys.integrations.accounts.detail(integrationId, id),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }

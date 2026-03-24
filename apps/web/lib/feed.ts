@@ -1,8 +1,8 @@
 import { Feed } from "feed";
 import { marked } from "marked";
 
-import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/app/metadata";
+import { getAllPosts } from "@/lib/blog";
 
 /**
  * Generates an Atom feed containing all posts.

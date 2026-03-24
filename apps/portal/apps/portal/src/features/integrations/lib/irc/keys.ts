@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 /**
  * IRC environment variables (Atheme JSON-RPC, server/port for UI; UnrealIRCd for admin).
@@ -8,6 +8,20 @@ import { createEnv } from "@t3-oss/env-nextjs";
  */
 export const keys = () =>
   createEnv({
+    runtimeEnv: {
+      IRC_SERVER: process.env.IRC_SERVER,
+      IRC_PORT: process.env.IRC_PORT,
+      IRC_ATHEME_JSONRPC_URL: process.env.IRC_ATHEME_JSONRPC_URL,
+      IRC_ATHEME_INSECURE_SKIP_VERIFY:
+        process.env.IRC_ATHEME_INSECURE_SKIP_VERIFY,
+      IRC_ATHEME_OPER_ACCOUNT: process.env.IRC_ATHEME_OPER_ACCOUNT,
+      IRC_ATHEME_OPER_PASSWORD: process.env.IRC_ATHEME_OPER_PASSWORD,
+      IRC_UNREAL_JSONRPC_URL: process.env.IRC_UNREAL_JSONRPC_URL,
+      IRC_UNREAL_RPC_USER: process.env.IRC_UNREAL_RPC_USER,
+      IRC_UNREAL_RPC_PASSWORD: process.env.IRC_UNREAL_RPC_PASSWORD,
+      IRC_UNREAL_INSECURE_SKIP_VERIFY:
+        process.env.IRC_UNREAL_INSECURE_SKIP_VERIFY,
+    },
     server: {
       IRC_SERVER: z.string().optional(),
       IRC_PORT: z.coerce.number().optional(),
@@ -25,19 +39,5 @@ export const keys = () =>
         .string()
         .optional()
         .transform((v) => v === "true" || v === "1"),
-    },
-    runtimeEnv: {
-      IRC_SERVER: process.env.IRC_SERVER,
-      IRC_PORT: process.env.IRC_PORT,
-      IRC_ATHEME_JSONRPC_URL: process.env.IRC_ATHEME_JSONRPC_URL,
-      IRC_ATHEME_INSECURE_SKIP_VERIFY:
-        process.env.IRC_ATHEME_INSECURE_SKIP_VERIFY,
-      IRC_ATHEME_OPER_ACCOUNT: process.env.IRC_ATHEME_OPER_ACCOUNT,
-      IRC_ATHEME_OPER_PASSWORD: process.env.IRC_ATHEME_OPER_PASSWORD,
-      IRC_UNREAL_JSONRPC_URL: process.env.IRC_UNREAL_JSONRPC_URL,
-      IRC_UNREAL_RPC_USER: process.env.IRC_UNREAL_RPC_USER,
-      IRC_UNREAL_RPC_PASSWORD: process.env.IRC_UNREAL_RPC_PASSWORD,
-      IRC_UNREAL_INSECURE_SKIP_VERIFY:
-        process.env.IRC_UNREAL_INSECURE_SKIP_VERIFY,
     },
   });

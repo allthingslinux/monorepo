@@ -1,6 +1,6 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAuth } from "@portal/api/utils";
 import { captureException } from "@sentry/nextjs";
+import type { NextRequest } from "next/server";
 
 import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     if (!integration?.enabled) {
       return Response.json(
-        { ok: false, error: "MediaWiki integration is not available" },
+        { error: "MediaWiki integration is not available", ok: false },
         { status: 503 }
       );
     }
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     if (!account) {
       return Response.json(
-        { ok: false, error: "No wiki account found" },
+        { error: "No wiki account found", ok: false },
         { status: 404 }
       );
     }
@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
     ]);
 
     return Response.json({
+      contribs,
       ok: true,
       userInfo,
-      contribs,
     });
   } catch (error) {
     captureException(error, {

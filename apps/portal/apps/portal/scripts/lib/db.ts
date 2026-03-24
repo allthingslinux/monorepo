@@ -4,7 +4,6 @@
  * without pulling in Next.js server-only modules.
  */
 import "dotenv/config";
-
 import { keys } from "@portal/db/keys";
 import { relations } from "@portal/db/relations";
 import { schema } from "@portal/db/schema";
@@ -22,4 +21,4 @@ if (!connectionString) {
 
 const pool = new Pool({ connectionString });
 
-export const db = drizzle({ client: pool, schema, relations });
+export const db = drizzle({ client: pool, relations, schema });

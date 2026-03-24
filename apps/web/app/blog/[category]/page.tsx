@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getAllCategories, getPostsByCategory } from "@/lib/blog";
-import { getBaseUrl } from "@/lib/utils";
 import { getDynamicMetadata } from "@/app/metadata";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getAllCategories, getPostsByCategory } from "@/lib/blog";
+import { getBaseUrl } from "@/lib/utils";
 
 export const revalidate = 3600;
 

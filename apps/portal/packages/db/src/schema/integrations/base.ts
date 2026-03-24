@@ -18,18 +18,18 @@ export const integrationAccountStatusEnum = pgEnum(
 export const integrationAccount = pgTable(
   "integration_accounts",
   {
-    id: text("id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    integrationType: text("integration_type").notNull(),
-    status: integrationAccountStatusEnum("status").default("active").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    id: text("id").primaryKey(),
+    integrationType: text("integration_type").notNull(),
+    metadata: jsonb("metadata"),
+    status: integrationAccountStatusEnum("status").default("active").notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    metadata: jsonb("metadata"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
   },
   (table) => [
     index("integration_accounts_userId_idx").on(table.userId),

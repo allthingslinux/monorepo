@@ -1,7 +1,7 @@
 "use client";
 
-import { Fragment } from "react";
 import type { BreadcrumbItem as BreadcrumbItemType } from "@portal/types/routes";
+import { Fragment } from "react";
 
 import {
   Breadcrumb,

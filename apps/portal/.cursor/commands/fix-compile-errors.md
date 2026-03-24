@@ -7,15 +7,15 @@ Analyze the compilation errors in the current codebase and provide fixes for the
 ## Steps
 
 1. **Identify compilation errors**
-    - Type mismatches and casting issues
-    - Missing imports or dependencies
-    - Syntax errors and malformed code
-    - Undefined variables or functions
-    - Configuration issues
+   - Type mismatches and casting issues
+   - Missing imports or dependencies
+   - Syntax errors and malformed code
+   - Undefined variables or functions
+   - Configuration issues
 2. **Fix each error**
-    - Identify the root cause
-    - Provide the corrected code
-    - Explain why the fix resolves the issue
+   - Identify the root cause
+   - Provide the corrected code
+   - Explain why the fix resolves the issue
 
 ## Fix Compile Errors Checklist
 

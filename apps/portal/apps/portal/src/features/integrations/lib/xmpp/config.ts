@@ -1,5 +1,4 @@
 import "server-only";
-
 import { APIError } from "@portal/api/utils";
 import { captureException } from "@sentry/nextjs";
 
@@ -40,12 +39,12 @@ export function validateXmppConfig(): void {
       "PROSODY_REST_TOKEN environment variable is required (Bearer token for mod_http_admin_api)";
     try {
       captureException(new Error(msg), {
+        level: "error",
         tags: {
           type: "configuration_error",
           module: "xmpp_config",
           missing_var: "PROSODY_REST_TOKEN",
         },
-        level: "error",
       });
     } catch {
       // Sentry might not be initialized yet, continue to throw
@@ -57,12 +56,12 @@ export function validateXmppConfig(): void {
     const msg = "PROSODY_REST_URL environment variable is required";
     try {
       captureException(new Error(msg), {
+        level: "error",
         tags: {
           type: "configuration_error",
           module: "xmpp_config",
           missing_var: "PROSODY_REST_URL",
         },
-        level: "error",
       });
     } catch {
       // Sentry might not be initialized yet, continue to throw

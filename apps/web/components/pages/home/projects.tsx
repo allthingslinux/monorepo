@@ -1,5 +1,5 @@
-import { memo } from "react";
 import Link from "next/link";
+import { memo } from "react";
 import { PiLinuxLogoBold, PiNetworkBold } from "react-icons/pi";
 import {
   TbBrandDiscord,

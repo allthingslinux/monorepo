@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -18,7 +19,7 @@ function getAppVersion(): string {
   }
   try {
     const pkg = JSON.parse(
-      readFileSync(join(process.cwd(), "package.json"), "utf-8")
+      readFileSync(join(process.cwd(), "package.json"), "utf8")
     );
     const ver = pkg.version as string | undefined;
     if (ver) {
@@ -29,7 +30,7 @@ function getAppVersion(): string {
   }
   try {
     const result = execSync("git describe --tags --always", {
-      encoding: "utf-8",
+      encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
     if (result) {
@@ -110,7 +111,7 @@ let nextConfig: NextConfig = {
     // Try to get git commit hash directly
     try {
       const gitHash = execSync("git rev-parse --short HEAD", {
-        encoding: "utf-8",
+        encoding: "utf8",
         stdio: ["ignore", "pipe", "ignore"],
       }).trim();
 
@@ -232,9 +233,8 @@ let nextConfig: NextConfig = {
     let sentryRelease: string | undefined;
     try {
       // Import keys() helper for validated env access
-      const { keys: observabilityKeys } = await import(
-        "@portal/observability/keys"
-      );
+      const { keys: observabilityKeys } =
+        await import("@portal/observability/keys");
       const env = observabilityKeys();
       sentryDsn = env.NEXT_PUBLIC_SENTRY_DSN;
       sentryRelease = env.SENTRY_RELEASE;
@@ -273,10 +273,10 @@ let nextConfig: NextConfig = {
         securityHeaders.push({
           key: "Report-To",
           value: JSON.stringify({
-            group: "csp-endpoint",
-            max_age: 10_886_400,
             endpoints: [{ url: reportUri }],
+            group: "csp-endpoint",
             include_subdomains: true,
+            max_age: 10_886_400,
           }),
         });
 
@@ -294,8 +294,8 @@ let nextConfig: NextConfig = {
     return [
       {
         // Apply security headers to all routes
-        source: "/:path*",
         headers: securityHeaders,
+        source: "/:path*",
       },
     ];
   },
@@ -399,6 +399,7 @@ let nextConfig: NextConfig = {
   // Spread config last but deep-merge images to avoid overwriting remotePatterns
   ...config,
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -406,7 +407,6 @@ let nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    formats: ["image/avif", "image/webp"],
     ...config.images,
   },
 };

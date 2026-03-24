@@ -31,9 +31,9 @@ export async function updateCurrentUser(
   data: Pick<UpdateUserInput, "name">
 ): Promise<User> {
   const response = await fetch("/api/user/me", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+    method: "PATCH",
   });
 
   if (!response.ok) {

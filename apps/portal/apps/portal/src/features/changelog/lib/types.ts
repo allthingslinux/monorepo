@@ -129,15 +129,15 @@ export interface ParsedCommitMessage {
  * Tailwind classes for each conventional commit type badge (light + dark mode).
  */
 export const COMMIT_TYPE_COLORS: Record<ConventionalCommitType, string> = {
-  feat: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-  fix: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400",
-  refactor: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-  chore: "bg-zinc-200 text-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-300",
-  docs: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
-  style: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-400",
-  perf: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
-  test: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
   build:
     "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400",
+  chore: "bg-zinc-200 text-zinc-700 dark:bg-zinc-700/40 dark:text-zinc-300",
   ci: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
+  docs: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+  feat: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  fix: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400",
+  perf: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
+  refactor: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  style: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-400",
+  test: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
 };

@@ -3,7 +3,6 @@ import {
   BookOpen,
   Code,
   DollarSign,
-  Github,
   MessageSquare,
   Users,
 } from "lucide-react";
@@ -12,6 +11,7 @@ import Link from "next/link";
 import {
   SiBitcoin,
   SiCashapp,
+  SiGithub,
   SiOpencollective,
   SiPaypal,
   SiStripe,
@@ -26,6 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { getPageMetadata } from "../metadata";
 
 export const metadata: Metadata = getPageMetadata("contribute");
@@ -225,7 +226,7 @@ export default function ContributePage() {
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  <Github className="h-4 w-4" />
+                  <SiGithub className="h-4 w-4" />
                   View on GitHub
                 </Link>
               </Button>

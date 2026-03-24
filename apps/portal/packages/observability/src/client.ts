@@ -44,8 +44,8 @@ const getReplayIntegration = () => {
   }
 
   return replayIntegration({
-    maskAllText: true,
     blockAllMedia: true,
+    maskAllText: true,
   });
 };
 
@@ -64,22 +64,22 @@ const sanitizeTransactionName = (transactionName?: string): string => {
   return (
     transactionName
       // Replace UUIDs with placeholder
-      .replace(
+      .replaceAll(
         /\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/gi,
         "/<uuid>"
       )
       // Replace hash-like strings
-      .replace(/\/[0-9a-fA-F]{32,}/gi, "/<hash>")
+      .replaceAll(/\/[0-9a-fA-F]{32,}/gi, "/<hash>")
       // Replace numeric IDs
-      .replace(/\/\d+/g, "/<id>")
+      .replaceAll(/\/\d+/g, "/<id>")
       // Replace email addresses
-      .replace(/\/[^/]+@[^/]+\.[^/]+/g, "/<email>")
+      .replaceAll(/\/[^/]+@[^/]+\.[^/]+/g, "/<email>")
       // Replace base64 tokens
-      .replace(/\/[A-Za-z0-9+/=]{40,}/g, "/<token>")
+      .replaceAll(/\/[A-Za-z0-9+/=]{40,}/g, "/<token>")
       // Replace hex tokens
-      .replace(/\/[0-9a-fA-F]{32,}/gi, "/<token>")
+      .replaceAll(/\/[0-9a-fA-F]{32,}/gi, "/<token>")
       // Clean up multiple slashes
-      .replace(/\/+/g, "/")
+      .replaceAll(/\/+/g, "/")
       // Remove trailing slash
       .replace(TRAILING_SLASH_REGEX, "")
   );
@@ -253,18 +253,14 @@ interface SamplingContext {
 /**
  * Check if transaction should be skipped
  */
-const shouldSkipTransaction = (name: string): boolean => {
-  return name.includes("health") || name.includes("metrics");
-};
+const shouldSkipTransaction = (name: string): boolean =>
+  name.includes("health") || name.includes("metrics");
 
 /**
  * Check if transaction is critical auth flow
  */
-const isCriticalAuthFlow = (name: string): boolean => {
-  return (
-    name.includes("auth") || name.includes("login") || name.includes("signup")
-  );
-};
+const isCriticalAuthFlow = (name: string): boolean =>
+  name.includes("auth") || name.includes("login") || name.includes("signup");
 
 /**
  * Get API route sampling rate
@@ -308,8 +304,9 @@ const getUserTierSamplingRate = (
 /**
  * Portal's intelligent sampling function
  */
-const portalSampler = (isProduction: boolean) => {
-  return (samplingContext: SamplingContext): number => {
+const portalSampler =
+  (isProduction: boolean) =>
+  (samplingContext: SamplingContext): number => {
     const { name, attributes, inheritOrSampleWith } = samplingContext;
 
     // Skip health checks and monitoring endpoints
@@ -343,14 +340,12 @@ const portalSampler = (isProduction: boolean) => {
     // Default rates based on environment
     return inheritOrSampleWith(isProduction ? 0.1 : 1);
   };
-};
 
 /**
  * Create beforeSend callback for filtering sensitive data
  */
-const createBeforeSend = (isProduction: boolean) => {
-  // biome-ignore lint/suspicious/noExplicitAny: Sentry callback types require any
-  return (event: any, hint?: any) => {
+const createBeforeSend =
+  (isProduction: boolean) => (event: any, hint?: any) => {
     // Remove sensitive user data
     if (event?.user) {
       event.user.email = undefined;
@@ -372,7 +367,6 @@ const createBeforeSend = (isProduction: boolean) => {
 
     return event;
   };
-};
 
 /**
  * Filter transaction data
@@ -389,9 +383,9 @@ const beforeSendTransaction = (event: any) => {
 /**
  * Create beforeBreadcrumb callback for filtering breadcrumbs
  */
-const createBeforeBreadcrumb = (isProduction: boolean) => {
-  // biome-ignore lint/suspicious/noExplicitAny: Sentry callback types require any
-  return (breadcrumb: any): any => {
+const createBeforeBreadcrumb =
+  (isProduction: boolean) =>
+  (breadcrumb: any): any => {
     // Skip console breadcrumbs in production
     if (isProduction && breadcrumb?.category === "console") {
       return null;
@@ -407,14 +401,12 @@ const createBeforeBreadcrumb = (isProduction: boolean) => {
 
     return breadcrumb;
   };
-};
 
 /**
  * Create tracesSampler callback
  */
-const createTracesSampler = (isProduction: boolean) => {
-  // biome-ignore lint/suspicious/noExplicitAny: Sentry callback types require any
-  return (samplingContext: any) => {
+const createTracesSampler =
+  (isProduction: boolean) => (samplingContext: any) => {
     // Adapt Sentry's TracesSamplerContext to portalSampler's SamplingContext
     const adaptedContext = {
       name:
@@ -434,7 +426,6 @@ const createTracesSampler = (isProduction: boolean) => {
 
     return portalSampler(isProduction)(adaptedContext);
   };
-};
 
 export const initializeSentry = (): ReturnType<typeof init> => {
   const env = keys();
@@ -494,9 +485,8 @@ export const initializeSentry = (): ReturnType<typeof init> => {
         integrations.push(
           browserTracingIntegration({
             // Filter out health checks and monitoring endpoints
-            shouldCreateSpanForRequest: (url: string) => {
-              return !url.match(HEALTH_METRICS_REGEX);
-            },
+            shouldCreateSpanForRequest: (url: string) =>
+              !url.match(HEALTH_METRICS_REGEX),
             // Ignore noisy resource spans
             ignoreResourceSpans: ["resource.css", "resource.font"],
             // Enable INP tracking for performance insights

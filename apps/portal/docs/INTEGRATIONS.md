@@ -114,14 +114,14 @@ Some integrations use dedicated tables **instead of** the unified `integration_a
 
 **Field placement:**
 
-| Location               | Fields                                                                 |
-| ---------------------- | ---------------------------------------------------------------------- |
-| Common (all tables)    | `id`, `user_id`, `status`, `created_at`, `updated_at`                  |
-| `integration_accounts` | `integration_type` (discriminator)                                     |
-| `irc_account`          | `nick` (unique), `server`, `port`                                      |
-| `xmpp_account`         | `jid` (unique), `username` (unique)                                    |
-| `mailcow_account`      | `email` (unique), `domain`, `local_part`                               |
-| All                    | `metadata` (JSONB for miscellaneous integration-specific data)         |
+| Location               | Fields                                                         |
+| ---------------------- | -------------------------------------------------------------- |
+| Common (all tables)    | `id`, `user_id`, `status`, `created_at`, `updated_at`          |
+| `integration_accounts` | `integration_type` (discriminator)                             |
+| `irc_account`          | `nick` (unique), `server`, `port`                              |
+| `xmpp_account`         | `jid` (unique), `username` (unique)                            |
+| `mailcow_account`      | `email` (unique), `domain`, `local_part`                       |
+| All                    | `metadata` (JSONB for miscellaneous integration-specific data) |
 
 **Why both exist:** The unified `integration_accounts` table works when integrations share the same schema and only differ by `integration_type`. Per-integration tables (`irc_account`, `xmpp_account`) are used when an integration needs strongly-typed, queryable columns (e.g., unique `nick`, indexed `server`/`port`) and efficient queries without JSON extraction. The `metadata` JSONB column in both patterns holds miscellaneous data that does not need indexing or strict typing.
 
@@ -195,13 +195,16 @@ interface Integration<
 ```
 
 ### Type Definition Pattern
+
 Always infer types from Zod schemas to ensure a single source of truth:
 
 ```typescript
 import { z } from "zod";
 import { CreateIrcAccountRequestSchema } from "@/shared/schemas/integrations/irc";
 
-export type CreateIrcAccountRequest = z.infer<typeof CreateIrcAccountRequestSchema>;
+export type CreateIrcAccountRequest = z.infer<
+  typeof CreateIrcAccountRequestSchema
+>;
 ```
 
 ## API Routes
@@ -286,7 +289,9 @@ Creates a new integration account for the current user.
 ```json
 {
   "ok": true,
-  "account": { /* account object */ }
+  "account": {
+    /* account object */
+  }
 }
 ```
 
@@ -312,7 +317,9 @@ Gets a specific account by ID (admin or owner only).
 ```json
 {
   "ok": true,
-  "account": { /* account object */ }
+  "account": {
+    /* account object */
+  }
 }
 ```
 
@@ -344,7 +351,9 @@ Updates an integration account (admin or owner only).
 ```json
 {
   "ok": true,
-  "account": { /* updated account object */ }
+  "account": {
+    /* updated account object */
+  }
 }
 ```
 

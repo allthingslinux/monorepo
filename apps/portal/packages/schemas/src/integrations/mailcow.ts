@@ -3,8 +3,8 @@
 // ============================================================================
 // Zod schemas for Mailcow integration API validation
 
-import { z } from "zod";
 import { selectMailcowAccountSchema } from "@portal/db/schema/mailcow";
+import { z } from "zod";
 
 import { metadataSchema } from "../utils";
 import { isValidMailcowLocalPart } from "./validation";
@@ -54,9 +54,9 @@ export const CreateMailboxRequestSchema = z
   });
 
 export const UpdateMailboxRequestSchema = z.object({
-  status: UpdateMailboxStatusSchema.optional(),
-  password: MailcowPasswordSchema.optional(),
   metadata: metadataSchema,
+  password: MailcowPasswordSchema.optional(),
+  status: UpdateMailboxStatusSchema.optional(),
 });
 
 export const MailcowAccountSchema = selectMailcowAccountSchema.extend({
@@ -74,11 +74,11 @@ export type MailcowAccount = z.infer<typeof MailcowAccountSchema>;
  * App Password Schemas
  */
 export const MailcowAppPasswordSchema = z.object({
-  id: z.coerce.string(),
   active: z.coerce.number(),
-  name: z.string().optional(),
+  app_passwd: z.string().optional(),
   created: z.string().optional(),
-  app_passwd: z.string().optional(), // only returned on creation
+  id: z.coerce.string(),
+  name: z.string().optional(), // only returned on creation
 });
 
 export const CreateAppPasswordRequestSchema = z.object({
@@ -94,18 +94,18 @@ export type CreateAppPasswordRequest = z.infer<
  * Alias Schemas
  */
 export const MailcowAliasSchema = z.object({
-  id: z.coerce.string(),
+  active: z.coerce.number(),
   address: z.string().email(),
   goto: z.string(),
-  active: z.coerce.number(),
-  public_comment: z.string().nullish(),
+  id: z.coerce.string(),
   private_comment: z.string().nullish(),
+  public_comment: z.string().nullish(),
 });
 
 export const CreateAliasRequestSchema = z.object({
+  active: z.boolean().default(true),
   address: z.string().email("Invalid alias address"),
   goto: z.string().email("Invalid destination address"),
-  active: z.boolean().default(true),
   public_comment: z.string().optional(),
 });
 

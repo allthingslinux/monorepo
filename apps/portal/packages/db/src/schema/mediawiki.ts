@@ -23,21 +23,21 @@ export const mediawikiAccountStatusEnum = pgEnum("mediawiki_account_status", [
 export const mediawikiAccount = pgTable(
   "mediawiki_account",
   {
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    wikiUsername: text("wiki_username").notNull(),
-    wikiUserId: integer("wiki_user_id"),
+    metadata: jsonb("metadata"),
     status: mediawikiAccountStatusEnum("status").default("active").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
-    metadata: jsonb("metadata"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    wikiUserId: integer("wiki_user_id"),
+    wikiUsername: text("wiki_username").notNull(),
   },
   (table) => [
     index("mediawiki_account_status_idx").on(table.status),

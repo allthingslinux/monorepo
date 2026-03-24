@@ -1,6 +1,5 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
 import type { UserWithIntegrations } from "@portal/api/types";
 import type { UserListWithIntegrationsResponse } from "@portal/types/api";
 import {
@@ -20,8 +19,8 @@ import {
   SelectValue,
 } from "@portal/ui/ui/select";
 import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo, useState } from "react";
 
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useUsers } from "@/features/admin/hooks/use-admin";
 import {
   useBanUser,
@@ -29,21 +28,23 @@ import {
   useUnbanUser,
 } from "@/features/admin/hooks/use-admin-actions";
 import { useUsersListSearchParams } from "@/features/admin/hooks/use-users-list-search-params";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
+
 import { DataTable } from "./data-table";
 import { createUnifiedUserColumns } from "./unified-user-columns";
 import { UserDetailSheet } from "./user-detail-sheet";
 
 const ROLE_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "user", label: "User" },
-  { value: "staff", label: "Staff" },
-  { value: "admin", label: "Admin" },
+  { label: "All", value: "all" },
+  { label: "User", value: "user" },
+  { label: "Staff", value: "staff" },
+  { label: "Admin", value: "admin" },
 ] as const;
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "active", label: "Active" },
-  { value: "banned", label: "Banned" },
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Banned", value: "banned" },
 ] as const;
 
 type RoleValue = (typeof ROLE_OPTIONS)[number]["value"];
@@ -61,13 +62,13 @@ function UnifiedUserManagementInner() {
 
   const filters = useMemo(
     () => ({
-      role: urlState.role === "all" ? undefined : urlState.role,
       banned:
         urlState.status === "all" ? undefined : urlState.status === "banned",
-      search: debouncedSearch || undefined,
+      expandIntegrations: true,
       limit: urlState.limit,
       offset: urlState.offset,
-      expandIntegrations: true,
+      role: urlState.role === "all" ? undefined : urlState.role,
+      search: debouncedSearch || undefined,
     }),
     [
       urlState.role,
@@ -87,10 +88,10 @@ function UnifiedUserManagementInner() {
   const columns = useMemo(
     () =>
       createUnifiedUserColumns({
-        setRole,
         banUser,
-        unbanUser,
         onViewDetails: (id) => setDetailUserId(id),
+        setRole,
+        unbanUser,
       }),
     [setRole, banUser, unbanUser]
   );

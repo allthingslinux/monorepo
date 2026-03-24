@@ -4,18 +4,18 @@
 
 ## What Lives Here
 
-| Directory | Purpose |
-|-----------|---------|
-| `lib/core/` | Base types, integration registry, shared utilities |
-| `lib/irc/` | IRC integration (Atheme JSON-RPC + UnrealIRCd client) |
-| `lib/xmpp/` | XMPP integration (Prosody REST client) |
-| `lib/mailcow/` | mailcow integration (REST API for mailbox provisioning) |
-| `lib/discord/` | Discord integration (`client.ts`, `keys.ts`) |
-| `lib/bridge/` | Bridge ↔ Portal identity env (`keys.ts` — e.g. `BRIDGE_SERVICE_TOKEN`) |
-| `lib/mediawiki/` | MediaWiki API client (wiki account sync) |
-| `components/` | Integration UI (status cards, account forms) |
-| `hooks/` | TanStack Query hooks for integration data |
-| `api/` | Integration API route handler wrappers |
+| Directory        | Purpose                                                                |
+| ---------------- | ---------------------------------------------------------------------- |
+| `lib/core/`      | Base types, integration registry, shared utilities                     |
+| `lib/irc/`       | IRC integration (Atheme JSON-RPC + UnrealIRCd client)                  |
+| `lib/xmpp/`      | XMPP integration (Prosody REST client)                                 |
+| `lib/mailcow/`   | mailcow integration (REST API for mailbox provisioning)                |
+| `lib/discord/`   | Discord integration (`client.ts`, `keys.ts`)                           |
+| `lib/bridge/`    | Bridge ↔ Portal identity env (`keys.ts` — e.g. `BRIDGE_SERVICE_TOKEN`) |
+| `lib/mediawiki/` | MediaWiki API client (wiki account sync)                               |
+| `components/`    | Integration UI (status cards, account forms)                           |
+| `hooks/`         | TanStack Query hooks for integration data                              |
+| `api/`           | Integration API route handler wrappers                                 |
 
 ## Integration Architecture
 
@@ -61,11 +61,11 @@ lib/mediawiki/
 
 ```typescript
 // Always server-side — in API route handlers
-import { createIrcAccount } from "@/features/integrations/lib/irc"
+import { createIrcAccount } from "@/features/integrations/lib/irc";
 
 // Client — TanStack Query hooks for reading integration status
-import { useIntegrations } from "@/features/integrations/hooks/use-integration"
-const { data: integrations, isLoading } = useIntegrations()
+import { useIntegrations } from "@/features/integrations/hooks/use-integration";
+const { data: integrations, isLoading } = useIntegrations();
 ```
 
 ## Environment Variables

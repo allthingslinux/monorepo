@@ -4,16 +4,17 @@
 
 ## What Lives Here
 
-| Directory | Purpose |
-|-----------|---------|
-| `lib/` | Admin business logic and server utilities |
+| Directory     | Purpose                                          |
+| ------------- | ------------------------------------------------ |
+| `lib/`        | Admin business logic and server utilities        |
 | `components/` | Admin UI components (data tables, forms, modals) |
-| `hooks/` | Admin-specific TanStack Query hooks |
-| `api/` | Admin API route handler wrappers |
+| `hooks/`      | Admin-specific TanStack Query hooks              |
+| `api/`        | Admin API route handler wrappers                 |
 
 ## Architecture
 
 Admin features follow the standard portal feature pattern:
+
 - **API routes** live in `src/app/api/admin/` (not here)
 - **Server queries** that need elevated access are in `packages/api/src/server-queries.ts`
 - **Client data fetching** goes through TanStack Query hooks in `hooks/`
@@ -24,17 +25,17 @@ All admin functionality requires explicit permission checks. **Never render admi
 
 ```typescript
 // Server-side — in route handlers or server actions
-import { auth } from "@/auth"
-import { USER_ROLES } from "@portal/utils/constants"
+import { auth } from "@/auth";
+import { USER_ROLES } from "@portal/utils/constants";
 
-const session = await auth.api.getSession({ headers: await headers() })
+const session = await auth.api.getSession({ headers: await headers() });
 if (session?.user.role !== USER_ROLES.ADMIN) {
-  return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 }
 
 // Client-side — in components
-import { usePermissions } from "@/auth"
-const { hasPermission } = usePermissions()
+import { usePermissions } from "@/auth";
+const { hasPermission } = usePermissions();
 // Gate entire components: if (!hasPermission("admin:read")) return null
 ```
 

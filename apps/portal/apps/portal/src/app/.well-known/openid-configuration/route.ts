@@ -1,5 +1,5 @@
-import type { NextRequest } from "next/server";
 import { oauthProviderOpenIdConfigMetadata } from "@better-auth/oauth-provider";
+import type { NextRequest } from "next/server";
 
 import { auth } from "@/auth";
 

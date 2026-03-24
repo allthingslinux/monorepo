@@ -8,14 +8,14 @@ import type {
 
 // Mock integration for testing
 const createMockIntegration = (id: string, enabled = true): Integration => ({
-  id,
-  name: `Integration ${id}`,
+  createAccount: vi.fn(),
+  deleteAccount: vi.fn(),
   description: `Description for ${id}`,
   enabled,
-  createAccount: vi.fn(),
   getAccount: vi.fn(),
+  id,
+  name: `Integration ${id}`,
   updateAccount: vi.fn(),
-  deleteAccount: vi.fn(),
 });
 
 describe("IntegrationRegistry", () => {
@@ -134,16 +134,16 @@ describe("IntegrationRegistry", () => {
       expect(publicInfo).toHaveLength(2);
       expect(publicInfo).toEqual<IntegrationPublicInfo[]>([
         {
-          id: "integration-1",
-          name: "Integration integration-1",
           description: "Description for integration-1",
           enabled: true,
+          id: "integration-1",
+          name: "Integration integration-1",
         },
         {
-          id: "integration-2",
-          name: "Integration integration-2",
           description: "Description for integration-2",
           enabled: false,
+          id: "integration-2",
+          name: "Integration integration-2",
         },
       ]);
     });

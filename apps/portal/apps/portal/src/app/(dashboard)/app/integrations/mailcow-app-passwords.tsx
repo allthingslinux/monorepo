@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Key, Loader2, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import { Badge } from "@portal/ui/ui/badge";
 import { Button } from "@portal/ui/ui/button";
 import {
@@ -17,6 +14,9 @@ import {
 import { Input } from "@portal/ui/ui/input";
 import { formatDate } from "@portal/utils/date";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Key, Loader2, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   createAppPassword,
@@ -38,8 +38,8 @@ export function AppPasswordManager({ accountId }: AppPasswordManagerProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data: passwords = [], isLoading } = useQuery({
-    queryKey: ["mailcow", "passwords", accountId],
     queryFn: () => getAppPasswords(accountId),
+    queryKey: ["mailcow", "passwords", accountId],
   });
 
   const handleCreate = async () => {
@@ -54,8 +54,8 @@ export function AppPasswordManager({ accountId }: AppPasswordManagerProps) {
       queryClient.invalidateQueries({
         queryKey: ["mailcow", "passwords", accountId],
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to create app password");
     } finally {
       setIsCreating(false);
@@ -69,8 +69,8 @@ export function AppPasswordManager({ accountId }: AppPasswordManagerProps) {
       queryClient.invalidateQueries({
         queryKey: ["mailcow", "passwords", accountId],
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to delete app password");
     }
   };

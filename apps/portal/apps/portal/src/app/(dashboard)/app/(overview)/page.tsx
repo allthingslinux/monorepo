@@ -1,11 +1,11 @@
-import { Calendar } from "lucide-react";
-import type { Metadata } from "next";
 import { getServerQueryClient } from "@portal/api/hydration";
 import { queryKeys } from "@portal/api/query-keys";
 import { fetchCurrentUserServer } from "@portal/api/server-queries";
 import { getRouteMetadata } from "@portal/seo/metadata";
 import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Calendar } from "lucide-react";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { verifySession } from "@/auth/dal";
@@ -23,10 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const MOCK_QUICK_LINKS = [
-  { label: "atl.tools", href: "https://atl.tools" },
-  { label: "atl.wiki", href: "https://atl.wiki" },
-  { label: "atl.dev", href: "https://atl.dev" },
-  { label: "atl.sh", href: "https://atl.sh" },
+  { href: "https://atl.tools", label: "atl.tools" },
+  { href: "https://atl.wiki", label: "atl.wiki" },
+  { href: "https://atl.dev", label: "atl.dev" },
+  { href: "https://atl.sh", label: "atl.sh" },
 ];
 
 export default async function AppPage() {
@@ -35,11 +35,11 @@ export default async function AppPage() {
 
   const [user, resolver, t] = await Promise.all([
     queryClient.fetchQuery({
-      queryKey: queryKeys.users.current(),
       queryFn: () =>
         fetchCurrentUserServer(
           sessionData.session as Parameters<typeof fetchCurrentUserServer>[0]
         ),
+      queryKey: queryKeys.users.current(),
     }),
     getServerRouteResolver(),
     getTranslations(),

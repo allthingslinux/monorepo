@@ -7,18 +7,18 @@ Analyze the current file for linting issues and automatically fix them according
 ## Steps
 
 1. **Identify linting issues**
-    - Code formatting and style consistency
-    - Unused imports and variables
-    - Missing semicolons or proper indentation
-    - Best practice violations
-    - Type safety issues
+   - Code formatting and style consistency
+   - Unused imports and variables
+   - Missing semicolons or proper indentation
+   - Best practice violations
+   - Type safety issues
 2. **Apply fixes**
-    - Fix formatting and style issues
-    - Remove unused imports and variables
-    - Add missing semicolons or correct indentation
-    - Apply best practice corrections
-    - Fix type safety issues
-    - Explain what changes were made
+   - Fix formatting and style issues
+   - Remove unused imports and variables
+   - Add missing semicolons or correct indentation
+   - Apply best practice corrections
+   - Fix type safety issues
+   - Explain what changes were made
 
 ## Lint and Fix Code Checklist
 

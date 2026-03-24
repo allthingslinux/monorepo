@@ -1,8 +1,8 @@
 import "server-only";
-
 import { captureException } from "@sentry/nextjs";
 
 import { BASE_URL } from "@/config/app";
+
 import { keys } from "./keys";
 import type {
   RawBlockResponse,
@@ -27,7 +27,7 @@ import type {
  * GET queries (site stats, recent changes, page info).
  */
 export class MediaWikiBotClient {
-  private readonly cookies: Map<string, string> = new Map();
+  private readonly cookies = new Map<string, string>();
   private authenticated = false;
   private loginFailed = false;
 
@@ -40,7 +40,7 @@ export class MediaWikiBotClient {
 
   /** Build a `Cookie` header value from the stored cookie map. */
   private buildCookieHeader(): string {
-    return Array.from(this.cookies.entries())
+    return [...this.cookies.entries()]
       .map(([name, value]) => `${name}=${value}`)
       .join("; ");
   }
@@ -117,17 +117,17 @@ export class MediaWikiBotClient {
     }
 
     const headers: Record<string, string> = {
-      "User-Agent": this.userAgent,
       "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": this.userAgent,
     };
     if (this.cookies.size > 0) {
       headers.Cookie = this.buildCookieHeader();
     }
 
     const response = await fetch(url.toString(), {
-      method: "POST",
-      headers,
       body: body.toString(),
+      headers,
+      method: "POST",
     });
     this.storeCookies(response);
 
@@ -200,8 +200,8 @@ export class MediaWikiBotClient {
         loginData.login?.reason ?? loginData.login?.result ?? "Unknown error";
       const error = new Error(`MediaWiki bot login failed: ${reason}`);
       captureException(error, {
-        tags: { integration: "mediawiki", step: "login_result" },
         extra: { result: loginData.login?.result },
+        tags: { integration: "mediawiki", step: "login_result" },
       });
       throw error;
     }
@@ -306,17 +306,17 @@ export class MediaWikiBotClient {
         const token = await this.getToken("createaccount");
         return this.post<RawCreateAccountResponse>({
           action: "createaccount",
-          username,
-          password,
-          retype: password,
           createreturnurl: BASE_URL,
           createtoken: token,
+          password,
+          retype: password,
+          username,
         });
       },
       (response) => {
-        const error = (
-          response as unknown as { error?: { code: string; info: string } }
-        ).error;
+        const { error } = response as unknown as {
+          error?: { code: string; info: string };
+        };
         if (error?.code === "badtoken") {
           return { isBadToken: true };
         }
@@ -325,15 +325,15 @@ export class MediaWikiBotClient {
             response.createaccount?.message ??
             error?.info ??
             `Account creation failed: ${response.createaccount?.status ?? "unknown"}`;
-          return { isBadToken: false, errorMessage: message };
+          return { errorMessage: message, isBadToken: false };
         }
         return { isBadToken: false };
       }
     );
 
     return {
-      username: result.createaccount.username ?? username,
       userId: result.createaccount.userid ?? 0,
+      username: result.createaccount.username ?? username,
     };
   }
 
@@ -347,19 +347,19 @@ export class MediaWikiBotClient {
         const token = await this.getToken("csrf");
         return this.post<RawResetPasswordResponse>({
           action: "resetpassword",
-          user: username,
           token,
+          user: username,
         });
       },
       (result) => {
-        const error = result.error;
+        const { error } = result;
         if (error?.code === "badtoken") {
           return { isBadToken: true };
         }
         if (error) {
           return {
-            isBadToken: false,
             errorMessage: `Password reset failed: ${error.info}`,
+            isBadToken: false,
           };
         }
         return { isBadToken: false };
@@ -380,23 +380,23 @@ export class MediaWikiBotClient {
         const token = await this.getToken("csrf");
         return this.post<RawBlockResponse>({
           action: "block",
-          user: username,
-          reason,
-          token,
+          autoblock: options?.autoblock ? "1" : undefined,
           expiry: options?.expiry ?? "infinite",
           nocreate: options?.nocreate ? "1" : undefined,
-          autoblock: options?.autoblock ? "1" : undefined,
+          reason,
+          token,
+          user: username,
         });
       },
       (result) => {
-        const error = result.error;
+        const { error } = result;
         if (error?.code === "badtoken") {
           return { isBadToken: true };
         }
         if (error) {
           return {
-            isBadToken: false,
             errorMessage: `Block failed: ${error.info}`,
+            isBadToken: false,
           };
         }
         return { isBadToken: false };
@@ -413,9 +413,9 @@ export class MediaWikiBotClient {
         const token = await this.getToken("csrf");
         return this.post<{ error?: { code: string; info: string } }>({
           action: "unblock",
-          user: username,
           reason,
           token,
+          user: username,
         });
       },
       (result) => {
@@ -424,8 +424,8 @@ export class MediaWikiBotClient {
         }
         if (result.error) {
           return {
-            isBadToken: false,
             errorMessage: `Unblock failed: ${result.error.info}`,
+            isBadToken: false,
           };
         }
         return { isBadToken: false };
@@ -446,8 +446,8 @@ export class MediaWikiBotClient {
     const data = await this.get<RawUserInfoResponse>({
       action: "query",
       list: "users",
-      ususers: username,
       usprop: "editcount|registration|groups|blockinfo",
+      ususers: username,
     });
 
     const user = data.query?.users?.[0];
@@ -456,12 +456,12 @@ export class MediaWikiBotClient {
     }
 
     return {
-      userId: user.userid ?? 0,
-      name: user.name,
-      editCount: user.editcount ?? 0,
-      registration: user.registration ?? "",
-      groups: user.groups ?? [],
       blockExpiry: user.blockexpiry,
+      editCount: user.editcount ?? 0,
+      groups: user.groups ?? [],
+      name: user.name,
+      registration: user.registration ?? "",
+      userId: user.userid ?? 0,
     };
   }
 
@@ -474,16 +474,16 @@ export class MediaWikiBotClient {
     const data = await this.get<RawUserContribsResponse>({
       action: "query",
       list: "usercontribs",
-      ucuser: username,
       uclimit: limit,
       ucprop: "title|timestamp|comment|sizediff",
+      ucuser: username,
     });
 
     return (data.query?.usercontribs ?? []).map((contrib) => ({
-      title: contrib.title,
-      timestamp: contrib.timestamp,
       comment: contrib.comment ?? "",
       sizeDiff: contrib.sizediff ?? 0,
+      timestamp: contrib.timestamp,
+      title: contrib.title,
     }));
   }
 }

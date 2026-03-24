@@ -4,16 +4,16 @@
 
 ## What Lives Here
 
-| File | Purpose |
-|------|---------|
-| `lib/config.ts` | Route definitions — all app routes declared here |
-| `lib/permissions.ts` | Route-level permission guards |
-| `lib/breadcrumbs.ts` | Breadcrumb generation from route config |
-| `lib/i18n.ts` | next-intl routing config and locale handling |
-| `lib/i18n-utils.ts` | i18n utility helpers |
-| `lib/ui.ts` | Route-related UI helpers (active link detection, etc.) |
-| `lib/types.ts` | Route types (`RouteConfig`, `ProtectedRoute`, etc.) |
-| `lib/README.md` | Detailed routing architecture documentation |
+| File                 | Purpose                                                |
+| -------------------- | ------------------------------------------------------ |
+| `lib/config.ts`      | Route definitions — all app routes declared here       |
+| `lib/permissions.ts` | Route-level permission guards                          |
+| `lib/breadcrumbs.ts` | Breadcrumb generation from route config                |
+| `lib/i18n.ts`        | next-intl routing config and locale handling           |
+| `lib/i18n-utils.ts`  | i18n utility helpers                                   |
+| `lib/ui.ts`          | Route-related UI helpers (active link detection, etc.) |
+| `lib/types.ts`       | Route types (`RouteConfig`, `ProtectedRoute`, etc.)    |
+| `lib/README.md`      | Detailed routing architecture documentation            |
 
 ## Middleware
 
@@ -30,7 +30,7 @@ The middleware handles:
 All routes are declared in `lib/config.ts`:
 
 ```typescript
-import { type RouteConfig } from "@portal/types/routes"
+import { type RouteConfig } from "@portal/types/routes";
 
 // Public routes — no auth required
 // Protected routes — require session + optional role check
@@ -42,9 +42,9 @@ import { type RouteConfig } from "@portal/types/routes"
 Breadcrumbs are **generated from the route config** via `generateBreadcrumbs` — don't hardcode trail logic in page components:
 
 ```typescript
-import { generateBreadcrumbs, routeConfig } from "@/features/routing/lib"
+import { generateBreadcrumbs, routeConfig } from "@/features/routing/lib";
 
-const crumbs = generateBreadcrumbs(pathname, routeConfig, resolver)
+const crumbs = generateBreadcrumbs(pathname, routeConfig, resolver);
 ```
 
 Dashboard pages often use `@portal/ui` `PageHeader` with `pathname` + `getServerRouteResolver()` instead of assembling crumbs manually.
@@ -54,8 +54,8 @@ Dashboard pages often use `@portal/ui` `PageHeader` with `pathname` + `getServer
 Supported locales: `en`, `es`, `fr`, `de`, `pt`, `zh` (defined in `src/i18n/`). Locale files in `locale/`. Use `next-intl` hooks:
 
 ```typescript
-import { useTranslations } from "next-intl"
-const t = useTranslations("common")
+import { useTranslations } from "next-intl";
+const t = useTranslations("common");
 ```
 
 ## Critical Rules

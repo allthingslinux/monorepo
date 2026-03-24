@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { BookOpen } from "lucide-react";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import { BookOpen } from "lucide-react";
+import { Suspense } from "react";
 
 import { isWikiApiConfigured } from "@/features/integrations/lib/mediawiki/keys";
 import { fetchWikiStats } from "@/shared/wiki";

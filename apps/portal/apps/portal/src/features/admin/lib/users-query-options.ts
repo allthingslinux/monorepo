@@ -10,8 +10,8 @@ import { keepPreviousData } from "@tanstack/react-query";
 
 export function usersListQueryOptions(filters?: UserListFilters) {
   return {
+    placeholderData: keepPreviousData,
     queryKey: queryKeys.users.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
-    placeholderData: keepPreviousData,
   };
 }

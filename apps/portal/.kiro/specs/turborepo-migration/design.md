@@ -212,9 +212,22 @@ sequenceDiagram
 // Becomes: packages/types/src/
 // Consumers import specific subpaths (no barrel file):
 
-import type { SessionData, AuthResult, UserPermissions, Permission } from "@portal/types/auth";
-import type { UserListFilters, SessionListFilters, ApiResponse } from "@portal/types/api";
-import type { RouteConfig, ProtectedRoute, BreadcrumbItem } from "@portal/types/routes";
+import type {
+  SessionData,
+  AuthResult,
+  UserPermissions,
+  Permission,
+} from "@portal/types/auth";
+import type {
+  UserListFilters,
+  SessionListFilters,
+  ApiResponse,
+} from "@portal/types/api";
+import type {
+  RouteConfig,
+  ProtectedRoute,
+  BreadcrumbItem,
+} from "@portal/types/routes";
 import type { UserDTO, SessionDTO, ApiKeyDTO } from "@portal/types/common";
 import type { EmailOptions } from "@portal/types/email";
 ```
@@ -385,7 +398,11 @@ import { sendEmail } from "@portal/email";
 // Becomes: packages/seo/src/
 // Consumers import specific subpaths (no barrel file):
 
-import { createPageMetadata, defaultMetadata, getRouteMetadata } from "@portal/seo/metadata";
+import {
+  createPageMetadata,
+  defaultMetadata,
+  getRouteMetadata,
+} from "@portal/seo/metadata";
 import { generateRobots } from "@portal/seo/robots";
 import { generateSitemap } from "@portal/seo/sitemap";
 import { JsonLd } from "@portal/seo/json-ld";
@@ -584,25 +601,25 @@ portal/                              # Turborepo root
 
 The migration rewrites `@/` path aliases to package imports:
 
-| Before (path alias)                    | After (package import)                     |
-|----------------------------------------|--------------------------------------------|
-| `@/shared/types/auth`                  | `@portal/types/auth`                       |
-| `@/shared/utils`                       | `@portal/utils/utils`                      |
-| `@/shared/utils/constants`             | `@portal/utils/constants`                  |
-| `@/shared/schemas`                     | `@portal/schemas/user` (or specific file)  |
-| `@/db`                                 | `@portal/db/client`                        |
-| `@/db/schema`                          | `@portal/db/schema`                        |
-| `@/components/ui/button`               | `@portal/ui/ui/button`                     |
-| `@/components/layout`                  | `@portal/ui/layout`                        |
-| `@/shared/api`                         | `@portal/api/query-client` (or specific)   |
-| `@/shared/email`                       | `@portal/email`                            |
-| `@/shared/observability`               | `@portal/observability/client` (or specific)|
-| `@/shared/seo`                         | `@portal/seo/metadata` (or specific)       |
-| `@/auth` (features/auth/lib)           | `@/auth` (stays — app-internal)            |
-| `@/features/*`                         | `@/features/*` (stays — app-internal)      |
-| `@/hooks/*`                            | `@/hooks/*` (stays — app-internal)         |
-| `@/config`                             | `@/config` (stays — app-internal)          |
-| `@/env`                                | `@/env` (stays — app-internal)             |
+| Before (path alias)          | After (package import)                       |
+| ---------------------------- | -------------------------------------------- |
+| `@/shared/types/auth`        | `@portal/types/auth`                         |
+| `@/shared/utils`             | `@portal/utils/utils`                        |
+| `@/shared/utils/constants`   | `@portal/utils/constants`                    |
+| `@/shared/schemas`           | `@portal/schemas/user` (or specific file)    |
+| `@/db`                       | `@portal/db/client`                          |
+| `@/db/schema`                | `@portal/db/schema`                          |
+| `@/components/ui/button`     | `@portal/ui/ui/button`                       |
+| `@/components/layout`        | `@portal/ui/layout`                          |
+| `@/shared/api`               | `@portal/api/query-client` (or specific)     |
+| `@/shared/email`             | `@portal/email`                              |
+| `@/shared/observability`     | `@portal/observability/client` (or specific) |
+| `@/shared/seo`               | `@portal/seo/metadata` (or specific)         |
+| `@/auth` (features/auth/lib) | `@/auth` (stays — app-internal)              |
+| `@/features/*`               | `@/features/*` (stays — app-internal)        |
+| `@/hooks/*`                  | `@/hooks/*` (stays — app-internal)           |
+| `@/config`                   | `@/config` (stays — app-internal)            |
+| `@/env`                      | `@/env` (stays — app-internal)               |
 
 Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-internal imports. Only shared modules become package imports. Packages use direct subpath imports (e.g., `@portal/utils/constants`) instead of barrel re-exports, aligning with the `noBarrelFile: "error"` Biome rule. The exception is `@portal/email` which uses `"."` since it's a single-file module.
 
@@ -761,7 +778,7 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
 
 **Note on `fix` task**: The `fix` task runs `ultracite fix` (not `biome fix`). It's not cached because it modifies files in place. The `check` task runs `ultracite check` and can be cached.
 
-```
+````
 
 **Preconditions:**
 - All packages declare their `build` script (or have none if JIT)
@@ -791,7 +808,7 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - unrs-resolver
-```
+````
 
 **Preconditions:**
 
@@ -861,7 +878,7 @@ onlyBuiltDependencies:
 
 **Note on typegen gotcha**: `pnpm typegen` (which runs `next typegen`) must execute before `pnpm type-check`. In the turbo pipeline, `apps/portal/turbo.json` overrides `type-check` to depend on `typegen`, so this is handled automatically when running `turbo run type-check`.
 
-```
+````
 
 **Preconditions:**
 - `turbo` is installed as a root devDependency
@@ -917,7 +934,7 @@ onlyBuiltDependencies:
     "noEmit": true
   }
 }
-```
+````
 
 **Preconditions:**
 
@@ -1336,26 +1353,26 @@ jobs:
 
   lint:
     steps:
-      - run: pnpm check  # turbo run check under the hood
+      - run: pnpm check # turbo run check under the hood
 
   type-check:
     steps:
-      - run: pnpm typegen  # next typegen in apps/portal
-      - run: pnpm type-check  # turbo run type-check
+      - run: pnpm typegen # next typegen in apps/portal
+      - run: pnpm type-check # turbo run type-check
 
   build:
     steps:
       - name: Cache Next.js build
         with:
-          path: apps/portal/.next/cache  # Updated path
-      - run: pnpm build  # turbo run build
+          path: apps/portal/.next/cache # Updated path
+      - run: pnpm build # turbo run build
 
   test:
     steps:
-      - run: pnpm test:coverage  # turbo run test:coverage
+      - run: pnpm test:coverage # turbo run test:coverage
       - name: Upload coverage
         with:
-          files: ./apps/portal/coverage/lcov.info  # Updated path
+          files: ./apps/portal/coverage/lcov.info # Updated path
 
   release:
     # Unchanged — still runs pnpm run release after all checks pass
@@ -1363,89 +1380,89 @@ jobs:
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Dependency acyclicity
 
-*For all* pairs of internal packages (A, B) in the workspace, if A declares B as a dependency in its `package.json`, then B does not transitively depend on A. The package dependency graph is a directed acyclic graph.
+_For all_ pairs of internal packages (A, B) in the workspace, if A declares B as a dependency in its `package.json`, then B does not transitively depend on A. The package dependency graph is a directed acyclic graph.
 
 **Validates: Requirements 5.5, 14.1**
 
 ### Property 2: No stale imports remain
 
-*For all* source files in the codebase (app and packages), no import statement references `@/shared/types`, `@/shared/utils`, `@/shared/schemas`, `@/shared/db`, `@/shared/api`, `@/shared/email`, `@/shared/observability`, `@/shared/seo`, `@/components/`, `@/db`, or `@/ui/` — all of which have been migrated to `@portal/*` package imports.
+_For all_ source files in the codebase (app and packages), no import statement references `@/shared/types`, `@/shared/utils`, `@/shared/schemas`, `@/shared/db`, `@/shared/api`, `@/shared/email`, `@/shared/observability`, `@/shared/seo`, `@/components/`, `@/db`, or `@/ui/` — all of which have been migrated to `@portal/*` package imports.
 
 **Validates: Requirements 6.1, 6.4, 6.5**
 
 ### Property 3: Package boundary enforcement
 
-*For all* source files in `packages/*/src/`, no import uses the `@/` app-internal alias, and no import references another internal package via a direct relative file path (e.g., `../../other-package/src/`). All cross-package imports go through `@portal/*` package exports.
+_For all_ source files in `packages/*/src/`, no import uses the `@/` app-internal alias, and no import references another internal package via a direct relative file path (e.g., `../../other-package/src/`). All cross-package imports go through `@portal/*` package exports.
 
 **Validates: Requirements 13.2, 13.3**
 
 ### Property 4: JIT package exports point to TypeScript source
 
-*For all* internal packages under `packages/`, the `exports` field in `package.json` maps subpaths directly to `.ts` source files (not compiled `.js` output), enabling the JIT package pattern where the consuming bundler transpiles the source.
+_For all_ internal packages under `packages/`, the `exports` field in `package.json` maps subpaths directly to `.ts` source files (not compiled `.js` output), enabling the JIT package pattern where the consuming bundler transpiles the source.
 
 **Validates: Requirement 5.2**
 
 ### Property 5: Package structure conformance
 
-*For all* internal packages under `packages/`, the `package.json` sets `"private": true`, and declares `check`, `fix`, and `type-check` scripts.
+_For all_ internal packages under `packages/`, the `package.json` sets `"private": true`, and declares `check`, `fix`, and `type-check` scripts.
 
 **Validates: Requirements 5.6, 13.1**
 
 ### Property 6: TypeScript config inheritance
 
-*For all* internal packages under `packages/`, the `tsconfig.json` extends `@portal/typescript-config/library.json`. The Portal App's `tsconfig.json` extends `@portal/typescript-config/nextjs.json`.
+_For all_ internal packages under `packages/`, the `tsconfig.json` extends `@portal/typescript-config/library.json`. The Portal App's `tsconfig.json` extends `@portal/typescript-config/nextjs.json`.
 
 **Validates: Requirements 3.4, 3.5**
 
 ### Property 7: No barrel files in wildcard-export packages
 
-*For all* internal packages that use the wildcard export pattern (`"./*"`), no `index.ts` barrel file exists in the package's `src/` directory.
+_For all_ internal packages that use the wildcard export pattern (`"./*"`), no `index.ts` barrel file exists in the package's `src/` directory.
 
 **Validates: Requirement 5.7**
 
 ### Property 8: Environment variable completeness
 
-*For all* environment variables referenced in `keys.ts` files across all packages and the app, the variable appears in the corresponding task's `env` array in `turbo.json` (or in `globalEnv`). No undeclared env var silently affects build output.
+_For all_ environment variables referenced in `keys.ts` files across all packages and the app, the variable appears in the corresponding task's `env` array in `turbo.json` (or in `globalEnv`). No undeclared env var silently affects build output.
 
 **Validates: Requirements 2.4, 12.2, 13.4**
 
 ### Property 9: No direct process.env access in packages
 
-*For all* source files in packages that use `@t3-oss/env-nextjs` for environment validation, no file other than `keys.ts` contains a direct `process.env` reference.
+_For all_ source files in packages that use `@t3-oss/env-nextjs` for environment validation, no file other than `keys.ts` contains a direct `process.env` reference.
 
 **Validates: Requirement 12.5**
 
 ### Property 10: Import path correctness
 
-*For all* `@portal/*` imports in the codebase, the import uses a direct subpath (e.g., `@portal/utils/constants`) rather than a bare package name, except for `@portal/email` which is a single-file module.
+_For all_ `@portal/*` imports in the codebase, the import uses a direct subpath (e.g., `@portal/utils/constants`) rather than a bare package name, except for `@portal/email` which is a single-file module.
 
 **Validates: Requirement 6.2**
 
 ### Property 11: App-internal alias preservation
 
-*For all* imports of `@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, and `@/env` in the Portal App source, the `@/` prefix is preserved (not rewritten to a `@portal/*` import).
+_For all_ imports of `@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, and `@/env` in the Portal App source, the `@/` prefix is preserved (not rewritten to a `@portal/*` import).
 
 **Validates: Requirement 6.3**
 
 ### Property 12: Functional equivalence
 
-*For all* routes R in the application, the response produced by the monorepo build is identical to the response produced by the single-app build, given the same request and database state.
+_For all_ routes R in the application, the response produced by the monorepo build is identical to the response produced by the single-app build, given the same request and database state.
 
 **Validates: Requirement 10.5**
 
 ### Property 13: Test preservation
 
-*For all* test files in `apps/portal/tests/`, the test passes in the monorepo structure if and only if it passed in the single-app structure (excluding the 2 known pre-existing `vi.mock` hoisting failures).
+_For all_ test files in `apps/portal/tests/`, the test passes in the monorepo structure if and only if it passed in the single-app structure (excluding the 2 known pre-existing `vi.mock` hoisting failures).
 
 **Validates: Requirement 10.4**
 
 ### Property 14: Package dependency completeness
 
-*For all* internal packages, every runtime import in the package's source files resolves to either the package's own files, a declared dependency in the package's `package.json`, or a Node.js built-in module.
+_For all_ internal packages, every runtime import in the package's source files resolves to either the package's own files, a declared dependency in the package's `package.json`, or a Node.js built-in module.
 
 **Validates: Requirement 5.4**
 
@@ -1575,8 +1592,8 @@ Key properties to test:
 
 ### New Dependencies
 
-| Package | Version | Scope | Purpose |
-|---------|---------|-------|---------|
+| Package | Version  | Scope              | Purpose                                          |
+| ------- | -------- | ------------------ | ------------------------------------------------ |
 | `turbo` | `^2.5.0` | Root devDependency | Turborepo CLI for task orchestration and caching |
 
 ### Moved Dependencies (from root to packages)

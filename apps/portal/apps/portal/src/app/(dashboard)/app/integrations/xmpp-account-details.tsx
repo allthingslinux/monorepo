@@ -1,9 +1,9 @@
 "use client";
 
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
 
@@ -28,9 +28,9 @@ export function XmppAccountDetails({
             onClick={async () => {
               await startSpan(
                 {
+                  attributes: { integrationId },
                   name: "Copy XMPP JID",
                   op: "ui.action",
-                  attributes: { integrationId },
                 },
                 async () => {
                   try {
@@ -42,7 +42,7 @@ export function XmppAccountDetails({
                     } else {
                       const textArea = document.createElement("textarea");
                       textArea.value = account.jid;
-                      document.body.appendChild(textArea);
+                      document.body.append(textArea);
                       textArea.select();
                       if (!document.execCommand("copy")) {
                         throw new Error("execCommand copy failed");

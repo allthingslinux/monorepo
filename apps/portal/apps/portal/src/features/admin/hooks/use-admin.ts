@@ -47,14 +47,14 @@ export function useUsers(filters?: UserListFilters) {
 
 export function useUser(userId: string | null) {
   return useQuery<AdminUserDetailResponse, Error>({
-    queryKey: queryKeys.users.detail(userId ?? ""),
+    enabled: !!userId,
     queryFn: () => {
       if (!userId) {
         throw new Error("No userId");
       }
       return fetchUserById(userId);
     },
-    enabled: !!userId,
+    queryKey: queryKeys.users.detail(userId ?? ""),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -105,17 +105,17 @@ export function useDeleteUser() {
 // Sessions
 export function useSessions(filters?: SessionListFilters) {
   return useQuery({
-    queryKey: queryKeys.sessions.list(filters),
     queryFn: () => fetchSessions(filters),
+    queryKey: queryKeys.sessions.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useSession(sessionId: string) {
   return useQuery({
-    queryKey: queryKeys.sessions.detail(sessionId),
-    queryFn: () => fetchSessionById(sessionId),
     enabled: !!sessionId,
+    queryFn: () => fetchSessionById(sessionId),
+    queryKey: queryKeys.sessions.detail(sessionId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -143,8 +143,8 @@ export function useDeleteSession() {
 // Stats
 export function useAdminStats() {
   return useQuery({
-    queryKey: queryKeys.admin.stats(),
     queryFn: fetchAdminStats,
+    queryKey: queryKeys.admin.stats(),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -155,17 +155,17 @@ export function useAdminApiKeys(filters?: {
   enabled?: boolean;
 }) {
   return useQuery({
-    queryKey: queryKeys.apiKeys.list(filters?.userId),
     queryFn: () => fetchApiKeys(filters),
+    queryKey: queryKeys.apiKeys.list(filters?.userId),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useAdminApiKey(keyId: string) {
   return useQuery({
-    queryKey: queryKeys.apiKeys.detail(keyId),
-    queryFn: () => fetchApiKeyById(keyId),
     enabled: !!keyId,
+    queryFn: () => fetchApiKeyById(keyId),
+    queryKey: queryKeys.apiKeys.detail(keyId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -196,17 +196,17 @@ export function useAdminOAuthClients(filters?: {
   disabled?: boolean;
 }) {
   return useQuery({
-    queryKey: queryKeys.oauthClients.list(filters),
     queryFn: () => fetchOAuthClients(filters),
+    queryKey: queryKeys.oauthClients.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
 
 export function useAdminOAuthClient(clientId: string) {
   return useQuery({
-    queryKey: queryKeys.oauthClients.detail(clientId),
-    queryFn: () => fetchOAuthClientById(clientId),
     enabled: !!clientId,
+    queryFn: () => fetchOAuthClientById(clientId),
+    queryKey: queryKeys.oauthClients.detail(clientId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -236,8 +236,8 @@ export function useAdminIrcAccounts(filters?: {
   offset?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.admin.ircAccounts.list(filters),
     queryFn: () => fetchIrcAccounts(filters),
+    queryKey: queryKeys.admin.ircAccounts.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -249,8 +249,8 @@ export function useAdminXmppAccounts(filters?: {
   offset?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.admin.xmppAccounts.list(filters),
     queryFn: () => fetchXmppAccounts(filters),
+    queryKey: queryKeys.admin.xmppAccounts.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -262,8 +262,8 @@ export function useAdminMailcowAccounts(filters?: {
   offset?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.admin.mailcowAccounts.list(filters),
     queryFn: () => fetchMailcowAccounts(filters),
+    queryKey: queryKeys.admin.mailcowAccounts.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -275,8 +275,8 @@ export function useAdminMediawikiAccounts(filters?: {
   offset?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.admin.mediawikiAccounts.list(filters),
     queryFn: () => fetchMediawikiAccounts(filters),
+    queryKey: queryKeys.admin.mediawikiAccounts.list(filters),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }

@@ -1,4 +1,5 @@
 import type { Role } from "@/types";
+
 import { creativeQuestions } from "./questions/departmental/creative";
 import { financeQuestions } from "./questions/departmental/finance";
 import { managementQuestions } from "./questions/departmental/management";

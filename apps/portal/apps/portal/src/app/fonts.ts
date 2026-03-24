@@ -2,8 +2,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 
 // Inter - Primary sans-serif font
 export const inter = Inter({
-  subsets: ["latin"],
   display: "swap",
+  subsets: ["latin"],
   variable: "--font-inter",
 });
 

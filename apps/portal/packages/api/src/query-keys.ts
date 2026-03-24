@@ -14,24 +14,24 @@ export const queryKeys = {
   // User queries
   users: {
     all: ["users"] as const,
-    lists: () => [...queryKeys.users.all, "list"] as const,
+    current: () => [...queryKeys.users.all, "current"] as const,
+    detail: (id: string) => [...queryKeys.users.details(), id] as const,
+    details: () => [...queryKeys.users.all, "detail"] as const,
     list: (filters?: UserListFilters) =>
       [...queryKeys.users.lists(), { filters }] as const,
-    details: () => [...queryKeys.users.all, "detail"] as const,
-    detail: (id: string) => [...queryKeys.users.details(), id] as const,
-    current: () => [...queryKeys.users.all, "current"] as const,
+    lists: () => [...queryKeys.users.all, "list"] as const,
     stats: () => [...queryKeys.users.all, "stats"] as const,
   },
 
   // Session queries
   sessions: {
     all: ["sessions"] as const,
-    lists: () => [...queryKeys.sessions.all, "list"] as const,
+    current: () => [...queryKeys.sessions.all, "current"] as const,
+    detail: (id: string) => [...queryKeys.sessions.details(), id] as const,
+    details: () => [...queryKeys.sessions.all, "detail"] as const,
     list: (filters?: SessionListFilters) =>
       [...queryKeys.sessions.lists(), { filters }] as const,
-    details: () => [...queryKeys.sessions.all, "detail"] as const,
-    detail: (id: string) => [...queryKeys.sessions.details(), id] as const,
-    current: () => [...queryKeys.sessions.all, "current"] as const,
+    lists: () => [...queryKeys.sessions.all, "list"] as const,
     user: (userId: string) =>
       [...queryKeys.sessions.all, "user", userId] as const,
   },
@@ -39,11 +39,11 @@ export const queryKeys = {
   // API Key queries
   apiKeys: {
     all: ["apiKeys"] as const,
-    lists: () => [...queryKeys.apiKeys.all, "list"] as const,
+    detail: (id: string) => [...queryKeys.apiKeys.details(), id] as const,
+    details: () => [...queryKeys.apiKeys.all, "detail"] as const,
     list: (userId?: string) =>
       [...queryKeys.apiKeys.lists(), { userId }] as const,
-    details: () => [...queryKeys.apiKeys.all, "detail"] as const,
-    detail: (id: string) => [...queryKeys.apiKeys.details(), id] as const,
+    lists: () => [...queryKeys.apiKeys.all, "list"] as const,
     user: (userId: string) =>
       [...queryKeys.apiKeys.all, "user", userId] as const,
   },
@@ -51,11 +51,11 @@ export const queryKeys = {
   // OAuth Client queries
   oauthClients: {
     all: ["oauthClients"] as const,
-    lists: () => [...queryKeys.oauthClients.all, "list"] as const,
+    detail: (id: string) => [...queryKeys.oauthClients.details(), id] as const,
+    details: () => [...queryKeys.oauthClients.all, "detail"] as const,
     list: (filters?: OAuthClientListFilters) =>
       [...queryKeys.oauthClients.lists(), { filters }] as const,
-    details: () => [...queryKeys.oauthClients.all, "detail"] as const,
-    detail: (id: string) => [...queryKeys.oauthClients.details(), id] as const,
+    lists: () => [...queryKeys.oauthClients.all, "list"] as const,
     user: (userId: string) =>
       [...queryKeys.oauthClients.all, "user", userId] as const,
   },
@@ -63,17 +63,11 @@ export const queryKeys = {
   // Admin queries
   admin: {
     all: ["admin"] as const,
-    stats: () => [...queryKeys.admin.all, "stats"] as const,
     dashboard: () => [...queryKeys.admin.all, "dashboard"] as const,
     ircAccounts: {
       lists: () => [...queryKeys.admin.all, "ircAccounts", "list"] as const,
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.ircAccounts.lists(), { filters }] as const,
-    },
-    xmppAccounts: {
-      lists: () => [...queryKeys.admin.all, "xmppAccounts", "list"] as const,
-      list: (filters?: { status?: string; limit?: number; offset?: number }) =>
-        [...queryKeys.admin.xmppAccounts.lists(), { filters }] as const,
     },
     mailcowAccounts: {
       lists: () => [...queryKeys.admin.all, "mailcowAccounts", "list"] as const,
@@ -86,13 +80,16 @@ export const queryKeys = {
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.mediawikiAccounts.lists(), { filters }] as const,
     },
+    stats: () => [...queryKeys.admin.all, "stats"] as const,
+    xmppAccounts: {
+      lists: () => [...queryKeys.admin.all, "xmppAccounts", "list"] as const,
+      list: (filters?: { status?: string; limit?: number; offset?: number }) =>
+        [...queryKeys.admin.xmppAccounts.lists(), { filters }] as const,
+    },
   },
 
   // Integration queries
   integrations: {
-    all: ["integrations"] as const,
-    lists: () => [...queryKeys.integrations.all, "list"] as const,
-    list: () => [...queryKeys.integrations.lists()] as const,
     accounts: {
       all: (integrationId: string) =>
         [...queryKeys.integrations.all, integrationId, "accounts"] as const,
@@ -112,5 +109,8 @@ export const queryKeys = {
           id,
         ] as const,
     },
+    all: ["integrations"] as const,
+    list: () => [...queryKeys.integrations.lists()] as const,
+    lists: () => [...queryKeys.integrations.all, "list"] as const,
   },
 } as const;

@@ -47,8 +47,8 @@ describe("handleAPIError", () => {
     expect(response.status).toBe(404);
     const data = (await response.json()) as { ok: boolean; error: string };
     expect(data).toEqual({
-      ok: false,
       error: "Not found",
+      ok: false,
     });
   });
 
@@ -59,8 +59,8 @@ describe("handleAPIError", () => {
     expect(response.status).toBe(500);
     const data = (await response.json()) as { ok: boolean; error: string };
     expect(data).toEqual({
-      ok: false,
       error: "Internal server error",
+      ok: false,
     });
   });
 });

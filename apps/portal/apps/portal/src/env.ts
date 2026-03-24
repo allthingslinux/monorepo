@@ -13,6 +13,7 @@ import { keys as changelog } from "@/shared/config/changelog";
 import { keys as devTools } from "@/shared/dev-tools/keys";
 
 export const env = createEnv({
+  client: {},
   extends: [
     auth(),
     bridge(),
@@ -26,7 +27,6 @@ export const env = createEnv({
     discord(),
     mediawiki(),
   ],
-  server: {},
-  client: {},
   runtimeEnv: {},
+  server: {},
 });

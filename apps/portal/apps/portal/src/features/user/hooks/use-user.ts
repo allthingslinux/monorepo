@@ -21,8 +21,8 @@ import {
  */
 export function useCurrentUser() {
   return useQuery({
-    queryKey: queryKeys.users.current(),
     queryFn: fetchCurrentUser,
+    queryKey: queryKeys.users.current(),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -52,8 +52,8 @@ export function useUpdateCurrentUser() {
  */
 export function useMySessions(filters?: { active?: boolean }) {
   return useQuery({
-    queryKey: [...queryKeys.sessions.current(), { filters }],
     queryFn: () => fetchMySessions(filters),
+    queryKey: [...queryKeys.sessions.current(), { filters }],
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }

@@ -1,8 +1,8 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, parseRouteId, requireAuth } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { session } from "@portal/db/schema/auth";
 import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -26,7 +26,7 @@ export async function DELETE(
 
     if (!deleted) {
       return Response.json(
-        { ok: false, error: "Session not found" },
+        { error: "Session not found", ok: false },
         { status: 404 }
       );
     }

@@ -1,13 +1,13 @@
-import { Suspense } from "react";
-import { GalleryVerticalEnd } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { connection } from "next/server";
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
 import { createPageMetadata } from "@portal/seo/metadata";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import { GalleryVerticalEnd } from "lucide-react";
+import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
 // ============================================================================
 // Metadata Generation
@@ -17,12 +17,12 @@ import { getMessages, getTranslations } from "next-intl/server";
 // generateStaticParams returns paths. Per-path i18n titles would need a
 // layout or request-time-only mechanism.
 export const metadata: Metadata = createPageMetadata({
-  title: "Authentication",
   description: "Sign in or manage your account.",
   robots: {
     index: false,
     follow: false,
   },
+  title: "Authentication",
 });
 
 // ============================================================================
@@ -37,13 +37,13 @@ const PATHS_WITHOUT_DISCLAIMER = [
 ] as const;
 
 const AUTH_VIEW_CLASS_NAMES = {
-  header: "text-center",
-  title: "text-xl",
   description: "text-sm",
   form: {
     button: "w-full",
     providerButton: "w-full",
   },
+  header: "text-center",
+  title: "text-xl",
 } as const;
 
 // ============================================================================

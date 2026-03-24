@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { connection } from "next/server";
 import { Button } from "@portal/ui/ui/button";
 import {
   Card,
@@ -10,6 +8,8 @@ import {
   CardTitle,
 } from "@portal/ui/ui/card";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { connection } from "next/server";
 
 export default async function AppNotFound() {
   await connection();

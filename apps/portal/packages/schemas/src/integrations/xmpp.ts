@@ -3,8 +3,8 @@
 // ============================================================================
 // Zod schemas for XMPP integration API validation
 
-import { z } from "zod";
 import { selectXmppAccountSchema } from "@portal/db/schema/xmpp";
+import { z } from "zod";
 
 import { brandedString, metadataSchema } from "../utils";
 import { isValidXmppUsername } from "./validation";
@@ -33,7 +33,7 @@ export const XmppUsernameSchema = brandedString<"XmppUsername">(
     )
 )
   .optional()
-  .or(z.literal("").transform(() => undefined));
+  .or(z.literal("").transform(() => {}));
 
 /**
  * Schema for creating an XMPP account via API
@@ -46,7 +46,7 @@ export const CreateXmppAccountRequestSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password must be 128 characters or less")
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .or(z.literal("").transform(() => {})),
 });
 
 /**
@@ -60,12 +60,12 @@ export const UpdateXmppAccountRequestSchema = z
       .min(8, "Password must be at least 8 characters")
       .max(128, "Password must be 128 characters or less")
       .optional()
-      .or(z.literal("").transform(() => undefined)),
+      .or(z.literal("").transform(() => {})),
   })
   .extend({
-    username: XmppUsernameSchema,
-    status: UpdateXmppAccountStatusSchema.optional(),
     metadata: metadataSchema,
+    status: UpdateXmppAccountStatusSchema.optional(),
+    username: XmppUsernameSchema,
   });
 
 /**

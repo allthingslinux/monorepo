@@ -1,12 +1,10 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
 import { AlertTriangle } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 
-import {
-  ChangelogFilters,
-  type EntryTypeFilterValue,
-} from "@/features/changelog/components/changelog-filters";
+import { ChangelogFilters } from "@/features/changelog/components/changelog-filters";
+import type { EntryTypeFilterValue } from "@/features/changelog/components/changelog-filters";
 import { TimelineView } from "@/features/changelog/components/timeline-view";
 import { parseConventionalCommit } from "@/features/changelog/lib/parser";
 import type {

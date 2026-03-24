@@ -1,6 +1,5 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
 import type { MailcowAccountWithUser } from "@portal/api/types";
 import { Badge } from "@portal/ui/ui/badge";
 import {
@@ -18,10 +17,13 @@ import {
   SelectValue,
 } from "@portal/ui/ui/select";
 import { formatDate } from "@portal/utils/date";
-import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo, useState } from "react";
 
 import { useAdminMailcowAccounts } from "@/features/admin/hooks/use-admin";
 import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
+
 import { DataTable } from "./data-table";
 
 const columnHelper = createColumnHelper<MailcowAccountWithUser>();
@@ -29,8 +31,6 @@ const columnHelper = createColumnHelper<MailcowAccountWithUser>();
 function createMailcowAccountColumns() {
   return [
     columnHelper.accessor((row) => row.user?.email ?? row.userId, {
-      id: "user",
-      header: "User",
       cell: ({ row }) => {
         const { user } = row.original;
         if (!user) {
@@ -47,21 +47,22 @@ function createMailcowAccountColumns() {
           </div>
         );
       },
+      header: "User",
+      id: "user",
     }),
     columnHelper.accessor("email", {
-      header: "Email",
       cell: ({ getValue }) => <span className="font-mono">{getValue()}</span>,
+      header: "Email",
     }),
     columnHelper.accessor("domain", {
-      header: "Domain",
       cell: ({ getValue }) => <span className="font-mono">{getValue()}</span>,
+      header: "Domain",
     }),
     columnHelper.accessor("localPart", {
-      header: "Local part",
       cell: ({ getValue }) => <span className="font-mono">{getValue()}</span>,
+      header: "Local part",
     }),
     columnHelper.accessor("status", {
-      header: "Status",
       cell: ({ getValue }) => (
         <Badge variant="outline">
           {integrationStatusLabels[
@@ -69,20 +70,21 @@ function createMailcowAccountColumns() {
           ] ?? getValue()}
         </Badge>
       ),
+      header: "Status",
     }),
     columnHelper.accessor("createdAt", {
+      cell: ({ getValue }) => formatDate(getValue() as string),
       header: "Created",
       sortingFn: "datetime",
-      cell: ({ getValue }) => formatDate(getValue() as string),
     }),
   ] as ColumnDef<MailcowAccountWithUser, unknown>[];
 }
 
 const MAILCOW_STATUS_OPTIONS = [
-  { value: "all", label: "All statuses" },
-  { value: "active", label: "Active" },
-  { value: "suspended", label: "Suspended" },
-  { value: "deleted", label: "Deleted" },
+  { label: "All statuses", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Suspended", value: "suspended" },
+  { label: "Deleted", value: "deleted" },
 ] as const;
 
 function MailcowAccountsManagementInner() {

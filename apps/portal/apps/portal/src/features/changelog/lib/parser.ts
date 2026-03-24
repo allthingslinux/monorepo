@@ -58,18 +58,18 @@ export function parseConventionalCommit(message: string): ParsedCommitMessage {
 
     if (CONVENTIONAL_TYPES.has(normalizedType)) {
       return {
-        type: normalizedType as ConventionalCommitType,
-        scope,
-        description,
         breaking: bang,
+        description,
+        scope,
+        type: normalizedType as ConventionalCommitType,
       };
     }
   }
 
   return {
-    type: null,
-    scope: null,
-    description: firstLine,
     breaking: false,
+    description: firstLine,
+    scope: null,
+    type: null,
   };
 }

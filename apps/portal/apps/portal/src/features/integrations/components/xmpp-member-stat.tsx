@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { Users } from "lucide-react";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Users } from "lucide-react";
+import { Suspense } from "react";
 
 import { getXmppStats } from "@/features/integrations/lib/xmpp/client";
 import { isXmppConfigured } from "@/features/integrations/lib/xmpp/config";

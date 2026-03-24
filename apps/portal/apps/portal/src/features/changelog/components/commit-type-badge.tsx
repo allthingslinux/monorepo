@@ -1,6 +1,7 @@
 import { cn } from "@portal/utils/utils";
 
-import { COMMIT_TYPE_COLORS, type ConventionalCommitType } from "../lib/types";
+import { COMMIT_TYPE_COLORS } from "../lib/types";
+import type { ConventionalCommitType } from "../lib/types";
 
 interface CommitTypeBadgeProps {
   scope?: string | null;

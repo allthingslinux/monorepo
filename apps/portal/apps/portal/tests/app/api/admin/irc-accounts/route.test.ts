@@ -54,8 +54,8 @@ vi.mock("@portal/api/utils", async () => {
     );
   return {
     ...actual,
-    requireAdminOrStaff: vi.fn(),
     handleAPIError: vi.fn(actual.handleAPIError),
+    requireAdminOrStaff: vi.fn(),
   };
 });
 

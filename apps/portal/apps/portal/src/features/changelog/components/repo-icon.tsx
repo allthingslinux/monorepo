@@ -1,3 +1,4 @@
+import { cn } from "@portal/utils/utils";
 import {
   Bot,
   Disc,
@@ -12,7 +13,6 @@ import {
   Terminal,
   Wrench,
 } from "lucide-react";
-import { cn } from "@portal/utils/utils";
 
 /**
  * Map of repo identifiers to their unique icons.
@@ -22,17 +22,17 @@ const REPO_ICONS: Record<
   string,
   React.ComponentType<{ className?: string }>
 > = {
-  "allthingslinux/portal": LayoutDashboard,
-  "allthingslinux/tux": Bot,
-  "allthingslinux/atl.tools": Wrench,
-  "allthingslinux/atl.services": Server,
-  "allthingslinux/atl.network": Network,
-  "allthingslinux/atl.chat": MessageCircle,
   "allthingslinux/allthingslinux": Globe,
-  "allthingslinux/pubnix": Terminal,
   "allthingslinux/atl-wiki": ScrollText,
+  "allthingslinux/atl.chat": MessageCircle,
+  "allthingslinux/atl.network": Network,
+  "allthingslinux/atl.services": Server,
+  "allthingslinux/atl.tools": Wrench,
   "allthingslinux/code-of-conduct": FileText,
   "allthingslinux/iso.atl.dev": Disc,
+  "allthingslinux/portal": LayoutDashboard,
+  "allthingslinux/pubnix": Terminal,
+  "allthingslinux/tux": Bot,
 };
 
 interface RepoIconProps {

@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { useState } from "react";
 
-import type { QuickBooksTransaction } from "@/lib/integrations/quickbooks";
-import { formatCurrency, formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import type { QuickBooksTransaction } from "@/lib/integrations/quickbooks";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 const INITIAL_DISPLAY_COUNT = 20;
 

@@ -1,6 +1,5 @@
-import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
-
+import { z } from "zod";
 import "server-only";
 
 /** Default ATL wiki API URL (atl.wiki has script path /, so api.php at root) */
@@ -8,16 +7,16 @@ const DEFAULT_WIKI_API_URL = "https://atl.wiki/api.php";
 
 export const keys = () =>
   createEnv({
-    server: {
-      WIKI_API_URL: z.string().url(),
-      WIKI_BOT_USERNAME: z.string().optional(),
-      WIKI_BOT_PASSWORD: z.string().optional(),
-    },
     client: {},
     runtimeEnv: {
       WIKI_API_URL: process.env.WIKI_API_URL ?? DEFAULT_WIKI_API_URL,
       WIKI_BOT_USERNAME: process.env.WIKI_BOT_USERNAME,
       WIKI_BOT_PASSWORD: process.env.WIKI_BOT_PASSWORD,
+    },
+    server: {
+      WIKI_API_URL: z.string().url(),
+      WIKI_BOT_USERNAME: z.string().optional(),
+      WIKI_BOT_PASSWORD: z.string().optional(),
     },
   });
 

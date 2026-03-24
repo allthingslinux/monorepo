@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { Users } from "lucide-react";
 import { Skeleton } from "@portal/ui/ui/skeleton";
+import { Users } from "lucide-react";
+import { Suspense } from "react";
 
 import { getIrcStats } from "@/features/integrations/lib/irc/atheme/client";
 import { isAthemeOperConfigured } from "@/features/integrations/lib/irc/config";

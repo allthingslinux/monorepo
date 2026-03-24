@@ -139,13 +139,23 @@ sequenceDiagram
 **Purpose**: Centralized, validated environment variable access for the portal Next.js app via `@t3-oss/env-nextjs`.
 
 **Current Interface** (env.ts aggregator):
+
 ```typescript
 // apps/portal/src/env.ts — extends all module keys
 import { createEnv } from "@t3-oss/env-nextjs";
 export const env = createEnv({
   extends: [
-    auth(), bridge(), changelog(), database(), devTools(),
-    observability(), xmpp(), irc(), mailcow(), discord(), mediawiki(),
+    auth(),
+    bridge(),
+    changelog(),
+    database(),
+    devTools(),
+    observability(),
+    xmpp(),
+    irc(),
+    mailcow(),
+    discord(),
+    mediawiki(),
   ],
   server: {},
   client: {},
@@ -154,11 +164,13 @@ export const env = createEnv({
 ```
 
 **Responsibilities**:
+
 - Aggregate all module-level `keys()` functions into a single validated env object
 - Ensure no raw `process.env` access outside of `keys.ts` files and `runtimeEnv` mappings
 - Provide type-safe access to all environment variables
 
 **Changes Required**:
+
 - Add `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET` to `discord/keys.ts` (currently accessed raw in `auth/lib/config.ts`)
 - Audit `mediawiki/keys.ts` helper functions (`isWikiApiConfigured`, `isMediaWikiConfigured`) that use raw `process.env` — acceptable for boolean checks but should be documented
 - Create `apps/portal/.env.example` from the union of all keys modules
@@ -168,6 +180,7 @@ export const env = createEnv({
 **Purpose**: Load and layer environment variables for Docker Compose services.
 
 **Current Interface**:
+
 ```bash
 # justfile
 dev:
@@ -180,6 +193,7 @@ prod:
 ```
 
 **Changes Required**:
+
 - Remove `ATL_ENVIRONMENT` variable entirely
 - Add `.env.prod` overlay file (parallel to `.env.dev`)
 - Update `just prod` to: `docker compose --env-file .env --env-file .env.prod up -d`
@@ -191,6 +205,7 @@ prod:
 **Purpose**: Load bridge configuration from `config.yaml` + env var overrides.
 
 **Current Interface**:
+
 ```python
 # bridge/config/schema.py
 _ENV_OVERRIDE_KEYS = (
@@ -202,6 +217,7 @@ _ENV_OVERRIDE_KEYS = (
 ```
 
 **Changes Required**:
+
 - Remove `ATL_ENVIRONMENT` from `_ENV_OVERRIDE_KEYS`
 - Ensure `BRIDGE_IRC_TLS_VERIFY` is the sole control for TLS verification behavior
 - Remove any deprecated alias handling (`BRIDGE_PORTAL_URL` → `BRIDGE_PORTAL_BASE_URL`, `BRIDGE_PORTAL_API_TOKEN` → `BRIDGE_PORTAL_TOKEN`)
@@ -214,19 +230,19 @@ _ENV_OVERRIDE_KEYS = (
 
 **Simplification Strategy**: Derive `HOST` from `ATHEME_SERVER_NAME`, default `USER` to `NICK`, hardcode `REAL` descriptions. Reduce to ~17 required vars:
 
-| Keep (required) | Derive/Hardcode |
-|---|---|
-| `ATHEME_SERVER_NAME` | `*_HOST` → `${ATHEME_SERVER_NAME}` |
-| `ATHEME_NICKSERV_NICK` | `*_USER` → defaults to `*_NICK` |
-| `ATHEME_CHANSERV_NICK` | `*_REAL` → hardcoded descriptions |
-| `ATHEME_OPERSERV_NICK` | |
-| `ATHEME_SASLSERV_NICK` | |
-| `ATHEME_GROUPSERV_NICK` | |
-| `ATHEME_HOSTSERV_NICK` | |
-| `ATHEME_HELPSERV_NICK` | |
-| `ATHEME_GLOBAL_NICK` | |
-| `ATHEME_ALIS_NICK` | |
-| + network/admin vars | |
+| Keep (required)         | Derive/Hardcode                    |
+| ----------------------- | ---------------------------------- |
+| `ATHEME_SERVER_NAME`    | `*_HOST` → `${ATHEME_SERVER_NAME}` |
+| `ATHEME_NICKSERV_NICK`  | `*_USER` → defaults to `*_NICK`    |
+| `ATHEME_CHANSERV_NICK`  | `*_REAL` → hardcoded descriptions  |
+| `ATHEME_OPERSERV_NICK`  |                                    |
+| `ATHEME_SASLSERV_NICK`  |                                    |
+| `ATHEME_GROUPSERV_NICK` |                                    |
+| `ATHEME_HOSTSERV_NICK`  |                                    |
+| `ATHEME_HELPSERV_NICK`  |                                    |
+| `ATHEME_GLOBAL_NICK`    |                                    |
+| `ATHEME_ALIS_NICK`      |                                    |
+| + network/admin vars    |                                    |
 
 ### Component 5: Prosody Config (Lua)
 
@@ -234,28 +250,28 @@ _ENV_OVERRIDE_KEYS = (
 
 **Current State**: ~55 `os.getenv()` calls using `PROSODY_*` prefix. Many have sensible defaults that never change.
 
-**Simplification Strategy**: 
+**Simplification Strategy**:
+
 1. Rename all `PROSODY_*` env vars to `XMPP_*` — Prosody is an implementation detail; the prefix should reflect the protocol.
 2. Hardcode defaults for tuning/rate-limit/archive vars. Keep only vars that genuinely differ between deployments (~15):
 
-| Keep (env-configurable) | Hardcode |
-|---|---|
-| `XMPP_DOMAIN` | `XMPP_ARCHIVE_*` (6 vars) |
-| `XMPP_ADMIN_JID` | `XMPP_PUSH_*` (5 vars) |
-| `XMPP_SSL_KEY` / `XMPP_SSL_CERT` | `XMPP_C2S_RATE/BURST/STANZA_SIZE` |
-| `XMPP_STORAGE` | `XMPP_S2S_RATE/BURST/STANZA_SIZE` |
-| `XMPP_DB_*` (5 vars, SQL mode) | `XMPP_HTTP_UPLOAD_RATE/BURST` |
-| `XMPP_OAUTH2_REGISTRATION_KEY` | `LUA_GC_*` (4 vars) |
-| `XMPP_LOG_LEVEL` | `XMPP_STATISTICS*` (2 vars) |
-| `XMPP_ALLOW_REGISTRATION` | `XMPP_BLOCK_REGISTRATIONS_REQUIRE` |
-| `XMPP_HTTP_EXTERNAL_URL` | `XMPP_MAX_CONNECTIONS_PER_IP` |
-| `XMPP_HTTPS_VIA_PROXY` | `XMPP_REGISTRATION_THROTTLE_*` |
-| `XMPP_UPLOAD_EXTERNAL_URL` | |
-| `XMPP_PROXY_ADDRESS` | |
-| `XMPP_OPENMETRICS_IP/CIDR` | |
-| `TURN_SECRET` / `TURN_EXTERNAL_HOST` / `TURN_PORT` / `TURNS_PORT` | |
-| TLS policy booleans (4 vars) | |
-
+| Keep (env-configurable)                                           | Hardcode                           |
+| ----------------------------------------------------------------- | ---------------------------------- |
+| `XMPP_DOMAIN`                                                     | `XMPP_ARCHIVE_*` (6 vars)          |
+| `XMPP_ADMIN_JID`                                                  | `XMPP_PUSH_*` (5 vars)             |
+| `XMPP_SSL_KEY` / `XMPP_SSL_CERT`                                  | `XMPP_C2S_RATE/BURST/STANZA_SIZE`  |
+| `XMPP_STORAGE`                                                    | `XMPP_S2S_RATE/BURST/STANZA_SIZE`  |
+| `XMPP_DB_*` (5 vars, SQL mode)                                    | `XMPP_HTTP_UPLOAD_RATE/BURST`      |
+| `XMPP_OAUTH2_REGISTRATION_KEY`                                    | `LUA_GC_*` (4 vars)                |
+| `XMPP_LOG_LEVEL`                                                  | `XMPP_STATISTICS*` (2 vars)        |
+| `XMPP_ALLOW_REGISTRATION`                                         | `XMPP_BLOCK_REGISTRATIONS_REQUIRE` |
+| `XMPP_HTTP_EXTERNAL_URL`                                          | `XMPP_MAX_CONNECTIONS_PER_IP`      |
+| `XMPP_HTTPS_VIA_PROXY`                                            | `XMPP_REGISTRATION_THROTTLE_*`     |
+| `XMPP_UPLOAD_EXTERNAL_URL`                                        |                                    |
+| `XMPP_PROXY_ADDRESS`                                              |                                    |
+| `XMPP_OPENMETRICS_IP/CIDR`                                        |                                    |
+| `TURN_SECRET` / `TURN_EXTERNAL_HOST` / `TURN_PORT` / `TURNS_PORT` |                                    |
+| TLS policy booleans (4 vars)                                      |                                    |
 
 ## Data Models
 
@@ -268,6 +284,7 @@ PREFIX_COMPONENT_PURPOSE[_SUFFIX]
 ```
 
 **Prefixes** (by service):
+
 - `IRC_` — UnrealIRCd / Atheme / IRC network
 - `XMPP_` — All XMPP-related config (domain, REST API, storage, TLS, admin). Prosody is the implementation but the prefix is protocol-level. No `PROSODY_` prefix.
 - `BRIDGE_` — Discord↔IRC↔XMPP bridge
@@ -277,12 +294,14 @@ PREFIX_COMPONENT_PURPOSE[_SUFFIX]
 - `NEXT_PUBLIC_` — Client-exposed Next.js vars
 
 **Suffixes** (for sensitive values):
+
 - `_TOKEN` — Bearer/API tokens
 - `_SECRET` — Shared secrets
 - `_KEY` — API keys or encryption keys
 - `_PASSWORD` — Passwords
 
 **Validation Rules**:
+
 - All vars UPPERCASE with underscores
 - No trailing underscores
 - Tokens/secrets/keys/passwords must use appropriate suffix
@@ -307,12 +326,12 @@ XMPP_DOMAIN                ↔    XMPP_DOMAIN
 
 ### 12-Factor Explicit Vars (Replacing ATL_ENVIRONMENT)
 
-| Old (mode-based) | New (explicit) | Dev Default | Prod Default |
-|---|---|---|---|
-| `ATL_ENVIRONMENT=dev` → TLS off | `IRC_TLS_VERIFY=false` | `false` | `true` |
-| `ATL_ENVIRONMENT=dev` → Lounge insecure | `IRC_LOUNGE_REJECT_UNAUTHORIZED=false` | `false` | `true` |
-| `ATL_ENVIRONMENT=dev` → WS plain | `IRC_WEBSOCKET_USE_TLS=false` | `false` | `true` |
-| `ATL_ENVIRONMENT=dev` → Bridge TLS off | `BRIDGE_IRC_TLS_VERIFY=false` | `false` | `true` |
+| Old (mode-based)                        | New (explicit)                         | Dev Default | Prod Default |
+| --------------------------------------- | -------------------------------------- | ----------- | ------------ |
+| `ATL_ENVIRONMENT=dev` → TLS off         | `IRC_TLS_VERIFY=false`                 | `false`     | `true`       |
+| `ATL_ENVIRONMENT=dev` → Lounge insecure | `IRC_LOUNGE_REJECT_UNAUTHORIZED=false` | `false`     | `true`       |
+| `ATL_ENVIRONMENT=dev` → WS plain        | `IRC_WEBSOCKET_USE_TLS=false`          | `false`     | `true`       |
+| `ATL_ENVIRONMENT=dev` → Bridge TLS off  | `BRIDGE_IRC_TLS_VERIFY=false`          | `false`     | `true`       |
 
 ## Algorithmic Pseudocode
 
@@ -324,42 +343,67 @@ function generateEnvExample(): string {
   const modules = [
     { name: "Auth", keys: ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL"] },
     { name: "Database", keys: ["DATABASE_URL"] },
-    { name: "Discord", keys: [
-      "DISCORD_BOT_TOKEN", "NEXT_PUBLIC_DISCORD_GUILD_ID",
-      "DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET"  // NEW: moved from raw process.env
-    ]},
+    {
+      name: "Discord",
+      keys: [
+        "DISCORD_BOT_TOKEN",
+        "NEXT_PUBLIC_DISCORD_GUILD_ID",
+        "DISCORD_CLIENT_ID",
+        "DISCORD_CLIENT_SECRET", // NEW: moved from raw process.env
+      ],
+    },
     { name: "Bridge", keys: ["BRIDGE_SERVICE_TOKEN"] },
-    { name: "IRC", keys: [
-      "IRC_SERVER", "IRC_PORT", "IRC_ATHEME_JSONRPC_URL",
-      "IRC_ATHEME_INSECURE_SKIP_VERIFY", "IRC_ATHEME_OPER_ACCOUNT",
-      "IRC_ATHEME_OPER_PASSWORD", "IRC_UNREAL_JSONRPC_URL",
-      "IRC_UNREAL_RPC_USER", "IRC_UNREAL_RPC_PASSWORD",
-      "IRC_UNREAL_INSECURE_SKIP_VERIFY"
-    ]},
+    {
+      name: "IRC",
+      keys: [
+        "IRC_SERVER",
+        "IRC_PORT",
+        "IRC_ATHEME_JSONRPC_URL",
+        "IRC_ATHEME_INSECURE_SKIP_VERIFY",
+        "IRC_ATHEME_OPER_ACCOUNT",
+        "IRC_ATHEME_OPER_PASSWORD",
+        "IRC_UNREAL_JSONRPC_URL",
+        "IRC_UNREAL_RPC_USER",
+        "IRC_UNREAL_RPC_PASSWORD",
+        "IRC_UNREAL_INSECURE_SKIP_VERIFY",
+      ],
+    },
     { name: "XMPP", keys: ["XMPP_DOMAIN", "XMPP_REST_URL", "XMPP_REST_TOKEN"] },
-    { name: "Mailcow", keys: [
-      "MAILCOW_API_URL", "MAILCOW_API_KEY", "MAILCOW_DOMAIN",
-      "MAILCOW_OAUTH_CLIENT_ID", "MAILCOW_OAUTH_CLIENT_SECRET",
-      "NEXT_PUBLIC_MAILCOW_WEB_URL", "NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED"
-    ]},
-    { name: "MediaWiki", keys: ["WIKI_API_URL", "WIKI_BOT_USERNAME", "WIKI_BOT_PASSWORD"] },
+    {
+      name: "Mailcow",
+      keys: [
+        "MAILCOW_API_URL",
+        "MAILCOW_API_KEY",
+        "MAILCOW_DOMAIN",
+        "MAILCOW_OAUTH_CLIENT_ID",
+        "MAILCOW_OAUTH_CLIENT_SECRET",
+        "NEXT_PUBLIC_MAILCOW_WEB_URL",
+        "NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED",
+      ],
+    },
+    {
+      name: "MediaWiki",
+      keys: ["WIKI_API_URL", "WIKI_BOT_USERNAME", "WIKI_BOT_PASSWORD"],
+    },
     { name: "Changelog", keys: ["GITHUB_TOKEN"] },
-    { name: "Observability", keys: ["SENTRY_DSN", /* etc */] },
+    { name: "Observability", keys: ["SENTRY_DSN" /* etc */] },
     { name: "Dev Tools", keys: ["NEXT_PUBLIC_DEV_TOOLS_ENABLED"] },
   ];
 
   // Output grouped by module with comments
-  return modules.map(m =>
-    `# ${m.name}\n` + m.keys.map(k => `${k}=`).join("\n")
-  ).join("\n\n");
+  return modules
+    .map((m) => `# ${m.name}\n` + m.keys.map((k) => `${k}=`).join("\n"))
+    .join("\n\n");
 }
 ```
 
 **Preconditions:**
+
 - All keys modules exist and export a `keys()` function
 - Each keys module declares its vars in the `server` or `client` section
 
 **Postconditions:**
+
 - `.env.example` contains every var from every keys module
 - Grouped by module with section comments
 - No default values leaked (all set to empty)
@@ -386,10 +430,12 @@ function generateEnvExample(): string {
 ```
 
 **Preconditions:**
+
 - `ATHEME_SERVER_NAME` is set in `.env`
 - Each service has at minimum a `*_NICK` var defined
 
 **Postconditions:**
+
 - Template only references `ATHEME_SERVER_NAME` + `ATHEME_*_NICK` vars
 - `HOST` fields all resolve to `ATHEME_SERVER_NAME`
 - `USER` fields default to the service's `NICK` value
@@ -426,10 +472,12 @@ local log_level = os.getenv("XMPP_LOG_LEVEL") or "info"
 ```
 
 **Preconditions:**
+
 - Current defaults in `.env.example` match the hardcoded values
 - No deployment has customized the tuning vars away from defaults
 
 **Postconditions:**
+
 - `Lua.os.getenv()` calls reduced from ~55 to ~15
 - All remaining getenv calls use `XMPP_` prefix (no `PROSODY_` prefix)
 - All hardcoded values match previous `.env.example` defaults
@@ -458,10 +506,12 @@ BRIDGE_IRC_TLS_VERIFY=true
 ```
 
 **Preconditions:**
+
 - `ATL_ENVIRONMENT` is currently used in: bridge `_ENV_OVERRIDE_KEYS`, init.sh, justfile, `.env.example`
 - All behavior gated on `ATL_ENVIRONMENT` can be expressed as explicit boolean vars
 
 **Postconditions:**
+
 - `ATL_ENVIRONMENT` removed from all files
 - Each behavior has its own explicit env var
 - `just dev` loads `.env` + `.env.dev`; `just prod` loads `.env` + `.env.prod`
@@ -476,8 +526,8 @@ export const keys = () =>
   createEnv({
     server: {
       DISCORD_BOT_TOKEN: z.string().min(1).optional(),
-      DISCORD_CLIENT_ID: z.string().min(1).optional(),      // NEW
-      DISCORD_CLIENT_SECRET: z.string().min(1).optional(),   // NEW
+      DISCORD_CLIENT_ID: z.string().min(1).optional(), // NEW
+      DISCORD_CLIENT_SECRET: z.string().min(1).optional(), // NEW
     },
     client: {
       NEXT_PUBLIC_DISCORD_GUILD_ID: z.string().min(1).optional(),
@@ -485,16 +535,18 @@ export const keys = () =>
     runtimeEnv: {
       DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
       NEXT_PUBLIC_DISCORD_GUILD_ID: process.env.NEXT_PUBLIC_DISCORD_GUILD_ID,
-      DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,         // NEW
+      DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID, // NEW
       DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET, // NEW
     },
   });
 ```
 
 **Preconditions:**
+
 - `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET` are currently accessed as raw `process.env` in `auth/lib/config.ts`
 
 **Postconditions:**
+
 - Both vars are registered in the discord keys module with Zod validation
 - `auth/lib/config.ts` imports from `discord/keys.ts` instead of raw `process.env`
 - The `env.ts` aggregator already includes `discord()`, so no change needed there
@@ -516,10 +568,12 @@ const socialProviders = {
 ```
 
 **Preconditions:**
+
 - `auth/lib/config.ts` currently uses `process.env.DISCORD_CLIENT_ID as string`
 - Discord keys module exports `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`
 
 **Postconditions:**
+
 - No raw `process.env` access in `auth/lib/config.ts` for Discord vars
 - `NODE_ENV` access via `process.env.NODE_ENV` is acceptable (Next.js built-in, not a custom var)
 
@@ -536,10 +590,12 @@ _ENV_OVERRIDE_KEYS = (
 ```
 
 **Preconditions:**
+
 - `ATL_ENVIRONMENT` is in `_ENV_OVERRIDE_KEYS` and used to derive TLS behavior
 - `BRIDGE_IRC_TLS_VERIFY` already exists as an explicit override
 
 **Postconditions:**
+
 - `ATL_ENVIRONMENT` removed from override keys
 - TLS behavior controlled solely by `BRIDGE_IRC_TLS_VERIFY`
 
@@ -551,7 +607,7 @@ _ENV_OVERRIDE_KEYS = (
 // Before (auth/lib/config.ts):
 const socialProviders = {
   discord: {
-    clientId: process.env.DISCORD_CLIENT_ID as string,    // ❌ raw access
+    clientId: process.env.DISCORD_CLIENT_ID as string, // ❌ raw access
     clientSecret: process.env.DISCORD_CLIENT_SECRET as string, // ❌ raw access
   },
 };
@@ -561,7 +617,7 @@ import { keys as discordKeys } from "@/features/integrations/lib/discord/keys";
 const discordEnv = discordKeys();
 const socialProviders = {
   discord: {
-    clientId: discordEnv.DISCORD_CLIENT_ID ?? "",    // ✅ validated via t3-env
+    clientId: discordEnv.DISCORD_CLIENT_ID ?? "", // ✅ validated via t3-env
     clientSecret: discordEnv.DISCORD_CLIENT_SECRET ?? "", // ✅ validated via t3-env
   },
 };
@@ -597,7 +653,6 @@ ATHEME_NICKSERV_NICK=NickServ
 # USER, HOST, REAL derived in template
 ```
 
-
 ## Correctness Properties
 
 1. **No raw process.env in portal app code**: For all TypeScript files in `apps/portal/src/` (excluding `keys.ts` files and `runtimeEnv` blocks), `process.env` must not appear. Exception: `process.env.NODE_ENV` (Next.js built-in).
@@ -610,13 +665,13 @@ ATHEME_NICKSERV_NICK=NickServ
 
 5. **Prosody getenv reduction**: `prosody.cfg.lua` must contain at most 20 `os.getenv()` calls (down from ~55), and all remaining calls must use `XMPP_` prefix (no `PROSODY_` prefix).
 
-6. **No PROSODY_ prefix in user-facing config**: After migration, `PROSODY_` must not appear in any `.env.example`, `.env.dev.example`, `.env.prod.example`, compose `environment:` blocks, or documentation. The `prosody.cfg.lua` file itself reads `XMPP_*` vars via `os.getenv()`.
+6. **No PROSODY\_ prefix in user-facing config**: After migration, `PROSODY_` must not appear in any `.env.example`, `.env.dev.example`, `.env.prod.example`, compose `environment:` blocks, or documentation. The `prosody.cfg.lua` file itself reads `XMPP_*` vars via `os.getenv()`.
 
-6. **Cross-repo token consistency**: `BRIDGE_SERVICE_TOKEN` in portal's `bridge/keys.ts` and `BRIDGE_PORTAL_TOKEN` in atl.chat's `.env.example` must be documented as the same shared secret in `ENV_VARS.md`.
+7. **Cross-repo token consistency**: `BRIDGE_SERVICE_TOKEN` in portal's `bridge/keys.ts` and `BRIDGE_PORTAL_TOKEN` in atl.chat's `.env.example` must be documented as the same shared secret in `ENV_VARS.md`.
 
-7. **.env.example completeness**: `apps/portal/.env.example` must contain every variable declared across all `keys.ts` modules. `atl.chat/.env.example` must contain every variable referenced in compose files, templates, and scripts.
+8. **.env.example completeness**: `apps/portal/.env.example` must contain every variable declared across all `keys.ts` modules. `atl.chat/.env.example` must contain every variable referenced in compose files, templates, and scripts.
 
-8. **12-factor explicit vars**: Each behavior previously gated on `ATL_ENVIRONMENT` must have its own explicit boolean env var with a clear name indicating what it controls.
+9. **12-factor explicit vars**: Each behavior previously gated on `ATL_ENVIRONMENT` must have its own explicit boolean env var with a clear name indicating what it controls.
 
 ## Error Handling
 
@@ -684,22 +739,29 @@ ATHEME_NICKSERV_NICK=NickServ
 ## Migration Phases
 
 ### Phase 0: Dev vs Prod (12-Factor)
+
 Remove `ATL_ENVIRONMENT`. Create `.env.prod` + `.env.prod.example`. Update justfile, init.sh, bridge config schema. Add explicit boolean vars.
 
-### Phase 1: PROSODY_ → XMPP_ Prefix Collapse
+### Phase 1: PROSODY* → XMPP* Prefix Collapse
+
 Rename all `PROSODY_*` env vars to `XMPP_*` across both repos. Update `prosody.cfg.lua` getenv calls, compose `environment:` blocks, `.env.example`, `.env.dev.example`, entrypoint scripts, portal `xmpp/keys.ts`, and all documentation. Prosody is an implementation detail — the prefix should be protocol-level.
 
 ### Phase 2: Bridge Alias Removal
+
 Remove deprecated `BRIDGE_PORTAL_URL` and `BRIDGE_PORTAL_API_TOKEN` aliases from bridge code and documentation. Canonical names only.
 
 ### Phase 3: Atheme Template Simplification
+
 Rewrite `atheme.conf.template` to derive HOST/USER/REAL from `ATHEME_SERVER_NAME` + `*_NICK`. Update `.env.example`.
 
 ### Phase 4: Documentation
+
 Create `ENV_VARS.md` as single cross-repo reference. Update `AGENTS.md` files in both repos.
 
 ### Phase 5: Portal .env.example + Discord Keys
+
 Add `DISCORD_CLIENT_ID`/`DISCORD_CLIENT_SECRET` to discord keys module. Update `auth/lib/config.ts`. Create `apps/portal/.env.example`.
 
 ### Phase 6: Validation
+
 Verify no raw `process.env` in portal (except keys.ts). Verify `ATL_ENVIRONMENT` removed. Verify no `PROSODY_` prefix in user-facing config. Verify Atheme/Prosody var counts. Run builds and tests.

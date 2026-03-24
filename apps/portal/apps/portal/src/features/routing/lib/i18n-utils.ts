@@ -1,9 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
-import {
-  createRouteTranslationResolver,
-  type RouteTranslationResolver,
-} from "./i18n";
+import { createRouteTranslationResolver } from "./i18n";
+import type { RouteTranslationResolver } from "./i18n";
 
 /**
  * Get a server-side translation resolver for route configuration

@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import type { z } from "zod";
+
 import { APIError } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
@@ -12,6 +12,7 @@ import {
   UpdateMailboxRequestSchema,
 } from "@portal/schemas/integrations/mailcow";
 import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
 
 import { IntegrationBase } from "../core/base";
 import { getIntegrationRegistry } from "../core/registry";
@@ -38,7 +39,9 @@ async function syncStatusToMailcow(
   } catch (error) {
     const action = status === "active" ? "activate" : "suspend";
     const msg = error instanceof Error ? error.message : "Unknown error";
-    throw new Error(`Failed to ${action} mailbox in mailcow: ${msg}`);
+    throw new Error(`Failed to ${action} mailbox in mailcow: ${msg}`, {
+      cause: error,
+    });
   }
 }
 
@@ -54,15 +57,15 @@ export class MailcowIntegration extends IntegrationBase<
 
   constructor() {
     super({
-      id: "mailcow",
-      name: "Mailcow",
+      accountSchema:
+        MailcowAccountSchema as unknown as z.ZodType<MailcowAccountType>,
+      createAccountSchema: CreateMailboxRequestSchema,
       description:
         "Get an @atl.tools email address with webmail, IMAP, and SMTP access.",
       enabled: isMailcowConfigured(),
-      createAccountSchema: CreateMailboxRequestSchema,
+      id: "mailcow",
+      name: "Mailcow",
       updateAccountSchema: UpdateMailboxRequestSchema,
-      accountSchema:
-        MailcowAccountSchema as unknown as z.ZodType<MailcowAccountType>,
     });
     this.enabled = isMailcowConfigured();
   }
@@ -79,7 +82,7 @@ export class MailcowIntegration extends IntegrationBase<
     const { local_part, password } = this.validateCreateInput(userId, input);
 
     validateMailcowConfig();
-    const domain = mailcowConfig.domain;
+    const { domain } = mailcowConfig;
     if (!domain) {
       throw new APIError("Mailcow domain is not configured", 500);
     }
@@ -94,9 +97,9 @@ export class MailcowIntegration extends IntegrationBase<
       await client.createMailbox(domain, local_part, password, name);
     } catch (error) {
       log.error("Mailcow API mailbox creation failed", {
-        userId,
         email,
         error: error instanceof Error ? error.message : String(error),
+        userId,
       });
       throw new APIError(
         `Failed to create mailbox in mailcow: ${
@@ -107,21 +110,21 @@ export class MailcowIntegration extends IntegrationBase<
     }
 
     const id = randomUUID();
-    log.debug("Inserting mailcow account into database", { userId, email });
+    log.debug("Inserting mailcow account into database", { email, userId });
     const [newAccount] = await db
       .insert(mailcowAccount)
       .values({
-        id,
-        userId,
-        email,
         domain,
+        email,
+        id,
         localPart: local_part,
         status: "active",
+        userId,
       })
       .returning();
 
     if (!newAccount) {
-      log.error("Failed to insert mailcow account into DB", { userId, email });
+      log.error("Failed to insert mailcow account into DB", { email, userId });
       try {
         await client.deleteMailbox(email);
       } catch (error) {
@@ -133,23 +136,23 @@ export class MailcowIntegration extends IntegrationBase<
       throw new APIError("Failed to create mailcow account record", 500);
     }
 
-    log.info("Mailcow account created successfully", { userId, email });
+    log.info("Mailcow account created successfully", { email, userId });
     return this.rowToAccount(newAccount);
   }
 
   private validateCreateInput(userId: string, input: unknown) {
     const inputData = input as { local_part?: string };
     log.info("Creating mailcow account", {
-      userId,
       local_part: inputData.local_part,
+      userId,
     });
 
     const parsed = CreateMailboxRequestSchema.safeParse(input);
     if (!parsed.success) {
       const msg = parsed.error.issues[0]?.message ?? "Invalid input";
       log.warn("Mailcow account creation validation failed", {
-        userId,
         issues: parsed.error.issues,
+        userId,
       });
       throw new APIError(msg, 400, { issues: parsed.error.issues });
     }
@@ -209,8 +212,8 @@ export class MailcowIntegration extends IntegrationBase<
     const domainCheck = await client.getDomain(domain);
     log.info("Availability check: getDomain result", {
       domain: mailcowConfig.domain,
-      exists: !!domainCheck,
       domainStructure: domainCheck ? Object.keys(domainCheck) : null,
+      exists: !!domainCheck,
     });
 
     if (!domainCheck) {
@@ -344,15 +347,15 @@ export class MailcowIntegration extends IntegrationBase<
     row: typeof mailcowAccount.$inferSelect
   ): MailcowAccountType {
     return {
-      id: row.id,
-      userId: row.userId,
-      integrationId: "mailcow",
-      email: row.email,
+      createdAt: row.createdAt,
       domain: row.domain,
+      email: row.email,
+      id: row.id,
+      integrationId: "mailcow",
       localPart: row.localPart,
       status: row.status as MailcowAccountType["status"],
-      createdAt: row.createdAt,
       updatedAt: row.updatedAt,
+      userId: row.userId,
     };
   }
 

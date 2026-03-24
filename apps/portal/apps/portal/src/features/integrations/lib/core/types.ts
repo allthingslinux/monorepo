@@ -1,6 +1,6 @@
-import type { z } from "zod";
 import type { IntegrationStatus as IntegrationStatusType } from "@portal/utils/constants";
 import { INTEGRATION_STATUSES } from "@portal/utils/constants";
+import type { z } from "zod";
 
 export type IntegrationId = string;
 

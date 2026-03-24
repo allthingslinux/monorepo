@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import {
   APIError,
   handleAPIError,
@@ -9,6 +8,7 @@ import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { ircAccount } from "@portal/db/schema/irc";
 import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
 
@@ -27,8 +27,8 @@ export async function GET(
       .select({
         ircAccount,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })
@@ -39,17 +39,17 @@ export async function GET(
 
     if (!row) {
       return Response.json(
-        { ok: false, error: "IRC account not found" },
+        { error: "IRC account not found", ok: false },
         { status: 404 }
       );
     }
 
     return Response.json({
-      ok: true,
       ircAccount: {
         ...row.ircAccount,
         user: row.user?.id ? row.user : undefined,
       },
+      ok: true,
     });
   } catch (error) {
     return handleAPIError(error);
@@ -81,7 +81,7 @@ export async function PATCH(
 
     const updated = await ircIntegration.updateAccount(id, body);
 
-    return Response.json({ ok: true, ircAccount: updated });
+    return Response.json({ ircAccount: updated, ok: true });
   } catch (error) {
     return handleAPIError(error);
   }
@@ -104,7 +104,7 @@ export async function DELETE(
 
     if (!existing) {
       return Response.json(
-        { ok: false, error: "IRC account not found" },
+        { error: "IRC account not found", ok: false },
         { status: 404 }
       );
     }

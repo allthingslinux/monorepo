@@ -93,9 +93,9 @@ export async function updateUser(
   data: UpdateUserInput
 ): Promise<User> {
   const response = await fetch(`/api/admin/users/${userId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+    method: "PATCH",
   });
 
   if (!response.ok) {

@@ -1,5 +1,4 @@
 import "server-only";
-
 import { keys } from "@portal/observability/keys";
 
 /**
@@ -89,22 +88,23 @@ export const onRequestError = async (
   try {
     const { captureRequestError } = await import("@sentry/nextjs");
     const requestInfo = {
-      path: request.path || "/",
-      method: request.method || "GET",
       headers: request.headers ?? {},
+      method: request.method || "GET",
+      path: request.path || "/",
     };
     const errorContext = {
-      routerKind: context.routerKind,
-      routeType: context.routeType,
       renderSource: context.renderSource,
-      routePath: context.routePath ?? request.path ?? "/",
       revalidateReason: context.revalidateReason,
+      routePath: context.routePath ?? request.path ?? "/",
+      routeType: context.routeType,
+      routerKind: context.routerKind,
     };
     captureRequestError(error, requestInfo, errorContext);
   } catch (sentryError) {
     try {
       const { captureException } = await import("@sentry/nextjs");
       captureException(error, {
+        extra: { request, context },
         tags: {
           type: "request_error",
           path: request.path || "/",
@@ -112,7 +112,6 @@ export const onRequestError = async (
           routerKind: context.routerKind,
           routeType: context.routeType,
         },
-        extra: { request, context },
       });
     } catch {
       // eslint-disable-next-line no-console

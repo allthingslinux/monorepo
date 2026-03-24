@@ -4,12 +4,12 @@
 
 ## Layout
 
-| Path | Purpose |
-|------|---------|
-| `app/api/**` | Route handler tests (e.g. `user/me`, `admin/*`, `bridge/identity`) |
-| `hooks/` | React hook tests (`use-permissions`, `use-mobile`, …) |
-| `lib/` | Unit tests grouped by domain (`integrations`, `api`, `utils`) — source under test is imported via `@/features/...`, not from `tests/lib` |
-| `monorepo/` | Workspace layout / correctness checks |
+| Path         | Purpose                                                                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/api/**` | Route handler tests (e.g. `user/me`, `admin/*`, `bridge/identity`)                                                                       |
+| `hooks/`     | React hook tests (`use-permissions`, `use-mobile`, …)                                                                                    |
+| `lib/`       | Unit tests grouped by domain (`integrations`, `api`, `utils`) — source under test is imported via `@/features/...`, not from `tests/lib` |
+| `monorepo/`  | Workspace layout / correctness checks                                                                                                    |
 
 ## Commands
 

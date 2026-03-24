@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, KeyRound, Loader2 } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import {
   Dialog,
@@ -16,6 +13,9 @@ import {
 import { Input } from "@portal/ui/ui/input";
 import { Label } from "@portal/ui/ui/label";
 import * as Sentry from "@sentry/nextjs";
+import { Copy, KeyRound, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { useResetIntegrationPassword } from "@/features/integrations/hooks/use-integration";
 

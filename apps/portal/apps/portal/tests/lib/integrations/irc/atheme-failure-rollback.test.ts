@@ -31,12 +31,12 @@ vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: {
-    server: "irc.atl.chat",
-    port: 6697,
     atheme: {
       jsonrpcUrl: "http://mock-atheme/jsonrpc",
       insecureSkipVerify: false,
     },
+    port: 6697,
+    server: "irc.atl.chat",
     unreal: {
       jsonrpcUrl: undefined,
       rpcUser: undefined,
@@ -49,22 +49,21 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
 }));
 
 vi.mock("@sentry/nextjs", () => ({
-  startSpan: vi.fn((_opts: unknown, cb: () => unknown) => cb()),
   captureException: vi.fn(),
+  startSpan: vi.fn((_opts: unknown, cb: () => unknown) => cb()),
 }));
 
 // Mock DB with chainable methods — we track delete calls
 vi.mock("@portal/db/client", () => ({
   db: {
-    select: vi.fn(),
-    insert: vi.fn(),
-    update: vi.fn(),
     delete: vi.fn(),
+    insert: vi.fn(),
+    select: vi.fn(),
+    update: vi.fn(),
   },
 }));
 
 vi.mock("@/features/integrations/lib/irc/atheme/client", () => ({
-  registerNick: vi.fn(),
   AthemeFaultError: class AthemeFaultError extends Error {
     code: number;
     fault: { code: number; message: string };
@@ -75,6 +74,7 @@ vi.mock("@/features/integrations/lib/irc/atheme/client", () => ({
       this.fault = fault;
     }
   },
+  registerNick: vi.fn(),
 }));
 
 import { db } from "@portal/db/client";
@@ -121,8 +121,8 @@ function setupDbMocks(nick: string) {
     }
     const chain = {
       from: vi.fn(),
-      where: vi.fn(),
       limit: vi.fn(),
+      where: vi.fn(),
     };
     chain.from.mockReturnValue(chain);
     chain.where.mockReturnValue(chain);
@@ -134,15 +134,15 @@ function setupDbMocks(nick: string) {
     values: vi.fn().mockReturnValue({
       returning: vi.fn().mockResolvedValue([
         {
-          id: ACCOUNT_ID,
-          userId: USER_ID,
-          nick,
-          server: "irc.atl.chat",
-          port: 6697,
-          status: "pending",
           createdAt: new Date(),
-          updatedAt: new Date(),
+          id: ACCOUNT_ID,
           metadata: null,
+          nick,
+          port: 6697,
+          server: "irc.atl.chat",
+          status: "pending",
+          updatedAt: new Date(),
+          userId: USER_ID,
         },
       ]),
     }),
@@ -167,10 +167,10 @@ describe("Property 7: Atheme Provisioning Failure Rolls Back", () => {
       fc.asyncProperty(
         // Canonical Portal usernames (nick): 3–10 chars, letter + [a-zA-Z0-9_]
         fc
-          .string({ minLength: 2, maxLength: 9 })
-          .map((s) => `a${s.replace(/[^a-zA-Z0-9_]/g, "x")}`),
+          .string({ maxLength: 9, minLength: 2 })
+          .map((s) => `a${s.replaceAll(/[^a-zA-Z0-9_]/g, "x")}`),
         fc
-          .string({ minLength: 1, maxLength: 50 })
+          .string({ maxLength: 50, minLength: 1 })
           .map((s) => `Network error: ${s}`),
         async (nick, errorMessage) => {
           setupDbMocks(nick);
@@ -195,11 +195,11 @@ describe("Property 7: Atheme Provisioning Failure Rolls Back", () => {
     await fc.assert(
       fc.asyncProperty(
         fc
-          .string({ minLength: 2, maxLength: 9 })
-          .map((s) => `a${s.replace(/[^a-zA-Z0-9_]/g, "x")}`),
+          .string({ maxLength: 9, minLength: 2 })
+          .map((s) => `a${s.replaceAll(/[^a-zA-Z0-9_]/g, "x")}`),
         // Atheme fault codes: 1,2,5,6,8,9,10,15,16
         fc.constantFrom(1, 2, 5, 6, 8, 9, 10, 15, 16),
-        fc.string({ minLength: 1, maxLength: 40 }),
+        fc.string({ maxLength: 40, minLength: 1 }),
         async (nick, faultCode, faultMessage) => {
           setupDbMocks(nick);
           (registerNick as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -223,8 +223,8 @@ describe("Property 7: Atheme Provisioning Failure Rolls Back", () => {
     await fc.assert(
       fc.asyncProperty(
         fc
-          .string({ minLength: 2, maxLength: 9 })
-          .map((s) => `a${s.replace(/[^a-zA-Z0-9_]/g, "x")}`),
+          .string({ maxLength: 9, minLength: 2 })
+          .map((s) => `a${s.replaceAll(/[^a-zA-Z0-9_]/g, "x")}`),
         async (nick) => {
           setupDbMocks(nick);
           const abortError = new DOMException(

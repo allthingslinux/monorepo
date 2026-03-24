@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { connection } from "next/server";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { createPageMetadata } from "@portal/seo/metadata";
 import { Button } from "@portal/ui/ui/button";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { connection } from "next/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
   const t = await getTranslations();
   return createPageMetadata({
-    title: t("marketing.homePage.metadataTitle"),
     description: t("marketing.homePage.metadataDescription"),
+    title: t("marketing.homePage.metadataTitle"),
   });
 }
 

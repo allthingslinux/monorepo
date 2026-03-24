@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@portal/ui/ui/button";
 import { Input } from "@portal/ui/ui/input";
 import { Separator } from "@portal/ui/ui/separator";
+import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 
 import type { FeedCategory, FeedSource } from "@/config/feed";
 import { FEED_CATEGORY_LABELS } from "@/config/feed";
@@ -34,8 +34,8 @@ function formatRelativeDate(isoDate?: string, pubDate?: string): string {
       return `${days}d ago`;
     }
     return date.toLocaleDateString(undefined, {
-      month: "short",
       day: "numeric",
+      month: "short",
       year: days > 365 ? "numeric" : undefined,
     });
   } catch {
@@ -293,7 +293,7 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
         seen.add(cat);
       }
     }
-    return Array.from(seen).sort();
+    return [...seen].toSorted();
   }, [enabledSources]);
 
   const filteredArticles = useMemo(() => {

@@ -1,7 +1,5 @@
 "use client";
 
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import {
   Dialog,
@@ -13,6 +11,8 @@ import {
 } from "@portal/ui/ui/dialog";
 import { Label } from "@portal/ui/ui/label";
 import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export interface XmppPasswordDialogData {
   jid: string;
@@ -56,9 +56,9 @@ export function XmppPasswordDialog({ data, onClose }: XmppPasswordDialogProps) {
                 onClick={async () => {
                   await startSpan(
                     {
+                      attributes: { integrationId: "xmpp" },
                       name: "Copy XMPP password",
                       op: "ui.action",
-                      attributes: { integrationId: "xmpp" },
                     },
                     async () => {
                       try {
@@ -69,7 +69,7 @@ export function XmppPasswordDialog({ data, onClose }: XmppPasswordDialogProps) {
                         } else {
                           const ta = document.createElement("textarea");
                           ta.value = data.temporaryPassword;
-                          document.body.appendChild(ta);
+                          document.body.append(ta);
                           ta.select();
                           const success = document.execCommand("copy");
                           document.body.removeChild(ta);
@@ -80,8 +80,8 @@ export function XmppPasswordDialog({ data, onClose }: XmppPasswordDialogProps) {
                         toast.success("Copied", {
                           description: "Password copied to clipboard",
                         });
-                      } catch (err) {
-                        captureException(err);
+                      } catch (error) {
+                        captureException(error);
                         toast.error("Failed to copy");
                       }
                     }

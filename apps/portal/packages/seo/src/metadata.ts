@@ -1,6 +1,6 @@
+import merge from "lodash/merge";
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import merge from "lodash/merge";
 
 import {
   APP_AUTHOR,
@@ -27,21 +27,21 @@ import type { RouteConfig } from "@/features/routing/lib/types";
  * Used as fallback and base for all pages
  */
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: {
-    default: APP_TITLE,
-    template: `%s | ${APP_TITLE}`,
-  },
-  description: APP_DESCRIPTION,
-  keywords: APP_KEYWORDS,
   authors: [APP_AUTHOR],
   creator: APP_CREATOR,
-  publisher: APP_PUBLISHER,
+  description: APP_DESCRIPTION,
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  keywords: APP_KEYWORDS,
+  metadataBase: new URL(BASE_URL),
   openGraph: {
     type: "website",
     // Locale is set to 'en_US' for English (default locale)
@@ -62,14 +62,7 @@ export const defaultMetadata: Metadata = {
     //   },
     // ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: APP_TITLE,
-    description: APP_DESCRIPTION,
-    // TODO: Add Twitter image when available
-    // images: ["/twitter-image.png"],
-    // creator: "@allthingslinux",
-  },
+  publisher: APP_PUBLISHER,
   robots: {
     index: true,
     follow: true,
@@ -81,10 +74,17 @@ export const defaultMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+  title: {
+    default: APP_TITLE,
+    template: `%s | ${APP_TITLE}`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    // TODO: Add Twitter image when available
+    // images: ["/twitter-image.png"],
+    // creator: "@allthingslinux",
   },
 };
 
@@ -128,11 +128,11 @@ export function getRouteMetadata(
 
   // Build metadata from route config (always uses metadata, not UI)
   return createPageMetadata({
-    title: route.metadata.title,
     description: route.metadata.description,
     keywords: route.metadata.keywords,
-    robots: route.metadata.robots,
     openGraph: route.metadata.openGraph,
+    robots: route.metadata.robots,
+    title: route.metadata.title,
     twitter: route.metadata.twitter,
   });
 }
@@ -150,7 +150,5 @@ export async function getStaticRouteMetadataCached(
   "use cache";
   cacheLife("hours");
   cacheTag("route-metadata", pathname);
-  return await Promise.resolve(
-    getRouteMetadata(pathname, routeConfig, undefined)
-  );
+  return await Promise.resolve(getRouteMetadata(pathname, routeConfig));
 }

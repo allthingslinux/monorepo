@@ -15,24 +15,29 @@ vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: { server: "irc.mock.chat", port: 6697 },
+  isAthemeOperConfigured: () => false,
   isIrcConfigured: () => true,
   isUnrealConfigured: () => true,
-  isAthemeOperConfigured: () => false,
 }));
 
 // Mock DB with chainable methods
 vi.mock("@portal/db/client", () => ({
   db: {
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        where: vi.fn(() => ({
-          limit: vi.fn(() => []),
-        })),
+    delete: vi.fn(() => ({
+      where: vi.fn(() => ({
+        returning: vi.fn(() => []),
       })),
     })),
     insert: vi.fn(() => ({
       values: vi.fn(() => ({
         returning: vi.fn(() => []),
+      })),
+    })),
+    select: vi.fn(() => ({
+      from: vi.fn(() => ({
+        where: vi.fn(() => ({
+          limit: vi.fn(() => []),
+        })),
       })),
     })),
     update: vi.fn(() => ({
@@ -42,27 +47,22 @@ vi.mock("@portal/db/client", () => ({
         })),
       })),
     })),
-    delete: vi.fn(() => ({
-      where: vi.fn(() => ({
-        returning: vi.fn(() => []),
-      })),
-    })),
   },
 }));
 
 // Mock Atheme
 vi.mock("@/features/integrations/lib/irc/atheme/client", () => ({
-  registerNick: vi.fn(),
   AthemeFaultError: class extends Error {
     code = 8;
     fault = { code: 8, message: "Fault" };
   },
+  registerNick: vi.fn(),
 }));
 
 // Mock Sentry
 vi.mock("@sentry/nextjs", () => ({
-  startSpan: vi.fn((_, cb) => cb()),
   captureException: vi.fn(),
+  startSpan: vi.fn((_, cb) => cb()),
 }));
 
 describe("IrcIntegration Logic", () => {
@@ -104,7 +104,7 @@ describe("IrcIntegration Logic", () => {
       (db.insert as any).mockReturnValueOnce({
         values: vi.fn(() => ({
           returning: vi.fn(() => [
-            { id: "acc-1", userId, nick, status: "pending" },
+            { id: "acc-1", nick, status: "pending", userId },
           ]),
         })),
       });
@@ -113,7 +113,7 @@ describe("IrcIntegration Logic", () => {
         set: vi.fn(() => ({
           where: vi.fn(() => ({
             returning: vi.fn(() => [
-              { id: "acc-1", userId, nick, status: "active" },
+              { id: "acc-1", nick, status: "active", userId },
             ]),
           })),
         })),
@@ -162,7 +162,7 @@ describe("IrcIntegration Logic", () => {
       (db.insert as any).mockReturnValueOnce({
         values: vi.fn(() => ({
           returning: vi.fn(() => [
-            { id: "acc-1", userId, nick, status: "pending" },
+            { id: "acc-1", nick, status: "pending", userId },
           ]),
         })),
       });

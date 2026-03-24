@@ -76,7 +76,9 @@ Some endpoints may return data directly without the `ok` wrapper:
   }
 }
 ```
+
 **Example with zod-validation-error:**
+
 ```json
 {
   "ok": false,
@@ -84,6 +86,7 @@ Some endpoints may return data directly without the `ok` wrapper:
   "details": { ... }
 }
 ```
+
 **Note:** The `details` field is optional and typically populated for 400 Bad Request (Validation) errors.
 
 ### HTTP Status Codes
@@ -771,8 +774,8 @@ GET /api/admin/users?limit=20&offset=40
 ### Fetching User Profile
 
 ```typescript
-const response = await fetch('/api/user/me', {
-  credentials: 'include', // Include session cookie
+const response = await fetch("/api/user/me", {
+  credentials: "include", // Include session cookie
 });
 
 if (!response.ok) {
@@ -787,15 +790,15 @@ console.log(data.user);
 ### Creating Integration Account
 
 ```typescript
-const response = await fetch('/api/integrations/xmpp/accounts', {
-  method: 'POST',
+const response = await fetch("/api/integrations/xmpp/accounts", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  credentials: 'include',
+  credentials: "include",
   body: JSON.stringify({
-    username: 'user@atl.chat',
-    password: 'secure-password',
+    username: "user@atl.chat",
+    password: "secure-password",
   }),
 });
 
@@ -811,9 +814,9 @@ console.log(data.account);
 ### Admin API with API Key
 
 ```typescript
-const response = await fetch('/api/admin/stats', {
+const response = await fetch("/api/admin/stats", {
   headers: {
-    'Authorization': `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`,
   },
 });
 

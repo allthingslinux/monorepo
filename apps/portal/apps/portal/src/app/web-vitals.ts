@@ -89,14 +89,18 @@ function formatMetricValue(name: string, value: number): string {
  */
 function getMetricStyle(rating?: string): string[] {
   switch (rating) {
-    case "good":
+    case "good": {
       return ["color: #10b981", "font-weight: bold"];
-    case "needs-improvement":
+    }
+    case "needs-improvement": {
       return ["color: #f59e0b", "font-weight: bold"];
-    case "poor":
+    }
+    case "poor": {
       return ["color: #ef4444", "font-weight: bold"];
-    default:
+    }
+    default: {
       return ["color: #6b7280"];
+    }
   }
 }
 
@@ -105,14 +109,18 @@ function getMetricStyle(rating?: string): string[] {
  */
 function getRatingEmoji(rating?: string): string {
   switch (rating) {
-    case "good":
+    case "good": {
       return "✅";
-    case "needs-improvement":
+    }
+    case "needs-improvement": {
       return "⚠️";
-    case "poor":
+    }
+    case "poor": {
       return "❌";
-    default:
+    }
+    default: {
       return "ℹ️";
+    }
   }
 }
 

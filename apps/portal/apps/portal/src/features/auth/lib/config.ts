@@ -1,6 +1,13 @@
 import { apiKey } from "@better-auth/api-key";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { passkey } from "@better-auth/passkey";
+import { db } from "@portal/db/client";
+import { schema } from "@portal/db/schema";
+import { user as authUser } from "@portal/db/schema/auth";
+import { ircAccount } from "@portal/db/schema/irc";
+import { xmppAccount } from "@portal/db/schema/xmpp";
+import { isValidCanonicalUsername } from "@portal/schemas/integrations/validation";
+import "server-only";
 import * as Sentry from "@sentry/nextjs";
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
@@ -19,19 +26,11 @@ import {
   twoFactor,
   username,
 } from "better-auth/plugins";
-
-import "server-only";
-
-import { db } from "@portal/db/client";
-import { schema } from "@portal/db/schema";
-import { user as authUser } from "@portal/db/schema/auth";
-import { ircAccount } from "@portal/db/schema/irc";
-import { xmppAccount } from "@portal/db/schema/xmpp";
-import { isValidCanonicalUsername } from "@portal/schemas/integrations/validation";
 import { and, eq } from "drizzle-orm";
 
 import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
 import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
+
 import {
   sendOTPEmail,
   sendResetPasswordEmail,
@@ -146,11 +145,11 @@ const user = {
   },
   // Delete user configuration
   deleteUser: {
-    enabled: true,
     beforeDelete: async (user: { id: string }) => {
       // Ensure external integrations are cleaned up before user deletion.
       await cleanupIntegrationAccounts(user.id);
     },
+    enabled: true,
     // sendDeleteAccountVerification: async ({ user, url, token }, request) => {
     //   // Send verification email before account deletion
     //   await sendEmail({
@@ -191,23 +190,8 @@ const account = {
 // Configure OAuth providers for user authentication (Google, GitHub, etc.)
 // Users can sign in with these providers using authClient.signIn.social()
 
-const socialProviders = {
-  // Example: Google OAuth
-  // google: {
-  //   clientId: process.env.GOOGLE_CLIENT_ID || "",
-  //   clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-  //   scope: ["email", "profile"],
-  //   // For OAuth Proxy: redirectURI must be your production app's callback URL
-  //   // redirectURI: "https://my-main-app.com/api/auth/callback/google",
-  // },
-  // Example: GitHub OAuth
-  // github: {
-  //   clientId: process.env.GITHUB_CLIENT_ID || "",
-  //   clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-  //   // For OAuth Proxy: redirectURI must be your production app's callback URL
-  //   // redirectURI: "https://my-main-app.com/api/auth/callback/github",
-  // },
-  ...(env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
+const socialProviders =
+  env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
     ? {
         discord: {
           clientId: env.DISCORD_CLIENT_ID,
@@ -216,8 +200,7 @@ const socialProviders = {
           // redirectURI: "https://my-main-app.com/api/auth/callback/discord",
         },
       }
-    : {}),
-};
+    : {};
 
 // ============================================================================
 // Generic OAuth (Mailcow as sign-in provider)
@@ -233,13 +216,9 @@ const mailcowOAuthConfig =
   mailcowEnv.MAILCOW_OAUTH_CLIENT_SECRET
     ? [
         {
-          providerId: "mailcow",
+          authorizationUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/authorize`,
           clientId: mailcowEnv.MAILCOW_OAUTH_CLIENT_ID,
           clientSecret: mailcowEnv.MAILCOW_OAUTH_CLIENT_SECRET,
-          authorizationUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/authorize`,
-          tokenUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/token`,
-          userInfoUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/profile`,
-          scopes: ["profile"],
           mapProfileToUser: (profile: {
             username?: string;
             identifier?: string;
@@ -254,6 +233,10 @@ const mailcowOAuthConfig =
             image: null,
             emailVerified: true,
           }),
+          providerId: "mailcow",
+          scopes: ["profile"],
+          tokenUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/token`,
+          userInfoUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/profile`,
         },
       ]
     : [];
@@ -344,7 +327,7 @@ const oauthProviderConfig = {
     // Add XMPP username when 'xmpp' scope is requested
     if (scopes.includes("xmpp")) {
       await Sentry.startSpan(
-        { op: "db.lookup", name: "xmppAccount lookup" },
+        { name: "xmppAccount lookup", op: "db.lookup" },
         async () => {
           try {
             const [xmppAccountRecord] = await db
@@ -373,7 +356,7 @@ const oauthProviderConfig = {
     // Add IRC nick when 'irc' scope is requested
     if (scopes.includes("irc")) {
       await Sentry.startSpan(
-        { op: "db.lookup", name: "ircAccount lookup" },
+        { name: "ircAccount lookup", op: "db.lookup" },
         async () => {
           try {
             const [ircAccountRecord] = await db
@@ -455,11 +438,11 @@ const oauthProviderConfig = {
 
 const plugins = [
   username({
-    minUsernameLength: 3,
-    maxUsernameLength: 30,
-    usernameValidator: (value: string) => isValidCanonicalUsername(value),
-    usernameNormalization: (value: string) => value.toLowerCase(),
     displayUsernameNormalization: (value: string) => value,
+    maxUsernameLength: 30,
+    minUsernameLength: 3,
+    usernameNormalization: (value: string) => value.toLowerCase(),
+    usernameValidator: (value: string) => isValidCanonicalUsername(value),
   }),
   passkey({
     rpName: "Portal", // Shown in WebAuthn prompts (defaults to appName)
@@ -580,8 +563,8 @@ const plugins = [
   twoFactor({
     issuer: "Portal", // Shown in authenticator apps (e.g. Google Authenticator)
     otpOptions: {
-      sendOTP: sendOTPEmail,
-      period: 3, // OTP validity in minutes (default: 3)
+      period: 3,
+      sendOTP: sendOTPEmail, // OTP validity in minutes (default: 3)
     },
     // Backup codes configuration
     // backupCodesOptions: {
@@ -810,7 +793,7 @@ const databaseHooks = {
           [key: string]: unknown;
         };
       }) => {
-        const data = payload.data;
+        const { data } = payload;
         const userId = typeof data?.id === "string" ? data.id : undefined;
         const nextUsername =
           typeof data?.username === "string" ? data.username : undefined;

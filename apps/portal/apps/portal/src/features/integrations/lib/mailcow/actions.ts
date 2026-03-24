@@ -1,12 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import type { z } from "zod";
 import { log } from "@portal/observability/utils";
 import {
   CreateAliasRequestSchema,
   CreateAppPasswordRequestSchema,
 } from "@portal/schemas/integrations/mailcow";
+import { revalidatePath } from "next/cache";
+import type { z } from "zod";
 
 import { mailcowIntegration } from "./implementation";
 import type { MailcowAlias, MailcowAppPassword } from "./types";
@@ -42,8 +42,8 @@ export async function createAppPassword(accountId: string, name: string) {
   } catch (error) {
     log.error("Failed to create app password", {
       accountId,
-      name,
       error: error instanceof Error ? error.message : String(error),
+      name,
     });
     throw error;
   }
@@ -60,8 +60,8 @@ export async function deleteAppPassword(
   } catch (error) {
     log.error("Failed to delete app password", {
       accountId,
-      passwordId,
       error: error instanceof Error ? error.message : String(error),
+      passwordId,
     });
     throw error;
   }

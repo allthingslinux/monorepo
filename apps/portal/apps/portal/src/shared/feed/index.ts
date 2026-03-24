@@ -62,8 +62,8 @@ function resolveItemLink(item: { link?: string; guid?: string }): string {
 /** Strip emoji characters and variation selectors, then trim. */
 function stripEmoji(str: string): string {
   return str
-    .replace(/\p{Emoji_Presentation}/gu, "")
-    .replace(/[\uFE0E\uFE0F]/g, "")
+    .replaceAll(/\p{Emoji_Presentation}/gu, "")
+    .replaceAll(/[\uFE0E\uFE0F]/g, "")
     .trim();
 }
 
@@ -166,10 +166,10 @@ function extractCategories(
 export async function fetchLatestBlogPosts(limit = 4): Promise<BlogPost[]> {
   try {
     const response = await fetch(BLOG_FEED_URL, {
-      next: { revalidate: BLOG_FEED_REVALIDATE_SECONDS },
       headers: {
         "User-Agent": "Portal/1.0 (https://portal.atl.tools)",
       },
+      next: { revalidate: BLOG_FEED_REVALIDATE_SECONDS },
     });
 
     if (!response.ok) {
@@ -180,11 +180,11 @@ export async function fetchLatestBlogPosts(limit = 4): Promise<BlogPost[]> {
     const feed = await parser.parseString(xml);
 
     return (feed.items ?? []).slice(0, limit).map((item) => ({
-      title: item.title ?? "Untitled",
+      isoDate: item.isoDate,
       link: resolveItemLink(item),
       pubDate: item.pubDate,
-      isoDate: item.isoDate,
       summary: item.contentSnippet ?? item.content?.slice(0, 120) ?? undefined,
+      title: item.title ?? "Untitled",
     }));
   } catch {
     return [];
@@ -200,20 +200,20 @@ export async function fetchLinuxFeedSource(
 ): Promise<FeedSourceResult> {
   try {
     const response = await fetch(source.feedUrl, {
-      next: { revalidate: FEED_REVALIDATE_SECONDS },
       headers: {
         "User-Agent": "Portal/1.0 (https://portal.atl.tools)",
         Accept:
           "application/rss+xml, application/atom+xml, application/xml, text/xml",
       },
+      next: { revalidate: FEED_REVALIDATE_SECONDS },
     });
 
     if (!response.ok) {
       return {
-        sourceId: source.id,
-        sourceName: source.name,
         articles: [],
         error: `HTTP ${response.status}`,
+        sourceId: source.id,
+        sourceName: source.name,
       };
     }
 
@@ -221,7 +221,7 @@ export async function fetchLinuxFeedSource(
     const feed = await parser.parseString(xml);
 
     const articles: FeedArticle[] = (feed.items ?? [])
-      .sort((a, b) => {
+      .toSorted((a, b) => {
         const dateA = new Date(a.isoDate ?? a.pubDate ?? 0).getTime();
         const dateB = new Date(b.isoDate ?? b.pubDate ?? 0).getTime();
         return dateB - dateA;
@@ -231,32 +231,32 @@ export async function fetchLinuxFeedSource(
         const link = resolveItemLink(item);
         const title = item.title ?? "Untitled";
         return {
-          id: `${source.id}::${link}::${title}::${index}`,
-          title,
-          link,
-          pubDate: item.pubDate,
-          isoDate: item.isoDate,
-          summary:
-            (item.contentSnippet ?? item.content)?.slice(0, 200) ?? undefined,
           categories: extractCategories(
             item,
             link,
             source.categoryPattern,
             source.categoryFromLinkPath
           ),
+          id: `${source.id}::${link}::${title}::${index}`,
+          isoDate: item.isoDate,
+          link,
+          pubDate: item.pubDate,
+          siteUrl: source.siteUrl,
           sourceId: source.id,
           sourceName: source.name,
-          siteUrl: source.siteUrl,
+          summary:
+            (item.contentSnippet ?? item.content)?.slice(0, 200) ?? undefined,
+          title,
         };
       });
 
-    return { sourceId: source.id, sourceName: source.name, articles };
-  } catch (err) {
+    return { articles, sourceId: source.id, sourceName: source.name };
+  } catch (error) {
     return {
       sourceId: source.id,
       sourceName: source.name,
       articles: [],
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -275,7 +275,7 @@ export async function fetchAllLinuxFeeds(
 
   const articles = results
     .flatMap((r) => r.articles)
-    .sort((a, b) => {
+    .toSorted((a, b) => {
       const dateA = new Date(a.isoDate ?? a.pubDate ?? 0).getTime();
       const dateB = new Date(b.isoDate ?? b.pubDate ?? 0).getTime();
       return dateB - dateA;

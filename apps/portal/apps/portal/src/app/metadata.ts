@@ -5,7 +5,4 @@
 // for backwards compatibility. New code should import directly from
 // @portal/seo/metadata instead.
 
-export {
-  createPageMetadata,
-  defaultMetadata,
-} from "@portal/seo/metadata";
+export { createPageMetadata, defaultMetadata } from "@portal/seo/metadata";

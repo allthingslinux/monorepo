@@ -1,9 +1,9 @@
 "use client";
 
-import { KeyRound, Loader2 } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@portal/ui/ui/button";
 import { captureException } from "@sentry/nextjs";
+import { KeyRound, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useResetIntegrationPassword } from "@/features/integrations/hooks/use-integration";
 
@@ -16,10 +16,10 @@ export function MediaWikiResetPassword({ accountId }: { accountId: string }) {
       toast.success("Password reset email sent", {
         description: "Check the email configured on your wiki account.",
       });
-    } catch (err) {
-      captureException(err);
+    } catch (error) {
+      captureException(error);
       toast.error(
-        err instanceof Error ? err.message : "Failed to reset wiki password"
+        error instanceof Error ? error.message : "Failed to reset wiki password"
       );
     }
   };

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { cn } from "@portal/utils/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@portal/utils/utils";
+import { useEffect, useState } from "react";
 
 import type { ProtectedRoute } from "@/features/routing/lib/types";
+
 import {
   Collapsible,
   CollapsibleContent,

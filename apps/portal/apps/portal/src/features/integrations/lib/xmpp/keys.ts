@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
 /**
  * Get validated XMPP environment variables
@@ -12,14 +12,14 @@ import { createEnv } from "@t3-oss/env-nextjs";
  */
 export const keys = () =>
   createEnv({
-    server: {
-      XMPP_DOMAIN: z.string().optional(),
-      PROSODY_REST_URL: z.url().optional(),
-      PROSODY_REST_TOKEN: z.string().optional(),
-    },
     runtimeEnv: {
       XMPP_DOMAIN: process.env.XMPP_DOMAIN,
       PROSODY_REST_URL: process.env.PROSODY_REST_URL,
       PROSODY_REST_TOKEN: process.env.PROSODY_REST_TOKEN,
+    },
+    server: {
+      XMPP_DOMAIN: z.string().optional(),
+      PROSODY_REST_URL: z.url().optional(),
+      PROSODY_REST_TOKEN: z.string().optional(),
     },
   });

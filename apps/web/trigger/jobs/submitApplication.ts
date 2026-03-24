@@ -1,10 +1,11 @@
 // app/jobs/submitApplication.ts
 // Using Trigger.dev SDK v4 pattern
 
-import { z } from "zod";
 import { logger, task } from "@trigger.dev/sdk";
+import { z } from "zod";
 
 import { env } from "@/env"; // Import the validated env object
+
 import { sendToDiscordWebhook } from "../../lib/integrations/discord";
 import { storeApplicationDataOnGitHub } from "../../lib/integrations/github";
 import { storeApplicationInMonday } from "../../lib/integrations/monday-graphql";

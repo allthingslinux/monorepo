@@ -1,8 +1,8 @@
 "use client";
 
-import { toast } from "sonner";
 import { queryKeys } from "@portal/api/query-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { authClient } from "@/auth/client";
 
@@ -37,6 +37,9 @@ export function useSetUserRole() {
 
       return result.data;
     },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update user role");
+    },
     onSuccess: (_, variables) => {
       // Invalidate user detail
       queryClient.invalidateQueries({
@@ -51,9 +54,6 @@ export function useSetUserRole() {
         queryKey: queryKeys.admin.stats(),
       });
       toast.success("User role updated");
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update user role");
     },
   });
 }
@@ -83,6 +83,9 @@ export function useBanUser() {
 
       return result.data;
     },
+    onError: (error) => {
+      toast.error(error.message || "Failed to ban user");
+    },
     onSuccess: (_, variables) => {
       // Invalidate user detail
       queryClient.invalidateQueries({
@@ -97,9 +100,6 @@ export function useBanUser() {
         queryKey: queryKeys.admin.stats(),
       });
       toast.success("User banned");
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to ban user");
     },
   });
 }
@@ -122,6 +122,9 @@ export function useUnbanUser() {
 
       return result.data;
     },
+    onError: (error) => {
+      toast.error(error.message || "Failed to unban user");
+    },
     onSuccess: (_, userId) => {
       // Invalidate user detail
       queryClient.invalidateQueries({
@@ -136,9 +139,6 @@ export function useUnbanUser() {
         queryKey: queryKeys.admin.stats(),
       });
       toast.success("User unbanned");
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to unban user");
     },
   });
 }

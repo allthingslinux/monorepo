@@ -1,6 +1,5 @@
 "use client";
 
-import { memo, useMemo } from "react";
 import type { Session } from "@portal/api/types";
 import type { SessionListResponse } from "@portal/types/api";
 import {
@@ -10,11 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@portal/ui/ui/card";
+import { memo, useMemo } from "react";
 
 import {
   useDeleteSession,
   useSessions,
 } from "@/features/admin/hooks/use-admin";
+
 import { DataTable } from "./data-table";
 import { createSessionColumns } from "./session-columns";
 

@@ -46,7 +46,8 @@ jobs:
         with:
           files: |
             apps/portal/next.config.ts
-            **/biome.jsonc
+            **/.oxlintrc.json
+            **/.oxfmtrc.jsonc
             apps/portal/vitest.config.ts
             turbo.json
             apps/portal/turbo.json

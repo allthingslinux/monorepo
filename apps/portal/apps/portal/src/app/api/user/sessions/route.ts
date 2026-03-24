@@ -1,8 +1,8 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAuth } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { session } from "@portal/db/schema/auth";
 import { and, desc, eq, gt } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -29,11 +29,11 @@ export async function GET(request: NextRequest) {
 
     const rows = await db
       .select({
-        id: session.id,
-        expiresAt: session.expiresAt,
         createdAt: session.createdAt,
-        updatedAt: session.updatedAt,
+        expiresAt: session.expiresAt,
+        id: session.id,
         ipAddress: session.ipAddress,
+        updatedAt: session.updatedAt,
         userAgent: session.userAgent,
         userId: session.userId,
       })

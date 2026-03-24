@@ -1,11 +1,12 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 import type { Session } from "@portal/api/types";
 import { Button } from "@portal/ui/ui/button";
 import type { UseMutationResult } from "@tanstack/react-query";
-import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 function getSortIcon(sorted: false | "asc" | "desc") {
   if (sorted === "asc") {
@@ -28,17 +29,6 @@ export function createSessionColumns(
 
   return [
     columnHelper.accessor("userId", {
-      size: 280,
-      minSize: 220,
-      header: ({ column }) => {
-        const sorted = column.getIsSorted();
-        return (
-          <Button onClick={column.getToggleSortingHandler()} variant="ghost">
-            User
-            {getSortIcon(sorted)}
-          </Button>
-        );
-      },
       cell: ({ row, getValue }) => {
         const userId = getValue();
         const session = row.original;
@@ -51,25 +41,28 @@ export function createSessionColumns(
           </div>
         );
       },
+      header: ({ column }) => {
+        const sorted = column.getIsSorted();
+        return (
+          <Button onClick={column.getToggleSortingHandler()} variant="ghost">
+            User
+            {getSortIcon(sorted)}
+          </Button>
+        );
+      },
+      minSize: 220,
+      size: 280,
     }),
     columnHelper.accessor("ipAddress", {
-      size: 150,
-      minSize: 120,
-      header: "IP Address",
       cell: ({ getValue }) => {
         const ipAddress = getValue();
         return ipAddress || "Unknown";
       },
+      header: "IP Address",
+      minSize: 120,
+      size: 150,
     }),
     columnHelper.accessor("userAgent", {
-      header: "User Agent",
-      size: 400,
-      minSize: 200,
-      maxSize: 600,
-      meta: {
-        align: "left",
-        wrap: true,
-      },
       cell: ({ getValue }) => {
         const userAgent = getValue();
         return (
@@ -78,13 +71,19 @@ export function createSessionColumns(
           </div>
         );
       },
+      header: "User Agent",
+      maxSize: 600,
+      meta: {
+        align: "left",
+        wrap: true,
+      },
+      minSize: 200,
+      size: 400,
     }),
     columnHelper.accessor("createdAt", {
-      size: 120,
-      minSize: 100,
-      sortingFn: "datetime",
-      meta: {
-        align: "right",
+      cell: ({ getValue }) => {
+        const date = getValue();
+        return new Date(date).toLocaleDateString();
       },
       header: ({ column }) => {
         const sorted = column.getIsSorted();
@@ -99,17 +98,17 @@ export function createSessionColumns(
           </Button>
         );
       },
+      meta: {
+        align: "right",
+      },
+      minSize: 100,
+      size: 120,
+      sortingFn: "datetime",
+    }),
+    columnHelper.accessor("expiresAt", {
       cell: ({ getValue }) => {
         const date = getValue();
         return new Date(date).toLocaleDateString();
-      },
-    }),
-    columnHelper.accessor("expiresAt", {
-      size: 120,
-      minSize: 100,
-      sortingFn: "datetime",
-      meta: {
-        align: "right",
       },
       header: ({ column }) => {
         const sorted = column.getIsSorted();
@@ -124,19 +123,14 @@ export function createSessionColumns(
           </Button>
         );
       },
-      cell: ({ getValue }) => {
-        const date = getValue();
-        return new Date(date).toLocaleDateString();
-      },
-    }),
-    columnHelper.display({
-      id: "actions",
-      size: 100,
-      minSize: 80,
       meta: {
         align: "right",
       },
-      header: "Actions",
+      minSize: 100,
+      size: 120,
+      sortingFn: "datetime",
+    }),
+    columnHelper.display({
       cell: ({ row }) => {
         const session = row.original;
 
@@ -160,6 +154,13 @@ export function createSessionColumns(
           </Button>
         );
       },
+      header: "Actions",
+      id: "actions",
+      meta: {
+        align: "right",
+      },
+      minSize: 80,
+      size: 100,
     }),
   ] as ColumnDef<Session>[];
 }

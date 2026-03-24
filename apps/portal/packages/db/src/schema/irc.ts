@@ -23,22 +23,22 @@ export const ircAccountStatusEnum = pgEnum("irc_account_status", [
 export const ircAccount = pgTable(
   "irc_account",
   {
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+    metadata: jsonb("metadata"),
     nick: text("nick").notNull(),
-    server: text("server").notNull(),
     port: integer("port").default(6697).notNull(),
+    server: text("server").notNull(),
     status: ircAccountStatusEnum("status").default("pending").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
-    metadata: jsonb("metadata"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
   },
   (table) => [
     index("irc_account_status_idx").on(table.status),

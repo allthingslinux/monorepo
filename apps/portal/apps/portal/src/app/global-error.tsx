@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { Button } from "@portal/ui/ui/button";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
   CardTitle,
 } from "@portal/ui/ui/card";
 import { captureException } from "@sentry/nextjs";
+import { useEffect } from "react";
 
 import { geistMono, geistSans, inter } from "./fonts";
 

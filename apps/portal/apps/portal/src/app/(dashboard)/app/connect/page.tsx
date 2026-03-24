@@ -1,3 +1,5 @@
+import { getRouteMetadata } from "@portal/seo/metadata";
+import { PageContent, PageHeader } from "@portal/ui/layout/page";
 import {
   ArrowUpRight,
   BookOpen,
@@ -14,8 +16,6 @@ import {
   Youtube,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { getRouteMetadata } from "@portal/seo/metadata";
-import { PageContent, PageHeader } from "@portal/ui/layout/page";
 
 import { verifySession } from "@/auth/dal";
 import { COMMUNITY_LINKS, SOCIAL_MEDIA_LINKS } from "@/config/community";
@@ -23,23 +23,23 @@ import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 
 const ICON_MAP = {
   discord: MessageCircle,
-  irc: Terminal,
-  xmpp: MessageSquare,
-  web: Globe,
   github: Github,
+  irc: Terminal,
+  web: Globe,
   wiki: BookOpen,
+  xmpp: MessageSquare,
 } as const;
 
 const SOCIAL_ICON_MAP = {
-  x: Share2,
-  youtube: Youtube,
-  mastodon: Share2,
   bluesky: Share2,
-  linkedin: Linkedin,
   facebook: Facebook,
   instagram: Instagram,
+  linkedin: Linkedin,
+  mastodon: Share2,
   tiktok: Video,
   tumblr: Share2,
+  x: Share2,
+  youtube: Youtube,
 } as const;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -68,23 +68,23 @@ function ExternalLinkTile({
 
   const sizeClasses = {
     hero: "size-12 sm:size-14",
-    tile: "size-10",
-    pill: "size-8",
     inline: "size-8",
+    pill: "size-8",
+    tile: "size-10",
   };
   const iconSizes = {
     hero: "size-6 sm:size-7",
-    tile: "size-4 sm:size-5",
-    pill: "size-4 sm:size-5",
     inline: "size-4 sm:size-5",
+    pill: "size-4 sm:size-5",
+    tile: "size-4 sm:size-5",
   };
 
   const layoutClasses = {
     hero: "col-span-full sm:col-span-2 p-5 sm:p-6",
-    tile: "p-4",
-    pill: "inline-flex px-4 py-2.5",
     inline:
       "inline-flex min-w-0 px-3 py-2 rounded-md border-transparent bg-muted/50 hover:bg-muted",
+    pill: "inline-flex px-4 py-2.5",
+    tile: "p-4",
   };
 
   return (

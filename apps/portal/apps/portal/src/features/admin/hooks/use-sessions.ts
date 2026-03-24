@@ -17,7 +17,6 @@ import { authClient } from "@/auth/client";
  */
 export function useDeviceSessions() {
   return useQuery({
-    queryKey: [...queryKeys.sessions.current(), "devices"],
     queryFn: async () => {
       const result = await authClient.multiSession.listDeviceSessions({});
       if (result.error) {
@@ -25,6 +24,7 @@ export function useDeviceSessions() {
       }
       return result.data ?? [];
     },
+    queryKey: [...queryKeys.sessions.current(), "devices"],
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -35,11 +35,11 @@ export function useDeviceSessions() {
  */
 export function useSessionsList() {
   return useQuery({
-    queryKey: queryKeys.sessions.current(),
     queryFn: async () => {
       const sessions = await authClient.listSessions();
       return sessions ?? [];
     },
+    queryKey: queryKeys.sessions.current(),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }

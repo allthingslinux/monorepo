@@ -8,17 +8,17 @@ codebase.
 ## Steps
 
 1. **Dependency audit**
-    - Check for known vulnerabilities
-    - Update outdated packages
-    - Review third-party dependencies
+   - Check for known vulnerabilities
+   - Update outdated packages
+   - Review third-party dependencies
 2. **Code security review**
-    - Check for common vulnerabilities
-    - Review authentication/authorization
-    - Audit data handling practices
+   - Check for common vulnerabilities
+   - Review authentication/authorization
+   - Audit data handling practices
 3. **Infrastructure security**
-    - Review environment variables
-    - Check access controls
-    - Audit network security
+   - Review environment variables
+   - Check access controls
+   - Audit network security
 
 ## Security Checklist
 

@@ -99,9 +99,10 @@ export interface ListQueryParams {
 /**
  * Request query parameters for filtered list endpoints
  */
-export interface FilteredListQueryParams extends ListQueryParams {
-  [key: string]: string | number | undefined;
-}
+export type FilteredListQueryParams = Record<
+  string,
+  string | number | undefined
+>;
 
 // ============================================================================
 // Filter Types

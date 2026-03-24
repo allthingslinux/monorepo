@@ -40,8 +40,8 @@ function findRouteByPath(
         return {
           ...r,
           child: {
-            label: child.label,
             breadcrumb: child.breadcrumb,
+            label: child.label,
           },
         };
       }
@@ -82,9 +82,9 @@ export function generateBreadcrumbs(
       currentPath += `/${segment}`;
       const isLast = index === segments.length - 1;
       breadcrumbs.push({
+        href: isLast ? undefined : currentPath,
         label:
           segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " "),
-        href: isLast ? undefined : currentPath,
       });
     });
     return breadcrumbs;
@@ -94,21 +94,21 @@ export function generateBreadcrumbs(
   if (cleanPath.startsWith("/app")) {
     // Add "App" as first breadcrumb for app routes
     breadcrumbs.push({
-      label: "App",
       href: "/app",
+      label: "App",
     });
   }
 
   // Add route breadcrumb
   if (route.breadcrumb?.label) {
     breadcrumbs.push({
-      label: route.breadcrumb.label,
       href: route.breadcrumb.exact ? undefined : route.path,
+      label: route.breadcrumb.label,
     });
   } else if (route.label) {
     breadcrumbs.push({
-      label: route.label,
-      href: undefined, // Current page
+      href: undefined,
+      label: route.label, // Current page
     });
   }
 
@@ -117,8 +117,8 @@ export function generateBreadcrumbs(
     const childLabel = route.child.breadcrumb?.label || route.child.label;
     if (childLabel) {
       breadcrumbs.push({
-        label: childLabel,
         href: undefined,
+        label: childLabel,
       });
     }
   }

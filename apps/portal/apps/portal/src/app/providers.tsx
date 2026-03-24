@@ -1,17 +1,18 @@
 "use client";
 
-import { type ReactNode, useEffect } from "react";
-import { Toaster } from "sonner";
-import type { Route } from "next";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
 import { AuthUIProviderTanstack } from "@daveyplate/better-auth-ui/tanstack";
 import { getQueryClient } from "@portal/api/query-client";
 import { CommandMenu } from "@portal/ui/command-menu";
 import { ReactQueryDevtools } from "@portal/ui/dev-tools";
 import { QueryClientProvider } from "@tanstack/react-query";
+import type { Route } from "next";
 import { ThemeProvider } from "next-themes";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import type { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 import { useListApiKeys } from "@/auth/auth-hooks";
 // import { ErrorBoundary } from "@portal/ui/error-boundary";

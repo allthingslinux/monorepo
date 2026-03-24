@@ -10,55 +10,55 @@ Reference: [TypeScript TSConfig Reference](https://www.typescriptlang.org/tsconf
 
 ### Project & module resolution
 
-| Option   | Value   | Purpose |
-|----------|---------|---------|
-| `baseUrl` | `"."`   | Root for resolving non-relative module names. Required when using `paths`. |
+| Option    | Value       | Purpose                                                                                                                                                                                                                                                                                                |
+| --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `baseUrl` | `"."`       | Root for resolving non-relative module names. Required when using `paths`.                                                                                                                                                                                                                             |
 | `paths`   | (see below) | Path aliases for imports (e.g. `@/auth`, `@/db`). Resolved relative to `baseUrl`. Path aliases are documented in [PATH_ALIASES.md](./PATH_ALIASES.md). **Note:** `paths` only affects type-checking; the bundler (Next.js) must resolve the same mappings at build time (Next.js reads from tsconfig). |
 
 ### Language & environment
 
-| Option | Value   | Purpose |
-|--------|---------|---------|
-| `target` | `"ESNext"` | Emit target is irrelevant when `noEmit: true`; this affects which built-in libs are assumed and how types are inferred. ESNext matches the runtime/bundler output. |
-| `lib`    | `["dom", "dom.iterable", "esnext"]` | Explicit APIs for the environment: DOM, DOM iterables, and latest JS. Keeps typings aligned with actual usage. |
-| `jsx`    | `"react-jsx"` | Use the React 17+ automatic JSX runtime. No need to import React in every file for JSX. |
+| Option   | Value                               | Purpose                                                                                                                                                            |
+| -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `target` | `"ESNext"`                          | Emit target is irrelevant when `noEmit: true`; this affects which built-in libs are assumed and how types are inferred. ESNext matches the runtime/bundler output. |
+| `lib`    | `["dom", "dom.iterable", "esnext"]` | Explicit APIs for the environment: DOM, DOM iterables, and latest JS. Keeps typings aligned with actual usage.                                                     |
+| `jsx`    | `"react-jsx"`                       | Use the React 17+ automatic JSX runtime. No need to import React in every file for JSX.                                                                            |
 
 ### Module system (bundler)
 
-| Option               | Value      | Purpose |
-|----------------------|------------|---------|
-| `module`             | `"esnext"` | Preserves modern ESM in type-checking; Next.js/Turbopack handle emit. |
-| `moduleResolution`   | `"bundler"` | Resolution tailored for bundlers: supports `package.json` `exports`/`imports`, no file-extension requirement on relative imports. |
-| `resolveJsonModule`  | `true`    | Allow `import ... from "./file.json"` and type inference from JSON. Used for locale files etc. |
-| `isolatedModules`    | `true`    | **Required** for Next.js/SWC: each file must transpile in isolation (no cross-file type-only emit). |
-| `allowJs`            | `true`    | Allow importing `.js`/`.jsx` so TS and JS can coexist during migration or for config/legacy files. |
+| Option              | Value       | Purpose                                                                                                                           |
+| ------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `module`            | `"esnext"`  | Preserves modern ESM in type-checking; Next.js/Turbopack handle emit.                                                             |
+| `moduleResolution`  | `"bundler"` | Resolution tailored for bundlers: supports `package.json` `exports`/`imports`, no file-extension requirement on relative imports. |
+| `resolveJsonModule` | `true`      | Allow `import ... from "./file.json"` and type inference from JSON. Used for locale files etc.                                    |
+| `isolatedModules`   | `true`      | **Required** for Next.js/SWC: each file must transpile in isolation (no cross-file type-only emit).                               |
+| `allowJs`           | `true`      | Allow importing `.js`/`.jsx` so TS and JS can coexist during migration or for config/legacy files.                                |
 
 ### Emit
 
-| Option   | Value  | Purpose |
-|----------|--------|---------|
+| Option   | Value  | Purpose                                                                                                      |
+| -------- | ------ | ------------------------------------------------------------------------------------------------------------ |
 | `noEmit` | `true` | TypeScript does not emit JS; Next.js/Turbopack do. Use `pnpm type-check` (`tsc --noEmit`) for type-checking. |
 
 ### Type checking
 
-| Option                           | Value  | Purpose |
-|----------------------------------|--------|---------|
-| `strict`                         | `true` | Enables the full strict family: `strictNullChecks`, `noImplicitAny`, `strictFunctionTypes`, etc. Recommended. |
+| Option                             | Value  | Purpose                                                                                                                         |
+| ---------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `strict`                           | `true` | Enables the full strict family: `strictNullChecks`, `noImplicitAny`, `strictFunctionTypes`, etc. Recommended.                   |
 | `forceConsistentCasingInFileNames` | `true` | Errors if import path casing differs from the path on disk. Avoids bugs on case-sensitive file systems. Default, made explicit. |
-| `noFallthroughCasesInSwitch`    | `true` | Errors on switch fallthrough unless `break`/`return`/`throw`. Prevents accidental fallthrough bugs. |
+| `noFallthroughCasesInSwitch`       | `true` | Errors on switch fallthrough unless `break`/`return`/`throw`. Prevents accidental fallthrough bugs.                             |
 
 ### Build performance & tooling
 
-| Option                 | Value  | Purpose |
-|------------------------|--------|---------|
-| `skipLibCheck`         | `true` | Skip type-checking of `.d.ts` files. Speeds up compilation; recommended when dependencies have valid declaration files. |
-| `incremental`          | `true` | Persist build info (e.g. `.tsbuildinfo`) for faster subsequent type-checks. |
-| `esModuleInterop`      | `true` | Improves interop with CommonJS default exports and namespace imports. Common for Node/Next.js. |
+| Option            | Value  | Purpose                                                                                                                 |
+| ----------------- | ------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `skipLibCheck`    | `true` | Skip type-checking of `.d.ts` files. Speeds up compilation; recommended when dependencies have valid declaration files. |
+| `incremental`     | `true` | Persist build info (e.g. `.tsbuildinfo`) for faster subsequent type-checks.                                             |
+| `esModuleInterop` | `true` | Improves interop with CommonJS default exports and namespace imports. Common for Node/Next.js.                          |
 
 ### Next.js
 
-| Option    | Value | Purpose |
-|-----------|------|---------|
+| Option    | Value                  | Purpose                                                                                  |
+| --------- | ---------------------- | ---------------------------------------------------------------------------------------- |
 | `plugins` | `[{ "name": "next" }]` | Next.js TypeScript plugin for App Router, `next/types`, and other Next-specific typings. |
 
 ---

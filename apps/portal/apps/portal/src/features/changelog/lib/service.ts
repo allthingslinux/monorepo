@@ -1,10 +1,10 @@
 import "server-only";
-
 import type { RepoConfig } from "@/shared/config/changelog";
 import {
   CHANGELOG_MAX_COMMITS_PER_REPO,
   CHANGELOG_REVALIDATE_SECONDS,
 } from "@/shared/config/changelog";
+
 import type {
   ChangelogResult,
   CommitEntry,
@@ -36,14 +36,14 @@ function normalizeReleases(data: unknown[], repo: RepoConfig): ReleaseEntry[] {
   return data.map((item) => {
     const r = item as Record<string, unknown>;
     return {
-      type: "release" as const,
-      id: String(r.id ?? ""),
-      repoId,
-      repoDisplayName: repo.displayName,
-      tagName: String(r.tag_name ?? ""),
-      title: String(r.name ?? ""),
       body: String(r.body ?? ""),
       date: String(r.published_at ?? ""),
+      id: String(r.id ?? ""),
+      repoDisplayName: repo.displayName,
+      repoId,
+      tagName: String(r.tag_name ?? ""),
+      title: String(r.name ?? ""),
+      type: "release" as const,
       url: String(r.html_url ?? ""),
     };
   });
@@ -59,16 +59,16 @@ function normalizeCommits(data: unknown[], repo: RepoConfig): CommitEntry[] {
     const sha = String(c.sha ?? "");
 
     return {
-      type: "commit" as const,
+      authorAvatarUrl: String(author.avatar_url ?? ""),
+      authorName: String(commitAuthor.name ?? ""),
+      date: String(commitAuthor.date ?? ""),
       id: sha,
-      repoId,
+      message: String(commit.message ?? ""),
       repoDisplayName: repo.displayName,
+      repoId,
       sha,
       shortSha: sha.slice(0, 7),
-      message: String(commit.message ?? ""),
-      authorName: String(commitAuthor.name ?? ""),
-      authorAvatarUrl: String(author.avatar_url ?? ""),
-      date: String(commitAuthor.date ?? ""),
+      type: "commit" as const,
       url: String(c.html_url ?? ""),
     };
   });
@@ -132,11 +132,11 @@ async function fetchCompareStats(
     }
 
     return {
-      commitCount: commits.length,
-      contributors: authorIds.size,
       additions,
-      deletions,
+      commitCount: commits.length,
       compareUrl: String(data.html_url ?? ""),
+      contributors: authorIds.size,
+      deletions,
     };
   } catch {
     return null;
@@ -205,10 +205,10 @@ async function fetchRepoReleases(
 
     if (!response.ok) {
       return {
-        repoId,
-        repoDisplayName: repo.displayName,
         entries: [],
         error: `HTTP ${response.status}`,
+        repoDisplayName: repo.displayName,
+        repoId,
       };
     }
 
@@ -216,16 +216,16 @@ async function fetchRepoReleases(
     const entries = normalizeReleases(data, repo);
     await enrichReleasesWithStats(entries, repo);
     return {
-      repoId,
-      repoDisplayName: repo.displayName,
       entries,
+      repoDisplayName: repo.displayName,
+      repoId,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       repoId,
       repoDisplayName: repo.displayName,
       entries: [],
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -246,25 +246,25 @@ async function fetchRepoCommits(
 
     if (!response.ok) {
       return {
-        repoId,
-        repoDisplayName: repo.displayName,
         entries: [],
         error: `HTTP ${response.status}`,
+        repoDisplayName: repo.displayName,
+        repoId,
       };
     }
 
     const data = await response.json();
     return {
-      repoId,
-      repoDisplayName: repo.displayName,
       entries: normalizeCommits(data, repo),
+      repoDisplayName: repo.displayName,
+      repoId,
     };
-  } catch (err) {
+  } catch (error) {
     return {
       repoId,
       repoDisplayName: repo.displayName,
       entries: [],
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -298,17 +298,17 @@ export async function fetchChangelog(
 
     if (error && !errorMap.has(repoId)) {
       errorMap.set(repoId, {
-        repoId,
         displayName: repoDisplayName,
         error,
+        repoId,
       });
     }
 
     allEntries.push(...entries);
 
     const existing = countMap.get(repoId) ?? {
-      displayName: repoDisplayName,
       count: 0,
+      displayName: repoDisplayName,
     };
     existing.count += entries.length;
     countMap.set(repoId, existing);
@@ -319,17 +319,17 @@ export async function fetchChangelog(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
-  const repoSummaries: RepoSummary[] = Array.from(countMap.entries()).map(
+  const repoSummaries: RepoSummary[] = [...countMap.entries()].map(
     ([repoId, { displayName, count }]) => ({
-      repoId,
       displayName,
       entryCount: count,
+      repoId,
     })
   );
 
   return {
     entries: allEntries,
-    repos: repoSummaries,
     errors: Array.from(errorMap.values()),
+    repos: repoSummaries,
   };
 }

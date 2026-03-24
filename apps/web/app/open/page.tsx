@@ -1,16 +1,17 @@
-import { Suspense } from "react";
 import { ArrowRight, Receipt, TrendingDown, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   fetchQuickBooksFinancialSummary,
   fetchQuickBooksTransactions,
   getCloudflareEnv,
 } from "@/lib/integrations/quickbooks";
 import { formatCurrency } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import { getPageMetadata } from "../metadata";
 import { MetricsSection } from "./metrics-section";
 import { TransactionsList } from "./transactions-list";

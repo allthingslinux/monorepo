@@ -1,0 +1,5 @@
+# Oxfmt reads .gitignore and .prettierignore — keep Mintlify tree unformatted (matches prior biome.jsonc)
+apps/docs/**
+
+# Cursor skill templates (mixed .ts/.tsx content; not production code)
+apps/portal/.cursor/skills/**

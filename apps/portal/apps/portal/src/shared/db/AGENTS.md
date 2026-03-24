@@ -6,23 +6,23 @@
 
 ## Where Things Live Now
 
-| What | Old Location | New Location |
-|------|-------------|-------------|
-| DB client | `src/shared/db/client.ts` | `packages/db/src/client.ts` |
-| Schema files | `src/shared/db/schema/` | `packages/db/src/schema/` |
-| Relations | `src/shared/db/relations.ts` | `packages/db/src/relations.ts` |
-| Drizzle Kit config | `src/shared/db/config.ts` | `packages/db/src/config.ts` |
-| DB env keys | `src/shared/db/keys.ts` | `packages/db/src/keys.ts` |
-| Migrations | `drizzle/` (app root) | `packages/db/drizzle/` |
+| What               | Old Location                 | New Location                   |
+| ------------------ | ---------------------------- | ------------------------------ |
+| DB client          | `src/shared/db/client.ts`    | `packages/db/src/client.ts`    |
+| Schema files       | `src/shared/db/schema/`      | `packages/db/src/schema/`      |
+| Relations          | `src/shared/db/relations.ts` | `packages/db/src/relations.ts` |
+| Drizzle Kit config | `src/shared/db/config.ts`    | `packages/db/src/config.ts`    |
+| DB env keys        | `src/shared/db/keys.ts`      | `packages/db/src/keys.ts`      |
+| Migrations         | `drizzle/` (app root)        | `packages/db/drizzle/`         |
 
 ## Usage
 
 ```typescript
-import { db } from "@portal/db/client"
-import { user, apikey } from "@portal/db/schema"
-import { eq } from "drizzle-orm"
+import { db } from "@portal/db/client";
+import { user, apikey } from "@portal/db/schema";
+import { eq } from "drizzle-orm";
 
-const result = await db.select().from(user).where(eq(user.id, userId))
+const result = await db.select().from(user).where(eq(user.id, userId));
 ```
 
 ## Migration Workflow
@@ -39,6 +39,7 @@ pnpm db:studio     # Open Drizzle Studio
 ## API Key Schema (BetterAuth v1.5+)
 
 The `apikey` table was updated for BetterAuth v1.5:
+
 - `userId` → `referenceId` (column `user_id` → `reference_id`) — the entity that owns the key
 - Added `configId` (column `config_id`, defaults to `"default"`) — multi-config support
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import Values from "@/components/pages/about/values";
+
 import { getPageMetadata } from "../metadata";
 
 export const metadata: Metadata = getPageMetadata("about");

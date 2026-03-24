@@ -17,8 +17,4 @@ export {
   verifySession,
 } from "./dal";
 export { serverClient } from "./server-client";
-export {
-  SessionProvider,
-  usePermissions,
-  useSession,
-} from "./session-context";
+export { SessionProvider, usePermissions, useSession } from "./session-context";

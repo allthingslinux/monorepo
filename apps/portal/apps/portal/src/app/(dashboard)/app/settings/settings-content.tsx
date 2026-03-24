@@ -8,11 +8,12 @@
 // Tab (account / security / api-keys) is synced to URL via nuqs so deep links
 // and back/forward work.
 
-import dynamic from "next/dynamic";
 import { Card } from "@portal/ui/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@portal/ui/ui/tabs";
+import dynamic from "next/dynamic";
 
 import { useSession } from "@/auth/session-context";
+
 import type { SettingsTabUrlState } from "./settings-search-params";
 import { useSettingsSearchParams } from "./use-settings-search-params";
 

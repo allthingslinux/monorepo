@@ -104,7 +104,7 @@ export function parseJid(jid: string): { username: string; domain: string } {
     throw new Error(`Invalid JID format: ${jid}`);
   }
 
-  return { username, domain };
+  return { domain, username };
 }
 
 /**

@@ -1,12 +1,13 @@
 "use client";
 
+import { UserAvatar } from "@daveyplate/better-auth-ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { UserAvatar } from "@daveyplate/better-auth-ui";
 
 import { authClient } from "@/auth/client";
 import { useSession } from "@/auth/session-context";
 import type { FooterAction } from "@/features/routing/lib/types";
+
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -28,8 +29,8 @@ export function SidebarUserSection({ actions }: SidebarUserSectionProps) {
   }
 
   const user = {
-    name: session.user.name || session.user.email?.split("@")[0] || "User",
     email: session.user.email || "",
+    name: session.user.name || session.user.email?.split("@")[0] || "User",
   };
 
   const handleLogout = async () => {

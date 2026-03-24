@@ -18,7 +18,6 @@ import { authClient } from "@/auth/client";
  */
 export function useApiKeys() {
   return useQuery({
-    queryKey: queryKeys.apiKeys.list(),
     queryFn: async () => {
       const result = await authClient.apiKey.list({});
       if (result.error) {
@@ -26,6 +25,7 @@ export function useApiKeys() {
       }
       return result.data ?? [];
     },
+    queryKey: queryKeys.apiKeys.list(),
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }
@@ -35,7 +35,7 @@ export function useApiKeys() {
  */
 export function useApiKey(keyId: string) {
   return useQuery({
-    queryKey: queryKeys.apiKeys.detail(keyId),
+    enabled: !!keyId,
     queryFn: async () => {
       // Better Auth client expects query object structure
       const result = await authClient.apiKey.get({ query: { id: keyId } });
@@ -44,7 +44,7 @@ export function useApiKey(keyId: string) {
       }
       return result.data ?? null;
     },
-    enabled: !!keyId,
+    queryKey: queryKeys.apiKeys.detail(keyId),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -58,14 +58,14 @@ export function useCreateApiKey() {
   return useMutation({
     mutationFn: async (input: CreateApiKeyInput) => {
       const result = await authClient.apiKey.create({
-        name: input.name,
-        prefix: input.prefix,
         expiresIn: input.expiresAt
           ? Math.floor(
               (new Date(input.expiresAt).getTime() - Date.now()) / 1000
             )
           : undefined,
         metadata: input.metadata ? JSON.parse(input.metadata) : undefined,
+        name: input.name,
+        prefix: input.prefix,
       });
 
       if (result.error) {
@@ -96,9 +96,9 @@ export function useUpdateApiKey() {
       data: UpdateApiKeyInput;
     }) => {
       const result = await authClient.apiKey.update({
+        enabled: data.enabled,
         keyId,
         name: data.name,
-        enabled: data.enabled,
         // Note: Better Auth might not support all these fields in update
         // Adjust based on actual API
       });
@@ -161,14 +161,14 @@ export function useVerifyApiKey() {
     }) => {
       // Use fetch to call the verify endpoint directly since client method may not be available
       const response = await fetch("/api/auth/api-key/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           key,
           permissions,
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
       });
 
       if (!response.ok) {

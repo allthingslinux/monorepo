@@ -5,7 +5,6 @@
 // These directly query the database instead of making HTTP requests
 
 import "server-only";
-
 import { db } from "@portal/db/client";
 import { apikey } from "@portal/db/schema/api-keys";
 import { session, user } from "@portal/db/schema/auth";
@@ -67,28 +66,28 @@ export async function fetchUsersServer(
     const [rows, [totalResult]] = await Promise.all([
       db
         .select({
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          image: user.image,
-          role: user.role,
-          banned: user.banned,
-          banReason: user.banReason,
           banExpires: user.banExpires,
+          banReason: user.banReason,
+          banned: user.banned,
           createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
+          email: user.email,
           emailVerified: user.emailVerified,
-          twoFactorEnabled: user.twoFactorEnabled,
+          id: user.id,
+          image: user.image,
           ircNick: ircAccount.nick,
           ircStatus: ircAccount.status,
-          xmppJid: xmppAccount.jid,
-          xmppUsername: xmppAccount.username,
-          xmppStatus: xmppAccount.status,
           mailcowEmail: mailcowAccount.email,
           mailcowStatus: mailcowAccount.status,
-          mediawikiWikiUsername: mediawikiAccount.wikiUsername,
           mediawikiStatus: mediawikiAccount.status,
+          mediawikiWikiUsername: mediawikiAccount.wikiUsername,
+          name: user.name,
+          role: user.role,
+          twoFactorEnabled: user.twoFactorEnabled,
+          updatedAt: user.updatedAt,
+          username: user.username,
+          xmppJid: xmppAccount.jid,
+          xmppStatus: xmppAccount.status,
+          xmppUsername: xmppAccount.username,
         })
         .from(user)
         .leftJoin(
@@ -125,28 +124,16 @@ export async function fetchUsersServer(
 
     const total = totalResult?.count ?? 0;
     const users = rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      username: row.username,
-      email: row.email,
-      image: row.image,
-      role: row.role,
-      banned: row.banned,
-      banReason: row.banReason,
       banExpires: row.banExpires,
+      banReason: row.banReason,
+      banned: row.banned,
       createdAt: row.createdAt,
-      updatedAt: row.updatedAt,
+      email: row.email,
       emailVerified: row.emailVerified,
-      twoFactorEnabled: row.twoFactorEnabled,
+      id: row.id,
+      image: row.image,
       ircAccount: row.ircNick
         ? { nick: row.ircNick, status: row.ircStatus }
-        : null,
-      xmppAccount: row.xmppJid
-        ? {
-            jid: row.xmppJid,
-            username: row.xmppUsername,
-            status: row.xmppStatus,
-          }
         : null,
       mailcowAccount: row.mailcowEmail
         ? { email: row.mailcowEmail, status: row.mailcowStatus }
@@ -157,16 +144,28 @@ export async function fetchUsersServer(
             status: row.mediawikiStatus,
           }
         : null,
+      name: row.name,
+      role: row.role,
+      twoFactorEnabled: row.twoFactorEnabled,
+      updatedAt: row.updatedAt,
+      username: row.username,
+      xmppAccount: row.xmppJid
+        ? {
+            jid: row.xmppJid,
+            username: row.xmppUsername,
+            status: row.xmppStatus,
+          }
+        : null,
     }));
 
     return {
-      users,
       pagination: {
         total: Number(total),
         limit,
         offset,
         hasMore: offset + limit < total,
       },
+      users,
     };
   }
 
@@ -186,13 +185,13 @@ export async function fetchUsersServer(
   const total = totalResult?.count ?? 0;
 
   return {
-    users,
     pagination: {
       total: Number(total),
       limit,
       offset,
       hasMore: offset + limit < total,
     },
+    users,
   };
 }
 
@@ -222,8 +221,8 @@ export async function fetchSessionsServer(
     .select({
       session,
       user: {
-        id: user.id,
         email: user.email,
+        id: user.id,
         name: user.name,
       },
     })
@@ -250,38 +249,50 @@ export async function fetchAdminStatsServer(): Promise<AdminStats> {
   // Get user stats
   const [userStats] = await db
     .select({
-      total: count(user.id),
       admins: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'admin')`,
-      staff: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'staff')`,
       banned: sql<number>`COUNT(*) FILTER (WHERE ${user.banned} = true)`,
+      staff: sql<number>`COUNT(*) FILTER (WHERE ${user.role} = 'staff')`,
+      total: count(user.id),
     })
     .from(user);
 
   // Get active sessions count
   const [sessionStats] = await db
     .select({
-      total: count(session.id),
       active: sql<number>`COUNT(*) FILTER (WHERE ${session.expiresAt} > NOW())`,
+      total: count(session.id),
     })
     .from(session);
 
   // Get API keys count
   const [apiKeyStats] = await db
     .select({
-      total: count(apikey.id),
       enabled: sql<number>`COUNT(*) FILTER (WHERE ${apikey.enabled} = true)`,
+      total: count(apikey.id),
     })
     .from(apikey);
 
   // Get OAuth clients count
   const [oauthClientStats] = await db
     .select({
-      total: count(oauthClient.id),
       disabled: sql<number>`COUNT(*) FILTER (WHERE ${oauthClient.disabled} = true)`,
+      total: count(oauthClient.id),
     })
     .from(oauthClient);
 
   return {
+    apiKeys: {
+      total: Number(apiKeyStats.total),
+      enabled: Number(apiKeyStats.enabled),
+    },
+    oauthClients: {
+      total: Number(oauthClientStats.total),
+      disabled: Number(oauthClientStats.disabled),
+    },
+    sessions: {
+      total: Number(sessionStats.total),
+      active: Number(sessionStats.active),
+    },
     users: {
       total: Number(userStats.total),
       admins: Number(userStats.admins),
@@ -291,18 +302,6 @@ export async function fetchAdminStatsServer(): Promise<AdminStats> {
         Number(userStats.total) -
         Number(userStats.admins) -
         Number(userStats.staff),
-    },
-    sessions: {
-      total: Number(sessionStats.total),
-      active: Number(sessionStats.active),
-    },
-    apiKeys: {
-      total: Number(apiKeyStats.total),
-      enabled: Number(apiKeyStats.enabled),
-    },
-    oauthClients: {
-      total: Number(oauthClientStats.total),
-      disabled: Number(oauthClientStats.disabled),
     },
   };
 }
@@ -333,8 +332,8 @@ export async function fetchApiKeysServer(
     .select({
       apikey,
       user: {
-        id: user.id,
         email: user.email,
+        id: user.id,
         name: user.name,
       },
     })
@@ -390,13 +389,13 @@ export async function fetchCurrentUserServer(
   // DTO: Only return necessary fields, not entire user object
   const [userData] = await db
     .select({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      role: user.role,
-      emailVerified: user.emailVerified,
       createdAt: user.createdAt,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      id: user.id,
+      image: user.image,
+      name: user.name,
+      role: user.role,
     })
     .from(user)
     .where(eq(user.id, userSession.user.id))
@@ -435,8 +434,8 @@ export async function fetchOAuthClientsServer(
     .select({
       oauthClient,
       user: {
-        id: user.id,
         email: user.email,
+        id: user.id,
         name: user.name,
       },
     })
@@ -453,8 +452,8 @@ export async function fetchOAuthClientsServer(
   const clients: OAuthClientListResponse["clients"] = oauthClientsData.map(
     (row) => ({
       ...row.oauthClient,
-      user: row.user?.id ? row.user : undefined,
       clientSecret: undefined as never,
+      user: row.user?.id ? row.user : undefined,
     })
   );
 

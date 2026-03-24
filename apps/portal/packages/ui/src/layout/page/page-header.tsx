@@ -20,7 +20,7 @@ export function PageHeader({
   // If resolver provided, translations will be automatically resolved
   const { title: uiTitle, description: uiDescription } = pathname
     ? getUIDisplay(pathname, routeConfig, resolver)
-    : { title: undefined, description: undefined };
+    : { description: undefined, title: undefined };
 
   // Use provided props, then UI display, then fallback to undefined
   const displayTitle = title ?? uiTitle;

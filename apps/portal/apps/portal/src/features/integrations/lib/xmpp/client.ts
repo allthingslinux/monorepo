@@ -1,5 +1,4 @@
 import "server-only";
-
 import { randomBytes } from "node:crypto";
 
 import { validateXmppConfig, xmppConfig } from "./config";
@@ -100,8 +99,8 @@ async function prosodyRequest<T>(
   const response = await fetch(url, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
       Authorization: createAuthHeader(),
+      "Content-Type": "application/json",
       ...options.headers,
     },
   });
@@ -162,8 +161,8 @@ export async function createProsodyAccount(
     const result = await prosodyRequest<ProsodyRestAccountResponse>(
       `/admin_api/users/${encodeURIComponent(username)}`,
       {
-        method: "PUT",
         body: JSON.stringify({ password }),
+        method: "PUT",
       }
     );
 
@@ -177,7 +176,7 @@ export async function createProsodyAccount(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error("Failed to create Prosody account");
+    throw new Error("Failed to create Prosody account", { cause: error });
   }
 }
 
@@ -215,7 +214,7 @@ export async function deleteProsodyAccount(
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error("Failed to delete Prosody account");
+    throw new Error("Failed to delete Prosody account", { cause: error });
   }
 }
 
@@ -271,8 +270,8 @@ export async function resetProsodyPassword(
   const password = newPassword;
   try {
     await prosodyRequest(`/admin_api/users/${encodeURIComponent(username)}`, {
-      method: "PUT",
       body: JSON.stringify({ password }),
+      method: "PUT",
     });
   } catch (error) {
     if (
@@ -338,5 +337,5 @@ export async function getXmppStats(): Promise<XmppServerStats> {
     // mod_http_user_count unavailable — onlineUsers stays -1
   }
 
-  return { registeredUsers, onlineUsers };
+  return { onlineUsers, registeredUsers };
 }

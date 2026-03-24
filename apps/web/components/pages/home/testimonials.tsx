@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useRef } from "react";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { memo, useRef } from "react";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";

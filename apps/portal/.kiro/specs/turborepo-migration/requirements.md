@@ -41,7 +41,7 @@ This document defines the requirements for migrating the Portal project from a s
 1. WHEN the `build` task is executed, THE Task_Pipeline SHALL build all upstream dependencies before building downstream consumers via the `^build` dependency pattern.
 2. WHEN source files, config files, or environment variables change, THE Task_Pipeline SHALL invalidate the cache for affected tasks.
 3. WHILE the `dev` task is running, THE Task_Pipeline SHALL treat the task as persistent and never cache its output.
-4. THE Task_Pipeline SHALL declare all build-time environment variables (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `NODE_ENV`, `NEXT_PUBLIC_*`, `SENTRY_*`, `GIT_COMMIT_SHA`) in the `build` task's `env` array.
+4. THE Task*Pipeline SHALL declare all build-time environment variables (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `NODE_ENV`, `NEXT_PUBLIC*\_`, `SENTRY\_\_`, `GIT_COMMIT_SHA`) in the `build`task's`env` array.
 5. THE Task_Pipeline SHALL use a Transit_Task to propagate cache invalidation for `check` and `type-check` tasks without requiring upstream builds.
 6. WHEN the `type-check` task runs for Portal_App, THE Task_Pipeline SHALL depend on the `typegen` task to ensure Next.js RouteContext types are generated first.
 7. THE Task_Pipeline SHALL mark database tasks (`db:generate`, `db:migrate`, `db:push`) and the `fix` task as non-cacheable.

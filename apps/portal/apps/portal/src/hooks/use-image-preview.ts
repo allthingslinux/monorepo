@@ -9,13 +9,14 @@ export function useImagePreview() {
     imagePreviewRef.current = imagePreview;
   }, [imagePreview]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (imagePreviewRef.current) {
         URL.revokeObjectURL(imagePreviewRef.current);
       }
-    };
-  }, []);
+    },
+    []
+  );
 
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,9 +43,9 @@ export function useImagePreview() {
   }, [imagePreview]);
 
   return {
+    clearImage,
+    handleImageChange,
     image,
     imagePreview,
-    handleImageChange,
-    clearImage,
   };
 }

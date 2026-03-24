@@ -16,9 +16,9 @@ interface ReleaseCardProps {
 
 export function ReleaseCard({ entry }: ReleaseCardProps) {
   const formattedDate = new Date(entry.date).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
     day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 
   const hasStats = entry.commitCount != null || entry.contributors != null;
@@ -47,30 +47,30 @@ export function ReleaseCard({ entry }: ReleaseCardProps) {
       )}
       {hasStats ? (
         <span className="inline-flex shrink-0 items-center gap-2.5">
-          {entry.commitCount != null ? (
+          {entry.commitCount == null ? null : (
             <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
               <GitCommitHorizontal className="size-3" />
               {entry.commitCount}
             </span>
-          ) : null}
-          {entry.contributors != null ? (
+          )}
+          {entry.contributors == null ? null : (
             <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
               <Users className="size-3" />
               {entry.contributors}
             </span>
-          ) : null}
-          {entry.additions != null ? (
+          )}
+          {entry.additions == null ? null : (
             <span className="inline-flex items-center gap-0.5 font-mono text-green-600 text-xs dark:text-green-400">
               <Plus className="size-3" />
               {entry.additions.toLocaleString()}
             </span>
-          ) : null}
-          {entry.deletions != null ? (
+          )}
+          {entry.deletions == null ? null : (
             <span className="inline-flex items-center gap-0.5 font-mono text-red-500 text-xs dark:text-red-400">
               <Minus className="size-3" />
               {entry.deletions.toLocaleString()}
             </span>
-          ) : null}
+          )}
         </span>
       ) : null}
       <span className="shrink-0 text-muted-foreground text-sm">

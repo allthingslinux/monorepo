@@ -10,37 +10,37 @@ describe("useIsMobile", () => {
   beforeEach(() => {
     // Reset window.innerWidth
     Object.defineProperty(window, "innerWidth", {
-      writable: true,
       configurable: true,
       value: originalInnerWidth,
+      writable: true,
     });
   });
 
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
     Object.defineProperty(window, "innerWidth", {
-      writable: true,
       configurable: true,
       value: originalInnerWidth,
+      writable: true,
     });
   });
 
   it("should return true for mobile viewport", () => {
     Object.defineProperty(window, "innerWidth", {
-      writable: true,
       configurable: true,
       value: 500,
+      writable: true,
     });
 
     const matchMediaMock = vi.fn((query: string) => ({
+      addEventListener: vi.fn(),
+      addListener: vi.fn(),
+      dispatchEvent: vi.fn(),
       matches: query.includes("max-width: 767px"),
       media: query,
       onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
+      removeListener: vi.fn(),
     }));
 
     window.matchMedia = matchMediaMock;
@@ -52,20 +52,20 @@ describe("useIsMobile", () => {
 
   it("should return false for desktop viewport", () => {
     Object.defineProperty(window, "innerWidth", {
-      writable: true,
       configurable: true,
       value: 1024,
+      writable: true,
     });
 
     const matchMediaMock = vi.fn((query: string) => ({
+      addEventListener: vi.fn(),
+      addListener: vi.fn(),
+      dispatchEvent: vi.fn(),
       matches: false,
       media: query,
       onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
+      removeListener: vi.fn(),
     }));
 
     window.matchMedia = matchMediaMock;

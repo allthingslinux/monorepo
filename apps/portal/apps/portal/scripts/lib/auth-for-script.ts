@@ -4,7 +4,6 @@
  * Only includes what signUpEmail needs: database adapter, basePath, baseURL, secret.
  */
 import "dotenv/config";
-
 import { schema } from "@portal/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -21,11 +20,11 @@ if (!secret) {
 }
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg", schema }),
   basePath: "/api/auth",
   baseURL,
-  secret,
+  database: drizzleAdapter(db, { provider: "pg", schema }),
   emailAndPassword: {
     enabled: true,
   },
+  secret,
 });

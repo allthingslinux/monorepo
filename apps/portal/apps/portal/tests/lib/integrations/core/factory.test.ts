@@ -11,10 +11,10 @@ vi.mock("@/features/integrations/lib/core/registry", () => {
   };
 
   return {
-    getIntegrationRegistry: () => mockRegistry,
     IntegrationRegistry: class {
       get = mockRegistry.get;
     },
+    getIntegrationRegistry: () => mockRegistry,
   };
 });
 
@@ -25,14 +25,14 @@ describe("getIntegrationOrThrow", () => {
 
   it("should return integration when found", () => {
     const mockIntegration: Integration = {
-      id: "test-integration",
-      name: "Test Integration",
+      createAccount: vi.fn(),
+      deleteAccount: vi.fn(),
       description: "Test description",
       enabled: true,
-      createAccount: vi.fn(),
       getAccount: vi.fn(),
+      id: "test-integration",
+      name: "Test Integration",
       updateAccount: vi.fn(),
-      deleteAccount: vi.fn(),
     };
 
     vi.mocked(getIntegrationRegistry().get).mockReturnValue(mockIntegration);

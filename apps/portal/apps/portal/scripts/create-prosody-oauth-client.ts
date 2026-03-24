@@ -1,6 +1,6 @@
 import "dotenv/config";
-
 import { randomBytes, randomUUID } from "node:crypto";
+
 import { db } from "@portal/db/client";
 import { oauthClient } from "@portal/db/schema/oauth";
 import { eq } from "drizzle-orm";

@@ -1,5 +1,5 @@
-import type { MetadataRoute } from "next";
 import { generateRobots } from "@portal/seo/robots";
+import type { MetadataRoute } from "next";
 
 import { routeConfig } from "@/features/routing/lib";
 

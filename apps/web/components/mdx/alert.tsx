@@ -1,4 +1,3 @@
-import type React from "react";
 import {
   AlertCircleIcon,
   AlertTriangleIcon,
@@ -6,13 +5,14 @@ import {
   InfoIcon,
   LightbulbIcon,
 } from "lucide-react";
+import type React from "react";
 
-import { cn } from "@/lib/utils";
 import {
   AlertDescription,
   AlertTitle,
   Alert as AlertUI,
 } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 type AlertType = "note" | "tip" | "important" | "warning" | "caution";
 

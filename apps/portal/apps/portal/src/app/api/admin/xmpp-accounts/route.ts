@@ -1,9 +1,9 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { and, count, desc, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
@@ -40,12 +40,12 @@ export async function GET(request: NextRequest) {
     const [rows, [totalResult]] = await Promise.all([
       db
         .select({
-          xmppAccount,
           user: {
             id: user.id,
             email: user.email,
             name: user.name,
           },
+          xmppAccount,
         })
         .from(xmppAccount)
         .leftJoin(user, eq(xmppAccount.userId, user.id))
@@ -64,13 +64,13 @@ export async function GET(request: NextRequest) {
     }));
 
     return Response.json({
-      xmppAccounts,
       pagination: {
         total,
         limit,
         offset,
         hasMore: offset + limit < total,
       },
+      xmppAccounts,
     });
   } catch (error) {
     return handleAPIError(error);

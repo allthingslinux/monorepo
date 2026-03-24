@@ -33,8 +33,8 @@ import {
  */
 export function useCurrentUserSuspense() {
   return useSuspenseQuery({
-    queryKey: queryKeys.users.current(),
     queryFn: fetchCurrentUser,
+    queryKey: queryKeys.users.current(),
     staleTime: QUERY_CACHE.STALE_TIME_DEFAULT,
   });
 }
@@ -66,8 +66,8 @@ export function useUpdateCurrentUserSuspense() {
  */
 export function useMySessionsSuspense(filters?: { active?: boolean }) {
   return useSuspenseQuery({
-    queryKey: [...queryKeys.sessions.current(), { filters }],
     queryFn: () => fetchMySessions(filters),
+    queryKey: [...queryKeys.sessions.current(), { filters }],
     staleTime: QUERY_CACHE.STALE_TIME_SHORT,
   });
 }

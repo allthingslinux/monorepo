@@ -1,8 +1,8 @@
-import type { NextRequest } from "next/server";
 import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { session, user } from "@portal/db/schema/auth";
 import { and, desc, eq, gt } from "drizzle-orm";
+import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 
@@ -31,8 +31,8 @@ export async function GET(request: NextRequest) {
       .select({
         session,
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
       })

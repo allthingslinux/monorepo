@@ -217,12 +217,12 @@ When integrating with the atl.chat bridge (identity API), set `BRIDGE_SERVICE_TO
 The project uses TypeScript path aliases for clean imports within `apps/portal/` (`@/auth` → `src/features/auth/lib`, `@/config` → `src/shared/config`). Workspace packages are imported via `@portal/*` (e.g., `@portal/db/client`, `@portal/types/auth`). See [docs/PATH_ALIASES.md](./docs/PATH_ALIASES.md).
 
 ```typescript
-import { auth, authClient } from "@/auth";                 // Authentication
-import { db } from "@portal/db/client";                    // Database
-import { BASE_URL } from "@/config";                       // App config
-import { Button } from "@portal/ui/button";                // UI components
-import type { SessionData } from "@portal/types/auth";     // Types
-import { USER_ROLES } from "@portal/utils/constants";      // Constants
+import { auth, authClient } from "@/auth"; // Authentication
+import { db } from "@portal/db/client"; // Database
+import { BASE_URL } from "@/config"; // App config
+import { Button } from "@portal/ui/button"; // UI components
+import type { SessionData } from "@portal/types/auth"; // Types
+import { USER_ROLES } from "@portal/utils/constants"; // Constants
 ```
 
 ### Module Organization
@@ -329,12 +329,12 @@ Portal follows a Turborepo monorepo pattern with shared code extracted into work
 
 ```typescript
 // Server-only
-import "server-only"
-import { auth } from "@/auth"
+import "server-only";
+import { auth } from "@/auth";
 
 // Client component
-"use client"
-import { authClient } from "@/auth/client"
+("use client");
+import { authClient } from "@/auth/client";
 ```
 
 ### Integration Framework
@@ -382,11 +382,11 @@ Response.json({ ok: false, error: "Error message" }, { status: 400 })
 ```typescript
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth(request)
+    const { userId } = await requireAuth(request);
     // ... business logic
-    return Response.json({ ok: true, data })
+    return Response.json({ ok: true, data });
   } catch (error) {
-    return handleAPIError(error)
+    return handleAPIError(error);
   }
 }
 ```

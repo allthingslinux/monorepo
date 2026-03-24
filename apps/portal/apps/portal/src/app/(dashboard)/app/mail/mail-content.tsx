@@ -1,18 +1,6 @@
 "use client";
 
 import {
-  AlertCircle,
-  ArrowUpRight,
-  AtSign,
-  Info,
-  Key,
-  Loader2,
-  Mail,
-  Trash2,
-} from "lucide-react";
-import { toast } from "sonner";
-import Link from "next/link";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -33,6 +21,18 @@ import {
 } from "@portal/ui/ui/card";
 import { Separator } from "@portal/ui/ui/separator";
 import { captureException } from "@sentry/nextjs";
+import {
+  AlertCircle,
+  ArrowUpRight,
+  AtSign,
+  Info,
+  Key,
+  Loader2,
+  Mail,
+  Trash2,
+} from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 import { MailcowAccountDetails } from "@/app/(dashboard)/app/integrations/mailcow-account-details";
 import { AliasManager } from "@/app/(dashboard)/app/integrations/mailcow-aliases";
@@ -122,10 +122,11 @@ export function MailContent({ webmailUrl }: MailContentProps) {
       toast.success("Email account deleted", {
         description: "Your mailbox has been permanently deleted.",
       });
-    } catch (err) {
-      captureException(err);
+    } catch (error) {
+      captureException(error);
       toast.error("Failed to delete account", {
-        description: err instanceof Error ? err.message : "An error occurred.",
+        description:
+          error instanceof Error ? error.message : "An error occurred.",
       });
     }
   };

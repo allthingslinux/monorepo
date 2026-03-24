@@ -13,9 +13,9 @@ export const APP_NAME = "Portal";
  * Application version (from env or package.json at build time)
  */
 export const APP_VERSION =
-  (typeof process !== "undefined"
-    ? process.env.NEXT_PUBLIC_APP_VERSION
-    : undefined) ?? "0.0.0";
+  (typeof process === "undefined"
+    ? undefined
+    : process.env.NEXT_PUBLIC_APP_VERSION) ?? "0.0.0";
 
 /**
  * Organization name

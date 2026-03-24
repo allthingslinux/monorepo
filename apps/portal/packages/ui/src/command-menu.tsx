@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { useIsClient } from "@/hooks/use-is-client";
-import { usePermissions } from "@/hooks/use-permissions";
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 import { createRouteTranslationResolver } from "@/features/routing/lib/i18n";
 import { getNavigationItems } from "@/features/routing/lib/permissions";
+import { useIsClient } from "@/hooks/use-is-client";
+import { usePermissions } from "@/hooks/use-permissions";
+
 import {
   CommandDialog,
   CommandEmpty,

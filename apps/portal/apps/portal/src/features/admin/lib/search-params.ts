@@ -6,20 +6,20 @@
  */
 import {
   createLoader,
-  type inferParserType,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
 } from "nuqs/server";
+import type { inferParserType } from "nuqs/server";
 
 export const usersListParsers = {
+  limit: parseAsInteger.withDefault(100),
+  offset: parseAsInteger.withDefault(0),
   role: parseAsStringLiteral(["user", "staff", "admin", "all"]).withDefault(
     "all"
   ),
-  status: parseAsStringLiteral(["all", "active", "banned"]).withDefault("all"),
   search: parseAsString.withDefault(""),
-  limit: parseAsInteger.withDefault(100),
-  offset: parseAsInteger.withDefault(0),
+  status: parseAsStringLiteral(["all", "active", "banned"]).withDefault("all"),
 } as const;
 
 /** Inferred type of URL state from usersListParsers (useQueryStates state and loader return). */

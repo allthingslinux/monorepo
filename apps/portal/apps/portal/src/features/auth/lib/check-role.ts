@@ -1,5 +1,4 @@
 import "server-only";
-
 import { db } from "@portal/db/client";
 import { user } from "@portal/db/schema/auth";
 import { eq } from "drizzle-orm";

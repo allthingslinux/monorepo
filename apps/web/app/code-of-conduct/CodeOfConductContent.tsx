@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import type React from "react";
 import { memo } from "react";
-import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";

@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 import { user } from "@portal/db/schema/auth";
 import { eq } from "drizzle-orm";
 
@@ -49,8 +48,8 @@ async function createAdminUser() {
     const newAdmin = await auth.api.signUpEmail({
       body: {
         email: adminEmail,
-        password: adminPassword,
         name: adminName,
+        password: adminPassword,
       },
     });
 

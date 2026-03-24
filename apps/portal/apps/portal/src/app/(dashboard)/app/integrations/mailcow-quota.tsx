@@ -1,9 +1,9 @@
 "use client";
 
-import { HardDrive } from "lucide-react";
 import { formatBytes } from "@portal/utils/format";
 import { cn } from "@portal/utils/utils";
 import { useQuery } from "@tanstack/react-query";
+import { HardDrive } from "lucide-react";
 
 import { getMailboxUsage } from "@/features/integrations/lib/mailcow/actions";
 
@@ -13,7 +13,6 @@ interface MailboxQuotaProps {
 
 export function MailboxQuota({ accountId }: MailboxQuotaProps) {
   const { data: usage, isLoading } = useQuery({
-    queryKey: ["mailcow", "quota", accountId],
     queryFn: async () => {
       const data = await getMailboxUsage(accountId);
       if (data && typeof data === "object") {
@@ -25,6 +24,7 @@ export function MailboxQuota({ accountId }: MailboxQuotaProps) {
       }
       return null;
     },
+    queryKey: ["mailcow", "quota", accountId],
   });
 
   if (isLoading) {

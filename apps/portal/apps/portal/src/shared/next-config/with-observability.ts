@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
 import { keys } from "@portal/observability/keys";
 import { withSentryConfig } from "@sentry/nextjs";
+import type { NextConfig } from "next";
 
 /**
  * Add observability configuration to Next.js config
@@ -42,17 +42,17 @@ export const withObservability = (sourceConfig: NextConfig): NextConfig => {
 
     // Source maps configuration
     sourcemaps: {
-      disable: false,
       assets: ["**/*.js", "**/*.js.map"],
-      ignore: ["**/node_modules/**"],
-      deleteSourcemapsAfterUpload: true, // Security: delete after upload
+      deleteSourcemapsAfterUpload: true,
+      disable: false,
+      ignore: ["**/node_modules/**"], // Security: delete after upload
     },
 
     // Release configuration
     release: {
-      name: env.SENTRY_RELEASE || "unknown",
       create: true,
       finalize: true,
+      name: env.SENTRY_RELEASE || "unknown",
     },
 
     // Bundle size optimizations

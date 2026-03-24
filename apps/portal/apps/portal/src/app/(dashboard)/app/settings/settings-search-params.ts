@@ -3,11 +3,8 @@
  * Import from "nuqs/server" so parsers can be reused in createLoader (server)
  * and in useQueryStates (client). See docs/NUQS.md.
  */
-import {
-  createLoader,
-  type inferParserType,
-  parseAsStringLiteral,
-} from "nuqs/server";
+import { createLoader, parseAsStringLiteral } from "nuqs/server";
+import type { inferParserType } from "nuqs/server";
 
 export const settingsTabParsers = {
   tab: parseAsStringLiteral(["account", "security", "api-keys"]).withDefault(
