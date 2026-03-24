@@ -1,0 +1,50 @@
+{
+  "name": "All Things Linux",
+  "short_name": "ATL",
+  "description": "A 501(c)(3) non-profit organization empowering the Linux ecosystem through education, collaboration, and support.",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#1e1e2e",
+  "background_color": "#1e1e2e",
+  "display": "standalone",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "About",
+      "url": "/about",
+      "description": "Learn more about All Things Linux"
+    },
+    {
+      "name": "Blog",
+      "url": "/blog",
+      "description": "Read our latest blog posts"
+    },
+    {
+      "name": "Code of Conduct",
+      "url": "/code-of-conduct",
+      "description": "View our community guidelines"
+    },
+    {
+      "name": "Apply",
+      "url": "/apply",
+      "description": "Apply to join All Things Linux"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/og.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "form_factor": "wide"
+    }
+  ]
+}
