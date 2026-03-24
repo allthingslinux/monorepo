@@ -50,7 +50,7 @@ export function CommandMenu() {
       // Cmd+K on Mac, Ctrl+K on Windows/Linux
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setOpen((prev) => !prev);
       }
     };
 

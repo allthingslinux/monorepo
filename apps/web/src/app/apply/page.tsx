@@ -14,7 +14,7 @@ import Link from "next/link";
 import { memo, useCallback, useMemo, useState } from "react";
 
 import { generalQuestions } from "@/data/forms/questions/general";
-import { roles } from "@/data/forms/roles";
+import { roles as allRoles } from "@/data/forms/roles";
 import { getRolesByDepartment } from "@/lib/utils";
 import type { FormQuestion, Role } from "@/types";
 
@@ -236,7 +236,7 @@ export default function GetInvolvedPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Memoize role data since it doesn't change
-  const rolesByDepartment = useMemo(() => getRolesByDepartment(roles), []);
+  const rolesByDepartment = useMemo(() => getRolesByDepartment(allRoles), []);
   const totalRoleCount = useMemo(
     () => Object.values(rolesByDepartment).flat().length,
     [rolesByDepartment]
@@ -279,12 +279,12 @@ export default function GetInvolvedPage() {
       <SearchInput onChange={handleSearchChange} value={searchQuery} />
 
       <div className="space-y-6 sm:space-y-8 md:space-y-12">
-        {filteredDepartments.map(({ department, roles }) => (
+        {filteredDepartments.map(({ department, roles: departmentRoles }) => (
           <DepartmentSection
             department={department}
             generalQuestionCount={generalQuestionCount}
             key={department}
-            roles={roles}
+            roles={departmentRoles}
           />
         ))}
 

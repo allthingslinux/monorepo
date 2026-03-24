@@ -68,7 +68,7 @@ vi.mock("@portal/db/client", () => ({
 }));
 
 vi.mock("@/features/integrations/lib/irc/atheme/client", () => ({
-  AthemeFaultError: class AthemeFaultError extends Error {
+  AthemeFaultError: class MockAthemeFaultError extends Error {
     code: number;
     fault: { code: number; message: string };
     constructor(fault: { code: number; message: string }) {

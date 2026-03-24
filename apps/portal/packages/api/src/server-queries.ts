@@ -358,11 +358,13 @@ export async function fetchApiKeysServer(
  * Used for prefetching user data in Server Components to reduce loading flash
  * Returns a DTO with only necessary fields matching the API route response
  *
- * @param session - Optional session object to avoid duplicate getSession calls.
- *                  If provided, uses this session instead of fetching a new one.
+ * @param providedSession - Optional session object to avoid duplicate getSession calls.
+ *                          If provided, uses this session instead of fetching a new one.
  */
 export async function fetchCurrentUserServer(
-  session?: Awaited<ReturnType<typeof import("@/auth").auth.api.getSession>>
+  providedSession?: Awaited<
+    ReturnType<typeof import("@/auth").auth.api.getSession>
+  >
 ): Promise<
   Pick<
     User,
@@ -370,7 +372,7 @@ export async function fetchCurrentUserServer(
   >
 > {
   // If session not provided, fetch it (but prefer passing from verifySession)
-  let userSession = session;
+  let userSession = providedSession;
   if (!userSession) {
     // Import here to avoid circular dependencies
     const { headers } = await import("next/headers");

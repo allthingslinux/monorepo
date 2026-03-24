@@ -186,8 +186,8 @@ function StepperFormContent({
       // Manually validate using the appropriate schema
       const currentSchema =
         methods.current.id === "general" ? generalSchema : roleSchema;
-      const currentValues = form.getValues();
-      const validationResult = currentSchema.safeParse(currentValues);
+      const stepFormValues = form.getValues();
+      const validationResult = currentSchema.safeParse(stepFormValues);
 
       if (!validationResult.success) {
         // Set errors for failed validations

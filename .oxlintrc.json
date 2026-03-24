@@ -36,7 +36,6 @@
     "no-use-before-define": "off",
     "typescript/no-explicit-any": "off",
     "promise/prefer-await-to-callbacks": "off",
-    "no-shadow": "off",
     "no-warning-comments": "off",
     "unicorn/prefer-dom-node-remove": "off",
     "unicorn/prefer-string-replace-all": "off",

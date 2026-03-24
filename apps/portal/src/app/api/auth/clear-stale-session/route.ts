@@ -7,11 +7,11 @@ import { auth } from "@/auth";
  * Extracts all Set-Cookie header values from a Headers object.
  * Uses getSetCookie() when available (Node 18.4+), otherwise falls back to get().
  */
-function getSetCookieValues(headers: Headers): string[] {
-  if (typeof headers.getSetCookie === "function") {
-    return headers.getSetCookie();
+function getSetCookieValues(headerList: Headers): string[] {
+  if (typeof headerList.getSetCookie === "function") {
+    return headerList.getSetCookie();
   }
-  const setCookie = headers.get("set-cookie");
+  const setCookie = headerList.get("set-cookie");
   return setCookie ? [setCookie] : [];
 }
 

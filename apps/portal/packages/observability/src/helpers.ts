@@ -764,8 +764,8 @@ interface Span {
  */
 export const updateSpanName = (span: Span, name: string): void => {
   try {
-    const { updateSpanName } = require("@sentry/nextjs");
-    updateSpanName(span, name);
+    const { updateSpanName: sentryUpdateSpanName } = require("@sentry/nextjs");
+    sentryUpdateSpanName(span, name);
   } catch {
     span?.updateName?.(name);
   }
@@ -839,8 +839,8 @@ export const continueTrace = <T>(
   callback: () => T
 ): T => {
   try {
-    const { continueTrace } = require("@sentry/nextjs");
-    return continueTrace(
+    const { continueTrace: sentryContinueTrace } = require("@sentry/nextjs");
+    return sentryContinueTrace(
       {
         baggage: headers.baggage,
         sentryTrace: headers["sentry-trace"],
@@ -857,8 +857,8 @@ export const continueTrace = <T>(
  */
 export const startNewTrace = <T>(callback: () => T): T => {
   try {
-    const { startNewTrace } = require("@sentry/nextjs");
-    return startNewTrace(callback);
+    const { startNewTrace: sentryStartNewTrace } = require("@sentry/nextjs");
+    return sentryStartNewTrace(callback);
   } catch {
     return callback();
   }

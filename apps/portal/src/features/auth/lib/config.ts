@@ -145,9 +145,9 @@ const user = {
   },
   // Delete user configuration
   deleteUser: {
-    beforeDelete: async (user: { id: string }) => {
+    beforeDelete: async (userToDelete: { id: string }) => {
       // Ensure external integrations are cleaned up before user deletion.
-      await cleanupIntegrationAccounts(user.id);
+      await cleanupIntegrationAccounts(userToDelete.id);
     },
     enabled: true,
     // sendDeleteAccountVerification: async ({ user, url, token }, request) => {
@@ -308,7 +308,7 @@ const oauthProviderConfig = {
   // },
   customUserInfoClaims: async ({
     scopes,
-    user,
+    user: claimsUser,
   }: {
     user: { id: string };
     scopes: string[];
@@ -324,7 +324,7 @@ const oauthProviderConfig = {
             const [xmppAccountRecord] = await db
               .select({ username: xmppAccount.username })
               .from(xmppAccount)
-              .where(eq(xmppAccount.userId, user.id))
+              .where(eq(xmppAccount.userId, claimsUser.id))
               .limit(1);
 
             if (xmppAccountRecord) {
@@ -335,7 +335,7 @@ const oauthProviderConfig = {
             Sentry.captureException(error, {
               tags: {
                 function: "customUserInfoClaims",
-                userId: user.id,
+                userId: claimsUser.id,
               },
             });
             // Continue without XMPP claim on error
@@ -355,7 +355,7 @@ const oauthProviderConfig = {
               .from(ircAccount)
               .where(
                 and(
-                  eq(ircAccount.userId, user.id),
+                  eq(ircAccount.userId, claimsUser.id),
                   eq(ircAccount.status, "active")
                 )
               )
@@ -368,7 +368,7 @@ const oauthProviderConfig = {
             Sentry.captureException(error, {
               tags: {
                 function: "customUserInfoClaims",
-                userId: user.id,
+                userId: claimsUser.id,
               },
             });
           }
