@@ -1,0 +1,142 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.environment) || 'staging' }}
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.env.outputs.tag }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+          else
+            ENV="staging"
+          fi
+          echo "environment=$ENV" >> $GITHUB_OUTPUT
+          echo "tag=$ENV-${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: Containerfile
+          target: runner
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.env.outputs.tag }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
+            type=gha
+          cache-to: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+            type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+            BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}
+            GIT_COMMIT_SHA=${{ github.sha }}
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: success()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.environment) || 'staging' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+          else
+            ENV="staging"
+          fi
+          echo "environment=$ENV" >> $GITHUB_OUTPUT
+          echo "tag=$ENV-${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "compose_profile=$ENV" >> $GITHUB_OUTPUT
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1
+        env:
+          IMAGE_TAG: ${{ steps.env.outputs.tag }}
+          COMPOSE_PROFILES: ${{ steps.env.outputs.compose_profile }}
+          ENVIRONMENT: ${{ steps.env.outputs.environment }}
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          timeout: 5m
+          envs: IMAGE_TAG,COMPOSE_PROFILES,ENVIRONMENT,GIT_COMMIT_SHA,GITHUB_REPOSITORY,GITHUB_ACTOR,GITHUB_TOKEN,IMAGE_NAME
+          script_path: .github/scripts/deploy.sh
+
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: ${{ steps.env.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Image: \`ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.env.outputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Compose profile: \`${{ steps.env.outputs.compose_profile }}\` (compose.yaml)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "- Verify deployment at your VPS" >> $GITHUB_STEP_SUMMARY
+          echo "- Check application logs: \`docker compose --profile ${{ steps.env.outputs.compose_profile }} logs portal-app-${{ steps.env.outputs.environment }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.env.outputs.environment }}" == "production" ]; then
+            echo "- ⚠️ Verify database migrations completed successfully" >> $GITHUB_STEP_SUMMARY
+          fi

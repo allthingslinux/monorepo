@@ -1,0 +1,186 @@
+{
+  "home": {
+    "label": "Home",
+    "metadata": {
+      "title": "Home",
+      "description": "Welcome to Portal - All Things Linux"
+    }
+  },
+  "sign-in": {
+    "label": "Sign In",
+    "metadata": {
+      "title": "Sign In",
+      "description": "Sign in to your account"
+    }
+  },
+  "sign-up": {
+    "label": "Sign Up",
+    "metadata": {
+      "title": "Sign Up",
+      "description": "Create a new account"
+    }
+  },
+  "dashboard": {
+    "label": "Dashboard",
+    "metadata": {
+      "title": "Dashboard",
+      "description": "Your comprehensive dashboard overview for managing all your All Things Linux services and account settings."
+    },
+    "ui": {
+      "title": "Welcome back, {name}!",
+      "description": "Here's your dashboard overview. Use the sidebar to navigate to account settings."
+    },
+    "breadcrumb": {
+      "label": "Overview"
+    }
+  },
+  "settings": {
+    "label": "Settings",
+    "metadata": {
+      "title": "Settings",
+      "description": "Manage your account and security settings"
+    },
+    "ui": {
+      "title": "Settings",
+      "description": "Manage your account and security settings"
+    },
+    "breadcrumb": {
+      "label": "Settings"
+    }
+  },
+  "connect": {
+    "label": "Connect",
+    "metadata": {
+      "title": "Connect",
+      "description": "Links to ATL community platforms: Discord, IRC, XMPP, wiki, and more"
+    },
+    "ui": {
+      "title": "Connect",
+      "description": "Connect with the community across Discord, IRC, XMPP, and our web platforms."
+    },
+    "breadcrumb": {
+      "label": "Connect"
+    }
+  },
+  "mail": {
+    "label": "Mail",
+    "metadata": {
+      "title": "Mail",
+      "description": "Manage your email account and mailbox"
+    },
+    "ui": {
+      "title": "Mail",
+      "description": "Manage your @atl.tools email account, access webmail, and configure mail clients."
+    },
+    "breadcrumb": {
+      "label": "Mail"
+    }
+  },
+  "feed": {
+    "label": "Feed",
+    "metadata": {
+      "title": "Feed",
+      "description": "Linux and open-source news from across the community"
+    },
+    "ui": {
+      "title": "Feed",
+      "description": "Linux and open-source news from across the community, curated from popular outlets."
+    },
+    "breadcrumb": {
+      "label": "Feed"
+    }
+  },
+  "changelog": {
+    "label": "Changelog",
+    "metadata": {
+      "title": "Changelog",
+      "description": "Unified changelog of releases and commits across ATL projects"
+    },
+    "ui": {
+      "title": "Changelog",
+      "description": "Releases and commits from across All Things Linux projects, aggregated into a single timeline."
+    },
+    "breadcrumb": {
+      "label": "Changelog"
+    }
+  },
+  "integrations": {
+    "label": "Integrations",
+    "metadata": {
+      "title": "Integrations",
+      "description": "Manage your service integrations including XMPP, IRC, and more"
+    }
+  },
+  "donate": {
+    "label": "Donate",
+    "metadata": {
+      "title": "Donate",
+      "description": "Support All Things Linux through donations and contributions"
+    },
+    "ui": {
+      "title": "Donate",
+      "description": "Support our community through financial donations, volunteering, or contributing your skills."
+    },
+    "breadcrumb": {
+      "label": "Donate"
+    }
+  },
+  "admin": {
+    "label": "Admin",
+    "metadata": {
+      "title": "Admin Dashboard",
+      "description": "Administrative dashboard"
+    },
+    "ui": {
+      "title": "Admin",
+      "description": "Administrative dashboard"
+    },
+    "breadcrumb": {
+      "label": "Admin"
+    }
+  },
+  "admin-users": {
+    "label": "Users",
+    "metadata": {
+      "title": "User Management",
+      "description": "Manage users and integration accounts"
+    },
+    "breadcrumb": {
+      "label": "Users"
+    }
+  },
+  "admin-sessions": {
+    "label": "Sessions",
+    "metadata": {
+      "title": "Session Management",
+      "description": "View and manage active user sessions"
+    },
+    "breadcrumb": {
+      "label": "Sessions"
+    }
+  },
+  "group": {
+    "platform": {
+      "label": "Platform"
+    }
+  },
+  "footer": {
+    "settings": {
+      "label": "Settings",
+      "metadata": {
+        "title": "Settings",
+        "description": "Manage your account and security settings"
+      }
+    },
+    "support": {
+      "label": "Support",
+      "metadata": {
+        "title": "Support",
+        "description": "Get help and support"
+      }
+    },
+    "logout": {
+      "label": "Log out"
+    }
+  }
+}

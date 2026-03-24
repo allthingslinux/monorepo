@@ -1,0 +1,101 @@
+# =============================================================================
+# .dockerignore — Monorepo-aware exclusions for turbo prune Docker builds
+# =============================================================================
+# The pruner stage copies the full monorepo, runs `turbo prune @portal/portal
+# --docker`, then subsequent stages use only the pruned output. Exclude build
+# artifacts, dev tooling, and files not needed for the production build.
+# =============================================================================
+
+# Dependencies (all packages)
+**/node_modules
+.pnp
+.pnp.js
+
+# Build artifacts (all packages)
+**/.next
+**/.turbo
+**/coverage
+**/out
+**/build
+**/dist
+
+# Testing (all packages)
+**/tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/vitest.config.ts
+**/vitest.setup.ts
+**/vitest.server-only-mock.ts
+.nyc_output
+
+# Logs
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files (injected via build args, not baked in)
+.env
+.env*.local
+.env.production
+.env.staging
+**/.env
+
+# IDE / Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+*.pem
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.cursor
+.husky
+.kiro
+
+# Documentation
+*.md
+docs
+!README.md
+
+# Docker (avoid recursive copy)
+Containerfile*
+Dockerfile*
+docker-compose*.yml
+compose.yaml
+.dockerignore
+
+# Database migrations (not needed for Next.js build)
+**/drizzle
+*.db
+*.sqlite
+
+# TypeScript build info
+**/*.tsbuildinfo
+
+# Linting / Formatting (not needed for build)
+**/biome.jsonc
+.lintstagedrc.json
+commitlint.config.cjs
+.eslintrc*
+.prettierrc*
+.releaserc.json
+
+# Misc
+.cache
+.vercel
+**/references
+**/examples
