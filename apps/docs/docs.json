@@ -2,12 +2,33 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "All Things Linux",
+  "description": "Documentation for the All Things Linux community monorepo: guides, Mintlify authoring, and API reference examples.",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "og:type": "website",
+      "og:site_name": "All Things Linux",
+      "twitter:card": "summary_large_image"
+    }
+  },
+  "search": {
+    "prompt": "Search All Things Linux docs…"
+  },
+  "api": {
+    "openapi": "api-reference/openapi.json",
+    "playground": {
+      "display": "interactive"
+    },
+    "spec": {
+      "download": true
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -15,10 +36,10 @@
         "groups": [
           {
             "group": "Getting started",
-            "pages": ["index", "quickstart", "development"]
+            "pages": ["index", "quickstart", "development", "contributing"]
           },
           {
-            "group": "Customization",
+            "group": "Project",
             "pages": ["essentials/settings", "essentials/navigation"]
           },
           {
@@ -92,15 +113,6 @@
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude", "mcp", "cursor"]
   }
 }

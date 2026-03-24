@@ -1,28 +1,31 @@
 ---
 title: "Introduction"
-description: "Example section for showcasing API endpoints"
+description: "How the sample OpenAPI specification powers API reference pages and the interactive playground"
 ---
 
 <Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
+  The specification bundled here is Mintlify’s **Plant Store** demo. It exists
+  so you can exercise the **interactive API playground** and MDX `openapi`
+  frontmatter. It does **not** represent a production All Things Linux API
+  unless we publish a separate product spec.
 </Note>
 
-## Welcome
+## Two ways to document APIs
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Mintlify supports:
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+- **OpenAPI-driven pages** — Endpoints are generated from `api-reference/openapi.json`, which is registered in `docs.json` under `api.openapi`. The playground uses this spec for try-it-out requests.
+- **MDX with `openapi` frontmatter** — Manual pages (like the endpoint examples in this tab) bind to operations in the same spec.
 
-## Authentication
+See the [OpenAPI setup](https://mintlify.com/docs/api-playground/openapi-setup) guide for advanced layout and navigation options.
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+## This repo’s spec
+
+The OpenAPI file lives at [`api-reference/openapi.json`](https://github.com/allthingslinux/monorepo/blob/main/apps/docs/api-reference/openapi.json) in the monorepo. `docs.json` enables the playground and allows downloading the spec from API pages.
+
+## Authentication (example)
+
+The sample spec declares Bearer auth:
 
 ```json
 "security": [
@@ -31,3 +34,9 @@ All API endpoints are authenticated using Bearer tokens and picked up from the s
   }
 ]
 ```
+
+Use the playground’s auth controls when testing—values are for the **sandbox** server declared in the spec, not ATL production services.
+
+## Production APIs
+
+When a stable public API is ready, replace or supplement this spec, update servers and security schemes, and adjust navigation so generated pages match your product. Until then, treat all paths under the sample as **illustrative only**.

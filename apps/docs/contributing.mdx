@@ -1,0 +1,44 @@
+---
+title: "Contributing"
+description: "How to contribute to All Things Linux docs and the monorepo that hosts them"
+---
+
+## Who this is for
+
+These docs live in the [allthingslinux monorepo](https://github.com/allthingslinux). Use this page if you want to fix a typo, add a guide, or follow our documentation workflow.
+
+## Repository layout
+
+The documentation app is under `apps/docs/`. It is a normal package in the pnpm workspace (`@atl/docs`). Site configuration is in [`docs.json`](https://github.com/allthingslinux/monorepo/blob/main/apps/docs/docs.json); pages are MDX files next to that file.
+
+## Local preview
+
+From the **repository root**:
+
+```bash
+pnpm install
+pnpm --filter @atl/docs dev
+```
+
+Or from `apps/docs`:
+
+```bash
+pnpm dev
+```
+
+This runs `mint dev` and serves a preview (default port 3000).
+
+## Quality checks
+
+Before opening a pull request:
+
+```bash
+pnpm --filter @atl/docs exec mint validate
+pnpm --filter @atl/docs exec mint broken-links
+```
+
+CI runs the same checks when `apps/docs/**` changes.
+
+## Writing standards
+
+Follow [Contribute to the documentation](https://github.com/allthingslinux/monorepo/blob/main/apps/docs/CONTRIBUTING.md) for style and review expectations. Agent-oriented instructions for editors live in [`AGENTS.md`](https://github.com/allthingslinux/monorepo/blob/main/apps/docs/AGENTS.md).
