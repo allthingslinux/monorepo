@@ -24,6 +24,8 @@ Planning context: see `monorepo-planning/MASTER.md` in your planning repository 
 | Lint + format (Ultracite / Oxlint + Oxfmt) | `pnpm check` / `pnpm fix`     |
 | Docs preview (Mintlify)                    | `pnpm --filter @atl/docs dev` |
 
+**Checks:** Root `pnpm check` / `pnpm fix` run **Ultracite only** (whole repo). The **web** app also defines `pnpm run check` (and `type-check`) under `apps/web` — that runs **contentlayer + `tsc` + Ultracite** for the marketing site. Use `pnpm --filter allthingslinux check` from the root when you mean the web app’s full check.
+
 **Note:** `apps/web` is **excluded from Oxlint** (`.eslintignore`) until that tree is brought up to the same rules as `apps/portal`. Oxfmt still formats it. Remove `apps/web/**` from `.eslintignore` when you are ready to fix findings.
 
 ## Shared config (one place)
