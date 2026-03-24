@@ -126,7 +126,7 @@ function addCSPNonceToResponse(response: NextResponse, nonce: string): void {
   const cspHeader = buildCSPHeader(nonce, sentryOrgDomain);
 
   // Set CSP as Report-Only for now until all inline scripts/styles are migrated to nonces
-  // TODO: Switch to Content-Security-Policy (enforcing) after full nonce migration
+  // Planned: Switch to Content-Security-Policy (enforcing) after full nonce migration
   response.headers.set("Content-Security-Policy-Report-Only", cspHeader);
 }
 

@@ -78,7 +78,8 @@ export function generateBreadcrumbs(
   if (!route) {
     // Fallback: generate from path segments
     let currentPath = "";
-    segments.forEach((segment, index) => {
+    for (let index = 0; index < segments.length; index += 1) {
+      const segment = segments[index]!;
       currentPath += `/${segment}`;
       const isLast = index === segments.length - 1;
       breadcrumbs.push({
@@ -87,7 +88,7 @@ export function generateBreadcrumbs(
           segment.charAt(0).toUpperCase() +
           segment.slice(1).replaceAll("-", " "),
       });
-    });
+    }
     return breadcrumbs;
   }
 

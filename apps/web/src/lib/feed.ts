@@ -9,11 +9,9 @@ import { getAllPosts } from "@/lib/blog";
  *
  * @returns {Promise<string>} A promise that resolves to a string representing an Atom feed from ATL blog posts.
  *
- * @remarks
- * - Fetches all posts using `getAllPosts()`.
- * - Constructs a feed with site and author metadata.
- * - Iterates through each post and adds it as an item to the feed.
- *
+ * @description
+ * Fetches all posts using `getAllPosts()`, builds site and author metadata,
+ * and adds each post as an item to the feed.
  */
 export async function generateFeed(): Promise<string> {
   const posts = await getAllPosts();
@@ -59,9 +57,9 @@ export async function generateFeed(): Promise<string> {
     }))
   );
 
-  feedEntries.forEach((entry) => {
+  for (const entry of feedEntries) {
     feed.addItem(entry);
-  });
+  }
 
   feed.addCategory("News");
 

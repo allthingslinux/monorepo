@@ -1,5 +1,6 @@
 "use client";
 
+/* oxlint-disable react/no-danger -- injects scoped keyframe CSS for this page */
 import Image from "next/image";
 import type React from "react";
 import { memo } from "react";

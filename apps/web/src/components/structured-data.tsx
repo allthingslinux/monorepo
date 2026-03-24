@@ -1,3 +1,4 @@
+/* oxlint-disable react/no-danger -- Schema.org JSON-LD is injected via Next.js Script */
 import Script from "next/script";
 
 interface ArticleSchema {

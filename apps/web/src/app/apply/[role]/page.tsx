@@ -46,7 +46,7 @@ export default function RoleApplicationPage() {
       const formData = new FormData();
 
       // Add all form fields to FormData
-      Object.entries(data).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(data)) {
         console.log(
           `Processing field: ${key} = ${value} (type: ${typeof value})`
         );
@@ -63,7 +63,7 @@ export default function RoleApplicationPage() {
           // Convert primitives to strings
           formData.append(key, String(value));
         }
-      });
+      }
 
       console.log(`Submitting application for role: ${role.slug}`);
 

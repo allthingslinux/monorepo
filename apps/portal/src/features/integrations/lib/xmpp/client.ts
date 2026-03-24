@@ -2,31 +2,11 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 
 import { validateXmppConfig, xmppConfig } from "./config";
+import { ProsodyAccountNotFoundError, ProsodyApiError } from "./errors";
 import type { ProsodyRestAccountResponse, ProsodyRestError } from "./types";
 import { formatJid } from "./utils";
 
-/**
- * Custom error for Prosody account not found
- */
-export class ProsodyAccountNotFoundError extends Error {
-  constructor(message = "Prosody account not found") {
-    super(message);
-    this.name = "ProsodyAccountNotFoundError";
-  }
-}
-
-/**
- * Error thrown by Prosody REST API requests, preserving the HTTP status code.
- */
-export class ProsodyApiError extends Error {
-  readonly status: number;
-
-  constructor(status: number, message: string) {
-    super(message);
-    this.name = "ProsodyApiError";
-    this.status = status;
-  }
-}
+export { ProsodyAccountNotFoundError, ProsodyApiError };
 
 // Prosody HTML error page parsing regexes (top-level for lint compliance)
 const PROSODY_HTML_EXTRA_RE = /<p class="extra">([^<]+)<\/p>/;

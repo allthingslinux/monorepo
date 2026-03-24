@@ -1,3 +1,4 @@
+import type * as PortalApiUtils from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -46,9 +47,7 @@ vi.mock("@portal/db/client", () => ({
 // Mock utils
 vi.mock("@portal/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof import("@portal/api/utils")>(
-      "@portal/api/utils"
-    );
+    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),

@@ -36,17 +36,7 @@
     "no-use-before-define": "off",
     "typescript/no-explicit-any": "off",
     "promise/prefer-await-to-callbacks": "off",
-    "no-warning-comments": "off",
-    "typescript/consistent-type-imports": "off",
-    "unicorn/consistent-function-scoping": "off",
-    "unicorn/no-immediate-mutation": "off",
-    "jsdoc/check-tag-names": "off",
-    "typescript/parameter-properties": "off",
-    "typescript/no-non-null-assertion": "off",
-    "unicorn/no-array-for-each": "off",
-    "react/no-danger": "off",
-    "max-classes-per-file": "off",
-    "complexity": "off"
+    "typescript/no-non-null-assertion": "off"
   },
   "overrides": [
     {
@@ -145,6 +135,18 @@
       ],
       "rules": {
         "unicorn/no-useless-undefined": "off"
+      }
+    },
+    {
+      "files": ["apps/portal/tests/monorepo/monorepo-correctness.test.ts"],
+      "rules": {
+        "unicorn/consistent-function-scoping": "off"
+      }
+    },
+    {
+      "files": ["apps/portal/tests/**/*.test.ts"],
+      "rules": {
+        "import/no-namespace": "off"
       }
     },
     {

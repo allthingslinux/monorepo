@@ -3,11 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/auth": ["../../apps/portal/src/features/auth/lib"],
-      "@/auth/*": ["../../apps/portal/src/features/auth/lib/*"],
-      "@/config": ["../../apps/portal/src/shared/config"],
-      "@/config/*": ["../../apps/portal/src/shared/config/*"],
-      "@/*": ["../../apps/portal/src/*"]
+      "@/auth": ["../../src/features/auth/lib"],
+      "@/auth/*": ["../../src/features/auth/lib/*"],
+      "@/config": ["../../src/shared/config"],
+      "@/config/*": ["../../src/shared/config/*"],
+      "@/*": ["../../src/*"]
     },
     "skipLibCheck": true
   },

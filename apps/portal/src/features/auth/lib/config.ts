@@ -955,3 +955,8 @@ export const auth = betterAuth(authOptions);
 // ============================================================================
 
 export type Session = typeof auth.$Infer.Session;
+
+/** Return type of `auth.api.getSession` (null when unauthenticated). */
+export type AuthGetSessionReturn = Awaited<
+  ReturnType<typeof auth.api.getSession>
+>;

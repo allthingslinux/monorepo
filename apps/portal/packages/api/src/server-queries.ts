@@ -15,6 +15,8 @@ import { oauthClient } from "@portal/db/schema/oauth";
 import { xmppAccount } from "@portal/db/schema/xmpp";
 import { and, count, desc, eq, gt, ilike, ne, or, sql } from "drizzle-orm";
 
+import type { AuthGetSessionReturn } from "@/auth";
+
 import type {
   AdminStats,
   ApiKeyListFilters,
@@ -362,9 +364,7 @@ export async function fetchApiKeysServer(
  *                          If provided, uses this session instead of fetching a new one.
  */
 export async function fetchCurrentUserServer(
-  providedSession?: Awaited<
-    ReturnType<typeof import("@/auth").auth.api.getSession>
-  >
+  providedSession?: AuthGetSessionReturn
 ): Promise<
   Pick<
     User,

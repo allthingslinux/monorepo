@@ -52,7 +52,7 @@ export const defaultMetadata: Metadata = {
     title: APP_TITLE,
     type: "website",
     url: BASE_URL,
-    // TODO: Add Open Graph image when available
+    // Planned: Add Open Graph image when available
     // images: [
     //   {
     //     url: "/og-image.png",
@@ -82,7 +82,7 @@ export const defaultMetadata: Metadata = {
     card: "summary_large_image",
     description: APP_DESCRIPTION,
     title: APP_TITLE,
-    // TODO: Add Twitter image when available
+    // Planned: Add Twitter image when available
     // images: ["/twitter-image.png"],
     // creator: "@allthingslinux",
   },

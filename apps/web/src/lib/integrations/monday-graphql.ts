@@ -124,6 +124,70 @@ async function getMondayBoardStructure(
   }
 }
 
+function formatStatusColumnValue(
+  column: MondayColumn,
+  value: unknown
+): unknown {
+  try {
+    const settings = JSON.parse(column.settings_str) as MondayStatusSettings;
+    if (!settings?.labels) {
+      return { index: 5 };
+    }
+    const { labels } = settings;
+    if (value && typeof value === "string") {
+      for (const [index, label] of Object.entries(labels)) {
+        if (
+          typeof label === "string" &&
+          label.toLowerCase() === value.toLowerCase()
+        ) {
+          return { index: Number.parseInt(index, 10) };
+        }
+      }
+    }
+
+    for (const [index, label] of Object.entries(labels)) {
+      if (typeof label === "string" && label.toLowerCase() === "needs review") {
+        return { index: Number.parseInt(index, 10) };
+      }
+    }
+
+    const firstIndex = Object.keys(labels)[0];
+    return { index: Number.parseInt(firstIndex, 10) };
+  } catch (error) {
+    console.warn(`Failed to parse status settings for ${column.id}:`, error);
+    return { index: 5 };
+  }
+}
+
+function formatDropdownColumnValue(
+  column: MondayColumn,
+  value: unknown
+): unknown {
+  try {
+    const settings = JSON.parse(column.settings_str) as MondayDropdownSettings;
+    if (!(settings?.labels && Array.isArray(settings.labels))) {
+      return { ids: [] };
+    }
+    if (value && typeof value === "string") {
+      const matchedOption = settings.labels.find(
+        (option) =>
+          option &&
+          option.name &&
+          option.name.toLowerCase() === value.toLowerCase()
+      );
+
+      if (matchedOption) {
+        return { ids: [matchedOption.id] };
+      }
+      return { text: String(value) };
+    }
+    return { ids: [] };
+  } catch (error) {
+    console.warn(`Failed to parse dropdown settings for ${column.id}:`, error);
+    return { ids: [] };
+  }
+}
+
 /**
  * Get appropriate value format for different column types
  */
@@ -134,52 +198,10 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
 
   switch (column.type) {
     case "status": {
-      // Status columns need to use the index of the label in the settings
-      try {
-        const settings = JSON.parse(
-          column.settings_str
-        ) as MondayStatusSettings;
-        // Parse the status settings properly - labels is an object, not an array
-        if (settings && settings.labels) {
-          const { labels } = settings;
-          // Find the status by name or use the first one (index 5 is "Needs Review" based on the logs)
-          if (value && typeof value === "string") {
-            for (const [index, label] of Object.entries(labels)) {
-              if (
-                typeof label === "string" &&
-                label.toLowerCase() === value.toLowerCase()
-              ) {
-                return { index: Number.parseInt(index, 10) };
-              }
-            }
-          }
-
-          // If "Needs Review" exists, use that (based on the logs, it's index 5)
-          for (const [index, label] of Object.entries(labels)) {
-            if (
-              typeof label === "string" &&
-              label.toLowerCase() === "needs review"
-            ) {
-              return { index: Number.parseInt(index, 10) };
-            }
-          }
-
-          // Default to the first status
-          const firstIndex = Object.keys(labels)[0];
-          return { index: Number.parseInt(firstIndex, 10) };
-        }
-        return { index: 5 }; // Default to 5 which is "Needs Review" based on the logs
-      } catch (error) {
-        console.warn(
-          `Failed to parse status settings for ${column.id}:`,
-          error
-        );
-        return { index: 5 }; // Default to "Needs Review" based on the logs
-      }
+      return formatStatusColumnValue(column, value);
     }
 
     case "date": {
-      // Format date as ISO string without time part
       if (value instanceof Date) {
         return value.toISOString().split("T")[0];
       }
@@ -187,54 +209,18 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
     }
 
     case "long_text": {
-      // Ensure long text is properly formatted
       return { text: String(value) };
     }
 
     case "text": {
-      // Just return the text value
       return String(value);
     }
 
     case "dropdown": {
-      // Try to find the dropdown option
-      try {
-        const settings = JSON.parse(
-          column.settings_str
-        ) as MondayDropdownSettings;
-        if (settings && settings.labels && Array.isArray(settings.labels)) {
-          // Only proceed if value is defined and labels is an array
-          if (value && typeof value === "string") {
-            const matchedOption = settings.labels.find(
-              (option) =>
-                option &&
-                option.name &&
-                option.name.toLowerCase() === value.toLowerCase()
-            );
-
-            if (matchedOption) {
-              return { ids: [matchedOption.id] };
-            }
-
-            // If no match found, use the text approach to create a new option
-            return { text: String(value) };
-          }
-
-          // Default to empty ids array
-          return { ids: [] };
-        }
-        return { ids: [] };
-      } catch (error) {
-        console.warn(
-          `Failed to parse dropdown settings for ${column.id}:`,
-          error
-        );
-        return { ids: [] };
-      }
+      return formatDropdownColumnValue(column, value);
     }
 
     default: {
-      // Default handling for other column types
       return String(value);
     }
   }
@@ -480,6 +466,51 @@ async function addDetailsToItem(
   }
 }
 
+function applyFixedBoardDropdown(
+  columnValues: Record<string, unknown>,
+  columns: MondayColumn[],
+  columnId: string,
+  value: string,
+  kind: "role" | "department"
+): void {
+  const label = kind === "role" ? "role" : "department";
+  console.log(
+    kind === "role"
+      ? `Setting role value: "${value}"`
+      : `Setting department value: "${value}"`
+  );
+
+  const column = columns.find((col) => col.id === columnId);
+  if (!column) {
+    columnValues[columnId] = { text: value };
+    return;
+  }
+
+  try {
+    const settings = JSON.parse(column.settings_str) as MondayDropdownSettings;
+    if (!(settings.labels && Array.isArray(settings.labels))) {
+      columnValues[columnId] = { text: value };
+      return;
+    }
+    const matched = settings.labels.find(
+      (option) =>
+        option?.name && option.name.toLowerCase() === value.toLowerCase()
+    );
+    if (matched) {
+      console.log(`Found matching ${label} ID ${matched.id} for "${value}"`);
+      columnValues[columnId] = { ids: [matched.id] };
+    } else {
+      console.log(
+        `No matching ${label} found for "${value}", using text approach`
+      );
+      columnValues[columnId] = { text: value };
+    }
+  } catch (error) {
+    console.warn(`Error parsing ${label} dropdown settings:`, error);
+    columnValues[columnId] = { text: value };
+  }
+}
+
 /**
  * Stores application data in Monday.com using GraphQL Request
  */
@@ -515,9 +546,9 @@ export async function storeApplicationInMonday(
 
     // Log column mapping information for debugging
     console.log("Column mapping for reference:");
-    columns.forEach((col: MondayColumn) => {
+    for (const col of columns) {
       console.log(`  ${col.id}: ${col.title} (${col.type})`);
-    });
+    }
 
     // Log all form keys to help debug
     console.log("Form data keys:", Object.keys(formData));
@@ -594,95 +625,20 @@ export async function storeApplicationInMonday(
     columnValues.date4 = new Date(timestamp).toISOString().split("T")[0]; // Date
     columnValues.color_mkp2nrgz = { index: 5 }; // Status - Needs Review (index 5)
 
-    // Role & Department Columns - match against existing values by ID if possible
-    console.log(`Setting role value: "${roleData.name}"`);
-
-    // Find the Role dropdown column and check for existing options
-    const roleColumn = columns.find((col) => col.id === "dropdown_mkp22pcr");
-    if (roleColumn) {
-      try {
-        const roleSettings = JSON.parse(
-          roleColumn.settings_str
-        ) as MondayDropdownSettings;
-        if (
-          roleSettings &&
-          roleSettings.labels &&
-          Array.isArray(roleSettings.labels)
-        ) {
-          // Try to find a case-insensitive match
-          const matchedRole = roleSettings.labels.find(
-            (option) =>
-              option &&
-              option.name &&
-              option.name.toLowerCase() === roleData.name.toLowerCase()
-          );
-
-          if (matchedRole) {
-            // Use the ID if we found a match
-            console.log(
-              `Found matching role ID ${matchedRole.id} for "${roleData.name}"`
-            );
-            columnValues.dropdown_mkp22pcr = { ids: [matchedRole.id] };
-          } else {
-            // Fall back to text approach if no match found
-            console.log(
-              `No matching role found for "${roleData.name}", using text approach`
-            );
-            columnValues.dropdown_mkp22pcr = { text: roleData.name };
-          }
-        }
-      } catch (error) {
-        console.warn("Error parsing role dropdown settings:", error);
-        columnValues.dropdown_mkp22pcr = { text: roleData.name };
-      }
-    } else {
-      columnValues.dropdown_mkp22pcr = { text: roleData.name };
-    }
-
-    // For department, do the same - try to match existing values
-    console.log(`Setting department value: "${roleData.department}"`);
-
-    // Find the Department dropdown column and check for existing options
-    const deptColumn = columns.find((col) => col.id === "dropdown_mkp2n3v9");
-    if (deptColumn) {
-      try {
-        const deptSettings = JSON.parse(
-          deptColumn.settings_str
-        ) as MondayDropdownSettings;
-        if (
-          deptSettings &&
-          deptSettings.labels &&
-          Array.isArray(deptSettings.labels)
-        ) {
-          // Try to find a case-insensitive match
-          const matchedDept = deptSettings.labels.find(
-            (option) =>
-              option &&
-              option.name &&
-              option.name.toLowerCase() === roleData.department.toLowerCase()
-          );
-
-          if (matchedDept) {
-            // Use the ID if we found a match
-            console.log(
-              `Found matching department ID ${matchedDept.id} for "${roleData.department}"`
-            );
-            columnValues.dropdown_mkp2n3v9 = { ids: [matchedDept.id] };
-          } else {
-            // Fall back to text approach if no match found
-            console.log(
-              `No matching department found for "${roleData.department}", using text approach`
-            );
-            columnValues.dropdown_mkp2n3v9 = { text: roleData.department };
-          }
-        }
-      } catch (error) {
-        console.warn("Error parsing department dropdown settings:", error);
-        columnValues.dropdown_mkp2n3v9 = { text: roleData.department };
-      }
-    } else {
-      columnValues.dropdown_mkp2n3v9 = { text: roleData.department };
-    }
+    applyFixedBoardDropdown(
+      columnValues,
+      columns,
+      "dropdown_mkp22pcr",
+      roleData.name,
+      "role"
+    );
+    applyFixedBoardDropdown(
+      columnValues,
+      columns,
+      "dropdown_mkp2n3v9",
+      roleData.department,
+      "department"
+    );
 
     // Log the complete column mapping for debugging
     console.log(

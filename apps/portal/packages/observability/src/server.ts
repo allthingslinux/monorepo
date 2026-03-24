@@ -115,15 +115,12 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     zodErrorsIntegration({
       limit: 10, // Limit validation errors per event
     }),
-  ];
 
-  // Add extra error data integration for richer error context
-  integrations.push(
     extraErrorDataIntegration({
       captureErrorCause: true, // Capture error.cause chains
       depth: 5, // Capture deeper error object properties
-    })
-  );
+    }),
+  ];
 
   // Add Node profiling integration
   try {

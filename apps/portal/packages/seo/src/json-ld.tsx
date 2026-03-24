@@ -1,3 +1,4 @@
+/* oxlint-disable react/no-danger -- JSON-LD requires raw JSON in a script element */
 import type { Thing, WithContext } from "schema-dts";
 
 import { getCSPNonce } from "@/shared/security/nonce";

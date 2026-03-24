@@ -11,55 +11,22 @@ import {
 
 export const runtime = "nodejs";
 
-/**
- * Helper to get Cloudflare env with KV access
- * Uses getCloudflareContext() which is the recommended way in OpenNext Cloudflare
- * Falls back gracefully if not available
- */
+function buildQuickBooksCallbackBaseUrl(requestUrl: string): string {
+  const url = new URL(requestUrl);
+  const host = url.hostname;
+  const { port } = url;
+  const protocol = url.protocol.replace(":", "");
+  const finalProtocol = host.includes("localhost") ? "http" : protocol;
+  return port
+    ? `${finalProtocol}://${host}:${port}`
+    : `${finalProtocol}://${host}`;
+}
 
-export async function GET(request: NextRequest) {
-  const { nextUrl, cookies } = request;
-  const { searchParams } = nextUrl;
-  const code = searchParams.get("code");
-  const state = searchParams.get("state");
-  const realmId = searchParams.get("realmId");
-  const errorParam = searchParams.get("error");
-  const errorDescription = searchParams.get("error_description");
-
-  // Handle error case
-  if (errorParam) {
-    return NextResponse.json(
-      {
-        error: errorParam,
-        error_description: errorDescription,
-      },
-      { status: 400 }
-    );
-  }
-
-  // Validate we have the required parameters
-  if (!(code && realmId)) {
-    return NextResponse.json(
-      { error: "Missing required parameters" },
-      { status: 400 }
-    );
-  }
-
-  // Validate CSRF state token
-  const storedState = cookies.get("qb_oauth_state")?.value;
-
-  // Validate CSRF state token
-  const isValidState = storedState && storedState === state;
-
-  if (!isValidState) {
-    console.error("CSRF state validation failed", {
-      allCookies: [...cookies.getAll()].map((c) => c.name),
-      receivedState: state ? `[${state.slice(0, 8)}...]` : "missing",
-      storedState: storedState ? `[${storedState.slice(0, 8)}...]` : "missing",
-    });
-
-    // Return helpful error page instead of JSON for better debugging
-    const errorHtml = `<!DOCTYPE html>
+function quickBooksOAuthStateErrorHtml(
+  storedState: string | undefined,
+  state: string | null
+): string {
+  return `<!DOCTYPE html>
     <html>
     <head><title>OAuth Error</title></head>
     <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px;">
@@ -76,29 +43,98 @@ export async function GET(request: NextRequest) {
       <p><a href="/">Return to home</a></p>
     </body>
     </html>`;
+}
 
-    return new NextResponse(errorHtml, {
+function logQuickBooksCallbackDevTokenHints(
+  clientId: string,
+  refreshToken: string,
+  realmId: string
+): void {
+  console.log("");
+  console.log(
+    "🔑 QuickBooks OAuth Setup - Copy these to your environment variables:"
+  );
+  console.log(`QUICKBOOKS_CLIENT_ID=${clientId}`);
+  console.log(
+    `QUICKBOOKS_REFRESH_TOKEN=${refreshToken.slice(0, 10)}...${refreshToken.slice(-4)} (masked)`
+  );
+  const safeRealmId = /^[0-9]+$/.test(realmId) ? realmId : "[INVALID_FORMAT]";
+  console.log(`QUICKBOOKS_REALM_ID=${safeRealmId}`);
+  console.log(
+    `QUICKBOOKS_ENVIRONMENT=${env.QUICKBOOKS_ENVIRONMENT || "sandbox"}`
+  );
+  console.log("");
+  console.log(
+    "⚠️  Full refresh token available in browser network tab or server logs."
+  );
+  console.log("Add these to your .env.local file and restart your dev server.");
+  console.log("");
+}
+
+function buildQuickBooksOAuthSuccessHtml(
+  realmId: string,
+  saved: boolean,
+  isSetupMode: boolean
+): string {
+  return `<!DOCTYPE html>
+    <html>
+    <head><title>QuickBooks Authorization Success</title></head>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center;">
+      <h1>✅ Authorization Successful!</h1>
+      <p>Your QuickBooks integration is now ${isSetupMode ? "configured" : "updated"}.</p>
+      <p><strong>Realm ID:</strong> ${escapeHtml(realmId)}</p>
+      <p><strong>Environment:</strong> ${escapeHtml(env.QUICKBOOKS_ENVIRONMENT || "sandbox")}</p>
+      ${saved ? "<p>✅ Tokens have been automatically saved to Cloudflare (KV or Secrets).</p>" : "<p>⚠️ Tokens are being used from environment variables. Check server logs for details.</p>"}
+      <p>You can close this window now.</p>
+    </body>
+    </html>`;
+}
+
+export async function GET(request: NextRequest) {
+  const { nextUrl, cookies } = request;
+  const { searchParams } = nextUrl;
+  const code = searchParams.get("code");
+  const state = searchParams.get("state");
+  const realmId = searchParams.get("realmId");
+  const errorParam = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
+
+  if (errorParam) {
+    return NextResponse.json(
+      {
+        error: errorParam,
+        error_description: errorDescription,
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!(code && realmId)) {
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 }
+    );
+  }
+
+  const storedState = cookies.get("qb_oauth_state")?.value;
+  const isValidState = storedState && storedState === state;
+
+  if (!isValidState) {
+    console.error("CSRF state validation failed", {
+      allCookies: [...cookies.getAll()].map((c) => c.name),
+      receivedState: state ? `[${state.slice(0, 8)}...]` : "missing",
+      storedState: storedState ? `[${storedState.slice(0, 8)}...]` : "missing",
+    });
+
+    return new NextResponse(quickBooksOAuthStateErrorHtml(storedState, state), {
       headers: { "Content-Type": "text/html" },
       status: 403,
     });
   }
 
-  // Clear the state cookie after validation
-
   const clientId = env.QUICKBOOKS_CLIENT_ID;
   const clientSecret = env.QUICKBOOKS_CLIENT_SECRET;
-
-  // Extract host and protocol from request URL to support different ports (3000, 8787, etc.)
-  const url = new URL(request.url);
-  const host = url.hostname;
-  const { port } = url;
-  const protocol = url.protocol.replace(":", "");
-
-  // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
-  const finalProtocol = host.includes("localhost") ? "http" : protocol;
-  const baseUrl = port
-    ? `${finalProtocol}://${host}:${port}`
-    : `${finalProtocol}://${host}`;
+  const baseUrl = buildQuickBooksCallbackBaseUrl(request.url);
   const redirectUri = `${baseUrl}/api/quickbooks/callback`;
 
   if (!(clientId && clientSecret)) {
@@ -109,7 +145,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Exchange authorization code for tokens
     const tokens = await exchangeAuthorizationCode(
       code,
       redirectUri,
@@ -125,7 +160,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Automatically save tokens
     const tokenData = {
       clientId,
       clientSecret,
@@ -134,8 +168,6 @@ export async function GET(request: NextRequest) {
       refreshToken: tokens.refresh_token,
     };
 
-    // Get Cloudflare environment if available
-    // Uses getCloudflareContext() which is the recommended way in OpenNext Cloudflare
     const cfEnv = await getCloudflareEnv();
 
     console.log(
@@ -150,7 +182,6 @@ export async function GET(request: NextRequest) {
       hasRefreshToken: !!tokenData.refreshToken,
     });
 
-    // Save tokens automatically
     const saved = await saveTokens(tokenData, cfEnv);
 
     if (saved) {
@@ -168,53 +199,19 @@ export async function GET(request: NextRequest) {
       console.log(
         "[QuickBooks Callback]    2. Add CLOUDFLARE_API_TOKEN as a secret to enable automatic secret updates"
       );
-      // Fallback for development/local environments - only log in development
       if (env.NODE_ENV === "development") {
-        console.log("");
-        console.log(
-          "🔑 QuickBooks OAuth Setup - Copy these to your environment variables:"
+        logQuickBooksCallbackDevTokenHints(
+          clientId,
+          tokens.refresh_token,
+          realmId
         );
-        console.log(`QUICKBOOKS_CLIENT_ID=${clientId}`);
-        console.log(
-          `QUICKBOOKS_REFRESH_TOKEN=${tokens.refresh_token.slice(0, 10)}...${tokens.refresh_token.slice(-4)} (masked)`
-        );
-        // Validate realmId format (typically numeric) before logging
-        const safeRealmId = /^[0-9]+$/.test(realmId)
-          ? realmId
-          : "[INVALID_FORMAT]";
-        console.log(`QUICKBOOKS_REALM_ID=${safeRealmId}`);
-        console.log(
-          `QUICKBOOKS_ENVIRONMENT=${env.QUICKBOOKS_ENVIRONMENT || "sandbox"}`
-        );
-        console.log("");
-        console.log(
-          "⚠️  Full refresh token available in browser network tab or server logs."
-        );
-        console.log(
-          "Add these to your .env.local file and restart your dev server."
-        );
-        console.log("");
       }
     }
 
-    // Determine if this is setup mode
     const isSetupMode = !env.QUICKBOOKS_REFRESH_TOKEN;
 
-    // Render success page
-    const html = `<!DOCTYPE html>
-    <html>
-    <head><title>QuickBooks Authorization Success</title></head>
-    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center;">
-      <h1>✅ Authorization Successful!</h1>
-      <p>Your QuickBooks integration is now ${isSetupMode ? "configured" : "updated"}.</p>
-      <p><strong>Realm ID:</strong> ${escapeHtml(realmId)}</p>
-      <p><strong>Environment:</strong> ${escapeHtml(env.QUICKBOOKS_ENVIRONMENT || "sandbox")}</p>
-      ${saved ? "<p>✅ Tokens have been automatically saved to Cloudflare (KV or Secrets).</p>" : "<p>⚠️ Tokens are being used from environment variables. Check server logs for details.</p>"}
-      <p>You can close this window now.</p>
-    </body>
-    </html>`;
+    const html = buildQuickBooksOAuthSuccessHtml(realmId, saved, isSetupMode);
 
-    // Clear the state cookie after validation
     const finalResponse = new NextResponse(html, {
       headers: { "Content-Type": "text/html" },
     });

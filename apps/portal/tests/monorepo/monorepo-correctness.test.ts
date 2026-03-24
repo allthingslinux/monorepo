@@ -220,8 +220,8 @@ describe("Property 1: Dependency acyclicity", () => {
  * Property 2: No stale imports remain
  *
  * For all source files in the codebase (app and packages), no import
- * statement references the old @/shared/*, @/components/*, @/db, or
- * @/ui/* patterns that have been migrated to @portal/* or @atl/ui package imports.
+ * statement references the old app-internal paths (shared/types, components,
+ * db, or ui) that have been migrated to portal-scoped or @atl/ui package imports.
  *
  * Validates: Requirements 6.1, 6.4, 6.5
  */
@@ -241,12 +241,12 @@ describe("Property 2: No stale imports remain", () => {
   ];
 
   function getAllSourceFiles(): string[] {
-    const files: string[] = [];
-    files.push(...collectSourceFiles(APP_SRC_DIR));
-    for (const pkgDir of getLibraryPackageDirs()) {
-      files.push(...collectSourceFiles(path.join(PACKAGES_DIR, pkgDir, "src")));
-    }
-    return files;
+    return [
+      ...collectSourceFiles(APP_SRC_DIR),
+      ...getLibraryPackageDirs().flatMap((pkgDir) =>
+        collectSourceFiles(path.join(PACKAGES_DIR, pkgDir, "src"))
+      ),
+    ];
   }
 
   it("no source file contains stale @/shared/*, @/components/*, @/db, or @/ui/* imports", () => {
@@ -297,10 +297,10 @@ describe("Property 2: No stale imports remain", () => {
 /**
  * Property 3: Package boundary enforcement
  *
- * For all source files in packages/star/src/, no import uses the @/
- * app-internal alias, and no import references another internal package
+ * For all source files in packages/star/src/, no import uses the
+ * app-internal slash alias, and no import references another internal package
  * via a direct relative file path. All cross-package imports go through
- * @portal/* (and shared @atl/ui) package exports.
+ * portal-scoped packages (and shared @atl/ui) package exports.
  *
  * Note: Some packages (seo, ui, api) retain @/ app-internal imports that
  * resolve through the app's bundler. These are documented architectural
@@ -681,12 +681,12 @@ describe("Property 10: Import path correctness", () => {
   const CONFIG_PACKAGE_IMPORTS = ["@portal/typescript-config"];
 
   function getAllSourceFiles(): string[] {
-    const files: string[] = [];
-    files.push(...collectSourceFiles(APP_SRC_DIR));
-    for (const pkgDir of getLibraryPackageDirs()) {
-      files.push(...collectSourceFiles(path.join(PACKAGES_DIR, pkgDir, "src")));
-    }
-    return files;
+    return [
+      ...collectSourceFiles(APP_SRC_DIR),
+      ...getLibraryPackageDirs().flatMap((pkgDir) =>
+        collectSourceFiles(path.join(PACKAGES_DIR, pkgDir, "src"))
+      ),
+    ];
   }
 
   function isBareWorkspaceImport(imp: string): boolean {
@@ -767,9 +767,9 @@ describe("Property 10: Import path correctness", () => {
 /**
  * Property 11: App-internal alias preservation
  *
- * For all imports of @/auth, @/features/*, @/hooks/*, @/config, and
- * @/env in the Portal App source, the @/ prefix is preserved (not
- * rewritten to a @portal/* import).
+ * For all imports of auth, features, hooks, config, and env using the
+ * app-internal slash prefix in the Portal App source, that prefix is preserved (not
+ * rewritten to a portal-scoped package import).
  *
  * Validates: Requirement 6.3
  */

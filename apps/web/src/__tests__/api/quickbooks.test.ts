@@ -8,6 +8,6 @@ describe("QuickBooks API Routes", () => {
     expect(true).toBe(true);
   });
 
-  // TODO: Implement integration tests using unstable_startWorker
+  // Planned: Implement integration tests using unstable_startWorker
   // when the Vitest Cloudflare Workers pool compatibility issues are resolved
 });

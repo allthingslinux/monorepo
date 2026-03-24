@@ -191,7 +191,7 @@ function StepperFormContent({
 
       if (!validationResult.success) {
         // Set errors for failed validations
-        validationResult.error.issues.forEach((issue) => {
+        for (const issue of validationResult.error.issues) {
           const fieldName = issue.path[0] as string;
           // Only set errors for fields on the current step
           if (requiredFields.includes(fieldName)) {
@@ -200,16 +200,16 @@ function StepperFormContent({
               type: "validation",
             });
           }
-        });
+        }
 
         scrollToFirstError();
         return; // Don't proceed if validation fails
       }
 
       // Clear errors on successful validation
-      requiredFields.forEach((fieldName) => {
+      for (const fieldName of requiredFields) {
         form.clearErrors(fieldName);
-      });
+      }
     }
 
     // Save current data before navigating

@@ -8,6 +8,7 @@
  * Validates: Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6
  */
 
+import type * as PortalApiUtils from "@portal/api/utils";
 import { db } from "@portal/db/client";
 import {
   assert as fcAssert,
@@ -49,13 +50,14 @@ vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
 // Mock auth — requireAuth always passes
 vi.mock("@portal/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof import("@portal/api/utils")>(
-      "@portal/api/utils"
-    );
+    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),
-    requireAuth: vi.fn().mockResolvedValue(),
+    requireAuth: vi.fn().mockResolvedValue({
+      session: { user: { id: "test-user" } },
+      userId: "test-user",
+    }),
   };
 });
 

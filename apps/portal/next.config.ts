@@ -229,7 +229,7 @@ let nextConfig: NextConfig = {
         // Note: CSP headers with nonce support are set dynamically in proxy.ts
         // The proxy generates per-request nonces and sets CSP using 'strict-dynamic'
         // This static Report-Only header is kept for monitoring/reporting purposes only
-        // TODO: Once all inline scripts/styles use nonces, remove unsafe-eval and unsafe-inline
+        // Planned: Once all inline scripts/styles use nonces, remove unsafe-eval and unsafe-inline
         securityHeaders.push({
           key: "Content-Security-Policy-Report-Only",
           value: `default-src 'self'; script-src 'self' 'nonce-*' 'strict-dynamic' https://js.sentry-cdn.com; style-src 'self' 'nonce-*' 'strict-dynamic'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://${orgDomain} https://js.sentry-cdn.com; report-uri ${reportUri}; report-to csp-endpoint`,

@@ -7,6 +7,7 @@
 import "server-only";
 import {
   consoleLoggingIntegration,
+  extraErrorDataIntegration,
   httpIntegration,
   init,
   zodErrorsIntegration,
@@ -22,6 +23,20 @@ const API_HEALTH_REGEX = /^GET \/api\/health/;
 const MONITORING_REGEX = /^GET \/monitoring/;
 const STATIC_ASSETS_REGEX = /^GET \/_next\/static\//;
 const FAVICON_REGEX = /^GET \/favicon/;
+
+/**
+ * Check if a URL is a Sentry endpoint by parsing the hostname.
+ * Prevents false positives for "sentry.io" in paths or query strings.
+ */
+function isSentryHostEdge(rawUrl: string): boolean {
+  try {
+    const parsed = new URL(rawUrl);
+    const hostname = parsed.hostname.toLowerCase();
+    return hostname === "sentry.io" || hostname.endsWith(".sentry.io");
+  } catch {
+    return false;
+  }
+}
 
 export const initializeSentry = (): ReturnType<typeof init> => {
   const env = keys();
@@ -40,22 +55,6 @@ export const initializeSentry = (): ReturnType<typeof init> => {
   // Environment-based sample rates
   const isProduction = process.env.NODE_ENV === "production";
 
-  /**
-   * Check if a URL is a Sentry endpoint by parsing the hostname
-   * This prevents false positives from "sentry.io" appearing in paths or query strings
-   */
-  const isSentryHost = (rawUrl: string): boolean => {
-    try {
-      const parsed = new URL(rawUrl);
-      const hostname = parsed.hostname.toLowerCase();
-      // Match sentry.io and its subdomains (e.g., o123456.ingest.sentry.io)
-      return hostname === "sentry.io" || hostname.endsWith(".sentry.io");
-    } catch {
-      // If URL parsing fails, do not treat it as a Sentry request
-      return false;
-    }
-  };
-
   const integrations = [
     // Send console.log, console.error, and console.warn calls as logs to Sentry
     consoleLoggingIntegration({ levels: ["log", "error", "warn"] }),
@@ -67,7 +66,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
         urlPath.includes("/health") ||
         urlPath.includes("/api/health") ||
         urlPath.includes("/monitoring"),
-      ignoreOutgoingRequests: (url) => isSentryHost(url),
+      ignoreOutgoingRequests: (url) => isSentryHostEdge(url),
       maxIncomingRequestBodySize: "small", // 1KB limit for edge runtime
       spans: true, // Enable spans for outgoing HTTP requests
     }),
@@ -76,20 +75,12 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     zodErrorsIntegration({
       limit: 10, // Limit validation errors per event
     }),
-  ];
 
-  // Add extra error data integration for richer error context
-  try {
-    const { extraErrorDataIntegration } = require("@sentry/nextjs");
-    integrations.push(
-      extraErrorDataIntegration({
-        captureErrorCause: true, // Capture error.cause chains
-        depth: 5, // Capture deeper error object properties
-      })
-    );
-  } catch {
-    // Integration not available
-  }
+    extraErrorDataIntegration({
+      captureErrorCause: true, // Capture error.cause chains
+      depth: 5, // Capture deeper error object properties
+    }),
+  ];
 
   return init({
     // Filter sensitive data before sending

@@ -38,8 +38,9 @@ import {
   Zap,
 } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { toast } from "sonner";
 import type { ZodType } from "zod";
 
@@ -429,6 +430,106 @@ export function IntegrationManagement<TAccount extends { id: string }>({
 // SetupDialog — create a new account
 // ---------------------------------------------------------------------------
 
+function SetupDialogDefaultFields({
+  createInputHelp,
+  createInputLabel,
+  createInputName,
+  createInputPlaceholder,
+  createSecondInputHelp,
+  createSecondInputLabel,
+  createSecondInputName,
+  createSecondInputPlaceholder,
+  createSecondInputType,
+  errors,
+  integrationId,
+  isPending,
+  register,
+}: {
+  createInputHelp?: string;
+  createInputLabel?: string;
+  createInputName: string;
+  createInputPlaceholder?: string;
+  createSecondInputHelp?: string;
+  createSecondInputLabel?: string;
+  createSecondInputName?: string;
+  createSecondInputPlaceholder?: string;
+  createSecondInputType?: string;
+  errors: FieldErrors<Record<string, string>>;
+  integrationId: string;
+  isPending: boolean;
+  register: UseFormRegister<Record<string, string>>;
+}) {
+  return (
+    <div className="space-y-4 py-4">
+      {createInputLabel && (
+        <div className="space-y-2">
+          <Label htmlFor={`${integrationId}-${createInputName}`}>
+            {createInputLabel}
+          </Label>
+          <Input
+            aria-describedby={
+              errors[createInputName]
+                ? `${integrationId}-${createInputName}-error`
+                : undefined
+            }
+            aria-invalid={!!errors[createInputName]}
+            disabled={isPending}
+            id={`${integrationId}-${createInputName}`}
+            placeholder={createInputPlaceholder}
+            {...register(createInputName)}
+          />
+          {errors[createInputName]?.message && (
+            <p
+              className="font-medium text-destructive text-sm"
+              id={`${integrationId}-${createInputName}-error`}
+              role="alert"
+            >
+              {String(errors[createInputName]?.message)}
+            </p>
+          )}
+          {createInputHelp && (
+            <p className="text-muted-foreground text-xs">{createInputHelp}</p>
+          )}
+        </div>
+      )}
+      {createSecondInputLabel && createSecondInputName && (
+        <div className="space-y-2">
+          <Label htmlFor={`${integrationId}-${createSecondInputName}`}>
+            {createSecondInputLabel}
+          </Label>
+          <Input
+            aria-describedby={
+              errors[createSecondInputName]
+                ? `${integrationId}-${createSecondInputName}-error`
+                : undefined
+            }
+            aria-invalid={!!errors[createSecondInputName]}
+            disabled={isPending}
+            id={`${integrationId}-${createSecondInputName}`}
+            placeholder={createSecondInputPlaceholder}
+            type={createSecondInputType ?? "text"}
+            {...register(createSecondInputName)}
+          />
+          {errors[createSecondInputName]?.message && (
+            <p
+              className="font-medium text-destructive text-sm"
+              id={`${integrationId}-${createSecondInputName}-error`}
+              role="alert"
+            >
+              {String(errors[createSecondInputName]?.message)}
+            </p>
+          )}
+          {createSecondInputHelp && (
+            <p className="text-muted-foreground text-xs">
+              {createSecondInputHelp}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SetupDialog<TAccount extends { id: string }>({
   open,
   onOpenChange,
@@ -492,48 +593,62 @@ function SetupDialog<TAccount extends { id: string }>({
     resolver: createSchema ? zodResolver(createSchema as any) : undefined,
   });
 
-  const onSubmit = async (data: Record<string, string>) => {
-    try {
-      const rawValue = data[createInputName] || "";
-      const trimmed = rawValue.trim();
+  const onSubmit = useCallback(
+    async (data: Record<string, string>) => {
+      try {
+        const rawValue = data[createInputName] || "";
+        const trimmed = rawValue.trim();
 
-      if (!(createSchema || createInputToPayload) && trimmed === "") {
-        setError(createInputName, {
-          message: `${createInputLabel || "Input"} is required`,
-          type: "manual",
-        });
-        return;
-      }
+        if (!(createSchema || createInputToPayload) && trimmed === "") {
+          setError(createInputName, {
+            message: `${createInputLabel || "Input"} is required`,
+            type: "manual",
+          });
+          return;
+        }
 
-      let payload: Record<string, unknown> = {};
+        let payload: Record<string, unknown> = {};
 
-      if (createSchema) {
-        payload = Object.fromEntries(
-          Object.entries(data).map(([k, v]) => [
-            k,
-            typeof v === "string" ? v.trim() : v,
-          ])
+        if (createSchema) {
+          payload = Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [
+              k,
+              typeof v === "string" ? v.trim() : v,
+            ])
+          );
+        } else if (createInputToPayload) {
+          payload = createInputToPayload(trimmed);
+        } else if (trimmed) {
+          payload = { [createInputName]: trimmed };
+        }
+
+        const createdAccount = await createMutation.mutateAsync(payload);
+        toast.success(`${title} account created`);
+        reset();
+        onOpenChange(false);
+        onCreateSuccess?.(createdAccount);
+      } catch (error) {
+        Sentry.captureException(error);
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : `Failed to create ${title.toLowerCase()} account`
         );
-      } else if (createInputToPayload) {
-        payload = createInputToPayload(trimmed);
-      } else if (trimmed) {
-        payload = { [createInputName]: trimmed };
       }
-
-      const createdAccount = await createMutation.mutateAsync(payload);
-      toast.success(`${title} account created`);
-      reset();
-      onOpenChange(false);
-      onCreateSuccess?.(createdAccount);
-    } catch (error) {
-      Sentry.captureException(error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : `Failed to create ${title.toLowerCase()} account`
-      );
-    }
-  };
+    },
+    [
+      createInputName,
+      createInputLabel,
+      createInputToPayload,
+      createMutation,
+      createSchema,
+      onCreateSuccess,
+      onOpenChange,
+      reset,
+      setError,
+      title,
+    ]
+  );
 
   if (renderCreateForm) {
     const handleCustomSuccess = (account: TAccount) => {
@@ -586,75 +701,21 @@ function SetupDialog<TAccount extends { id: string }>({
               Create your {title} account to get started.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            {createInputLabel && (
-              <div className="space-y-2">
-                <Label htmlFor={`${integrationId}-${createInputName}`}>
-                  {createInputLabel}
-                </Label>
-                <Input
-                  aria-describedby={
-                    errors[createInputName]
-                      ? `${integrationId}-${createInputName}-error`
-                      : undefined
-                  }
-                  aria-invalid={!!errors[createInputName]}
-                  disabled={createMutation.isPending}
-                  id={`${integrationId}-${createInputName}`}
-                  placeholder={createInputPlaceholder}
-                  {...register(createInputName)}
-                />
-                {errors[createInputName]?.message && (
-                  <p
-                    className="font-medium text-destructive text-sm"
-                    id={`${integrationId}-${createInputName}-error`}
-                    role="alert"
-                  >
-                    {String(errors[createInputName]?.message)}
-                  </p>
-                )}
-                {createInputHelp && (
-                  <p className="text-muted-foreground text-xs">
-                    {createInputHelp}
-                  </p>
-                )}
-              </div>
-            )}
-            {createSecondInputLabel && createSecondInputName && (
-              <div className="space-y-2">
-                <Label htmlFor={`${integrationId}-${createSecondInputName}`}>
-                  {createSecondInputLabel}
-                </Label>
-                <Input
-                  aria-describedby={
-                    errors[createSecondInputName]
-                      ? `${integrationId}-${createSecondInputName}-error`
-                      : undefined
-                  }
-                  aria-invalid={!!errors[createSecondInputName]}
-                  disabled={createMutation.isPending}
-                  id={`${integrationId}-${createSecondInputName}`}
-                  placeholder={createSecondInputPlaceholder}
-                  type={createSecondInputType ?? "text"}
-                  {...register(createSecondInputName)}
-                />
-                {errors[createSecondInputName]?.message && (
-                  <p
-                    className="font-medium text-destructive text-sm"
-                    id={`${integrationId}-${createSecondInputName}-error`}
-                    role="alert"
-                  >
-                    {String(errors[createSecondInputName]?.message)}
-                  </p>
-                )}
-                {createSecondInputHelp && (
-                  <p className="text-muted-foreground text-xs">
-                    {createSecondInputHelp}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
+          <SetupDialogDefaultFields
+            createInputHelp={createInputHelp}
+            createInputLabel={createInputLabel}
+            createInputName={createInputName}
+            createInputPlaceholder={createInputPlaceholder}
+            createSecondInputHelp={createSecondInputHelp}
+            createSecondInputLabel={createSecondInputLabel}
+            createSecondInputName={createSecondInputName}
+            createSecondInputPlaceholder={createSecondInputPlaceholder}
+            createSecondInputType={createSecondInputType}
+            errors={errors}
+            integrationId={integrationId}
+            isPending={createMutation.isPending}
+            register={register}
+          />
           <DialogFooter>
             <Button
               disabled={createMutation.isPending}

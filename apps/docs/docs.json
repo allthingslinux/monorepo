@@ -157,14 +157,24 @@
     "global": {
       "anchors": [
         {
+          "anchor": "Website",
+          "href": "https://allthingslinux.org",
+          "icon": "globe"
+        },
+        {
           "anchor": "GitHub",
           "href": "https://github.com/allthingslinux",
           "icon": "github"
         },
         {
-          "anchor": "Mintlify docs",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Discord",
+          "href": "https://discord.gg/linux",
+          "icon": "discord"
+        },
+        {
+          "anchor": "Open Collective",
+          "href": "https://opencollective.com/allthingslinux",
+          "icon": "heart"
         }
       ]
     }

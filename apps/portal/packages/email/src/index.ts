@@ -4,7 +4,7 @@
 import type { EmailOptions } from "@portal/types/email";
 
 export function sendEmail(options: EmailOptions) {
-  // TODO: Implement with your email provider
+  // Planned: Implement with your email provider
   // For development, just log the email
   console.log("📧 Email would be sent:", {
     content: options.html || options.text,

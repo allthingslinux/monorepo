@@ -1,4 +1,5 @@
 import { APIError } from "@portal/api/utils";
+import type * as PortalApiUtils from "@portal/api/utils";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -170,9 +171,7 @@ const mockHandleAPIError = vi.fn();
 
 vi.mock("@portal/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof import("@portal/api/utils")>(
-      "@portal/api/utils"
-    );
+    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
   return {
     ...actual,
     handleAPIError: (...args: unknown[]) => mockHandleAPIError(...args),

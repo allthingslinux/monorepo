@@ -1,5 +1,6 @@
 "use client";
 
+/* oxlint-disable react/no-danger -- injects theme CSS variables for Recharts */
 import { cn } from "@atl/ui/lib/utils";
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";

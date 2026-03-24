@@ -102,13 +102,14 @@ export function parseRouteId(value: string | string[] | undefined): string {
  * Custom API Error class
  */
 export class APIError extends Error {
-  constructor(
-    message: string,
-    public status = 500,
-    public details?: unknown
-  ) {
+  status: number;
+  details?: unknown;
+
+  constructor(message: string, status = 500, details?: unknown) {
     super(message);
     this.name = "APIError";
+    this.status = status;
+    this.details = details;
   }
 }
 

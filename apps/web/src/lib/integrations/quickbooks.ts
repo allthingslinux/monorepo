@@ -323,6 +323,82 @@ export function escapeHtml(str: string): string {
     .replaceAll("'", "&#039;");
 }
 
+function logQuickBooksInvalidGrantHelp(): void {
+  console.error("");
+  console.error("❌ QuickBooks refresh token is invalid or expired");
+  console.error("💡 To fix this, you need to re-authenticate:");
+  console.error("");
+  console.error("   1. Visit the admin setup URL to re-authenticate:");
+  console.error(
+    `      http://localhost:3000/api/quickbooks/admin-setup?admin=${env.QUICKBOOKS_ADMIN_KEY || "YOUR_ADMIN_KEY"}`
+  );
+  console.error(
+    "   2. Or visit: http://localhost:8787/api/quickbooks/admin-setup?admin=YOUR_ADMIN_KEY"
+  );
+  console.error("   3. After authentication, update your refresh token in:");
+  console.error("      - .env.local (for Next.js dev on port 3000)");
+  console.error("      - .dev.vars (for Wrangler dev on port 8787)");
+  console.error("");
+}
+
+function reportQuickBooksTokenRefreshFailure(
+  response: Response,
+  errorText: string
+): void {
+  let errorData: { error?: string; error_description?: string } = {};
+  try {
+    errorData = JSON.parse(errorText);
+  } catch {
+    // If not JSON, use the raw text
+  }
+
+  console.error("Token refresh failed:", errorText);
+
+  if (response.status === 400 && errorData.error === "invalid_grant") {
+    logQuickBooksInvalidGrantHelp();
+  }
+
+  if (response.status === 429) {
+    const retryAfter = response.headers.get("Retry-After");
+    console.warn(
+      `Rate limited by QuickBooks API. Retry after: ${retryAfter || "unknown"} seconds`
+    );
+  }
+}
+
+async function persistRotatedRefreshTokenToKv(
+  cfEnv: QuickBooksCloudflareEnv,
+  tokens: QuickBooksTokenResponse
+): Promise<void> {
+  const kv = cfEnv.KV_QUICKBOOKS;
+  if (!kv) {
+    return;
+  }
+  try {
+    const existingTokens = await kv.get("quickbooks_tokens");
+
+    const tokenData = existingTokens
+      ? JSON.parse(existingTokens)
+      : {
+          accessToken: tokens.access_token,
+          expiresAt: new Date(
+            Date.now() + tokens.expires_in * 1000
+          ).toISOString(),
+          lastUpdated: new Date().toISOString(),
+          realmId: null,
+          refreshToken: tokens.refresh_token,
+        };
+
+    tokenData.refreshToken = tokens.refresh_token;
+    tokenData.lastUpdated = new Date().toISOString();
+
+    await kv.put("quickbooks_tokens", JSON.stringify(tokenData));
+    console.log("✅ New refresh token saved to KV storage");
+  } catch (error) {
+    console.warn("Failed to update refresh token in KV:", error);
+  }
+}
+
 /**
  * Fetches a new access token using the refresh token
  * Implements caching to avoid unnecessary refresh calls
@@ -381,44 +457,7 @@ export async function getAccessToken(
 
     if (!response.ok) {
       const errorText = await response.text();
-      let errorData: { error?: string; error_description?: string } = {};
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        // If not JSON, use the raw text
-      }
-
-      console.error("Token refresh failed:", errorText);
-
-      // Handle invalid grant (expired/invalid refresh token)
-      if (response.status === 400 && errorData.error === "invalid_grant") {
-        console.error("");
-        console.error("❌ QuickBooks refresh token is invalid or expired");
-        console.error("💡 To fix this, you need to re-authenticate:");
-        console.error("");
-        console.error("   1. Visit the admin setup URL to re-authenticate:");
-        console.error(
-          `      http://localhost:3000/api/quickbooks/admin-setup?admin=${env.QUICKBOOKS_ADMIN_KEY || "YOUR_ADMIN_KEY"}`
-        );
-        console.error(
-          "   2. Or visit: http://localhost:8787/api/quickbooks/admin-setup?admin=YOUR_ADMIN_KEY"
-        );
-        console.error(
-          "   3. After authentication, update your refresh token in:"
-        );
-        console.error("      - .env.local (for Next.js dev on port 3000)");
-        console.error("      - .dev.vars (for Wrangler dev on port 8787)");
-        console.error("");
-      }
-
-      // Handle rate limiting (429 Too Many Requests)
-      if (response.status === 429) {
-        const retryAfter = response.headers.get("Retry-After");
-        console.warn(
-          `Rate limited by QuickBooks API. Retry after: ${retryAfter || "unknown"} seconds`
-        );
-      }
-
+      reportQuickBooksTokenRefreshFailure(response, errorText);
       return null;
     }
 
@@ -460,37 +499,8 @@ export async function getAccessToken(
     if (refreshTokenChanged) {
       console.log("🔄 QuickBooks refresh token rotated (24hr security update)");
 
-      // Save new refresh token to storage
       if (cfEnv?.KV_QUICKBOOKS) {
-        try {
-          const existingTokens =
-            await cfEnv.KV_QUICKBOOKS.get("quickbooks_tokens");
-
-          // Always save the token data, creating the KV entry if it doesn't exist
-          const tokenData = existingTokens
-            ? JSON.parse(existingTokens)
-            : {
-                accessToken: tokens.access_token,
-                expiresAt: new Date(
-                  Date.now() + tokens.expires_in * 1000
-                ).toISOString(),
-                lastUpdated: new Date().toISOString(),
-                realmId: null, // Will be set later if needed
-                refreshToken: tokens.refresh_token,
-              };
-
-          // Update with the new refresh token
-          tokenData.refreshToken = tokens.refresh_token;
-          tokenData.lastUpdated = new Date().toISOString();
-
-          await cfEnv.KV_QUICKBOOKS.put(
-            "quickbooks_tokens",
-            JSON.stringify(tokenData)
-          );
-          console.log("✅ New refresh token saved to KV storage");
-        } catch (error) {
-          console.warn("Failed to update refresh token in KV:", error);
-        }
+        await persistRotatedRefreshTokenToKv(cfEnv, tokens);
       }
 
       return {
@@ -509,6 +519,107 @@ export async function getAccessToken(
     }
     return null;
   }
+}
+
+function isQuickBooksTokenExpiredPayload(
+  errorText: string,
+  errorData: { fault?: { error?: { code?: string }[] } }
+): boolean {
+  return (
+    errorData.fault?.error?.[0]?.code === "3200" ||
+    errorText.includes("Token expired") ||
+    errorText.includes("AuthenticationFailed")
+  );
+}
+
+async function handleQuickBooksEntityUnauthorized<T extends QuickBooksEntity>(
+  response: Response,
+  baseUrl: string,
+  realmId: string,
+  accessToken: string,
+  entityType: string,
+  mapEntity: (raw: T) => QuickBooksTransaction,
+  retryCount: number,
+  getFreshToken?: () => Promise<string | null>
+): Promise<QuickBooksTransaction[]> {
+  const errorText = await response.text();
+  let errorData: { fault?: { error?: { code?: string }[] } } = {};
+  try {
+    errorData = JSON.parse(errorText);
+  } catch {
+    // If not JSON, continue with retry logic
+  }
+
+  if (
+    isQuickBooksTokenExpiredPayload(errorText, errorData) &&
+    getFreshToken &&
+    retryCount === 0
+  ) {
+    console.log(
+      `[QuickBooks] 🔄 Token expired for ${entityType}, refreshing and retrying...`
+    );
+    const freshToken = await getFreshToken();
+    if (freshToken) {
+      console.log(
+        `[QuickBooks] ✅ Got fresh token for ${entityType}, retrying request...`
+      );
+      return fetchQuickBooksEntities(
+        baseUrl,
+        realmId,
+        freshToken,
+        entityType,
+        mapEntity,
+        retryCount + 1,
+        getFreshToken
+      );
+    }
+    console.error(
+      `[QuickBooks] ❌ Failed to refresh token for ${entityType}. Refresh token may be expired - re-authentication required.`
+    );
+  }
+
+  console.warn(
+    `Failed to fetch ${entityType}:`,
+    response.status,
+    errorText.slice(0, 200)
+  );
+  return [];
+}
+
+async function handleQuickBooksEntityRateLimited<T extends QuickBooksEntity>(
+  response: Response,
+  baseUrl: string,
+  realmId: string,
+  accessToken: string,
+  entityType: string,
+  mapEntity: (raw: T) => QuickBooksTransaction,
+  retryCount: number,
+  getFreshToken?: () => Promise<string | null>
+): Promise<QuickBooksTransaction[]> {
+  const retryAfter = response.headers.get("Retry-After");
+  const retryDelay = retryAfter
+    ? Number.parseInt(retryAfter, 10) * 1000
+    : Math.min(1000 * 2 ** retryCount, 30_000);
+
+  console.warn(
+    `Rate limited when fetching ${entityType}. Retrying after ${retryDelay}ms (attempt ${retryCount + 1}/3)`
+  );
+
+  if (retryCount < 3) {
+    await delay(retryDelay);
+    return fetchQuickBooksEntities(
+      baseUrl,
+      realmId,
+      accessToken,
+      entityType,
+      mapEntity,
+      retryCount + 1,
+      getFreshToken
+    );
+  }
+
+  console.error(`Max retries reached for ${entityType} due to rate limiting`);
+  return [];
 }
 
 /**
@@ -542,81 +653,30 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
 
     clearTimeout(timeoutId);
 
-    // Handle authentication errors (401) - token expired
     if (response.status === 401) {
-      const errorText = await response.text();
-      let errorData: { fault?: { error?: { code?: string }[] } } = {};
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        // If not JSON, continue with retry logic
-      }
-
-      const isTokenExpired =
-        errorData.fault?.error?.[0]?.code === "3200" ||
-        errorText.includes("Token expired") ||
-        errorText.includes("AuthenticationFailed");
-
-      if (isTokenExpired && getFreshToken && retryCount === 0) {
-        console.log(
-          `[QuickBooks] 🔄 Token expired for ${entityType}, refreshing and retrying...`
-        );
-        const freshToken = await getFreshToken();
-        if (freshToken) {
-          console.log(
-            `[QuickBooks] ✅ Got fresh token for ${entityType}, retrying request...`
-          );
-          return fetchQuickBooksEntities(
-            baseUrl,
-            realmId,
-            freshToken,
-            entityType,
-            mapEntity,
-            retryCount + 1,
-            getFreshToken
-          );
-        }
-        console.error(
-          `[QuickBooks] ❌ Failed to refresh token for ${entityType}. Refresh token may be expired - re-authentication required.`
-        );
-      }
-
-      console.warn(
-        `Failed to fetch ${entityType}:`,
-        response.status,
-        errorText.slice(0, 200)
+      return handleQuickBooksEntityUnauthorized(
+        response,
+        baseUrl,
+        realmId,
+        accessToken,
+        entityType,
+        mapEntity,
+        retryCount,
+        getFreshToken
       );
-      return [];
     }
 
-    // Handle rate limiting (429 Too Many Requests)
     if (response.status === 429) {
-      const retryAfter = response.headers.get("Retry-After");
-      const retryDelay = retryAfter
-        ? Number.parseInt(retryAfter, 10) * 1000
-        : Math.min(1000 * 2 ** retryCount, 30_000);
-
-      console.warn(
-        `Rate limited when fetching ${entityType}. Retrying after ${retryDelay}ms (attempt ${retryCount + 1}/3)`
+      return handleQuickBooksEntityRateLimited(
+        response,
+        baseUrl,
+        realmId,
+        accessToken,
+        entityType,
+        mapEntity,
+        retryCount,
+        getFreshToken
       );
-
-      if (retryCount < 3) {
-        await delay(retryDelay);
-        return fetchQuickBooksEntities(
-          baseUrl,
-          realmId,
-          accessToken,
-          entityType,
-          mapEntity,
-          retryCount + 1,
-          getFreshToken
-        );
-      }
-
-      console.error(
-        `Max retries reached for ${entityType} due to rate limiting`
-      );
-      return [];
     }
 
     if (!response.ok) {
@@ -753,7 +813,7 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
   return envTokens;
 }
 
-async function saveTokens(
+async function trySaveQuickBooksTokensToKv(
   tokens: {
     refreshToken: string;
     realmId: string;
@@ -761,70 +821,60 @@ async function saveTokens(
     clientSecret?: string;
     environment?: string;
   },
-  cfEnv?: QuickBooksCloudflareEnv
-) {
-  console.log("[QuickBooks saveTokens] Called with:", {
-    hasClientId: !!tokens.clientId,
-    hasClientSecret: !!tokens.clientSecret,
-    hasKVNamespace: !!cfEnv?.KV_QUICKBOOKS,
-    hasRealmId: !!tokens.realmId,
-    hasRefreshToken: !!tokens.refreshToken,
-  });
-
-  // Try Cloudflare KV first (production)
-  if (cfEnv?.KV_QUICKBOOKS) {
-    try {
-      console.log("[QuickBooks saveTokens] Attempting to save to KV...");
-
-      // Merge with existing tokens to preserve complete credentials
-      let mergedTokens = { ...tokens };
-      const existing = await cfEnv.KV_QUICKBOOKS.get("quickbooks_tokens");
-      if (existing) {
-        const parsed = JSON.parse(existing);
-        mergedTokens = {
-          clientId: tokens.clientId || parsed.clientId,
-          clientSecret: tokens.clientSecret || parsed.clientSecret,
-          environment: tokens.environment || parsed.environment,
-          realmId: tokens.realmId || parsed.realmId,
-          refreshToken: tokens.refreshToken,
-        };
-      }
-
-      await cfEnv.KV_QUICKBOOKS.put(
-        "quickbooks_tokens",
-        JSON.stringify(mergedTokens)
-      );
-      console.log("[QuickBooks saveTokens] ✅ Tokens saved to Cloudflare KV");
-
-      // Verify the save worked
-      const verify = await cfEnv.KV_QUICKBOOKS.get("quickbooks_tokens");
-      if (verify) {
-        console.log(
-          "[QuickBooks saveTokens] ✅ Verified: tokens can be read back from KV"
-        );
-      } else {
-        console.warn(
-          "[QuickBooks saveTokens] ⚠️ Warning: tokens saved but could not be read back"
-        );
-      }
-
-      return true;
-    } catch (error) {
-      console.error("[QuickBooks saveTokens] ❌ Failed to save to KV:", error);
-      if (error instanceof Error) {
-        console.error("[QuickBooks saveTokens] Error message:", error.message);
-        console.error("[QuickBooks saveTokens] Error stack:", error.stack);
-      }
-    }
-  } else {
-    console.log(
-      "[QuickBooks saveTokens] ⚠️ KV namespace not available in cfEnv"
-    );
+  cfEnv: QuickBooksCloudflareEnv
+): Promise<boolean> {
+  const kv = cfEnv.KV_QUICKBOOKS;
+  if (!kv) {
+    return false;
   }
+  try {
+    console.log("[QuickBooks saveTokens] Attempting to save to KV...");
 
-  // Fallback: Try to update Cloudflare Secrets via API
-  // This allows automatic persistence of tokens when KV is not available
-  // Update refresh token and realm ID (obtained from OAuth callback)
+    let mergedTokens = { ...tokens };
+    const existing = await kv.get("quickbooks_tokens");
+    if (existing) {
+      const parsed = JSON.parse(existing);
+      mergedTokens = {
+        clientId: tokens.clientId || parsed.clientId,
+        clientSecret: tokens.clientSecret || parsed.clientSecret,
+        environment: tokens.environment || parsed.environment,
+        realmId: tokens.realmId || parsed.realmId,
+        refreshToken: tokens.refreshToken,
+      };
+    }
+
+    await kv.put("quickbooks_tokens", JSON.stringify(mergedTokens));
+    console.log("[QuickBooks saveTokens] ✅ Tokens saved to Cloudflare KV");
+
+    const verify = await kv.get("quickbooks_tokens");
+    if (verify) {
+      console.log(
+        "[QuickBooks saveTokens] ✅ Verified: tokens can be read back from KV"
+      );
+    } else {
+      console.warn(
+        "[QuickBooks saveTokens] ⚠️ Warning: tokens saved but could not be read back"
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error("[QuickBooks saveTokens] ❌ Failed to save to KV:", error);
+    if (error instanceof Error) {
+      console.error("[QuickBooks saveTokens] Error message:", error.message);
+      console.error("[QuickBooks saveTokens] Error stack:", error.stack);
+    }
+    return false;
+  }
+}
+
+async function persistQuickBooksTokensViaSecretsAndDevFallback(tokens: {
+  refreshToken: string;
+  realmId: string;
+  clientId?: string;
+  clientSecret?: string;
+  environment?: string;
+}): Promise<boolean> {
   let secretsUpdated = false;
 
   if (tokens.refreshToken) {
@@ -865,7 +915,6 @@ async function saveTokens(
     return true;
   }
 
-  // Final fallback: automatically update local env files in development
   if (env.NODE_ENV === "development") {
     try {
       const updated = await updateLocalEnvFiles(tokens);
@@ -882,7 +931,6 @@ async function saveTokens(
       );
     }
 
-    // Fallback to logging if auto-update fails
     console.log(
       "🔑 QuickBooks OAuth Setup - Copy these to your environment variables:"
     );
@@ -892,7 +940,6 @@ async function saveTokens(
     console.log(
       "⚠️  Full token available in OAuth callback response - check browser network tab"
     );
-    // Validate realmId format (typically numeric) before logging
     const safeRealmId = /^[0-9]+$/.test(tokens.realmId)
       ? tokens.realmId
       : "[INVALID_FORMAT]";
@@ -905,6 +952,38 @@ async function saveTokens(
     }
   }
   return false;
+}
+
+async function saveTokens(
+  tokens: {
+    refreshToken: string;
+    realmId: string;
+    clientId?: string;
+    clientSecret?: string;
+    environment?: string;
+  },
+  cfEnv?: QuickBooksCloudflareEnv
+) {
+  console.log("[QuickBooks saveTokens] Called with:", {
+    hasClientId: !!tokens.clientId,
+    hasClientSecret: !!tokens.clientSecret,
+    hasKVNamespace: !!cfEnv?.KV_QUICKBOOKS,
+    hasRealmId: !!tokens.realmId,
+    hasRefreshToken: !!tokens.refreshToken,
+  });
+
+  if (cfEnv?.KV_QUICKBOOKS) {
+    const saved = await trySaveQuickBooksTokensToKv(tokens, cfEnv);
+    if (saved) {
+      return true;
+    }
+  } else {
+    console.log(
+      "[QuickBooks saveTokens] ⚠️ KV namespace not available in cfEnv"
+    );
+  }
+
+  return persistQuickBooksTokensViaSecretsAndDevFallback(tokens);
 }
 
 /**
@@ -1410,6 +1489,75 @@ export async function exchangeAuthorizationCode(
  */
 export { saveTokens };
 
+interface ProfitLossTotals {
+  expenses: number;
+  income: number;
+  netIncome: number;
+}
+
+function firstNumericColValue(colData: any[]): number {
+  for (const col of colData) {
+    const parsed = Number.parseFloat(col?.value || "0");
+    if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
+      return parsed;
+    }
+  }
+  return 0;
+}
+
+function applyProfitLossSectionSummary(
+  row: any,
+  totals: ProfitLossTotals
+): void {
+  if (!row.Summary?.ColData) {
+    return;
+  }
+  const value = firstNumericColValue(row.Summary.ColData);
+  if (row.group === "GrossProfit") {
+    totals.income = value;
+  }
+  if (row.group === "Expenses") {
+    totals.expenses = Math.abs(value);
+  }
+  if (row.group === "NetIncome") {
+    totals.netIncome = value;
+  }
+}
+
+function applyTotalExpensesSubRow(row: any, totals: ProfitLossTotals): void {
+  if (!row.Rows?.Row) {
+    return;
+  }
+  for (const subRow of row.Rows.Row) {
+    if (!subRow.Summary?.ColData) {
+      continue;
+    }
+    const summaryLabel = subRow.Summary.ColData[0]?.value || "";
+    if (summaryLabel !== "Total Expenses") {
+      continue;
+    }
+    for (const col of subRow.Summary.ColData) {
+      const parsed = Number.parseFloat(col?.value || "0");
+      if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
+        totals.expenses = Math.abs(parsed);
+        return;
+      }
+    }
+  }
+}
+
+function processProfitLossReportRow(row: any, totals: ProfitLossTotals): void {
+  if (row.type === "Section" && row.group) {
+    applyProfitLossSectionSummary(row, totals);
+    applyTotalExpensesSubRow(row, totals);
+  }
+  if (row.Rows?.Row) {
+    for (const subRow of row.Rows.Row) {
+      processProfitLossReportRow(subRow, totals);
+    }
+  }
+}
+
 /**
  * Fetches Gross Profit and Total Expenses from QuickBooks Statement of Activity report
  */
@@ -1464,65 +1612,16 @@ export async function fetchQuickBooksFinancialSummary(
     const report = (await response.json()) as any;
     const rows = report.Rows?.Row || [];
 
-    let income = 0;
-    let expenses = 0;
-    let netIncome = 0;
-
-    // Iterate through all rows looking for specific group attributes
-    const processRow = (row: any) => {
-      // Check if this is a Section type with a group attribute
-      if (row.type === "Section" && row.group) {
-        // For sections with Summary, get the numeric value from ColData
-        if (row.Summary?.ColData) {
-          // Find the first column with a numeric value (skip the label column)
-          let value = 0;
-          for (const col of row.Summary.ColData) {
-            const parsed = Number.parseFloat(col?.value || "0");
-            if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
-              value = parsed;
-              break;
-            }
-          }
-
-          if (row.group === "GrossProfit") {
-            income = value;
-          }
-          if (row.group === "Expenses") {
-            expenses = Math.abs(value);
-          }
-          if (row.group === "NetIncome") {
-            netIncome = value;
-          }
-        }
-
-        // Also check Rows within this section for the summary row
-        if (row.Rows?.Row) {
-          for (const subRow of row.Rows.Row) {
-            if (subRow.Summary?.ColData) {
-              const summaryLabel = subRow.Summary.ColData[0]?.value || "";
-              if (summaryLabel === "Total Expenses") {
-                // Find numeric value in the Summary ColData
-                for (const col of subRow.Summary.ColData) {
-                  const parsed = Number.parseFloat(col?.value || "0");
-                  if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
-                    expenses = Math.abs(parsed);
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Process nested rows
-      if (row.Rows?.Row) {
-        row.Rows.Row.forEach(processRow);
-      }
+    const totals: ProfitLossTotals = {
+      expenses: 0,
+      income: 0,
+      netIncome: 0,
     };
 
-    rows.forEach(processRow);
-    return { expenses, income, netIncome };
+    for (const row of rows) {
+      processProfitLossReportRow(row, totals);
+    }
+    return totals;
   } catch (error) {
     console.error("[QuickBooks] Error fetching financial summary:", error);
     return null;

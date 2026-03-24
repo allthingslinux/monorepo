@@ -6,7 +6,7 @@
 
 export type { AuthClient } from "./client";
 export { authClient } from "./client";
-export type { Session } from "./config";
+export type { AuthGetSessionReturn, Session } from "./config";
 export { auth } from "./config";
 export {
   getUser,
