@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
 
 export const siteConfig = {
-  name: "All Things Linux",
   description:
     "A 501(c)(3) non-profit organization empowering the Linux ecosystem through education, collaboration, and support.",
-  url: "https://allthingslinux.org",
-  ogImage: "https://allthingslinux.org/images/og.png",
   links: {
-    github: "https://github.com/allthingslinux",
     discord: "https://discord.gg/linux",
+    github: "https://github.com/allthingslinux",
   },
+  name: "All Things Linux",
+  ogImage: "https://allthingslinux.org/images/og.png",
+  url: "https://allthingslinux.org",
 };
 
 // Helper to determine if we're on the dev environment
@@ -19,40 +19,17 @@ const isDevEnvironment = () => {
 };
 
 export const defaultMetadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: siteConfig.name,
   },
-  description: siteConfig.description,
+  applicationName: siteConfig.name,
   authors: [{ name: "All Things Linux" }],
   creator: "All Things Linux",
-  publisher: "All Things Linux",
-  robots: {
-    index: !isDevEnvironment(), // noindex for dev environments
-    follow: !isDevEnvironment(),
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@allthingslinux",
+  description: siteConfig.description,
+  formatDetection: {
+    telephone: false,
   },
   icons: {
     // icon: [
@@ -138,65 +115,88 @@ export const defaultMetadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   metadataBase: new URL(siteConfig.url),
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
+  openGraph: {
+    description: siteConfig.description,
+    images: [
+      {
+        alt: siteConfig.name,
+        height: 630,
+        url: siteConfig.ogImage,
+        width: 1200,
+      },
+    ],
+    locale: "en_US",
+    siteName: siteConfig.name,
     title: siteConfig.name,
+    type: "website",
+    url: siteConfig.url,
   },
-  applicationName: siteConfig.name,
-  formatDetection: {
-    telephone: false,
+  publisher: "All Things Linux",
+  robots: {
+    index: !isDevEnvironment(), // noindex for dev environments
+    follow: !isDevEnvironment(),
+  },
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    creator: "@allthingslinux",
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    title: siteConfig.name,
   },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
   initialScale: 1,
+  width: "device-width",
 };
 
 export const getPageMetadata = (page: string): Metadata => {
   const pageMetadata: Record<string, Metadata> = {
+    about: {
+      description:
+        "Learn about All Things Linux, our mission, values, and commitment to the Linux community.",
+      title: "About",
+    },
+    apply: {
+      description:
+        "Apply to join All Things Linux and contribute to our community projects.",
+      title: "Apply",
+    },
+    blog: {
+      description:
+        "Stay updated with the latest news, tutorials, and insights about Linux and open source software.",
+      title: "Blog",
+    },
+    "code-of-conduct": {
+      description:
+        "Our community guidelines and code of conduct that ensures a welcoming and inclusive environment for all members.",
+      title: "Code of Conduct",
+    },
+    contribute: {
+      description:
+        "Support All Things Linux through donations, code contributions, volunteering, or community support.",
+      title: "Contribute",
+    },
     home: {
-      title: siteConfig.name,
       description: siteConfig.description,
       openGraph: {
         ...defaultMetadata.openGraph,
-        title: siteConfig.name,
         siteName: undefined,
+        title: siteConfig.name,
       },
+      title: siteConfig.name,
       twitter: {
         ...defaultMetadata.twitter,
         title: siteConfig.name,
       },
     },
-    about: {
-      title: "About",
-      description:
-        "Learn about All Things Linux, our mission, values, and commitment to the Linux community.",
-    },
-    "code-of-conduct": {
-      title: "Code of Conduct",
-      description:
-        "Our community guidelines and code of conduct that ensures a welcoming and inclusive environment for all members.",
-    },
-    blog: {
-      title: "Blog",
-      description:
-        "Stay updated with the latest news, tutorials, and insights about Linux and open source software.",
-    },
-    apply: {
-      title: "Apply",
-      description:
-        "Apply to join All Things Linux and contribute to our community projects.",
-    },
-    contribute: {
-      title: "Contribute",
-      description:
-        "Support All Things Linux through donations, code contributions, volunteering, or community support.",
-    },
     open: {
-      title: "Open",
       description: "View our public financial reports and insights.",
+      title: "Open",
     },
   };
 
@@ -209,20 +209,18 @@ export const getPageMetadata = (page: string): Metadata => {
 export const getDynamicMetadata = (params: {
   title?: string;
   description?: string;
-}): Metadata => {
-  return {
-    ...defaultMetadata,
-    title: params.title,
+}): Metadata => ({
+  ...defaultMetadata,
+  description: params.description,
+  openGraph: {
+    ...defaultMetadata.openGraph,
     description: params.description,
-    openGraph: {
-      ...defaultMetadata.openGraph,
-      title: params.title,
-      description: params.description,
-    },
-    twitter: {
-      ...defaultMetadata.twitter,
-      title: params.title,
-      description: params.description,
-    },
-  };
-};
+    title: params.title,
+  },
+  title: params.title,
+  twitter: {
+    ...defaultMetadata.twitter,
+    description: params.description,
+    title: params.title,
+  },
+});

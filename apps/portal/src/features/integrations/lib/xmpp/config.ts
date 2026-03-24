@@ -41,9 +41,9 @@ export function validateXmppConfig(): void {
       captureException(new Error(msg), {
         level: "error",
         tags: {
-          type: "configuration_error",
-          module: "xmpp_config",
           missing_var: "PROSODY_REST_TOKEN",
+          module: "xmpp_config",
+          type: "configuration_error",
         },
       });
     } catch {
@@ -58,9 +58,9 @@ export function validateXmppConfig(): void {
       captureException(new Error(msg), {
         level: "error",
         tags: {
-          type: "configuration_error",
-          module: "xmpp_config",
           missing_var: "PROSODY_REST_URL",
+          module: "xmpp_config",
+          type: "configuration_error",
         },
       });
     } catch {

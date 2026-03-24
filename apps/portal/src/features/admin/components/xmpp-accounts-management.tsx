@@ -32,7 +32,7 @@ function createXmppAccountColumns() {
   return [
     columnHelper.accessor((row) => row.user?.email ?? row.userId, {
       cell: ({ row }) => {
-        const user = row.original.user;
+        const { user } = row.original;
         if (!user) {
           return (
             <span className="font-mono text-muted-foreground text-sm">

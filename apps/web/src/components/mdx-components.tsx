@@ -327,28 +327,28 @@ const Code = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
 };
 
 const components = {
+  Alert,
+  Image,
+  a: Anchor,
+  blockquote: Blockquote,
+  code: Code,
   h1: Heading1,
   h2: Heading2,
   h3: Heading3,
   h4: Heading4,
   h5: Heading5,
   h6: Heading6,
-  a: Anchor,
-  p: Paragraph,
-  ul: UnorderedList,
-  ol: OrderedList,
-  li: ListItem,
-  blockquote: Blockquote,
-  img: CustomImage,
   hr: HorizontalRule,
-  table: Table,
-  tr: TableRow,
-  th: TableHeader,
-  td: TableCell,
+  img: CustomImage,
+  li: ListItem,
+  ol: OrderedList,
+  p: Paragraph,
   pre: Preformatted,
-  code: Code,
-  Image,
-  Alert,
+  table: Table,
+  td: TableCell,
+  th: TableHeader,
+  tr: TableRow,
+  ul: UnorderedList,
 };
 
 // Standard React Error Boundary
@@ -358,11 +358,11 @@ class MDXErrorBoundary extends React.Component<
 > {
   constructor(props: { children: React.ReactNode }) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { error: null, hasError: false };
   }
 
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
+    return { error, hasError: true };
   }
 
   render() {

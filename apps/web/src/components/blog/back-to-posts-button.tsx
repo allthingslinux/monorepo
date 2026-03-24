@@ -53,7 +53,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
         <p class="text-neutral-200">Loading posts...</p>
       </div>
     `;
-    document.body.appendChild(overlay);
+    document.body.append(overlay);
 
     // Fade in the overlay
     setTimeout(() => {
@@ -84,6 +84,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
 
   return (
     <button
+      type="button"
       className={cn(
         buttonVariants({ variant: "ghost" }),
         isNavigating && "pointer-events-none opacity-70",

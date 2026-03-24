@@ -15,10 +15,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/contribute",
     // Add all other static routes here
   ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
     changeFrequency: "monthly" as const,
+    lastModified: new Date(),
     priority: route === "" ? 1 : 0.8,
+    url: `${baseUrl}${route}`,
   }));
 
   // Add distribution logos to sitemap for better image SEO
@@ -38,31 +38,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "redhat",
     "slackware",
   ].map((distro) => ({
-    url: `${baseUrl}/images/hero/${distro}.png`,
-    lastModified: new Date(),
     changeFrequency: "yearly" as const,
+    lastModified: new Date(),
     priority: 0.3,
+    url: `${baseUrl}/images/hero/${distro}.png`,
   }));
 
   // Get all blog posts and add them to sitemap
   const posts = await getAllPostsAsPostType();
 
   const blogPosts = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.categorySlug}/${post.slug}`,
-    lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,
+    lastModified: new Date(post.date),
     priority: 0.7,
+    url: `${baseUrl}/blog/${post.categorySlug}/${post.slug}`,
   }));
 
   // Get unique categories and add them to sitemap
-  const categories = Array.from(
-    new Set(posts.map((post) => post.categorySlug))
-  );
+  const categories = [...new Set(posts.map((post) => post.categorySlug))];
   const categoryPages = categories.map((category) => ({
-    url: `${baseUrl}/blog/${category}`,
-    lastModified: new Date(),
     changeFrequency: "daily" as const,
+    lastModified: new Date(),
     priority: 0.8,
+    url: `${baseUrl}/blog/${category}`,
   }));
 
   return [...routes, ...distributionLogos, ...categoryPages, ...blogPosts];

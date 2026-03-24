@@ -31,13 +31,11 @@ const FormField = <
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   ...props
-}: ControllerProps<TFieldValues, TName>) => {
-  return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
-    </FormFieldContext.Provider>
-  );
-};
+}: ControllerProps<TFieldValues, TName>) => (
+  <FormFieldContext.Provider value={{ name: props.name }}>
+    <Controller {...props} />
+  </FormFieldContext.Provider>
+);
 
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
@@ -53,11 +51,11 @@ const useFormField = () => {
   const { id } = itemContext;
 
   return {
+    formDescriptionId: `${id}-form-item-description`,
+    formItemId: `${id}-form-item`,
+    formMessageId: `${id}-form-item-message`,
     id,
     name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
     ...fieldState,
   };
 };
@@ -115,11 +113,11 @@ function FormControl({ children, ...props }: FormControlProps) {
     child,
     mergeProps(
       {
-        id: formItemId,
         "aria-describedby": !error
           ? `${formDescriptionId}`
           : `${formDescriptionId} ${formMessageId}`,
         "aria-invalid": !!error,
+        id: formItemId,
       },
       mergeProps(child.props as Record<string, unknown>, props)
     )

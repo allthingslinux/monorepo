@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   MdCookie,
   MdGavel,
@@ -5,63 +6,55 @@ import {
   MdSecurity,
 } from "react-icons/md";
 
-const Privacy = () => {
-  return (
-    <a
-      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
-      href="https://www.iubenda.com/privacy-policy/97069484/full-legal"
-      rel="noopener noreferrer"
-      target="_blank"
-      title="Privacy Policy"
-    >
-      <MdOutlinePrivacyTip className="h-4 w-4" />
-      Privacy Policy
-    </a>
-  );
-};
+const Privacy = () => (
+  <a
+    className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
+    href="https://www.iubenda.com/privacy-policy/97069484/full-legal"
+    rel="noopener noreferrer"
+    target="_blank"
+    title="Privacy Policy"
+  >
+    <MdOutlinePrivacyTip className="h-4 w-4" />
+    Privacy Policy
+  </a>
+);
 
-const Cookies = () => {
-  return (
-    <a
-      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
-      href="https://www.iubenda.com/privacy-policy/97069484/cookie-policy"
-      rel="noopener noreferrer"
-      target="_blank"
-      title="Cookie Policy"
-    >
-      <MdCookie className="h-4 w-4" />
-      Cookie Policy
-    </a>
-  );
-};
+const Cookies = () => (
+  <a
+    className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
+    href="https://www.iubenda.com/privacy-policy/97069484/cookie-policy"
+    rel="noopener noreferrer"
+    target="_blank"
+    title="Cookie Policy"
+  >
+    <MdCookie className="h-4 w-4" />
+    Cookie Policy
+  </a>
+);
 
-const Terms = () => {
-  return (
-    <a
-      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
-      href="https://www.iubenda.com/terms-and-conditions/97069484"
-      rel="noopener noreferrer"
-      target="_blank"
-      title="Terms and Conditions"
-    >
-      <MdGavel className="h-4 w-4" />
-      Terms & Conditions
-    </a>
-  );
-};
+const Terms = () => (
+  <a
+    className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
+    href="https://www.iubenda.com/terms-and-conditions/97069484"
+    rel="noopener noreferrer"
+    target="_blank"
+    title="Terms and Conditions"
+  >
+    <MdGavel className="h-4 w-4" />
+    Terms & Conditions
+  </a>
+);
 
-const Security = () => {
-  return (
-    <a
-      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
-      href="/security"
-      title="Security - Responsible Disclosure"
-    >
-      <MdSecurity className="h-4 w-4" />
-      Security
-    </a>
-  );
-};
+const Security = () => (
+  <Link
+    className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
+    href="/security"
+    title="Security - Responsible Disclosure"
+  >
+    <MdSecurity className="h-4 w-4" />
+    Security
+  </Link>
+);
 
 // const PrivacyChoices = () => {
 //   useEffect(() => {

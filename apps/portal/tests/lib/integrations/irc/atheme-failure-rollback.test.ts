@@ -32,16 +32,16 @@ vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: {
     atheme: {
-      jsonrpcUrl: "http://mock-atheme/jsonrpc",
       insecureSkipVerify: false,
+      jsonrpcUrl: "http://mock-atheme/jsonrpc",
     },
     port: 6697,
     server: "irc.atl.chat",
     unreal: {
-      jsonrpcUrl: undefined,
-      rpcUser: undefined,
-      rpcPassword: undefined,
       insecureSkipVerify: false,
+      jsonrpcUrl: undefined,
+      rpcPassword: undefined,
+      rpcUser: undefined,
     },
   },
   isIrcConfigured: () => true,

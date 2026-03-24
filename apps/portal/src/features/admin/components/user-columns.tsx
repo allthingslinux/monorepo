@@ -198,8 +198,8 @@ export function createUserColumns(mutations: UserMutations): ColumnDef<User>[] {
             disabled={mutations.setRole.isPending}
             onValueChange={(newRole) =>
               mutations.setRole.mutate({
-                userId: user.id,
                 role: newRole as "user" | "staff" | "admin",
+                userId: user.id,
               })
             }
             value={role}

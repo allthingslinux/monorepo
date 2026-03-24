@@ -23,7 +23,6 @@ type ProjectStatus =
 
 const projects = [
   {
-    title: "atl.wiki",
     description:
       "Easy to use guides and references for the Linux and FOSS ecosystem.",
     icon: (
@@ -31,9 +30,9 @@ const projects = [
     ),
     link: "https://atl.wiki",
     status: "v1.1" as ProjectStatus,
+    title: "atl.wiki",
   },
   {
-    title: ".gg/linux",
     description:
       "Our official Discord server, the heart of our community, growing by the day.",
     icon: (
@@ -41,25 +40,25 @@ const projects = [
     ),
     link: "https://discord.gg/linux",
     status: "active" as ProjectStatus,
+    title: ".gg/linux",
   },
   {
-    title: "atl.tools",
     description:
       "Self-hosted applications, services and mail, always free - more coming soon!",
     icon: <TbStack2 className="size-8 text-rose-400 sm:size-10 md:size-12" />,
     link: "https://atl.tools",
     status: "beta" as ProjectStatus,
+    title: "atl.tools",
   },
   {
-    title: "atl.chat",
     description:
       "Chat with the community via our bridged IRC and XMPP servers.",
     icon: <TbMessage2 className="size-8 text-sky-500 sm:size-10 md:size-12" />,
     link: "https://github.com/allthingslinux/atl.chat",
     status: "coming soon" as ProjectStatus,
+    title: "atl.chat",
   },
   {
-    title: "tux",
     description:
       "Tux is the all-in-one open source Discord bot that powers our community.",
     icon: (
@@ -67,9 +66,9 @@ const projects = [
     ),
     link: "https://github.com/allthingslinux/tux",
     status: "v0.1.0-rc.5" as ProjectStatus,
+    title: "tux",
   },
   {
-    title: "atl.sh",
     description:
       "Our pubnix/tilde services to facilitate free experimentation and learning.",
     icon: (
@@ -77,9 +76,9 @@ const projects = [
     ),
     link: "#",
     status: "development" as ProjectStatus,
+    title: "atl.sh",
   },
   {
-    title: "portal",
     description:
       "Centralized hub and identity provider for all things, All Things Linux.",
     icon: (
@@ -87,22 +86,23 @@ const projects = [
     ),
     link: "https://github.com/allthingslinux/portal",
     status: "coming soon" as ProjectStatus,
+    title: "portal",
   },
   {
-    title: "atl.dev",
     description:
       "Hosting, version control, storage and more for developers and FOSS projects.",
     icon: <TbCode className="size-8 text-green-300 sm:size-10 md:size-12" />,
     link: "#",
     status: "development" as ProjectStatus,
+    title: "atl.dev",
   },
   {
-    title: "iso archive",
     description:
       "An initiative to archive ISOs and their metadata for future generations.",
     icon: <TbFiles className="size-8 text-sky-400 sm:size-10 md:size-12" />,
     link: "https://github.com/allthingslinux/iso.atl.dev",
     status: "development" as ProjectStatus,
+    title: "iso archive",
   },
 ];
 
@@ -128,24 +128,24 @@ function StatusBadge({ status }: { status: ProjectStatus }) {
 
   const statusConfig: Record<string, { label: string; className: string }> = {
     active: {
-      label: "Active",
       className: "bg-green-500/20 text-white border-green-500/30",
+      label: "Active",
     },
     beta: {
-      label: "Beta",
       className: "bg-orange-500/20 text-white border-orange-500/30",
-    },
-    development: {
-      label: "In Development",
-      className: "bg-blue-500/20 text-white border-blue-500/30",
-    },
-    paused: {
-      label: "Paused",
-      className: "bg-gray-500/20 text-white border-gray-500/30",
+      label: "Beta",
     },
     "coming soon": {
-      label: "Coming Soon",
       className: "bg-amber-500/20 text-white border-amber-500/30",
+      label: "Coming Soon",
+    },
+    development: {
+      className: "bg-blue-500/20 text-white border-blue-500/30",
+      label: "In Development",
+    },
+    paused: {
+      className: "bg-gray-500/20 text-white border-gray-500/30",
+      label: "Paused",
     },
   };
 
@@ -212,6 +212,21 @@ const Projects = memo(() => {
   const regularProjects = projects.slice(0, regularRowsCount);
   const lastRowProjects = projects.slice(regularRowsCount);
 
+  const lastRowGridClass =
+    shouldCenterLastRow && lastRowCount === 2
+      ? "flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-5 md:gap-6 lg:flex lg:flex-row lg:justify-center"
+      : "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:gap-6 lg:grid-cols-3";
+
+  const getLastRowItemClass = () => {
+    if (shouldCenterLastRow && lastRowCount === 1) {
+      return "lg:col-start-2";
+    }
+    if (shouldCenterLastRow && lastRowCount === 2) {
+      return "w-full sm:w-auto lg:w-[calc(33.333%-0.67rem)]";
+    }
+    return "";
+  };
+
   return (
     <section className="py-4 md:py-6">
       <div className="mx-auto w-full max-w-[1400px] px-3 sm:px-4 md:px-6">
@@ -233,26 +248,9 @@ const Projects = memo(() => {
         </div>
 
         {lastRowProjects.length > 0 && (
-          <div
-            className={`mt-4 sm:mt-5 md:mt-6 ${
-              shouldCenterLastRow && lastRowCount === 1
-                ? "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:gap-6 lg:grid-cols-3"
-                : shouldCenterLastRow && lastRowCount === 2
-                  ? "flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-5 md:gap-6 lg:flex lg:flex-row lg:justify-center"
-                  : "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:gap-6 lg:grid-cols-3"
-            }`}
-          >
-            {lastRowProjects.map((project, index) => (
-              <div
-                className={
-                  shouldCenterLastRow && lastRowCount === 1
-                    ? "lg:col-start-2"
-                    : shouldCenterLastRow && lastRowCount === 2
-                      ? "w-full sm:w-auto lg:w-[calc(33.333%-0.67rem)]"
-                      : ""
-                }
-                key={project.title}
-              >
+          <div className={`mt-4 sm:mt-5 md:mt-6 ${lastRowGridClass}`}>
+            {lastRowProjects.map((project) => (
+              <div className={getLastRowItemClass()} key={project.title}>
                 <ProjectCard project={project} />
               </div>
             ))}

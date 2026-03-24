@@ -16,28 +16,24 @@ export default function Loading() {
 
           <div className="mx-auto mt-20 grid max-w-screen-xl grid-cols-1 gap-20 lg:grid-cols-4">
             <div className="hidden flex-col gap-2 lg:flex">
-              {Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <Skeleton className="h-10 w-full rounded-md" key={i} />
-                ))}
+              {Array.from({ length: 6 }, (_, i) => (
+                <Skeleton className="h-10 w-full rounded-md" key={i} />
+              ))}
             </div>
 
             <div className="lg:col-span-3">
-              {Array(5)
-                .fill(0)
-                .map((_, i) => (
-                  <div className="mb-8 flex flex-col gap-3" key={i}>
-                    <Skeleton className="h-5 w-24 rounded-md" />
-                    <Skeleton className="h-8 w-full rounded-md" />
-                    <Skeleton className="h-20 w-full rounded-md" />
-                    <div className="mt-3 flex items-center gap-2">
-                      <Skeleton className="h-4 w-32 rounded-md" />
-                      <Skeleton className="h-4 w-40 rounded-md" />
-                    </div>
-                    <Separator className="my-8" />
+              {Array.from({ length: 5 }, (_, i) => (
+                <div className="mb-8 flex flex-col gap-3" key={i}>
+                  <Skeleton className="h-5 w-24 rounded-md" />
+                  <Skeleton className="h-8 w-full rounded-md" />
+                  <Skeleton className="h-20 w-full rounded-md" />
+                  <div className="mt-3 flex items-center gap-2">
+                    <Skeleton className="h-4 w-32 rounded-md" />
+                    <Skeleton className="h-4 w-40 rounded-md" />
                   </div>
-                ))}
+                  <Separator className="my-8" />
+                </div>
+              ))}
             </div>
           </div>
         </div>

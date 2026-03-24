@@ -291,8 +291,8 @@ export const scopePatterns = {
   ): T =>
     withLocalScope(
       {
-        tags: { endpoint, method, ...(userId && { user_id: userId }) },
         context: { api: { endpoint, method } },
+        tags: { endpoint, method, ...(userId && { user_id: userId }) },
       },
       fn
     ),
@@ -300,8 +300,8 @@ export const scopePatterns = {
   jobContext: <T>(jobName: string, jobId: string, fn: () => T): T =>
     withIsolatedScope(
       {
-        tags: { job_name: jobName, job_id: jobId },
-        extra: { job: { name: jobName, id: jobId } },
+        extra: { job: { id: jobId, name: jobName } },
+        tags: { job_id: jobId, job_name: jobName },
       },
       fn
     ),
@@ -485,9 +485,9 @@ export const instrumentQueueProducer = async <T>(
     return await startSpan(
       {
         attributes: {
-          "messaging.message.id": options.messageId,
           "messaging.destination.name": options.queueName,
           "messaging.message.body.size": options.messageSize,
+          "messaging.message.id": options.messageId,
         },
         name: "queue_producer",
         op: "queue.publish",
@@ -527,9 +527,9 @@ export const instrumentQueueConsumer = async <T>(
             try {
               const result = await startSpan(
                 {
+                  attributes: buildQueueConsumerAttributes(options),
                   name: "queue_consumer",
                   op: "queue.process",
-                  attributes: buildQueueConsumerAttributes(options),
                 },
                 () => {
                   consumerExecuted = true;
@@ -781,9 +781,9 @@ export const spanMetrics = {
     duration: number,
     status: number
   ) => ({
+    "http.duration_ms": duration,
     "http.endpoint": endpoint,
     "http.method": method,
-    "http.duration_ms": duration,
     "http.status_code": status,
   }),
 
@@ -793,9 +793,9 @@ export const spanMetrics = {
     duration: number,
     success: boolean
   ) => ({
+    "auth.duration_ms": duration,
     "auth.operation": operation,
     "auth.provider": provider,
-    "auth.duration_ms": duration,
     "auth.success": success,
   }),
 
@@ -805,9 +805,9 @@ export const spanMetrics = {
     duration: number,
     rows?: number
   ) => ({
+    "db.duration_ms": duration,
     "db.operation": operation,
     "db.table": table,
-    "db.duration_ms": duration,
     ...(rows !== undefined && { "db.rows_affected": rows }),
   }),
 };
@@ -977,15 +977,15 @@ export const portalMetrics = {
     rows?: number
   ) => {
     incrementCounter("db.query", 1, {
-      attributes: { table, operation },
+      attributes: { operation, table },
     });
     recordDistribution("db.duration", duration, {
-      attributes: { table, operation },
+      attributes: { operation, table },
       unit: "millisecond",
     });
     if (rows !== undefined) {
       recordDistribution("db.rows", rows, {
-        attributes: { table, operation },
+        attributes: { operation, table },
       });
     }
   },

@@ -91,9 +91,9 @@ function DataTableInner<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onSortingChange: setSorting,
     state: {
-      sorting,
       columnFilters,
       columnVisibility,
+      sorting,
     },
   });
 

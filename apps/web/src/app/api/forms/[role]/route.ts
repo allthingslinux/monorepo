@@ -150,8 +150,8 @@ export async function POST(
 
     // Construct payload for the event
     const submissionPayload: SubmissionPayload = {
-      roleData: roleWithGeneralQuestions,
       formData: typedFormObject,
+      roleData: roleWithGeneralQuestions,
       timestamp,
     };
 
@@ -177,7 +177,7 @@ export async function POST(
     );
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { message: "Submission validation failed", error: error.issues },
+        { error: error.issues, message: "Submission validation failed" },
         { status: 400 }
       );
     }
@@ -186,7 +186,7 @@ export async function POST(
       errorMessage = error.message;
     }
     return NextResponse.json(
-      { message: "Error processing submission", error: errorMessage },
+      { error: errorMessage, message: "Error processing submission" },
       { status: 500 }
     );
   }

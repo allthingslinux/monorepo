@@ -35,7 +35,7 @@ export function FinancialSupportDialog() {
             <br /> <br />
             Below is a breakdown of the fees that we are charged on your
             donations. These are included in the total amount you donate, so you
-            don't have to worry about any additional fees.
+            don&apos;t have to worry about any additional fees.
             <br /> <br />
             In general Open Collective is the best platform to donate on, it has
             the most donation options and charges the lowest fees (via Stripe

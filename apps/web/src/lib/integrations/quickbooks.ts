@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
@@ -47,9 +48,9 @@ export async function getCloudflareEnv(): Promise<
     console.log(
       "[QuickBooks getCloudflareEnv] ⚠️ getCloudflareContext() returned but KV_QUICKBOOKS not found:",
       {
+        envKeys: context?.env ? Object.keys(context.env) : [],
         hasContext: !!context,
         hasEnv: !!context?.env,
-        envKeys: context?.env ? Object.keys(context.env) : [],
       }
     );
   } catch (error) {
@@ -169,10 +170,10 @@ export interface QuickBooksEntity {
         name?: string;
       };
     };
-    LinkedTxn?: Array<{
+    LinkedTxn?: {
       TxnId?: string;
       TxnType?: string;
-    }>;
+    }[];
   }[];
   PaymentType?: string;
   PrivateNote?: string;
@@ -205,9 +206,7 @@ interface CachedToken {
 let tokenCache: CachedToken | null = null;
 
 // Check if we should use caching (KV for Cloudflare, in-memory for Node.js)
-const shouldCacheTokens = () => {
-  return true; // Always cache, but use KV when available
-};
+const shouldCacheTokens = () => true;
 
 // KV cache key for tokens
 const TOKEN_CACHE_KEY = "quickbooks_tokens_cache";
@@ -227,10 +226,10 @@ function getQuickBooksApiBaseUrl(
 
 // Discovery document URLs
 const DISCOVERY_URLS = {
-  sandbox:
-    "https://developer.api.intuit.com/.well-known/openid_sandbox_configuration",
   production:
     "https://developer.api.intuit.com/.well-known/openid_configuration",
+  sandbox:
+    "https://developer.api.intuit.com/.well-known/openid_sandbox_configuration",
 } as const;
 
 // Discovery document interface
@@ -317,11 +316,11 @@ async function getQuickBooksOAuthTokenUrl(
  */
 export function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 /**
@@ -365,16 +364,16 @@ export async function getAccessToken(
   try {
     const oauthUrl = await getQuickBooksOAuthTokenUrl(environment);
     const response = await fetch(oauthUrl, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`),
-      },
       body: new URLSearchParams({
         grant_type: "refresh_token",
         refresh_token: refreshToken,
       }),
+      headers: {
+        Accept: "application/json",
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
       signal: controller.signal,
     });
 
@@ -432,8 +431,8 @@ export async function getAccessToken(
     const cacheData: CachedToken = {
       accessToken: tokens.access_token,
       expiresAt: now + expiresInMs,
-      refreshToken: tokens.refresh_token,
       lastRefreshed: now,
+      refreshToken: tokens.refresh_token,
     };
 
     // Cache in KV if available (Cloudflare Workers)
@@ -534,8 +533,8 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
       `${baseUrl}/v3/company/${realmId}/query?query=SELECT * FROM ${entityType} MAXRESULTS 100`,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           Accept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         signal: controller.signal,
       }
@@ -602,7 +601,7 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
       );
 
       if (retryCount < 3) {
-        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        await delay(retryDelay);
         return fetchQuickBooksEntities(
           baseUrl,
           realmId,
@@ -663,11 +662,11 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
         try {
           const parsed = JSON.parse(tokens);
           console.log("[QuickBooks] Parsed tokens:", {
+            environment: parsed.environment,
             hasClientId: !!parsed.clientId,
             hasClientSecret: !!parsed.clientSecret,
-            hasRefreshToken: !!parsed.refreshToken,
             hasRealmId: !!parsed.realmId,
-            environment: parsed.environment,
+            hasRefreshToken: !!parsed.refreshToken,
           });
           // Verify required fields
           if (
@@ -686,8 +685,8 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
             {
               hasClientId: !!parsed.clientId,
               hasClientSecret: !!parsed.clientSecret,
-              hasRefreshToken: !!parsed.refreshToken,
               hasRealmId: !!parsed.realmId,
+              hasRefreshToken: !!parsed.refreshToken,
             }
           );
         } catch (parseError) {
@@ -738,17 +737,17 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
   const envTokens = {
     clientId: env.QUICKBOOKS_CLIENT_ID,
     clientSecret: env.QUICKBOOKS_CLIENT_SECRET,
-    refreshToken: env.QUICKBOOKS_REFRESH_TOKEN,
-    realmId: env.QUICKBOOKS_REALM_ID,
     environment: env.QUICKBOOKS_ENVIRONMENT || "sandbox",
+    realmId: env.QUICKBOOKS_REALM_ID,
+    refreshToken: env.QUICKBOOKS_REFRESH_TOKEN,
   };
 
   console.log("[QuickBooks] Using environment variables:", {
+    environment: envTokens.environment,
     hasClientId: !!envTokens.clientId,
     hasClientSecret: !!envTokens.clientSecret,
-    hasRefreshToken: !!envTokens.refreshToken,
     hasRealmId: !!envTokens.realmId,
-    environment: envTokens.environment,
+    hasRefreshToken: !!envTokens.refreshToken,
   });
 
   return envTokens;
@@ -765,11 +764,11 @@ async function saveTokens(
   cfEnv?: QuickBooksCloudflareEnv
 ) {
   console.log("[QuickBooks saveTokens] Called with:", {
-    hasKVNamespace: !!cfEnv?.KV_QUICKBOOKS,
     hasClientId: !!tokens.clientId,
     hasClientSecret: !!tokens.clientSecret,
-    hasRefreshToken: !!tokens.refreshToken,
+    hasKVNamespace: !!cfEnv?.KV_QUICKBOOKS,
     hasRealmId: !!tokens.realmId,
+    hasRefreshToken: !!tokens.refreshToken,
   });
 
   // Try Cloudflare KV first (production)
@@ -785,9 +784,9 @@ async function saveTokens(
         mergedTokens = {
           clientId: tokens.clientId || parsed.clientId,
           clientSecret: tokens.clientSecret || parsed.clientSecret,
-          refreshToken: tokens.refreshToken,
-          realmId: tokens.realmId || parsed.realmId,
           environment: tokens.environment || parsed.environment,
+          realmId: tokens.realmId || parsed.realmId,
+          refreshToken: tokens.refreshToken,
         };
       }
 
@@ -1024,10 +1023,10 @@ async function updateCloudflareSecret(
   console.log(
     "[QuickBooks updateCloudflareSecret] Attempting to update secret:",
     {
-      secretName,
-      hasApiToken: !!apiToken,
       hasAccountId: !!accountId,
+      hasApiToken: !!apiToken,
       qbEnvironment,
+      secretName,
     }
   );
 
@@ -1053,16 +1052,16 @@ async function updateCloudflareSecret(
       : `https://api.cloudflare.com/client/v4/workers/scripts/${workerName}`;
 
     const response = await fetch(`${baseUrl}/secrets`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         name: secretName,
         text: secretValue,
         type: "secret_text",
       }),
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
     });
 
     if (response.ok) {
@@ -1104,8 +1103,8 @@ export async function fetchQuickBooksTransactions(
       {
         hasClientId: !!tokens.clientId,
         hasClientSecret: !!tokens.clientSecret,
-        hasRefreshToken: !!tokens.refreshToken,
         hasRealmId: !!tokens.realmId,
+        hasRefreshToken: !!tokens.refreshToken,
       }
     );
     return [];
@@ -1231,15 +1230,17 @@ export async function fetchQuickBooksTransactions(
             purchase.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
               ?.name || "Uncategorized";
           return {
-            id: purchase.Id,
-            txnDate: purchase.TxnDate,
             amount: -Math.abs(purchase.TotalAmt),
+            description: category,
+            id: purchase.Id,
+            status: "reconciled" as const,
+            txnDate: purchase.TxnDate,
             type: "Expense",
             vendorName: purchase.EntityRef?.name || "Unknown Vendor",
-            description: category,
-            status: "reconciled" as const,
           };
-        }
+        },
+        0,
+        getFreshToken
       ),
       fetchQuickBooksEntities(
         baseUrl,
@@ -1251,15 +1252,17 @@ export async function fetchQuickBooksTransactions(
             invoice.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
               ?.name || "Uncategorized";
           return {
-            id: invoice.Id,
-            txnDate: invoice.TxnDate,
             amount: invoice.TotalAmt,
-            type: "Invoice",
             customerName: invoice.CustomerRef?.name || "Unknown Customer",
             description: category,
+            id: invoice.Id,
             status: "pending" as const,
+            txnDate: invoice.TxnDate,
+            type: "Invoice",
           };
-        }
+        },
+        0,
+        getFreshToken
       ),
       fetchQuickBooksEntities(
         baseUrl,
@@ -1271,15 +1274,17 @@ export async function fetchQuickBooksTransactions(
             payment.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
               ?.name || "Uncategorized";
           return {
-            id: payment.Id,
-            txnDate: payment.TxnDate,
             amount: payment.TotalAmt,
-            type: "Payment",
             customerName: payment.CustomerRef?.name || "Unknown Customer",
             description: category,
+            id: payment.Id,
             status: "cleared" as const,
+            txnDate: payment.TxnDate,
+            type: "Payment",
           };
-        }
+        },
+        0,
+        getFreshToken
       ),
       fetchQuickBooksEntities(
         baseUrl,
@@ -1312,15 +1317,17 @@ export async function fetchQuickBooksTransactions(
           }
 
           return {
-            id: deposit.Id,
-            txnDate: deposit.TxnDate,
             amount: deposit.TotalAmt,
-            type: "Deposit",
             customerName: entityName,
             description: category,
+            id: deposit.Id,
             status: "cleared" as const,
+            txnDate: deposit.TxnDate,
+            type: "Deposit",
           };
-        }
+        },
+        0,
+        getFreshToken
       ),
     ]);
 
@@ -1355,17 +1362,17 @@ export async function exchangeAuthorizationCode(
   try {
     const oauthUrl = await getQuickBooksOAuthTokenUrl(environment);
     const response = await fetch(oauthUrl, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`),
-      },
       body: new URLSearchParams({
-        grant_type: "authorization_code",
         code,
+        grant_type: "authorization_code",
         redirect_uri: redirectUri,
       }),
+      headers: {
+        Accept: "application/json",
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
       signal: controller.signal,
     });
 
@@ -1471,7 +1478,7 @@ export async function fetchQuickBooksFinancialSummary(
           let value = 0;
           for (const col of row.Summary.ColData) {
             const parsed = Number.parseFloat(col?.value || "0");
-            if (!isNaN(parsed) && col?.value && col.value !== "") {
+            if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
               value = parsed;
               break;
             }
@@ -1497,7 +1504,7 @@ export async function fetchQuickBooksFinancialSummary(
                 // Find numeric value in the Summary ColData
                 for (const col of subRow.Summary.ColData) {
                   const parsed = Number.parseFloat(col?.value || "0");
-                  if (!isNaN(parsed) && col?.value && col.value !== "") {
+                  if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
                     expenses = Math.abs(parsed);
                     break;
                   }
@@ -1515,7 +1522,7 @@ export async function fetchQuickBooksFinancialSummary(
     };
 
     rows.forEach(processRow);
-    return { income, expenses, netIncome };
+    return { expenses, income, netIncome };
   } catch (error) {
     console.error("[QuickBooks] Error fetching financial summary:", error);
     return null;

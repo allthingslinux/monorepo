@@ -222,7 +222,7 @@ async function TransactionsContent() {
           No transactions found
         </div>
         <div className="text-muted-foreground text-xs">
-          If you see "invalid_grant" errors in the logs, you may need to
+          If you see invalid_grant errors in the logs, you may need to
           re-authenticate via the admin setup route.
         </div>
       </div>
@@ -230,26 +230,26 @@ async function TransactionsContent() {
   }
 
   // Use financial summary from QuickBooks if available, otherwise calculate from transactions
-  const stats: TransactionStats = financialSummary
-    ? {
-        total: transactions.length,
-        income: financialSummary.income,
-        expenses: financialSummary.expenses,
-        netIncome: financialSummary.netIncome,
+  let stats: TransactionStats;
+  if (financialSummary) {
+    stats = {
+      expenses: financialSummary.expenses,
+      income: financialSummary.income,
+      netIncome: financialSummary.netIncome,
+      total: transactions.length,
+    };
+  } else {
+    stats = { expenses: 0, income: 0, netIncome: 0, total: 0 };
+    for (const transaction of transactions) {
+      stats.total++;
+      if (transaction.amount >= 0) {
+        stats.income += transaction.amount;
+      } else {
+        stats.expenses += Math.abs(transaction.amount);
       }
-    : transactions.reduce(
-        (acc, transaction) => {
-          acc.total++;
-          if (transaction.amount >= 0) {
-            acc.income += transaction.amount;
-          } else {
-            acc.expenses += Math.abs(transaction.amount);
-          }
-          acc.netIncome = acc.income - acc.expenses;
-          return acc;
-        },
-        { total: 0, income: 0, expenses: 0, netIncome: 0 } as TransactionStats
-      );
+      stats.netIncome = stats.income - stats.expenses;
+    }
+  }
 
   return (
     <div className="space-y-6">

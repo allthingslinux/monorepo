@@ -1,10 +1,8 @@
 /**
  * Paths skipped for Ultracite (oxlint + oxfmt) on staged files — mirror root
- * `.eslintignore` so pre-commit matches `pnpm check`.
+ * `.oxlintrc.json` → `ignorePatterns` so pre-commit matches `pnpm check`.
  */
 const IGNORE_PATH_PREFIXES = [
-  "apps/web/",
-  "apps/docs/",
   "apps/portal/references/",
   "apps/portal/drizzle/",
   "apps/portal/.cursor/skills/",

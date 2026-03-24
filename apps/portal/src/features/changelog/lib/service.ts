@@ -222,10 +222,10 @@ async function fetchRepoReleases(
     };
   } catch (error) {
     return {
-      repoId,
-      repoDisplayName: repo.displayName,
       entries: [],
       error: error instanceof Error ? error.message : "Unknown error",
+      repoDisplayName: repo.displayName,
+      repoId,
     };
   }
 }
@@ -261,10 +261,10 @@ async function fetchRepoCommits(
     };
   } catch (error) {
     return {
-      repoId,
-      repoDisplayName: repo.displayName,
       entries: [],
       error: error instanceof Error ? error.message : "Unknown error",
+      repoDisplayName: repo.displayName,
+      repoId,
     };
   }
 }
@@ -329,7 +329,7 @@ export async function fetchChangelog(
 
   return {
     entries: allEntries,
-    errors: Array.from(errorMap.values()),
+    errors: [...errorMap.values()],
     repos: repoSummaries,
   };
 }

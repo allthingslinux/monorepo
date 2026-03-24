@@ -46,84 +46,84 @@ interface StageProfile {
 function getStageProfile(stage: string): StageProfile {
   if (stage === "prod") {
     return {
-      workerName: "allthingslinux-prod",
-      r2BucketName: "atl-cache-prod",
-      kvNamespaceId: "7bfc722d19ea48b0b35422ac27029dfa",
-      nextPublicUrl: "https://allthingslinux.org",
-      nextPublicApiUrl: "https://allthingslinux.org/api",
-      previewUrls: false,
-      domains: [{ domainName: "allthingslinux.org", adopt: true }],
       adoptWorker: true,
+      domains: [{ adopt: true, domainName: "allthingslinux.org" }],
+      kvNamespaceId: "7bfc722d19ea48b0b35422ac27029dfa",
+      nextPublicApiUrl: "https://allthingslinux.org/api",
+      nextPublicUrl: "https://allthingslinux.org",
+      previewUrls: false,
+      r2BucketName: "atl-cache-prod",
+      workerName: "allthingslinux-prod",
     };
   }
   if (stage === "dev") {
     return {
-      workerName: "allthingslinux-dev",
-      r2BucketName: "atl-cache-dev",
-      kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
-      nextPublicUrl: "https://allthingslinux.dev",
-      nextPublicApiUrl: "https://allthingslinux.dev/api",
-      previewUrls: false,
-      domains: [{ domainName: "allthingslinux.dev", adopt: true }],
       adoptWorker: true,
+      domains: [{ adopt: true, domainName: "allthingslinux.dev" }],
+      kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
+      nextPublicApiUrl: "https://allthingslinux.dev/api",
+      nextPublicUrl: "https://allthingslinux.dev",
+      previewUrls: false,
+      r2BucketName: "atl-cache-dev",
+      workerName: "allthingslinux-dev",
     };
   }
   if (stage.startsWith("pr-")) {
     return {
-      workerName: `allthingslinux-${stage}`,
-      r2BucketName: "atl-cache-dev",
-      kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
-      nextPublicUrl: "https://allthingslinux.dev",
-      nextPublicApiUrl: "https://allthingslinux.dev/api",
-      previewUrls: true,
-      domains: undefined,
       adoptWorker: true,
+      domains: undefined,
+      kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
+      nextPublicApiUrl: "https://allthingslinux.dev/api",
+      nextPublicUrl: "https://allthingslinux.dev",
+      previewUrls: true,
+      r2BucketName: "atl-cache-dev",
+      workerName: `allthingslinux-${stage}`,
     };
   }
   return {
-    workerName: "allthingslinux-local",
-    r2BucketName: "atl-cache-local",
-    kvNamespaceId: "b58a50d9090b46a181322eb96d0c8c90",
-    nextPublicUrl: "http://localhost:8788",
-    nextPublicApiUrl: "http://localhost:8788/api",
-    previewUrls: true,
-    domains: undefined,
     adoptWorker: true,
+    domains: undefined,
+    kvNamespaceId: "b58a50d9090b46a181322eb96d0c8c90",
+    nextPublicApiUrl: "http://localhost:8788/api",
+    nextPublicUrl: "http://localhost:8788",
+    previewUrls: true,
+    r2BucketName: "atl-cache-local",
+    workerName: "allthingslinux-local",
   };
 }
 
 /** Matches `apps/web/wrangler.jsonc` — OpenNext DO cache classes. */
 const MIGRATIONS: WranglerJsonSpec["migrations"] = [
   {
-    tag: "v1",
     new_sqlite_classes: [
       "DOQueueHandler",
       "DOShardedTagCache",
       "BucketCachePurge",
     ],
+    tag: "v1",
   },
 ];
 
 const OPENNEXT_DO_BINDINGS = [
-  { name: "NEXT_CACHE_DO_QUEUE", class_name: "DOQueueHandler" },
-  { name: "NEXT_TAG_CACHE_DO_SHARDED", class_name: "DOShardedTagCache" },
-  { name: "NEXT_CACHE_DO_PURGE", class_name: "BucketCachePurge" },
+  { class_name: "DOQueueHandler", name: "NEXT_CACHE_DO_QUEUE" },
+  { class_name: "DOShardedTagCache", name: "NEXT_TAG_CACHE_DO_SHARDED" },
+  { class_name: "BucketCachePurge", name: "NEXT_CACHE_DO_PURGE" },
 ] as const;
 
 function mergeWrangler(spec: WranglerJsonSpec): WranglerJsonSpec {
   return {
     ...spec,
-    find_additional_modules: true,
-    logpush: true,
-    limits: { cpu_ms: 300_000 },
-    observability: {
-      enabled: true,
-      logs: { invocation_logs: true },
-      head_sampling_rate: 1,
-    },
-    migrations: MIGRATIONS,
     durable_objects: {
       bindings: [...OPENNEXT_DO_BINDINGS],
+    },
+    find_additional_modules: true,
+    limits: { cpu_ms: 300_000 },
+    logpush: true,
+    migrations: MIGRATIONS,
+    observability: {
+      enabled: true,
+      head_sampling_rate: 1,
+      logs: { invocation_logs: true },
     },
   };
 }
@@ -138,10 +138,10 @@ function createStateStore(scope: Scope) {
 }
 
 const app = await alchemy(ALCHEMY_APP_ID, {
-  phase,
   password: process.env.ALCHEMY_PASSWORD,
-  stateStore: createStateStore,
+  phase,
   rootDir: cwd,
+  stateStore: createStateStore,
   ...(process.env.ALCHEMY_PROFILE
     ? { profile: process.env.ALCHEMY_PROFILE }
     : {}),
@@ -151,33 +151,28 @@ const stage = resolveStage();
 const profile = getStageProfile(stage);
 
 const r2 = await R2Bucket("next-inc-cache", {
-  name: profile.r2BucketName,
   adopt: true,
+  name: profile.r2BucketName,
 });
 
 const website = await Nextjs("website", {
-  cwd: path.resolve(cwd),
-  name: profile.workerName,
   adopt: profile.adoptWorker,
-  compatibilityDate: "2025-01-02",
-  compatibilityFlags: ["nodejs_compat", "global_fetch_strictly_public"],
-  limits: { cpu_ms: 300_000 },
-  logpush: true,
-  observability: {
-    enabled: true,
-    headSamplingRate: 1,
-    logs: { invocationLogs: true },
-  },
-  url: profile.previewUrls,
-  previewSubdomains: profile.previewUrls,
-  domains: profile.domains,
   bindings: {
-    NEXT_INC_CACHE_R2_BUCKET: r2,
-    KV_QUICKBOOKS: { type: "kv_namespace", id: profile.kvNamespaceId },
+    IMAGES: Images(),
+    KV_QUICKBOOKS: { id: profile.kvNamespaceId, type: "kv_namespace" },
+    NEXT_CACHE_DO_PURGE: DurableObjectNamespace("next-cache-do-purge", {
+      className: "BucketCachePurge",
+      sqlite: true,
+    }),
     NEXT_CACHE_DO_QUEUE: DurableObjectNamespace("next-cache-do-queue", {
       className: "DOQueueHandler",
       sqlite: true,
     }),
+    NEXT_INC_CACHE_R2_BUCKET: r2,
+    NEXT_PUBLIC_API_URL: profile.nextPublicApiUrl,
+    NEXT_PUBLIC_GITHUB_REPO_NAME: "applications",
+    NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux",
+    NEXT_PUBLIC_URL: profile.nextPublicUrl,
     NEXT_TAG_CACHE_DO_SHARDED: DurableObjectNamespace(
       "next-tag-cache-do-sharded",
       {
@@ -185,27 +180,32 @@ const website = await Nextjs("website", {
         sqlite: true,
       }
     ),
-    NEXT_CACHE_DO_PURGE: DurableObjectNamespace("next-cache-do-purge", {
-      className: "BucketCachePurge",
-      sqlite: true,
-    }),
     WORKER_SELF_REFERENCE: Self,
-    IMAGES: Images(),
-    NEXT_PUBLIC_URL: profile.nextPublicUrl,
-    NEXT_PUBLIC_API_URL: profile.nextPublicApiUrl,
-    NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux",
-    NEXT_PUBLIC_GITHUB_REPO_NAME: "applications",
-  },
-  wrangler: {
-    path: ".alchemy/local/wrangler.jsonc",
-    secrets: true,
-    transform: mergeWrangler,
   },
   build: {
     command:
       "WRANGLER_BUILD_PLATFORM=node pnpm exec opennextjs-cloudflare build",
     env: { NEXTJS_ENV: "production" },
     memoize: process.env.CI ? false : undefined,
+  },
+  compatibilityDate: "2025-01-02",
+  compatibilityFlags: ["nodejs_compat", "global_fetch_strictly_public"],
+  cwd: path.resolve(cwd),
+  domains: profile.domains,
+  limits: { cpu_ms: 300_000 },
+  logpush: true,
+  name: profile.workerName,
+  observability: {
+    enabled: true,
+    headSamplingRate: 1,
+    logs: { invocationLogs: true },
+  },
+  previewSubdomains: profile.previewUrls,
+  url: profile.previewUrls,
+  wrangler: {
+    path: ".alchemy/local/wrangler.jsonc",
+    secrets: true,
+    transform: mergeWrangler,
   },
 });
 
@@ -221,13 +221,13 @@ if (
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
   if (owner && repo && Number.isFinite(prNumber) && prNumber > 0) {
     await GitHubComment("deploy-preview", {
-      owner,
-      repository: repo,
-      issueNumber: prNumber,
       body: `## Deployment preview
 
 Preview URL: ${website.url ?? "(no workers.dev URL — check Cloudflare dashboard)"}
 `,
+      issueNumber: prNumber,
+      owner,
+      repository: repo,
     });
   }
 }

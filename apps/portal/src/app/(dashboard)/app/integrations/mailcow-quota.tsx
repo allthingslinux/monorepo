@@ -17,9 +17,9 @@ export function MailboxQuota({ accountId }: MailboxQuotaProps) {
       const data = await getMailboxUsage(accountId);
       if (data && typeof data === "object") {
         return {
+          messages: Number(data.messages) || 0,
           quota: Number(data.quota) || 0,
           quota_used: Number(data.quota_used) || 0,
-          messages: Number(data.messages) || 0,
         };
       }
       return null;

@@ -26,8 +26,8 @@ export async function GET(
     const [row] = await db
       .select({
         user: {
-          id: user.id,
           email: user.email,
+          id: user.id,
           name: user.name,
         },
         xmppAccount,

@@ -404,9 +404,9 @@ let nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        protocol: "https",
         hostname: "**",
         pathname: "/**",
+        protocol: "https",
       },
     ],
     ...config.images,

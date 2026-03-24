@@ -65,26 +65,26 @@ export const queryKeys = {
     all: ["admin"] as const,
     dashboard: () => [...queryKeys.admin.all, "dashboard"] as const,
     ircAccounts: {
-      lists: () => [...queryKeys.admin.all, "ircAccounts", "list"] as const,
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.ircAccounts.lists(), { filters }] as const,
+      lists: () => [...queryKeys.admin.all, "ircAccounts", "list"] as const,
     },
     mailcowAccounts: {
-      lists: () => [...queryKeys.admin.all, "mailcowAccounts", "list"] as const,
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.mailcowAccounts.lists(), { filters }] as const,
+      lists: () => [...queryKeys.admin.all, "mailcowAccounts", "list"] as const,
     },
     mediawikiAccounts: {
-      lists: () =>
-        [...queryKeys.admin.all, "mediawikiAccounts", "list"] as const,
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.mediawikiAccounts.lists(), { filters }] as const,
+      lists: () =>
+        [...queryKeys.admin.all, "mediawikiAccounts", "list"] as const,
     },
     stats: () => [...queryKeys.admin.all, "stats"] as const,
     xmppAccounts: {
-      lists: () => [...queryKeys.admin.all, "xmppAccounts", "list"] as const,
       list: (filters?: { status?: string; limit?: number; offset?: number }) =>
         [...queryKeys.admin.xmppAccounts.lists(), { filters }] as const,
+      lists: () => [...queryKeys.admin.all, "xmppAccounts", "list"] as const,
     },
   },
 
@@ -98,15 +98,15 @@ export const queryKeys = {
           ...queryKeys.integrations.accounts.all(integrationId),
           "current",
         ] as const,
-      details: (integrationId: string) =>
-        [
-          ...queryKeys.integrations.accounts.all(integrationId),
-          "detail",
-        ] as const,
       detail: (integrationId: string, id: string) =>
         [
           ...queryKeys.integrations.accounts.details(integrationId),
           id,
+        ] as const,
+      details: (integrationId: string) =>
+        [
+          ...queryKeys.integrations.accounts.all(integrationId),
+          "detail",
         ] as const,
     },
     all: ["integrations"] as const,

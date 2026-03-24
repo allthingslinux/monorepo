@@ -7,7 +7,7 @@ export default function ClientScrollToTop() {
   return (
     <Button
       className="flex items-center gap-2"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => window.scrollTo({ behavior: "smooth", top: 0 })}
       size="sm"
       variant="outline"
     >

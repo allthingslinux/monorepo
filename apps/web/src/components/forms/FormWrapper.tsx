@@ -78,11 +78,11 @@ export default function FormWrapper({
         <div className="space-y-8">
           {visibleQuestions.map((q) => {
             const commonProps = {
-              name: q.name,
-              label: q.question,
-              required: !q.optional,
               description: q.description,
               disabled: isSubmitting,
+              label: q.question,
+              name: q.name,
+              required: !q.optional,
             };
 
             switch (q.type) {

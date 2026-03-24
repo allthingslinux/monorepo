@@ -33,16 +33,14 @@ export default function BlogPostLoading() {
 
         {/* Content loading skeleton */}
         <div className="space-y-6">
-          {Array(8)
-            .fill(0)
-            .map((_, i) => (
-              <div className="space-y-3" key={i}>
-                {i % 3 === 0 && <Skeleton className="h-8 w-2/3 rounded-md" />}
-                <Skeleton className="h-4 w-full rounded-md" />
-                <Skeleton className="h-4 w-full rounded-md" />
-                {i % 2 === 0 && <Skeleton className="h-4 w-4/5 rounded-md" />}
-              </div>
-            ))}
+          {Array.from({ length: 8 }, (_, i) => (
+            <div className="space-y-3" key={i}>
+              {i % 3 === 0 && <Skeleton className="h-8 w-2/3 rounded-md" />}
+              <Skeleton className="h-4 w-full rounded-md" />
+              <Skeleton className="h-4 w-full rounded-md" />
+              {i % 2 === 0 && <Skeleton className="h-4 w-4/5 rounded-md" />}
+            </div>
+          ))}
         </div>
 
         <hr className="mt-12" />

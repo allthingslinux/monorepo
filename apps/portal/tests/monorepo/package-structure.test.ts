@@ -26,7 +26,7 @@ function getPackageDirs(): string[] {
 /** Read and parse a package's package.json */
 function readPackageJson(pkgDir: string): Record<string, unknown> {
   const filePath = path.join(PACKAGES_DIR, pkgDir, "package.json");
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 /** Non-config packages that should follow the standard library pattern */

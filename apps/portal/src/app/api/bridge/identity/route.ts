@@ -121,15 +121,15 @@ async function lookupByDiscordId(discordId: string) {
 
   return Response.json({
     identity: {
-      user_id: userId,
-      username: profile.username,
+      avatar_url: profile.avatarUrl ?? null,
       discord_id: discordId,
       irc_nick: irc?.nick ?? null,
       irc_status: irc?.status ?? null,
+      user_id: userId,
+      username: profile.username,
       xmpp_jid: xmpp?.jid ?? null,
-      xmpp_username: xmpp?.username ?? null,
       xmpp_status: xmpp?.status ?? null,
-      avatar_url: profile.avatarUrl ?? null,
+      xmpp_username: xmpp?.username ?? null,
     },
     ok: true,
   });
@@ -157,15 +157,15 @@ async function lookupByIrcNick(ircNick: string) {
 
   return Response.json({
     identity: {
-      user_id: active.userId,
-      username: profile.username,
+      avatar_url: profile.avatarUrl ?? null,
       discord_id: discordAcc?.accountId ?? null,
       irc_nick: active.nick,
       irc_status: active.status,
+      user_id: active.userId,
+      username: profile.username,
       xmpp_jid: xmpp?.jid ?? null,
-      xmpp_username: xmpp?.username ?? null,
       xmpp_status: xmpp?.status ?? null,
-      avatar_url: profile.avatarUrl ?? null,
+      xmpp_username: xmpp?.username ?? null,
     },
     ok: true,
   });
@@ -193,15 +193,15 @@ async function lookupByXmppJid(xmppJid: string) {
 
   return Response.json({
     identity: {
-      user_id: xmpp.userId,
-      username: profile.username,
+      avatar_url: profile.avatarUrl ?? null,
       discord_id: discordAcc?.accountId ?? null,
       irc_nick: irc?.nick ?? null,
       irc_status: irc?.status ?? null,
+      user_id: xmpp.userId,
+      username: profile.username,
       xmpp_jid: xmpp.jid,
-      xmpp_username: xmpp.username,
       xmpp_status: xmpp.status,
-      avatar_url: profile.avatarUrl ?? null,
+      xmpp_username: xmpp.username,
     },
     ok: true,
   });

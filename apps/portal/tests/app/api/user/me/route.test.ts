@@ -83,13 +83,13 @@ vi.mock("@portal/db/schema/auth", () => ({
     userId: "userId",
   },
   user: {
-    id: "id",
-    name: "name",
-    email: "email",
-    image: "image",
-    role: "role",
-    emailVerified: "emailVerified",
     createdAt: "createdAt",
+    email: "email",
+    emailVerified: "emailVerified",
+    id: "id",
+    image: "image",
+    name: "name",
+    role: "role",
   },
   verification: {},
 }));
@@ -104,27 +104,27 @@ vi.mock("@portal/db/schema/api-keys", () => ({
 
 vi.mock("@portal/db/schema/oauth", () => ({
   oauthAccessToken: {
-    id: "id",
     clientId: "clientId",
-    userId: "userId",
-    sessionId: "sessionId",
+    id: "id",
     refreshId: "refreshId",
+    sessionId: "sessionId",
+    userId: "userId",
   },
   oauthClient: {
-    id: "id",
     clientId: "clientId",
+    id: "id",
     userId: "userId",
   },
   oauthConsent: {
-    id: "id",
     clientId: "clientId",
+    id: "id",
     userId: "userId",
   },
   oauthRefreshToken: {
-    id: "id",
     clientId: "clientId",
-    userId: "userId",
+    id: "id",
     sessionId: "sessionId",
+    userId: "userId",
   },
 }));
 
@@ -197,7 +197,7 @@ describe("GET /api/user/me", () => {
 
   it("should return user data for authenticated user", async () => {
     mockRequireAuth.mockResolvedValue({
-      session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      session: { user: { email: "test@example.com", id: "user-1" } } as never,
       userId: "user-1",
     });
 
@@ -236,7 +236,7 @@ describe("GET /api/user/me", () => {
 
   it("should return 404 when user is not found", async () => {
     mockRequireAuth.mockResolvedValue({
-      session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      session: { user: { email: "test@example.com", id: "user-1" } } as never,
       userId: "user-1",
     });
 
@@ -276,7 +276,7 @@ describe("GET /api/user/me", () => {
 
   it("should handle database errors", async () => {
     mockRequireAuth.mockResolvedValue({
-      session: { user: { id: "user-1", email: "test@example.com" } } as never,
+      session: { user: { email: "test@example.com", id: "user-1" } } as never,
       userId: "user-1",
     });
 

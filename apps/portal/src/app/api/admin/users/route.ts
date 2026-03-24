@@ -123,8 +123,8 @@ export async function GET(request: NextRequest) {
           : null,
         mediawikiAccount: row.mediawikiWikiUsername
           ? {
-              wikiUsername: row.mediawikiWikiUsername,
               status: row.mediawikiStatus,
+              wikiUsername: row.mediawikiWikiUsername,
             }
           : null,
         name: row.name,
@@ -135,18 +135,18 @@ export async function GET(request: NextRequest) {
         xmppAccount: row.xmppJid
           ? {
               jid: row.xmppJid,
-              username: row.xmppUsername,
               status: row.xmppStatus,
+              username: row.xmppUsername,
             }
           : null,
       }));
 
       return Response.json({
         pagination: {
-          total: count,
+          hasMore: offset + limit < count,
           limit,
           offset,
-          hasMore: offset + limit < count,
+          total: count,
         },
         users,
       });
@@ -168,10 +168,10 @@ export async function GET(request: NextRequest) {
 
     return Response.json({
       pagination: {
-        total: count,
+        hasMore: offset + limit < count,
         limit,
         offset,
-        hasMore: offset + limit < count,
+        total: count,
       },
       users,
     });

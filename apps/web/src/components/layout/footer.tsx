@@ -1,4 +1,5 @@
 import { Separator } from "@atl/ui/components/separator";
+import Link from "next/link";
 import { BsOpencollective } from "react-icons/bs";
 import {
   FaDiscord,
@@ -14,56 +15,56 @@ import { Cookies, Privacy, Security, Terms } from "@/components/consent";
 // Define footer sections data
 const sections = [
   {
-    title: "Information",
     links: [
-      { name: "About", href: "/about" },
-      { name: "Code of Conduct", href: "/code-of-conduct" },
-      { name: "Blog", href: "/blog" },
-      { name: "Apply", href: "/apply" },
-      { name: "Contribute", href: "/contribute" },
+      { href: "/about", name: "About" },
+      { href: "/code-of-conduct", name: "Code of Conduct" },
+      { href: "/blog", name: "Blog" },
+      { href: "/apply", name: "Apply" },
+      { href: "/contribute", name: "Contribute" },
     ],
+    title: "Information",
   },
   {
-    title: "Projects",
     links: [
-      { name: "tux", href: "https://github.com/allthingslinux/tux" },
-      { name: "atl.wiki", href: "https://atl.wiki" },
-      { name: "atl.tools", href: "https://atl.tools" },
-      { name: "atl.chat", href: "https://atl.chat" },
+      { href: "https://github.com/allthingslinux/tux", name: "tux" },
+      { href: "https://atl.wiki", name: "atl.wiki" },
+      { href: "https://atl.tools", name: "atl.tools" },
+      { href: "https://atl.chat", name: "atl.chat" },
     ],
+    title: "Projects",
   },
 ];
 
 // Define social media links
 const socialLinks = [
   {
-    icon: FaDiscord,
     href: "https://discord.gg/linux",
+    icon: FaDiscord,
     label: "Discord",
   },
   {
-    icon: BsOpencollective,
     href: "https://opencollective.com/allthingslinux",
+    icon: BsOpencollective,
     label: "Open Collective",
   },
   {
-    icon: FaGithub,
     href: "https://github.com/allthingslinux",
+    icon: FaGithub,
     label: "GitHub",
   },
   {
-    icon: FaInstagram,
     href: "https://instagram.com/allthingslinux",
+    icon: FaInstagram,
     label: "Instagram",
   },
   {
-    icon: FaFacebook,
     href: "https://facebook.com/allthingslinux.org",
+    icon: FaFacebook,
     label: "Facebook",
   },
   {
-    icon: FaRss,
     href: "https://allthingslinux.org/feed",
+    icon: FaRss,
     label: "Atom Feed",
   },
 ];
@@ -98,11 +99,20 @@ const LegalSection = () => (
 // );
 
 // Footer link component
-const FooterLink = ({ name, href }: { name: string; href: string }) => (
-  <li className="font-medium hover:text-primary">
-    <a href={href}>{name}</a>
-  </li>
-);
+const FooterLink = ({ name, href }: { name: string; href: string }) => {
+  const isExternal = href.startsWith("http");
+  return (
+    <li className="font-medium hover:text-primary">
+      {isExternal ? (
+        <a href={href} rel="noopener noreferrer" target="_blank">
+          {name}
+        </a>
+      ) : (
+        <Link href={href}>{name}</Link>
+      )}
+    </li>
+  );
+};
 
 // Section component
 const FooterSection = ({
@@ -163,12 +173,12 @@ const SocialSection = () => (
       </a>
     </div>
     <div className="mt-5 text-center md:text-left">
-      <a
+      <Link
         className="font-bold text-muted-foreground text-xl transition-colors hover:text-primary"
         href="/open"
       >
         /open
-      </a>
+      </Link>
     </div>
   </div>
 );

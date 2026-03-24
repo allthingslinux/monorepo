@@ -19,8 +19,8 @@ export async function UpdatesSection() {
             Community updates coming soon
           </div>
           <div className="text-muted-foreground text-sm">
-            We're working on sharing regular updates about our community and
-            projects.
+            We&apos;re working on sharing regular updates about our community
+            and projects.
           </div>
         </CardContent>
       </Card>

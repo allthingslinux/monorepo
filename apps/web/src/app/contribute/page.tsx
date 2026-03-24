@@ -343,7 +343,7 @@ export default function ContributePage() {
               We Practice Radical Transparency
             </h3>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              As a 501(c)(3) non-profit, we're committed to complete
+              As a 501(c)(3) non-profit, we&apos;re committed to complete
               transparency. We publish all our financials in real-time and share
               all of our decisions openly with the community.
             </p>

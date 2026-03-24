@@ -14,17 +14,17 @@ import { defaultMetadata, viewport } from "./metadata";
 
 // Initialize font with subset for better performance
 const inter = Inter({
-  subsets: ["latin"],
   display: "swap",
   preload: true,
+  subsets: ["latin"],
   variable: "--font-inter",
 });
 
 // Add a monospace font for code blocks
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
   display: "swap",
   preload: true,
+  subsets: ["latin"],
   variable: "--font-mono",
 });
 

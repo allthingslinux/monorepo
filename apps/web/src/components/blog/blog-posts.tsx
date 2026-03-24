@@ -113,8 +113,8 @@ export default function BlogPosts({
         // Use a slight delay to ensure content has updated in the DOM
         const scrollTimer = setTimeout(() => {
           window.scrollTo({
-            top: 0,
             behavior: "smooth",
+            top: 0,
           });
           setShouldScrollTop(false);
         }, 100);
@@ -166,7 +166,7 @@ export default function BlogPosts({
       }
 
       // For other categories, use the category slug
-      const categorySlug = category.toLowerCase().replace(/ /g, "-");
+      const categorySlug = category.toLowerCase().replaceAll(" ", "-");
 
       // Use shallow routing to avoid full page reload
       router.prefetch(`/blog/${categorySlug}`);

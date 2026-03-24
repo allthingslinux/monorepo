@@ -14,7 +14,7 @@ vi.mock("@/features/integrations/lib/xmpp/keys", () => ({ keys: () => ({}) }));
 vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
-  ircConfig: { server: "irc.mock.chat", port: 6697 },
+  ircConfig: { port: 6697, server: "irc.mock.chat" },
   isAthemeOperConfigured: () => false,
   isIrcConfigured: () => true,
   isUnrealConfigured: () => true,

@@ -2,49 +2,47 @@ import type { FormQuestion } from "@/types";
 
 export const generalQuestions: FormQuestion[] = [
   {
+    description: "Your unique/global username; not a server nickname.",
+    inputType: "text",
     name: "discord_username",
     question: "Discord Username:",
-    description: "Your unique/global username; not a server nickname.",
     type: "short",
-    inputType: "text",
   },
   {
+    description:
+      "Learn how to find your Discord ID: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID",
+    maxLength: 22,
+    minLength: 17,
     name: "discord_id",
     question: "Discord ID:",
     type: "digits-only",
-    minLength: 17,
-    maxLength: 22,
-    description:
-      "Learn how to find your Discord ID: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID",
   },
   {
+    description: "What would you like us to call you?",
     name: "preferred_name",
     question: "Preferred Name:",
-    description: "What would you like us to call you?",
     type: "short",
   },
   {
-    name: "age",
-    question: "Age:",
     description:
       "You must be at least 16 years old to apply for all roles. We prefer applicants who are aged 18 or older.",
-    type: "digits-only",
-    minLength: 2,
     maxLength: 2,
+    minLength: 2,
+    name: "age",
+    question: "Age:",
+    type: "digits-only",
   },
   {
-    name: "pronouns",
-    question: "Preferred Pronouns:",
     description: "e.g., he/him, she/her, they/them, etc.",
-    type: "short",
+    name: "pronouns",
     optional: true,
+    question: "Preferred Pronouns:",
+    type: "short",
   },
   {
-    name: "timezone",
-    question: "Timezone:",
     description:
       "Please select the closest timezone to your location (Non Daylight Savings Time).",
-    type: "select",
+    name: "timezone",
     options: [
       "UTC-12:00 (BIT)", // Baker Island Time
       "UTC-11:00 (NUT)", // Niue Time
@@ -73,14 +71,13 @@ export const generalQuestions: FormQuestion[] = [
       "UTC+11:00 (SBT)", // Solomon Islands Time
       "UTC+12:00 (FJT)", // Fiji Time
     ],
+    question: "Timezone:",
+    type: "select",
   },
   {
-    name: "membership_duration",
-    question:
-      "How long have you been a member of the All Things Linux community?",
     description:
       "There is no minimum requirement, this is just to help us understand your level of engagement with the community.",
-    type: "select",
+    name: "membership_duration",
     options: [
       "Less than 1 month",
       "1 - 3 months",
@@ -89,37 +86,37 @@ export const generalQuestions: FormQuestion[] = [
       "More than 1 year",
       "Other (please specify):",
     ],
+    question:
+      "How long have you been a member of the All Things Linux community?",
+    type: "select",
   },
   {
     name: "membership_duration_other",
     question:
       'If you selected "Other" for membership duration, please specify:',
-    type: "short",
     showIf: {
       membership_duration: "Other (please specify):",
     },
-  },
-  {
-    name: "about_yourself",
-    question: "Tell us a bit about yourself:",
-    description:
-      "Feel free to briefly introduce yourself, your interests, hobbies, or anything you'd like us to know!",
-    type: "paragraph",
-    optional: true,
-  },
-  {
-    name: "availability",
-    question: "Describe your general availability:",
-    description: "e.g., Weekday evenings, weekends anytime, etc.",
     type: "short",
   },
   {
-    name: "commitment_hours",
-    question:
-      "Approximately how many hours per week can you commit to this role?",
+    description:
+      "Feel free to briefly introduce yourself, your interests, hobbies, or anything you'd like us to know!",
+    name: "about_yourself",
+    optional: true,
+    question: "Tell us a bit about yourself:",
+    type: "paragraph",
+  },
+  {
+    description: "e.g., Weekday evenings, weekends anytime, etc.",
+    name: "availability",
+    question: "Describe your general availability:",
+    type: "short",
+  },
+  {
     description:
       "Remember, this is a volunteer position, so please be realistic about your availability.",
-    type: "select",
+    name: "commitment_hours",
     options: [
       "1-5 hours",
       "5-10 hours",
@@ -128,65 +125,68 @@ export const generalQuestions: FormQuestion[] = [
       "20+ hours",
       "Other (Please specify):",
     ],
+    question:
+      "Approximately how many hours per week can you commit to this role?",
+    type: "select",
   },
   {
     name: "commitment_hours_other",
     question: 'If you selected "Other" for hours per week, please specify:',
-    type: "short",
     showIf: {
       commitment_hours: "Other (Please specify):",
     },
+    type: "short",
   },
   {
-    name: "motivation",
-    question: "What motivates you to join the All Things Linux team?",
     description:
       "Please share briefly what draws you to our community and mission.",
+    name: "motivation",
+    question: "What motivates you to join the All Things Linux team?",
     type: "paragraph",
   },
   {
+    description: "Links to past projects or references welcome!",
     name: "relevant_experience",
+    optional: true,
     question:
       "Do you have any relevant experiences from previous employment, volunteer roles, or personal projects you would like us to know about?",
-    description: "Links to past projects or references welcome!",
     type: "paragraph",
-    optional: true,
   },
   {
+    description: "Please review before answering.",
     name: "code_of_conduct",
+    options: ["Yes, fully", "No", "Somewhat (please specify):"],
     question:
       "Have you read, understood, and agree to abide by our Code of Conduct and Community Guidelines?",
-    description: "Please review before answering.",
     type: "select",
-    options: ["Yes, fully", "No", "Somewhat (please specify):"],
   },
   {
     name: "code_of_conduct_comment",
+    optional: true,
     question:
       'If you selected "Somewhat" regarding the Code of Conduct, please explain:',
-    type: "short",
-    optional: true,
     showIf: {
       code_of_conduct: "Somewhat (please specify):",
     },
+    type: "short",
   },
   {
-    name: "voice_conversation",
-    question:
-      "If we move forward with your application, would you be open to attending a brief, casual voice conversation as the next step?",
     description:
       "This is intended as an informal chat, not a formal interview.",
-    type: "select",
+    name: "voice_conversation",
     options: ["Yes", "No", "Other (please explain):"],
+    question:
+      "If we move forward with your application, would you be open to attending a brief, casual voice conversation as the next step?",
+    type: "select",
   },
   {
     name: "voice_conversation_comment",
+    optional: true,
     question:
       'If you selected "Other" regarding voice conversation, please explain:',
-    type: "short",
-    optional: true,
     showIf: {
       voice_conversation: "Other (please explain):",
     },
+    type: "short",
   },
 ];

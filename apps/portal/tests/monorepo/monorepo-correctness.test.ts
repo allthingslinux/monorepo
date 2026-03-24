@@ -699,7 +699,7 @@ describe("Property 10: Import path correctness", () => {
     const violations: { file: string; importPath: string }[] = [];
 
     for (const file of sourceFiles) {
-      const content = fs.readFileSync(file, "utf-8");
+      const content = fs.readFileSync(file, "utf8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
@@ -739,7 +739,7 @@ describe("Property 10: Import path correctness", () => {
 
     fc.assert(
       fc.property(fc.constantFrom(...sourceFiles), (file) => {
-        const content = fs.readFileSync(file, "utf-8");
+        const content = fs.readFileSync(file, "utf8");
         const imports = extractImports(content);
         for (const imp of imports) {
           const isPortal = imp.startsWith("@portal/");

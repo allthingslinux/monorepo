@@ -226,12 +226,12 @@ const mailcowOAuthConfig =
             full_name?: string;
             displayName?: string;
           }) => ({
-            id: profile.username ?? profile.identifier ?? profile.email ?? "",
             email: profile.email ?? "",
+            emailVerified: true,
+            id: profile.username ?? profile.identifier ?? profile.email ?? "",
+            image: null,
             name:
               profile.full_name ?? profile.displayName ?? profile.email ?? "",
-            image: null,
-            emailVerified: true,
           }),
           providerId: "mailcow",
           scopes: ["profile"],

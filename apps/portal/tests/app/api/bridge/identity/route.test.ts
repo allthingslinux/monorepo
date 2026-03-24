@@ -55,7 +55,7 @@ vi.mock("@portal/api/utils", async () => {
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),
-    requireAuth: vi.fn().mockResolvedValue(undefined),
+    requireAuth: vi.fn().mockResolvedValue(),
   };
 });
 
@@ -216,11 +216,11 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          jid: fc.string({ minLength: 3, maxLength: 30 }),
-          nick: fc.string({ minLength: 1, maxLength: 16 }),
+          jid: fc.string({ maxLength: 30, minLength: 3 }),
+          nick: fc.string({ maxLength: 16, minLength: 1 }),
           status: fc.constantFrom("active", "pending"),
           userId: fc.uuid(),
-          username: fc.string({ minLength: 1, maxLength: 20 }),
+          username: fc.string({ maxLength: 20, minLength: 1 }),
         }),
         async ({ userId, nick, status, jid, username }) => {
           // Sequence: discordAccount, ircAccount, xmppAccount, user (avatar)
@@ -251,7 +251,7 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          nick: fc.string({ minLength: 1, maxLength: 16 }),
+          nick: fc.string({ maxLength: 16, minLength: 1 }),
           status: fc.constantFrom("active", "pending"),
           userId: fc.uuid(),
         }),
@@ -284,10 +284,10 @@ describe("Property 12: Identity API Response Never Contains irc_server", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          jid: fc.string({ minLength: 3, maxLength: 30 }),
+          jid: fc.string({ maxLength: 30, minLength: 3 }),
           status: fc.constantFrom("active", "pending"),
           userId: fc.uuid(),
-          username: fc.string({ minLength: 1, maxLength: 20 }),
+          username: fc.string({ maxLength: 20, minLength: 1 }),
         }),
         async ({ userId, jid, username, status }) => {
           // Sequence: xmppAccount, ircAccount, discordAccount, user (avatar)
@@ -349,7 +349,7 @@ describe("Property 13: Identity API Response Shape Completeness", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          nick: fc.string({ minLength: 1, maxLength: 16 }),
+          nick: fc.string({ maxLength: 16, minLength: 1 }),
           status: fc.constantFrom("active", "pending"),
           userId: fc.uuid(),
         }),
@@ -382,10 +382,10 @@ describe("Property 13: Identity API Response Shape Completeness", () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          jid: fc.string({ minLength: 3, maxLength: 30 }),
+          jid: fc.string({ maxLength: 30, minLength: 3 }),
           status: fc.constantFrom("active", "pending"),
           userId: fc.uuid(),
-          username: fc.string({ minLength: 1, maxLength: 20 }),
+          username: fc.string({ maxLength: 20, minLength: 1 }),
         }),
         async ({ userId, jid, username, status }) => {
           mockSelectSequence(

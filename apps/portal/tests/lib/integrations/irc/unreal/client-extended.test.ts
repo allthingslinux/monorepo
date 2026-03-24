@@ -51,7 +51,7 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
 /** Mock a successful JSON-RPC response. */
 function mockOk(result: unknown) {
   mockFetch.mockResolvedValueOnce({
-    json: async () => ({ jsonrpc: "2.0", result, id: 1 }),
+    json: async () => ({ id: 1, jsonrpc: "2.0", result }),
     ok: true,
   });
 }

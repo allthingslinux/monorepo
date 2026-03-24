@@ -34,12 +34,12 @@ export async function generateMetadata({
 
   return {
     ...getDynamicMetadata({
-      title: `${categoryTitle} Articles`,
       description: `Browse all our articles on ${categoryTitle}`,
+      title: `${categoryTitle} Articles`,
     }),
     openGraph: {
-      title: `${categoryTitle} Articles`,
       description: `Browse all our articles on ${categoryTitle}`,
+      title: `${categoryTitle} Articles`,
       url: `${getBaseUrl()}/blog/${category}`,
       // images: [
       //   {
@@ -52,8 +52,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${categoryTitle} Articles`,
       description: `Browse all our articles on ${categoryTitle}`,
+      title: `${categoryTitle} Articles`,
       // images: [ogImageUrl.toString()],
     },
   };
@@ -102,7 +102,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               variant="ghost"
             />
             {allCategories.map((cat) => {
-              const catSlug = cat.toLowerCase().replace(/ /g, "-");
+              const catSlug = cat.toLowerCase().replaceAll(" ", "-");
               return (
                 <Button
                   className="rounded-full"
@@ -122,20 +122,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            {posts.map((post) => {
-              // Generate dynamic OG image URL for this post
-              // const postImageUrl = new URL(getApiUrl('/api/og'));
-              // postImageUrl.searchParams.append('title', post.title);
-              // postImageUrl.searchParams.append('category', post.category);
-              // postImageUrl.searchParams.append('date', post.date);
-
-              return (
-                <Link
-                  className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md"
-                  href={`/blog/${post.categorySlug}/${post.slug}`}
-                  key={post.slug}
-                >
-                  {/* <div className="relative h-48 overflow-hidden bg-muted">
+            {posts.map((post) => (
+              <Link
+                className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md"
+                href={`/blog/${post.categorySlug}/${post.slug}`}
+                key={post.slug}
+              >
+                {/* <div className="relative h-48 overflow-hidden bg-muted">
                     <Image
                       src={postImageUrl.toString()}
                       alt={post.title}
@@ -144,28 +137,27 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div> */}
-                  <div className="flex flex-grow flex-col p-5">
-                    <Badge className="mb-2 w-fit" variant="outline">
-                      {post.category}
-                    </Badge>
-                    <h3 className="mb-2 font-semibold text-xl transition-colors group-hover:text-primary">
-                      {post.title}
-                    </h3>
-                    {post.description && (
-                      <p className="mb-4 line-clamp-3 text-muted-foreground text-sm">
-                        {post.description}
-                      </p>
-                    )}
-                    <div className="mt-auto flex items-center gap-2 border-t pt-3 text-sm">
-                      <span className="font-medium">{post.author}</span>
-                      <span className="text-muted-foreground">
-                        • {post.dateFormatted}
-                      </span>
-                    </div>
+                <div className="flex flex-grow flex-col p-5">
+                  <Badge className="mb-2 w-fit" variant="outline">
+                    {post.category}
+                  </Badge>
+                  <h3 className="mb-2 font-semibold text-xl transition-colors group-hover:text-primary">
+                    {post.title}
+                  </h3>
+                  {post.description && (
+                    <p className="mb-4 line-clamp-3 text-muted-foreground text-sm">
+                      {post.description}
+                    </p>
+                  )}
+                  <div className="mt-auto flex items-center gap-2 border-t pt-3 text-sm">
+                    <span className="font-medium">{post.author}</span>
+                    <span className="text-muted-foreground">
+                      • {post.dateFormatted}
+                    </span>
                   </div>
-                </Link>
-              );
-            })}
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </div>

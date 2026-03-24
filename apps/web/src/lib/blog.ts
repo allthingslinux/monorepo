@@ -28,7 +28,7 @@ export async function getAllPostsAsPostType(): Promise<Post[]> {
 // Get all unique categories
 export async function getAllCategories(): Promise<string[]> {
   const posts = await getAllPosts();
-  return Array.from(new Set(posts.map((post) => post.category))).toSorted();
+  return [...new Set(posts.map((post) => post.category))].toSorted();
 }
 
 export async function getPostsByCategory(
@@ -39,7 +39,7 @@ export async function getPostsByCategory(
     return getAllPosts();
   }
 
-  const categorySlug = category.toLowerCase().replace(/ /g, "-");
+  const categorySlug = category.toLowerCase().replaceAll(" ", "-");
   const allPosts = await getAllPosts();
   return allPosts.filter((post) => post.categorySlug === categorySlug);
 }

@@ -10,9 +10,9 @@ function useLiveTime(intervalMs = 1000) {
     const format = () =>
       new Date().toLocaleTimeString(undefined, {
         hour: "2-digit",
+        hour12: false,
         minute: "2-digit",
         second: "2-digit",
-        hour12: false,
       });
     setTime(format());
     const id = setInterval(() => setTime(format()), intervalMs);

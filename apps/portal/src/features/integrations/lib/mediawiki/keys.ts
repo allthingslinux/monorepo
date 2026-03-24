@@ -10,13 +10,13 @@ export const keys = () =>
     client: {},
     runtimeEnv: {
       WIKI_API_URL: process.env.WIKI_API_URL ?? DEFAULT_WIKI_API_URL,
-      WIKI_BOT_USERNAME: process.env.WIKI_BOT_USERNAME,
       WIKI_BOT_PASSWORD: process.env.WIKI_BOT_PASSWORD,
+      WIKI_BOT_USERNAME: process.env.WIKI_BOT_USERNAME,
     },
     server: {
       WIKI_API_URL: z.string().url(),
-      WIKI_BOT_USERNAME: z.string().optional(),
       WIKI_BOT_PASSWORD: z.string().optional(),
+      WIKI_BOT_USERNAME: z.string().optional(),
     },
   });
 

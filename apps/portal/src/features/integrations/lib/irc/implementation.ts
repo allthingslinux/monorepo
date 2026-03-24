@@ -125,7 +125,7 @@ export class IrcIntegration extends IntegrationBase<
       }
     } catch (dbError) {
       Sentry.captureException(dbError, {
-        extra: { userId, nick },
+        extra: { nick, userId },
         tags: { integration: "irc", step: "db_insert_pending" },
       });
       throw new Error("Failed to initialize IRC account record", {
@@ -153,7 +153,7 @@ export class IrcIntegration extends IntegrationBase<
         await db.delete(ircAccount).where(eq(ircAccount.id, accountId));
       } catch (cleanupError) {
         Sentry.captureException(cleanupError, {
-          extra: { userId, accountId, originalError: athemeError },
+          extra: { accountId, originalError: athemeError, userId },
           tags: { integration: "irc", step: "cleanup_after_atheme_failure" },
         });
       }
@@ -167,7 +167,7 @@ export class IrcIntegration extends IntegrationBase<
         await setVhost(nick, `${nick}@${domain}`);
       } catch (vhostError) {
         Sentry.captureException(vhostError, {
-          extra: { userId, nick },
+          extra: { nick, userId },
           tags: { integration: "irc", step: "set_vhost" },
         });
       }
@@ -184,14 +184,14 @@ export class IrcIntegration extends IntegrationBase<
       finalRow = await this.activateAccountRecord(accountId, userId, nick);
     } catch (activationError) {
       Sentry.captureException(activationError, {
-        extra: { userId, nick, accountId },
+        extra: { accountId, nick, userId },
         tags: { integration: "irc", step: "db_activate_exception" },
       });
     }
 
     if (!finalRow) {
       Sentry.captureException(new Error("Failed to activate IRC account"), {
-        extra: { userId, nick, accountId },
+        extra: { accountId, nick, userId },
         tags: { integration: "irc", step: "db_activate" },
       });
       throw new Error(
@@ -324,8 +324,8 @@ export class IrcIntegration extends IntegrationBase<
       await Sentry.startSpan(
         {
           attributes: {
-            "irc.server": ircConfig.server,
             "irc.nick_length": String(nick.length),
+            "irc.server": ircConfig.server,
           },
           name: "Atheme registerNick",
           op: "rpc.client",
@@ -337,8 +337,8 @@ export class IrcIntegration extends IntegrationBase<
     } catch (error) {
       Sentry.captureException(error, {
         extra: {
-          nick,
           faultCode: error instanceof AthemeFaultError ? error.code : undefined,
+          nick,
         },
         tags: { integration: "irc", operation: "registerNick" },
       });

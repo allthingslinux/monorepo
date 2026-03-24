@@ -24,7 +24,7 @@ function getWikiBaseUrl(): string {
 /** Build wiki page URL from title (atl.wiki uses article path /$1) */
 function pageUrl(title: string): string {
   const base = getWikiBaseUrl();
-  const encoded = encodeURIComponent(title.replaceAll(/ /g, "_"));
+  const encoded = encodeURIComponent(title.replaceAll(" ", "_"));
   return `${base}/${encoded}`;
 }
 

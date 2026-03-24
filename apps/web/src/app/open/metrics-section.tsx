@@ -66,31 +66,31 @@ export async function MetricsSection() {
   // Community and organization metrics - coming soon
   const metrics = [
     {
-      label: "Monthly Visitors",
-      value: null,
+      comingSoon: true,
       description: "Website traffic",
       highlight: "primary" as const,
-      comingSoon: true,
+      label: "Monthly Visitors",
+      value: null,
     },
     {
-      label: "Active Contributors",
-      value: null,
+      comingSoon: true,
       description: "Community members",
       highlight: "success" as const,
-      comingSoon: true,
+      label: "Active Contributors",
+      value: null,
     },
     {
+      comingSoon: true,
+      description: "Active initiatives",
       label: "Open Projects",
       value: null,
-      description: "Active initiatives",
-      comingSoon: true,
     },
     {
-      label: "Community Members",
-      value: null,
+      comingSoon: true,
       description: "Discord & GitHub",
       highlight: "primary" as const,
-      comingSoon: true,
+      label: "Community Members",
+      value: null,
     },
   ];
 

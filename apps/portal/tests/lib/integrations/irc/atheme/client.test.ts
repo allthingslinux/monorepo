@@ -25,8 +25,8 @@ vi.mock("@/features/integrations/lib/irc/keys", () => ({
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: {
     atheme: {
-      jsonrpcUrl: "http://mock-atheme/jsonrpc",
       insecureSkipVerify: false,
+      jsonrpcUrl: "http://mock-atheme/jsonrpc",
     },
     port: 6697,
     server: "irc.mock.chat",
@@ -48,7 +48,7 @@ describe("Atheme Client", () => {
       const email = "alice@example.com";
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ jsonrpc: "2.0", result: "Success", id: "1" }),
+        json: async () => ({ id: "1", jsonrpc: "2.0", result: "Success" }),
         ok: true,
       });
 
@@ -60,6 +60,7 @@ describe("Atheme Client", () => {
         "http://mock-atheme/jsonrpc",
         expect.objectContaining({
           body: JSON.stringify({
+            id: "1",
             jsonrpc: "2.0",
             method: "atheme.command",
             params: [
@@ -72,7 +73,6 @@ describe("Atheme Client", () => {
               password,
               email,
             ],
-            id: "1",
           }),
           method: "POST",
         })
@@ -86,9 +86,9 @@ describe("Atheme Client", () => {
       const ip = "1.2.3.4";
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
-          jsonrpc: "2.0",
           error: { code: 8, message: "Nick already registered" },
           id: "1",
+          jsonrpc: "2.0",
         }),
         ok: false,
         status: 400,
@@ -123,7 +123,7 @@ describe("Atheme Client", () => {
 
       try {
         mockFetch.mockResolvedValueOnce({
-          json: async () => ({ jsonrpc: "2.0", result: "Success", id: "1" }),
+          json: async () => ({ id: "1", jsonrpc: "2.0", result: "Success" }),
           ok: true,
         });
 

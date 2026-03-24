@@ -29,7 +29,7 @@ export default function About() {
           <div className="p-6 font-mono sm:p-8 md:p-10">
             <div
               className="mb-8 animate-type-once overflow-hidden whitespace-nowrap border-primary/70 border-r-4 pr-1 text-primary/90 text-sm sm:text-base"
-              style={{ width: "240px", maxWidth: "240px" }}
+              style={{ maxWidth: "240px", width: "240px" }}
             >
               <span className="text-green-400">$</span>{" "}
               <span className="text-yellow-300">cat</span> allthingslinux.md

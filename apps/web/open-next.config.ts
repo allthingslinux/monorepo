@@ -8,8 +8,8 @@ import doShardedTagCache from "@opennextjs/cloudflare/overrides/tag-cache/do-sha
 export default defineCloudflareConfig({
   // Enhanced R2 incremental cache with regional caching for faster retrieval
   incrementalCache: withRegionalCache(r2IncrementalCache, {
-    mode: "long-lived",
     bypassTagCacheOnCacheHit: true,
+    mode: "long-lived",
   }),
 
   // Durable Object queue for ISR revalidation deduplication

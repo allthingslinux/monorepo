@@ -1,5 +1,24 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/out/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.turbo/**",
+    "**/*.min.js",
+    "**/next-env.d.ts",
+    "**/cloudflare-env.d.ts",
+    "**/worker-configuration.d.ts",
+    "apps/web/.contentlayer/**",
+    "apps/web/.open-next/**",
+    "apps/web/.wrangler/**",
+    "apps/portal/references/**",
+    "apps/portal/drizzle/**",
+    "apps/portal/.cursor/skills/**"
+  ],
   "extends": [
     "./node_modules/ultracite/config/oxlint/core/.oxlintrc.json",
     "./node_modules/ultracite/config/oxlint/react/.oxlintrc.json",
@@ -101,6 +120,31 @@
       ],
       "rules": {
         "import/no-namespace": "off"
+      }
+    },
+    {
+      "files": ["apps/web/**/*.{ts,tsx}"],
+      "rules": {
+        "unicorn/filename-case": "off",
+        "react/jsx-handler-names": "off"
+      }
+    },
+    {
+      "files": ["apps/web/src/components/mdx-components.tsx"],
+      "rules": {
+        "import/no-namespace": "off",
+        "jsx-a11y/anchor-has-content": "off",
+        "jsx-a11y/heading-has-content": "off",
+        "react/no-react-children": "off",
+        "no-nested-ternary": "off",
+        "unicorn/no-nested-ternary": "off"
+      }
+    },
+    {
+      "files": ["apps/web/scripts/**/*.mjs"],
+      "rules": {
+        "import/no-namespace": "off",
+        "no-param-reassign": "off"
       }
     },
     {

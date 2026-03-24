@@ -18,14 +18,14 @@ import { cn } from "@/lib/utils";
 
 // Define navigation items
 const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "CoC", href: "/code-of-conduct" },
-  { name: "Blog", href: "/blog" },
-  { name: "Wiki", href: "https://atl.wiki" },
-  { name: "Tools", href: "https://atl.tools" },
-  { name: "Open", href: "/open" },
-  { name: "Apply", href: "/apply" },
+  { href: "/", name: "Home" },
+  { href: "/about", name: "About" },
+  { href: "/code-of-conduct", name: "CoC" },
+  { href: "/blog", name: "Blog" },
+  { href: "https://atl.wiki", name: "Wiki" },
+  { href: "https://atl.tools", name: "Tools" },
+  { href: "/open", name: "Open" },
+  { href: "/apply", name: "Apply" },
 ];
 
 // Logo component
@@ -79,8 +79,14 @@ const DesktopNavigation = () => (
 );
 
 // CTA button component
-const CTAButton = ({ className }: { className?: string }) => (
-  <Link href="/contribute">
+const CTAButton = ({
+  className,
+  onNavigate,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+}) => (
+  <Link href="/contribute" onClick={onNavigate}>
     <Button
       className={cn(
         "rounded-full bg-primary px-5 py-2.5 font-semibold text-primary-foreground",
@@ -153,9 +159,7 @@ const MobileNavigation = () => {
         </SheetHeader>
         <div className="flex flex-col gap-8">
           <MobileNavLinks onNavigate={handleClose} />
-          <div onClick={handleClose}>
-            <CTAButton className="w-full" />
-          </div>
+          <CTAButton className="w-full" onNavigate={handleClose} />
         </div>
       </SheetContent>
     </Sheet>

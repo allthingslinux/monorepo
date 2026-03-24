@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, Check } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -56,9 +57,9 @@ function StepItem({
   const borderStyles = cn(
     "group flex cursor-pointer flex-col border-l-4 py-2 pl-4 transition-colors hover:border-primary md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0",
     {
+      "border-border": isUpcoming && !hasError,
       "border-destructive": hasError,
       "border-primary": (isComplete || isCurrent) && !hasError,
-      "border-border": isUpcoming && !hasError,
     }
   );
 
@@ -68,34 +69,39 @@ function StepItem({
     {
       "bg-destructive text-destructive-foreground": hasError,
       "bg-primary text-primary-foreground": isComplete && !hasError,
-      "border border-primary text-primary":
-        isCurrent && !isComplete && !hasError,
       "border border-border text-muted-foreground":
         isUpcoming && !isCurrent && !hasError,
+      "border border-primary text-primary":
+        isCurrent && !isComplete && !hasError,
     }
   );
 
   // Helper to determine title styles
   const titleStyles = cn("flex items-center", {
     "text-destructive": hasError,
-    "text-primary": (isComplete || isCurrent) && !hasError,
     "text-muted-foreground": isUpcoming && !isCurrent && !hasError,
+    "text-primary": (isComplete || isCurrent) && !hasError,
   });
+
+  let stepGlyph: ReactNode;
+  if (isComplete && !hasError) {
+    stepGlyph = <Check aria-hidden="true" className="h-3 w-3" />;
+  } else if (hasError) {
+    stepGlyph = <AlertTriangle aria-hidden="true" className="h-3 w-3" />;
+  } else {
+    stepGlyph = <span>{index + 1}</span>;
+  }
 
   return (
     <li className="md:flex-1" key={step.id}>
-      <div className={borderStyles} onClick={onClick}>
+      <button
+        className={cn(borderStyles, "w-full text-left")}
+        onClick={onClick}
+        type="button"
+      >
         <span className="font-medium text-sm">
           <span className="flex items-center">
-            <span className={indicatorStyles}>
-              {isComplete && !hasError ? (
-                <Check aria-hidden="true" className="h-3 w-3" />
-              ) : hasError ? (
-                <AlertTriangle aria-hidden="true" className="h-3 w-3" />
-              ) : (
-                <span>{index + 1}</span>
-              )}
-            </span>
+            <span className={indicatorStyles}>{stepGlyph}</span>
             <span className={titleStyles}>
               {step.title}
               {hasError && errorCount > 0 && (
@@ -111,7 +117,7 @@ function StepItem({
             {step.description}
           </span>
         )}
-      </div>
+      </button>
     </li>
   );
 }

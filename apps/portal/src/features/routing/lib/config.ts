@@ -29,34 +29,34 @@ export const routeConfig = {
     {
       id: "home",
       metadata: {
-        robots: { index: true, follow: true },
+        robots: { follow: true, index: true },
       },
       path: "/",
       sitemap: {
-        priority: 1,
         changeFrequency: "weekly",
+        priority: 1,
       },
     },
     {
       id: "sign-in",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       path: "/auth/sign-in",
       sitemap: {
-        priority: 0.8,
         changeFrequency: "monthly",
+        priority: 0.8,
       },
     },
     {
       id: "sign-up",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       path: "/auth/sign-up",
       sitemap: {
-        priority: 0.8,
         changeFrequency: "monthly",
+        priority: 0.8,
       },
     },
   ],
@@ -70,7 +70,7 @@ export const routeConfig = {
       icon: SquareTerminal,
       id: "dashboard",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -82,7 +82,7 @@ export const routeConfig = {
       icon: Globe,
       id: "connect",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -94,7 +94,7 @@ export const routeConfig = {
       icon: Settings2,
       id: "settings",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       path: "/app/settings",
     },
@@ -103,7 +103,7 @@ export const routeConfig = {
       icon: Mail,
       id: "mail",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -116,7 +116,7 @@ export const routeConfig = {
       icon: Rss,
       id: "feed",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -129,7 +129,7 @@ export const routeConfig = {
       icon: History,
       id: "changelog",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -141,7 +141,7 @@ export const routeConfig = {
       icon: MessageSquare,
       id: "integrations",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
         group: "platform",
@@ -154,7 +154,7 @@ export const routeConfig = {
       icon: DollarSign,
       id: "donate",
       metadata: {
-        robots: { index: true, follow: true },
+        robots: { follow: true, index: true },
       },
       navigation: {
         group: "platform",
@@ -166,16 +166,16 @@ export const routeConfig = {
       icon: Shield,
       id: "admin",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       navigation: {
-        group: "platform",
-        order: 10,
-        permissions: ["canViewAdmin"],
         children: [
           { id: "admin-users", path: "/app/admin/users" },
           { id: "admin-sessions", path: "/app/admin/sessions" },
         ],
+        group: "platform",
+        order: 10,
+        permissions: ["canViewAdmin"],
       },
       path: "/app/admin",
     },
@@ -195,7 +195,7 @@ export const routeConfig = {
       icon: Settings2,
       id: "settings",
       metadata: {
-        robots: { index: false, follow: false },
+        robots: { follow: false, index: false },
       },
       path: "/app/settings",
     },
@@ -203,7 +203,7 @@ export const routeConfig = {
       icon: HelpCircle,
       id: "support",
       metadata: {
-        robots: { index: true, follow: true },
+        robots: { follow: true, index: true },
       },
       path: "/support",
     },
@@ -235,7 +235,7 @@ export function buildIntegrationRoutes(
     icon: MessageSquare,
     id: `integration-${integration.id}`,
     metadata: {
-      robots: { index: false, follow: false },
+      robots: { follow: false, index: false },
     },
     navigation: {
       group: "platform",

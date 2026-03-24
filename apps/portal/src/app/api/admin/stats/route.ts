@@ -44,26 +44,26 @@ export async function GET(request: NextRequest) {
 
     return Response.json({
       apiKeys: {
-        total: Number(apiKeyStats.total),
         enabled: Number(apiKeyStats.enabled),
+        total: Number(apiKeyStats.total),
       },
       oauthClients: {
-        total: Number(oauthClientStats.total),
         disabled: Number(oauthClientStats.disabled),
+        total: Number(oauthClientStats.total),
       },
       sessions: {
-        total: Number(sessionStats.total),
         active: Number(sessionStats.active),
+        total: Number(sessionStats.total),
       },
       users: {
-        total: Number(userStats.total),
         admins: Number(userStats.admins),
-        staff: Number(userStats.staff),
         banned: Number(userStats.banned),
         regular:
           Number(userStats.total) -
           Number(userStats.admins) -
           Number(userStats.staff),
+        staff: Number(userStats.staff),
+        total: Number(userStats.total),
       },
     });
   } catch (error) {

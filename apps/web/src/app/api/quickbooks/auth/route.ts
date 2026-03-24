@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   // Extract host and protocol from request URL to support different ports (3000, 8787, etc.)
   const url = new URL(request.url);
   const host = url.hostname;
-  const port = url.port;
+  const { port } = url;
   const protocol = url.protocol.replace(":", "");
 
   // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
@@ -183,10 +183,10 @@ export async function GET(request: NextRequest) {
   // Set OAuth state cookie server-side with httpOnly flag for CSRF protection
   response.cookies.set("qb_oauth_state", state, {
     httpOnly: true,
-    secure: finalProtocol === "https",
-    sameSite: "lax",
     maxAge: 600,
     path: "/",
+    sameSite: "lax",
+    secure: finalProtocol === "https",
   });
 
   return response;

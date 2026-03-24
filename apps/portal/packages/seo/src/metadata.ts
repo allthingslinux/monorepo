@@ -31,14 +31,14 @@ export const defaultMetadata: Metadata = {
   creator: APP_CREATOR,
   description: APP_DESCRIPTION,
   formatDetection: {
-    email: false,
     address: false,
+    email: false,
     telephone: false,
   },
   icons: {
+    apple: "/favicon.ico",
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
   },
   keywords: APP_KEYWORDS,
   metadataBase: new URL(BASE_URL),
@@ -64,15 +64,15 @@ export const defaultMetadata: Metadata = {
   },
   publisher: APP_PUBLISHER,
   robots: {
-    index: true,
     follow: true,
     googleBot: {
-      index: true,
       follow: true,
-      "max-video-preview": -1,
+      index: true,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
+    index: true,
   },
   title: {
     default: APP_TITLE,
@@ -80,8 +80,8 @@ export const defaultMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: APP_TITLE,
     description: APP_DESCRIPTION,
+    title: APP_TITLE,
     // TODO: Add Twitter image when available
     // images: ["/twitter-image.png"],
     // creator: "@allthingslinux",

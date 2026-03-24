@@ -43,9 +43,9 @@ describe("UnrealIRCd Client", () => {
       const mockUsers = [{ nick: "alice", realname: "Alice" }];
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
+          id: 1,
           jsonrpc: "2.0",
           result: { list: mockUsers },
-          id: 1,
         }),
         ok: true,
       });
@@ -89,9 +89,9 @@ describe("UnrealIRCd Client", () => {
       const mockChannels = [{ name: "#allthingslinux" }];
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
+          id: 1,
           jsonrpc: "2.0",
           result: { list: mockChannels },
-          id: 1,
         }),
         ok: true,
       });
@@ -125,9 +125,9 @@ describe("UnrealIRCd Client", () => {
       const mockUser = { nick: "alice", realname: "Alice" };
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
+          id: 1,
           jsonrpc: "2.0",
           result: { client: mockUser },
-          id: 1,
         }),
         ok: true,
       });
@@ -167,9 +167,9 @@ describe("UnrealIRCd Client", () => {
       const mockChannel = { name: "#test" };
       mockFetch.mockResolvedValueOnce({
         json: async () => ({
+          id: 1,
           jsonrpc: "2.0",
           result: { channel: mockChannel },
-          id: 1,
         }),
         ok: true,
       });

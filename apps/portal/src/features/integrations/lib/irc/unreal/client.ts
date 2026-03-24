@@ -101,8 +101,8 @@ async function unrealRequest<T>(
         const fetchOptions: RequestInit = {
           body: JSON.stringify(body),
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Basic ${getBasicAuth()}`,
+            "Content-Type": "application/json",
           },
           method: "POST",
           signal: controller.signal,

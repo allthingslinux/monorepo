@@ -6,11 +6,7 @@ function base64Encode(str: string): string {
   const encoder = new TextEncoder();
   const data = encoder.encode(str);
 
-  return btoa(
-    Array.from(data)
-      .map((byte) => String.fromCodePoint(byte))
-      .join("")
-  );
+  return btoa([...data].map((byte) => String.fromCodePoint(byte)).join(""));
 }
 
 /**
@@ -51,31 +47,31 @@ export async function storeApplicationDataOnGitHub(
     const applicationData = {
       timestamp,
       role: {
-        name: roleData.name,
-        slug: roleData.slug,
         department: roleData.department,
         description: roleData.description,
+        name: roleData.name,
+        slug: roleData.slug,
       },
       applicant: {
-        discord_username: formData.discord_username,
         discord_id: formData.discord_id,
+        discord_username: formData.discord_username,
       },
       // Include all form data organized by questions
       generalAnswers: roleData.generalQuestions
         .filter((q: Question) => formData[q.name])
         .map((q: Question) => ({
-          question: q.question,
           answer: formData[q.name],
           name: q.name,
           optional: q.optional,
+          question: q.question,
         })),
       roleAnswers: roleData.questions
         .filter((q: Question) => formData[q.name])
         .map((q: Question) => ({
-          question: q.question,
           answer: formData[q.name],
           name: q.name,
           optional: q.optional,
+          question: q.question,
         })),
       // Include simplified form data for complete backup
       rawFormData: Object.fromEntries(
@@ -84,8 +80,11 @@ export async function storeApplicationDataOnGitHub(
     };
 
     // Format timestamp for filename
-    const safeTimestamp = timestamp.replace(/[:.]/g, "-");
-    const safeUsername = formData.discord_username.replace(/[^a-z0-9]/gi, "_");
+    const safeTimestamp = timestamp.replaceAll(/[:.]/g, "-");
+    const safeUsername = formData.discord_username.replaceAll(
+      /[^a-z0-9]/gi,
+      "_"
+    );
     const filename = `applications/${roleData.slug}/${safeUsername}-${safeTimestamp}.json`;
     const content = JSON.stringify(applicationData, null, 2);
 
@@ -98,18 +97,18 @@ export async function storeApplicationDataOnGitHub(
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filename}`,
       {
-        method: "PUT",
+        body: JSON.stringify({
+          branch: "main",
+          content: contentEncoded,
+          message: `Application submission: ${roleData.name} - ${formData.discord_username}`,
+        }),
         headers: {
+          Accept: "application/vnd.github.v3+json",
           Authorization: `token ${githubToken}`,
           "Content-Type": "application/json",
-          Accept: "application/vnd.github.v3+json",
           "User-Agent": "Cloudflare-Worker",
         },
-        body: JSON.stringify({
-          message: `Application submission: ${roleData.name} - ${formData.discord_username}`,
-          content: contentEncoded,
-          branch: "main",
-        }),
+        method: "PUT",
       }
     );
 

@@ -21,8 +21,8 @@ export async function GET(): Promise<Response> {
     console.error("Feed generation error:", error);
 
     return new Response("Internal Server Error", {
-      status: 500,
       headers: { "Content-Type": "text/plain" },
+      status: 500,
     });
   }
 }

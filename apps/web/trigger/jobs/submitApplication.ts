@@ -11,8 +11,8 @@ import { storeApplicationInMonday } from "@/lib/integrations/monday-graphql";
 
 // Define the Zod schema - used for payload validation inside the task
 const submissionPayloadSchema = z.object({
-  roleData: z.any().describe("Role data object including general questions"),
   formData: z.any().describe("Parsed form data object"),
+  roleData: z.any().describe("Role data object including general questions"),
   timestamp: z.string().describe("ISO timestamp string of submission"),
 });
 

@@ -25,7 +25,10 @@ importers:
         version: 0.41.0
       oxlint:
         specifier: ^1.56.0
-        version: 1.56.0
+        version: 1.56.0(oxlint-tsgolint@0.17.2)
+      oxlint-tsgolint:
+        specifier: ^0.17.2
+        version: 0.17.2
       turbo:
         specifier: ^2.8.20
         version: 2.8.20
@@ -34,7 +37,7 @@ importers:
         version: 5.9.3
       ultracite:
         specifier: 7.3.2
-        version: 7.3.2(oxlint@1.56.0)
+        version: 7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
 
   apps/docs:
     devDependencies:
@@ -100,7 +103,7 @@ importers:
         version: link:packages/utils
       '@sentry/nextjs':
         specifier: ^10.45.0
-        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
+        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
       '@sentry/node-native':
         specifier: ^10.45.0
         version: 10.45.0
@@ -317,7 +320,7 @@ importers:
         version: 5.9.3
       ultracite:
         specifier: 7.3.2
-        version: 7.3.2(oxlint@1.56.0)
+        version: 7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
       vitest:
         specifier: ^4.1.1
         version: 4.1.1(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.14(@types/node@25.5.0)(typescript@5.9.3))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
@@ -416,7 +419,7 @@ importers:
     dependencies:
       '@sentry/nextjs':
         specifier: ^10.45.0
-        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
+        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.11
         version: 0.13.11(arktype@2.1.27)(typescript@5.9.3)(zod@4.3.6)
@@ -4721,6 +4724,36 @@ packages:
   '@oxfmt/binding-win32-x64-msvc@0.41.0':
     resolution: {integrity: sha512-49ZSpbZ1noozyPapE8SUOSm3IN0Ze4b5nkO+4+7fq6oEYQQJFhE0saj5k/Gg4oewVPdjn0L3ZFeWk2Vehjcw7A==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [win32]
+
+  '@oxlint-tsgolint/darwin-arm64@0.17.2':
+    resolution: {integrity: sha512-1/QmWTRB8g5273wUnmmQxQz+kEFLJq8MYS82uFdxulUa2sdggWEQphnRhDRAzcbOCtrsya8+xGohv41dqRM/hQ==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@oxlint-tsgolint/darwin-x64@0.17.2':
+    resolution: {integrity: sha512-GjEvcZPm8e9N2QtRlH5ttRr4II1ph86iR+gj7P7u47NuxKs099GivV0ISAsRlG09uYgRG3lTe2x5JrnMknuI0Q==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxlint-tsgolint/linux-arm64@0.17.2':
+    resolution: {integrity: sha512-Ybo4npjDMXQ15MBoftOBut9/gOdHhbnIhRmphx9owBQcZBmwrIy1+PfLqHRBuTCJ8diUmxQxSRkvXrGb+ogGqQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@oxlint-tsgolint/linux-x64@0.17.2':
+    resolution: {integrity: sha512-bU3A7bg9qa1VeWUwYwbXaAcUCOW+fl+SndNMNoYpm2+nhsAzzr9k9jz5Qr7NeKwbYet3qETjmhCmmfqe1syiPA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@oxlint-tsgolint/win32-arm64@0.17.2':
+    resolution: {integrity: sha512-MeM1tyeg8J4DoHxAO3geDllM0Zm0tQDieQ701OXiS/vFA4QK+v+qBEJALqUys5obbIlLR2scmhzGor89bOr2ug==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@oxlint-tsgolint/win32-x64@0.17.2':
+    resolution: {integrity: sha512-XfmGnyosL9jDGPwZcoDqdYADQNXjzH5hZs0xoZFodBbQhI1oAuItw/XR6tgga6grjusPSMS7j373sSGLLrE3yg==}
     cpu: [x64]
     os: [win32]
 
@@ -11547,6 +11580,10 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
+  oxlint-tsgolint@0.17.2:
+    resolution: {integrity: sha512-W3gmZSOzNFGs9EwU8i3xlDpC0aqynQNtoDnaftdAZ3FE8cR7W625pPRbSmtsUOtTC0MPixx1i08R6uRVLfPp7g==}
+    hasBin: true
+
   oxlint@1.56.0:
     resolution: {integrity: sha512-Q+5Mj5PVaH/R6/fhMMFzw4dT+KPB+kQW4kaL8FOIq7tfhlnEVp6+3lcWqFruuTNlUo9srZUW3qH7Id4pskeR6g==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -18215,7 +18252,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.0.6
       express: 5.2.1(supports-color@10.2.2)
-      express-rate-limit: 8.3.1(express@5.2.1(supports-color@10.2.2))
+      express-rate-limit: 8.3.1(express@5.2.1)
       hono: 4.12.9
       jose: 6.2.2
       json-schema-typed: 8.0.2
@@ -19049,6 +19086,24 @@ snapshots:
     optional: true
 
   '@oxfmt/binding-win32-x64-msvc@0.41.0':
+    optional: true
+
+  '@oxlint-tsgolint/darwin-arm64@0.17.2':
+    optional: true
+
+  '@oxlint-tsgolint/darwin-x64@0.17.2':
+    optional: true
+
+  '@oxlint-tsgolint/linux-arm64@0.17.2':
+    optional: true
+
+  '@oxlint-tsgolint/linux-x64@0.17.2':
+    optional: true
+
+  '@oxlint-tsgolint/win32-arm64@0.17.2':
+    optional: true
+
+  '@oxlint-tsgolint/win32-x64@0.17.2':
     optional: true
 
   '@oxlint/binding-android-arm-eabi@1.56.0':
@@ -20457,7 +20512,7 @@ snapshots:
 
   '@sentry/core@10.45.0': {}
 
-  '@sentry/nextjs@10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)':
+  '@sentry/nextjs@10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.40.0
@@ -23939,7 +23994,7 @@ snapshots:
     dependencies:
       express: 5.2.1(supports-color@10.2.2)
 
-  express-rate-limit@8.3.1(express@5.2.1(supports-color@10.2.2)):
+  express-rate-limit@8.3.1(express@5.2.1):
     dependencies:
       express: 5.2.1(supports-color@10.2.2)
       ip-address: 10.1.0
@@ -26804,7 +26859,16 @@ snapshots:
       '@oxfmt/binding-win32-ia32-msvc': 0.41.0
       '@oxfmt/binding-win32-x64-msvc': 0.41.0
 
-  oxlint@1.56.0:
+  oxlint-tsgolint@0.17.2:
+    optionalDependencies:
+      '@oxlint-tsgolint/darwin-arm64': 0.17.2
+      '@oxlint-tsgolint/darwin-x64': 0.17.2
+      '@oxlint-tsgolint/linux-arm64': 0.17.2
+      '@oxlint-tsgolint/linux-x64': 0.17.2
+      '@oxlint-tsgolint/win32-arm64': 0.17.2
+      '@oxlint-tsgolint/win32-x64': 0.17.2
+
+  oxlint@1.56.0(oxlint-tsgolint@0.17.2):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.56.0
       '@oxlint/binding-android-arm64': 1.56.0
@@ -26825,6 +26889,7 @@ snapshots:
       '@oxlint/binding-win32-arm64-msvc': 1.56.0
       '@oxlint/binding-win32-ia32-msvc': 1.56.0
       '@oxlint/binding-win32-x64-msvc': 1.56.0
+      oxlint-tsgolint: 0.17.2
 
   p-any@4.0.0:
     dependencies:
@@ -29363,7 +29428,7 @@ snapshots:
 
   ulid@2.4.0: {}
 
-  ultracite@7.3.2(oxlint@1.56.0):
+  ultracite@7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2)):
     dependencies:
       '@clack/prompts': 1.1.0
       commander: 14.0.3
@@ -29372,7 +29437,7 @@ snapshots:
       jsonc-parser: 3.3.1
       nypm: 0.6.5
     optionalDependencies:
-      oxlint: 1.56.0
+      oxlint: 1.56.0(oxlint-tsgolint@0.17.2)
 
   unbox-primitive@1.1.0:
     dependencies:

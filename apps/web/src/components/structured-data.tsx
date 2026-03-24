@@ -13,12 +13,12 @@ export function OrganizationSchema() {
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "All Things Linux",
-    url: "https://allthingslinux.org",
-    logo: "https://allthingslinux.org/images/logo.png",
-    sameAs: ["https://github.com/allthingslinux", "https://discord.gg/linux"],
     description:
       "A 501(c)(3) non-profit organization empowering the Linux ecosystem through education, collaboration, and support.",
+    logo: "https://allthingslinux.org/images/logo.png",
+    name: "All Things Linux",
+    sameAs: ["https://github.com/allthingslinux", "https://discord.gg/linux"],
+    url: "https://allthingslinux.org",
   };
 
   return (
@@ -36,12 +36,12 @@ export function WebsiteSchema() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "All Things Linux",
-    url: "https://allthingslinux.org",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://allthingslinux.org/search?q={search_term_string}",
       "query-input": "required name=search_term_string",
+      target: "https://allthingslinux.org/search?q={search_term_string}",
     },
+    url: "https://allthingslinux.org",
   };
 
   return (
@@ -65,26 +65,26 @@ export function ArticleSchema({
   const articleData = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: title,
-    description,
-    image: imageUrl,
-    datePublished,
-    dateModified,
     author: {
       "@type": "Person",
       name: authorName,
     },
+    dateModified,
+    datePublished,
+    description,
+    headline: title,
+    image: imageUrl,
+    mainEntityOfPage: {
+      "@id": "https://allthingslinux.org",
+      "@type": "WebPage",
+    },
     publisher: {
       "@type": "Organization",
-      name: "All Things Linux",
       logo: {
         "@type": "ImageObject",
         url: "https://allthingslinux.org/images/logo.png",
       },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": "https://allthingslinux.org",
+      name: "All Things Linux",
     },
   };
 

@@ -75,7 +75,7 @@ const DigitsOnlyField = memo(function DigitsOnlyField({
             onBlur={field.onBlur}
             onChange={(e) => {
               // Only allow digits
-              const value = e.target.value.replace(/\D/g, "");
+              const value = e.target.value.replaceAll(/\D/g, "");
               field.onChange(value);
               // React Hook Form will handle validation automatically in onChange mode
             }}

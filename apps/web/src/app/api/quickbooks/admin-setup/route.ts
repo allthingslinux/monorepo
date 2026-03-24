@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   // This avoids issues with forwarded headers that might incorrectly set protocol to https
   const url = new URL(request.url);
   const host = url.hostname;
-  const port = url.port;
+  const { port } = url;
   const protocol = url.protocol.replace(":", "");
 
   // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
@@ -71,14 +71,12 @@ export async function GET(request: NextRequest) {
   console.log("[QuickBooks OAuth] Port:", port || "default");
   console.log("[QuickBooks OAuth] Protocol:", finalProtocol);
   console.log("[QuickBooks OAuth] Redirect URI:", redirectUri);
-  console.log("[QuickBooks OAuth] State:", state.slice(0, 16) + "...");
+  console.log("[QuickBooks OAuth] State:", `${state.slice(0, 16)}...`);
   console.log(
     "[QuickBooks OAuth] ⚠️  IMPORTANT: This redirect URI must be added to your QuickBooks app"
   );
   console.log(
-    '[QuickBooks OAuth] ⚠️  Make sure it is in the "' +
-      (environment === "sandbox" ? "Development" : "Production") +
-      '" environment tab'
+    `[QuickBooks OAuth] ⚠️  Make sure it is in the "${environment === "sandbox" ? "Development" : "Production"}" environment tab`
   );
 
   return response;

@@ -22,15 +22,15 @@ export async function proxy(request: NextRequest) {
     // Handle OPTIONS requests (preflight)
     if (request.method === "OPTIONS") {
       return new NextResponse(null, {
-        status: 204,
         headers: {
           "Access-Control-Allow-Credentials": "true",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
           "Access-Control-Allow-Headers":
             "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+          "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+          "Access-Control-Allow-Origin": "*",
           "Access-Control-Max-Age": "86400",
         },
+        status: 204,
       });
     }
 

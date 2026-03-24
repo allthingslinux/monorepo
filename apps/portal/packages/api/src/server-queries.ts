@@ -140,8 +140,8 @@ export async function fetchUsersServer(
         : null,
       mediawikiAccount: row.mediawikiWikiUsername
         ? {
-            wikiUsername: row.mediawikiWikiUsername,
             status: row.mediawikiStatus,
+            wikiUsername: row.mediawikiWikiUsername,
           }
         : null,
       name: row.name,
@@ -152,18 +152,18 @@ export async function fetchUsersServer(
       xmppAccount: row.xmppJid
         ? {
             jid: row.xmppJid,
-            username: row.xmppUsername,
             status: row.xmppStatus,
+            username: row.xmppUsername,
           }
         : null,
     }));
 
     return {
       pagination: {
-        total: Number(total),
+        hasMore: offset + limit < total,
         limit,
         offset,
-        hasMore: offset + limit < total,
+        total: Number(total),
       },
       users,
     };
@@ -186,10 +186,10 @@ export async function fetchUsersServer(
 
   return {
     pagination: {
-      total: Number(total),
+      hasMore: offset + limit < total,
       limit,
       offset,
-      hasMore: offset + limit < total,
+      total: Number(total),
     },
     users,
   };
@@ -282,26 +282,26 @@ export async function fetchAdminStatsServer(): Promise<AdminStats> {
 
   return {
     apiKeys: {
-      total: Number(apiKeyStats.total),
       enabled: Number(apiKeyStats.enabled),
+      total: Number(apiKeyStats.total),
     },
     oauthClients: {
-      total: Number(oauthClientStats.total),
       disabled: Number(oauthClientStats.disabled),
+      total: Number(oauthClientStats.total),
     },
     sessions: {
-      total: Number(sessionStats.total),
       active: Number(sessionStats.active),
+      total: Number(sessionStats.total),
     },
     users: {
-      total: Number(userStats.total),
       admins: Number(userStats.admins),
-      staff: Number(userStats.staff),
       banned: Number(userStats.banned),
       regular:
         Number(userStats.total) -
         Number(userStats.admins) -
         Number(userStats.staff),
+      staff: Number(userStats.staff),
+      total: Number(userStats.total),
     },
   };
 }

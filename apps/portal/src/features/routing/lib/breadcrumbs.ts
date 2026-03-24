@@ -84,7 +84,8 @@ export function generateBreadcrumbs(
       breadcrumbs.push({
         href: isLast ? undefined : currentPath,
         label:
-          segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " "),
+          segment.charAt(0).toUpperCase() +
+          segment.slice(1).replaceAll("-", " "),
       });
     });
     return breadcrumbs;

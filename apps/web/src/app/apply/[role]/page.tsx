@@ -16,6 +16,7 @@ import { generateFormSchema } from "@/lib/utils";
 
 export default function RoleApplicationPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const params = useParams();
   const roleSlug = params.role as string;
@@ -68,17 +69,18 @@ export default function RoleApplicationPage() {
 
       // Use relative URL instead of absolute for better compatibility with Workers
       const response = await fetch(`/api/forms/${role.slug}`, {
-        method: "POST",
         body: formData,
+        method: "POST",
       });
 
       console.log(`Response status: ${response.status}`);
 
       if (response.ok) {
+        setSubmitError(null);
         setIsSubmitted(true);
         // Ensure scroll to top happens after state update
         setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ behavior: "smooth", top: 0 });
         }, 10);
       } else {
         // Safely get error data from response
@@ -113,13 +115,10 @@ export default function RoleApplicationPage() {
           console.error("Error details:", errorDetails);
         }
 
-        // Show user-friendly error message and scroll to it
-        alert(
+        setSubmitError(
           `There was an error submitting your application: ${errorMessage}. Please try again later.`
         );
-
-        // Scroll to top to ensure error alert is visible
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ behavior: "smooth", top: 0 });
       }
     } catch (error) {
       // Handle network or other errors
@@ -127,11 +126,10 @@ export default function RoleApplicationPage() {
         error instanceof Error ? error.message : "Unknown error";
       console.error("Error submitting form:", errorMessage);
 
-      // Show alert and scroll to top
-      alert(
+      setSubmitError(
         "There was an error submitting your application. Please check your network connection and try again."
       );
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ behavior: "smooth", top: 0 });
     }
   };
 
@@ -159,8 +157,8 @@ export default function RoleApplicationPage() {
 
             <h1 className="mb-4 font-bold text-3xl">Application Submitted!</h1>
             <p className="mb-8 max-w-md text-muted-foreground text-xl">
-              Thank you for your application. We'll review it and get back to
-              you soon.
+              Thank you for your application. We&apos;ll review it and get back
+              to you soon.
             </p>
 
             <Link
@@ -215,6 +213,14 @@ export default function RoleApplicationPage() {
 
         {/* Form with same max-width */}
         <div className="w-full max-w-[800px]">
+          {submitError ? (
+            <div
+              className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-destructive text-sm"
+              role="alert"
+            >
+              {submitError}
+            </div>
+          ) : null}
           <StepperForm
             departmentalQuestions={role.questions}
             generalQuestions={generalQuestions}

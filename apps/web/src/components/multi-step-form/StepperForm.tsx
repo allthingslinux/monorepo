@@ -76,14 +76,14 @@ const scrollToFirstError = () => {
 // Define the stepper with two steps
 const { Scoped, useStepper } = defineStepper(
   {
+    description: "Basic information about you",
     id: "general",
     title: "General Information",
-    description: "Basic information about you",
   },
   {
+    description: "Questions specific to your application",
     id: "role_specific",
     title: "Department & Role Questions",
-    description: "Questions specific to your application",
   }
 );
 
@@ -196,8 +196,8 @@ function StepperFormContent({
           // Only set errors for fields on the current step
           if (requiredFields.includes(fieldName)) {
             form.setError(fieldName, {
-              type: "validation",
               message: issue.message,
+              type: "validation",
             });
           }
         });
@@ -221,7 +221,7 @@ function StepperFormContent({
 
     // Make sure to scroll to top with a slight delay to ensure DOM updates
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ behavior: "smooth", top: 0 });
     }, 50);
   };
 
@@ -241,7 +241,7 @@ function StepperFormContent({
           await onSubmitAction(finalData);
 
           // Scroll to top after successful submission
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ behavior: "smooth", top: 0 });
         } catch (error) {
           console.error("Error in form submission:", error);
           setSubmissionError(
@@ -250,7 +250,7 @@ function StepperFormContent({
 
           // Scroll to error message
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ behavior: "smooth", top: 0 });
           }, 100);
         }
       } else {
@@ -267,7 +267,7 @@ function StepperFormContent({
 
       // Scroll to error message
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ behavior: "smooth", top: 0 });
       }, 100);
     }
   };
@@ -387,7 +387,7 @@ function StepForm({
       } else if (onNext) {
         onNext();
         setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ behavior: "smooth", top: 0 });
         }, 50);
       }
     } catch (error) {
@@ -438,13 +438,12 @@ function StepForm({
             size="lg"
             type="button"
           >
-            {isSubmitting || formState.isSubmitting
-              ? isLastStep
-                ? "Submitting..."
-                : "Processing..."
-              : isLastStep
-                ? "Submit Application"
-                : "Next Step"}
+            {(() => {
+              if (isSubmitting || formState.isSubmitting) {
+                return isLastStep ? "Submitting..." : "Processing...";
+              }
+              return isLastStep ? "Submit Application" : "Next Step";
+            })()}
           </Button>
         </div>
       </div>

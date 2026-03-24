@@ -27,18 +27,18 @@ export const keys = () =>
         .transform((v) => v === "true"),
     },
     runtimeEnv: {
-      MAILCOW_API_URL: process.env.MAILCOW_API_URL,
       MAILCOW_API_KEY: process.env.MAILCOW_API_KEY,
+      MAILCOW_API_URL: process.env.MAILCOW_API_URL,
       MAILCOW_DOMAIN: process.env.MAILCOW_DOMAIN,
       MAILCOW_OAUTH_CLIENT_ID: process.env.MAILCOW_OAUTH_CLIENT_ID,
       MAILCOW_OAUTH_CLIENT_SECRET: process.env.MAILCOW_OAUTH_CLIENT_SECRET,
-      NEXT_PUBLIC_MAILCOW_WEB_URL: process.env.NEXT_PUBLIC_MAILCOW_WEB_URL,
       NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED:
         process.env.NEXT_PUBLIC_MAILCOW_OAUTH_ENABLED,
+      NEXT_PUBLIC_MAILCOW_WEB_URL: process.env.NEXT_PUBLIC_MAILCOW_WEB_URL,
     },
     server: {
-      MAILCOW_API_URL: z.url().optional(),
       MAILCOW_API_KEY: z.string().optional(),
+      MAILCOW_API_URL: z.url().optional(),
       MAILCOW_DOMAIN: z.string().optional(),
       MAILCOW_OAUTH_CLIENT_ID: z.string().min(1).optional(),
       MAILCOW_OAUTH_CLIENT_SECRET: z.string().min(1).optional(),

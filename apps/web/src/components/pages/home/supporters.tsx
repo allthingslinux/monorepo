@@ -5,36 +5,36 @@ import { memo, useEffect, useRef, useState } from "react";
 
 const SUPPORTERS = [
   {
-    name: "Canva",
     logo: "/images/supporters/canva.webp",
+    name: "Canva",
   },
   {
-    name: "Cloudflare",
     logo: "/images/supporters/cloudflare.webp",
+    name: "Cloudflare",
   },
   {
-    name: "TechSoup",
     logo: "/images/supporters/techsoup.webp",
+    name: "TechSoup",
   },
   {
-    name: "Fibery",
     logo: "/images/supporters/fibery.webp",
+    name: "Fibery",
   },
   {
-    name: "Monday",
     logo: "/images/supporters/monday.webp",
+    name: "Monday",
   },
   {
-    name: "Okta",
     logo: "/images/supporters/okta.webp",
+    name: "Okta",
   },
   {
-    name: "GitHub",
     logo: "/images/supporters/github.webp",
+    name: "GitHub",
   },
   {
-    name: "Sentry",
     logo: "/images/supporters/sentry.webp",
+    name: "Sentry",
   },
 ] as const;
 
@@ -90,7 +90,7 @@ SupporterLogo.displayName = "SupporterLogo";
 const Supporters = memo(() => {
   const [isVisible, setIsVisible] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number | undefined>(undefined);
+  const animationFrameRef = useRef<number | undefined>();
   const positionRef = useRef(0);
   const speedRef = useRef(0.5); // pixels per frame
   const setWidthRef = useRef(0);

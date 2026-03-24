@@ -59,36 +59,48 @@ export function getTranslatedRouteConfig(
 ): RouteConfig {
   return {
     ...config,
-    public: config.public.map((route) => {
-      const label = resolveRouteTranslation(route.id, "label", resolver);
-      const title = resolveRouteTranslation(
-        route.id,
-        "metadata.title",
+    footerActions: config.footerActions.map((action) => {
+      const actionLabel = resolveRouteTranslation(
+        `footer.${action.id}`,
+        "label",
         resolver
       );
-      const description = resolveRouteTranslation(
-        route.id,
-        "metadata.description",
-        resolver
-      );
-      const breadcrumbLabel = route.breadcrumb
-        ? resolveRouteTranslation(route.id, "breadcrumb.label", resolver)
+      const actionTitle = action.metadata
+        ? resolveRouteTranslation(
+            `footer.${action.id}`,
+            "metadata.title",
+            resolver
+          )
+        : undefined;
+      const actionDescription = action.metadata
+        ? resolveRouteTranslation(
+            `footer.${action.id}`,
+            "metadata.description",
+            resolver
+          )
         : undefined;
 
       return {
-        ...route,
-        ...(label ? { label } : {}),
-        breadcrumb: route.breadcrumb
+        ...action,
+        ...(actionLabel ? { label: actionLabel } : {}),
+        metadata: action.metadata
           ? {
-              ...route.breadcrumb,
-              ...(breadcrumbLabel ? { label: breadcrumbLabel } : {}),
+              ...action.metadata,
+              ...(actionTitle ? { title: actionTitle } : {}),
+              ...(actionDescription ? { description: actionDescription } : {}),
             }
           : undefined,
-        metadata: {
-          ...route.metadata,
-          ...(title ? { title } : {}),
-          ...(description ? { description } : {}),
-        },
+      };
+    }),
+    navigationGroups: config.navigationGroups.map((group) => {
+      const groupLabel = resolveRouteTranslation(
+        `group.${group.id}`,
+        "label",
+        resolver
+      );
+      return {
+        ...group,
+        ...(groupLabel ? { label: groupLabel } : {}),
       };
     }),
     protected: config.protected.map((route) => {
@@ -168,48 +180,36 @@ export function getTranslatedRouteConfig(
           : undefined,
       };
     }),
-    navigationGroups: config.navigationGroups.map((group) => {
-      const groupLabel = resolveRouteTranslation(
-        `group.${group.id}`,
-        "label",
+    public: config.public.map((route) => {
+      const label = resolveRouteTranslation(route.id, "label", resolver);
+      const title = resolveRouteTranslation(
+        route.id,
+        "metadata.title",
         resolver
       );
-      return {
-        ...group,
-        ...(groupLabel ? { label: groupLabel } : {}),
-      };
-    }),
-    footerActions: config.footerActions.map((action) => {
-      const actionLabel = resolveRouteTranslation(
-        `footer.${action.id}`,
-        "label",
+      const description = resolveRouteTranslation(
+        route.id,
+        "metadata.description",
         resolver
       );
-      const actionTitle = action.metadata
-        ? resolveRouteTranslation(
-            `footer.${action.id}`,
-            "metadata.title",
-            resolver
-          )
-        : undefined;
-      const actionDescription = action.metadata
-        ? resolveRouteTranslation(
-            `footer.${action.id}`,
-            "metadata.description",
-            resolver
-          )
+      const breadcrumbLabel = route.breadcrumb
+        ? resolveRouteTranslation(route.id, "breadcrumb.label", resolver)
         : undefined;
 
       return {
-        ...action,
-        ...(actionLabel ? { label: actionLabel } : {}),
-        metadata: action.metadata
+        ...route,
+        ...(label ? { label } : {}),
+        breadcrumb: route.breadcrumb
           ? {
-              ...action.metadata,
-              ...(actionTitle ? { title: actionTitle } : {}),
-              ...(actionDescription ? { description: actionDescription } : {}),
+              ...route.breadcrumb,
+              ...(breadcrumbLabel ? { label: breadcrumbLabel } : {}),
             }
           : undefined,
+        metadata: {
+          ...route.metadata,
+          ...(title ? { title } : {}),
+          ...(description ? { description } : {}),
+        },
       };
     }),
   };
@@ -256,9 +256,9 @@ export function createRouteTranslationResolver(
         captureException(error, {
           level: "warning",
           tags: {
-            type: "missing_translation",
             routeId,
             translationKey,
+            type: "missing_translation",
           }, // Missing translations are warnings, not errors
         });
       } else {

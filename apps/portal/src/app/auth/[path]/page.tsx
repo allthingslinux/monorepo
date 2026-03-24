@@ -19,8 +19,8 @@ import { Suspense } from "react";
 export const metadata: Metadata = createPageMetadata({
   description: "Sign in or manage your account.",
   robots: {
-    index: false,
     follow: false,
+    index: false,
   },
   title: "Authentication",
 });

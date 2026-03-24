@@ -19,9 +19,8 @@ import { getRolesByDepartment } from "@/lib/utils";
 import type { FormQuestion, Role } from "@/types";
 
 // Helper to filter out conditional questions
-const filterOutConditionalQuestions = (questions: FormQuestion[]) => {
-  return questions.filter((question) => !question.showIf);
-};
+const filterOutConditionalQuestions = (questions: FormQuestion[]) =>
+  questions.filter((question) => !question.showIf);
 
 const Hero = memo(({ roleCount }: { roleCount: number }) => (
   <div className="relative mb-8 overflow-hidden rounded-xl border border-primary/10 sm:mb-10 md:mb-12">

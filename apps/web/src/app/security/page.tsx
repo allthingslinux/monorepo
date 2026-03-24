@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Security - Responsible Disclosure",
   description:
     "Security vulnerability disclosure and responsible reporting for All Things Linux.",
+  title: "Security - Responsible Disclosure",
 };
 
 export default function SecurityPage() {
@@ -153,8 +153,8 @@ export default function SecurityPage() {
           <p className="mt-1 mb-0 text-muted-foreground">
             We appreciate security researchers who help keep our community safe.
             If you would like to be acknowledged for your responsible
-            disclosure, please let us know in your report and we'll be happy to
-            recognize your contribution publicly.
+            disclosure, please let us know in your report and we&apos;ll be
+            happy to recognize your contribution publicly.
           </p>
         </div>
         <p className="mb-0 text-muted-foreground text-sm">

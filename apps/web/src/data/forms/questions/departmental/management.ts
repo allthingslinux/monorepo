@@ -2,11 +2,11 @@ import type { FormQuestion } from "@/types";
 
 export const managementQuestions: FormQuestion[] = [
   {
+    description:
+      "Feel free to share your motivations or why guiding others appeals to you.",
     name: "leadership_interest",
     question:
       "What interests you about being in a leadership or management role within our community?",
-    description:
-      "Feel free to share your motivations or why guiding others appeals to you.",
     type: "paragraph",
   },
   {
@@ -16,11 +16,11 @@ export const managementQuestions: FormQuestion[] = [
     type: "paragraph",
   },
   {
+    description:
+      "Feel free to discuss things like empathy, communication skills, responsibility, patience, curiosity, etc.",
     name: "personal_qualities",
     question:
       "What are some personal qualities you have that might help you as a leader, even if you haven't had a formal leadership role yet?",
-    description:
-      "Feel free to discuss things like empathy, communication skills, responsibility, patience, curiosity, etc.",
     type: "paragraph",
   },
   {
@@ -37,10 +37,10 @@ export const managementQuestions: FormQuestion[] = [
   },
   {
     name: "task_organization",
+    optional: true,
     question:
       "How do you typically organize your tasks and responsibilities, especially if handling multiple commitments at once?",
     type: "paragraph",
-    optional: true,
   },
   {
     name: "learning_goals",
@@ -50,16 +50,16 @@ export const managementQuestions: FormQuestion[] = [
   },
   {
     name: "admired_leader",
+    optional: true,
     question:
       "Is there a person or leader you've admired or looked up to? What qualities about them inspired you?",
     type: "paragraph",
-    optional: true,
   },
   {
     name: "unique_perspective",
+    optional: true,
     question:
       "What unique perspective or fresh ideas do you think you might bring to our leadership team at All Things Linux?",
     type: "paragraph",
-    optional: true,
   },
 ];

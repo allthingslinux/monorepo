@@ -104,13 +104,13 @@ export const onRequestError = async (
     try {
       const { captureException } = await import("@sentry/nextjs");
       captureException(error, {
-        extra: { request, context },
+        extra: { context, request },
         tags: {
-          type: "request_error",
-          path: request.path || "/",
           method: request.method || "GET",
-          routerKind: context.routerKind,
+          path: request.path || "/",
           routeType: context.routeType,
+          routerKind: context.routerKind,
+          type: "request_error",
         },
       });
     } catch {

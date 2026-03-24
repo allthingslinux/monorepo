@@ -153,7 +153,7 @@ export class MediaWikiIntegration extends IntegrationBase<
           .where(eq(mediawikiAccount.id, accountRow.id));
       } catch (cleanupError) {
         Sentry.captureException(cleanupError, {
-          extra: { userId, accountId: accountRow.id, originalError: botError },
+          extra: { accountId: accountRow.id, originalError: botError, userId },
           tags: { integration: "mediawiki", step: "cleanup_after_bot_failure" },
         });
       }
@@ -186,7 +186,7 @@ export class MediaWikiIntegration extends IntegrationBase<
       Sentry.captureException(
         new Error("Failed to activate MediaWiki account"),
         {
-          extra: { userId, wikiUsername, accountId: accountRow.id },
+          extra: { accountId: accountRow.id, userId, wikiUsername },
           tags: { integration: "mediawiki", step: "db_activate" },
         }
       );

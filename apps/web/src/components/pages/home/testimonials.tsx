@@ -28,29 +28,27 @@ export const ReviewCard = memo(
     content: string;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
-  }) => {
-    return (
-      <Card
-        className="max-w-[500px] select-none border border-muted-foreground/10 border-dashed bg-card p-6"
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
-        <div className="mb-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="size-12 rounded-full ring-1 ring-input">
-              <AvatarImage alt={name} loading="lazy" src={avatar} />
-            </Avatar>
-            <div>
-              <p className="font-medium text-foreground text-sm">{name}</p>
-            </div>
+  }) => (
+    <Card
+      className="max-w-[500px] select-none border border-muted-foreground/10 border-dashed bg-card p-6"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="mb-4">
+        <div className="flex items-center gap-4">
+          <Avatar className="size-12 rounded-full ring-1 ring-input">
+            <AvatarImage alt={name} loading="lazy" src={avatar} />
+          </Avatar>
+          <div>
+            <p className="font-medium text-foreground text-sm">{name}</p>
           </div>
         </div>
-        <q className="text-balance text-card-foreground text-sm leading-6">
-          {content}
-        </q>
-      </Card>
-    );
-  }
+      </div>
+      <q className="text-balance text-card-foreground text-sm leading-6">
+        {content}
+      </q>
+    </Card>
+  )
 );
 
 ReviewCard.displayName = "ReviewCard";
@@ -58,8 +56,8 @@ ReviewCard.displayName = "ReviewCard";
 export default function Testimonials() {
   const plugin = useRef(
     AutoScroll({
-      startDelay: 0,
       speed: 1,
+      startDelay: 0,
       stopOnInteraction: false,
       stopOnMouseEnter: true,
     })
@@ -82,9 +80,9 @@ export default function Testimonials() {
       <div className="w-full overflow-hidden">
         <Carousel
           opts={{
-            loop: true,
             align: "start",
             containScroll: false,
+            loop: true,
           }}
           plugins={[plugin.current]}
         >

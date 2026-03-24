@@ -13,13 +13,13 @@ import { z } from "zod";
 export const keys = () =>
   createEnv({
     runtimeEnv: {
-      XMPP_DOMAIN: process.env.XMPP_DOMAIN,
-      PROSODY_REST_URL: process.env.PROSODY_REST_URL,
       PROSODY_REST_TOKEN: process.env.PROSODY_REST_TOKEN,
+      PROSODY_REST_URL: process.env.PROSODY_REST_URL,
+      XMPP_DOMAIN: process.env.XMPP_DOMAIN,
     },
     server: {
-      XMPP_DOMAIN: z.string().optional(),
-      PROSODY_REST_URL: z.url().optional(),
       PROSODY_REST_TOKEN: z.string().optional(),
+      PROSODY_REST_URL: z.url().optional(),
+      XMPP_DOMAIN: z.string().optional(),
     },
   });

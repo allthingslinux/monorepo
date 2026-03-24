@@ -25,8 +25,8 @@ export async function generateMetadata({
 
   if (!post) {
     return getDynamicMetadata({
-      title: "Post Not Found",
       description: "The requested blog post could not be found.",
+      title: "Post Not Found",
     });
   }
 
@@ -46,8 +46,8 @@ export async function generateMetadata({
 
   return {
     ...getDynamicMetadata({
-      title: post.title,
       description: post.description || `Read our post about ${post.title}`,
+      title: post.title,
     }),
     openGraph: {
       title: post.title,
@@ -68,8 +68,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
       description: post.description || `Read our post about ${post.title}`,
+      title: post.title,
       // images: [ogImageUrl.toString()],
     },
   };

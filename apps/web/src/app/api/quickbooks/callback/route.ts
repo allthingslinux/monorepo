@@ -53,9 +53,9 @@ export async function GET(request: NextRequest) {
 
   if (!isValidState) {
     console.error("CSRF state validation failed", {
-      storedState: storedState ? `[${storedState.slice(0, 8)}...]` : "missing",
+      allCookies: [...cookies.getAll()].map((c) => c.name),
       receivedState: state ? `[${state.slice(0, 8)}...]` : "missing",
-      allCookies: Array.from(cookies.getAll()).map((c) => c.name),
+      storedState: storedState ? `[${storedState.slice(0, 8)}...]` : "missing",
     });
 
     // Return helpful error page instead of JSON for better debugging
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
   // Extract host and protocol from request URL to support different ports (3000, 8787, etc.)
   const url = new URL(request.url);
   const host = url.hostname;
-  const port = url.port;
+  const { port } = url;
   const protocol = url.protocol.replace(":", "");
 
   // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
@@ -129,9 +129,9 @@ export async function GET(request: NextRequest) {
     const tokenData = {
       clientId,
       clientSecret,
-      refreshToken: tokens.refresh_token,
-      realmId,
       environment: env.QUICKBOOKS_ENVIRONMENT || "sandbox",
+      realmId,
+      refreshToken: tokens.refresh_token,
     };
 
     // Get Cloudflare environment if available
@@ -143,11 +143,11 @@ export async function GET(request: NextRequest) {
       !!cfEnv?.KV_QUICKBOOKS
     );
     console.log("[QuickBooks Callback] Attempting to save tokens...", {
+      environment: tokenData.environment,
       hasClientId: !!tokenData.clientId,
       hasClientSecret: !!tokenData.clientSecret,
-      hasRefreshToken: !!tokenData.refreshToken,
       hasRealmId: !!tokenData.realmId,
-      environment: tokenData.environment,
+      hasRefreshToken: !!tokenData.refreshToken,
     });
 
     // Save tokens automatically
@@ -224,8 +224,8 @@ export async function GET(request: NextRequest) {
     console.error("Error in QuickBooks callback:", error);
     return NextResponse.json(
       {
-        error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
+        error: "Internal server error",
       },
       { status: 500 }
     );

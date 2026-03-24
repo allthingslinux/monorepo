@@ -201,9 +201,9 @@ export async function fetchLinuxFeedSource(
   try {
     const response = await fetch(source.feedUrl, {
       headers: {
-        "User-Agent": "Portal/1.0 (https://portal.atl.tools)",
         Accept:
           "application/rss+xml, application/atom+xml, application/xml, text/xml",
+        "User-Agent": "Portal/1.0 (https://portal.atl.tools)",
       },
       next: { revalidate: FEED_REVALIDATE_SECONDS },
     });
@@ -253,10 +253,10 @@ export async function fetchLinuxFeedSource(
     return { articles, sourceId: source.id, sourceName: source.name };
   } catch (error) {
     return {
-      sourceId: source.id,
-      sourceName: source.name,
       articles: [],
       error: error instanceof Error ? error.message : "Unknown error",
+      sourceId: source.id,
+      sourceName: source.name,
     };
   }
 }

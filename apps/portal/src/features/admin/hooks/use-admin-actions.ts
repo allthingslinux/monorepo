@@ -27,8 +27,8 @@ export function useSetUserRole() {
       role: "user" | "staff" | "admin";
     }) => {
       const result = await authClient.admin.setRole({
-        userId,
         role,
+        userId,
       });
 
       if (result.error) {
@@ -73,8 +73,8 @@ export function useBanUser() {
       banReason?: string;
     }) => {
       const result = await authClient.admin.banUser({
-        userId,
         banReason: banReason || "Banned by admin",
+        userId,
       });
 
       if (result.error) {

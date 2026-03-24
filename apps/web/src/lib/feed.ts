@@ -23,39 +23,39 @@ export async function generateFeed(): Promise<string> {
   );
 
   const feed = new Feed({
-    title: `${siteConfig.name} - Blog`,
-    description: siteConfig.description,
-    id: siteConfig.url,
-    link: `${siteConfig.url}/blog`,
-    language: "en",
+    author: {
+      email: "admin@allthingslinux.org",
+      link: siteConfig.url,
+      name: siteConfig.name,
+    },
     copyright: `All Rights Reserved ${new Date().getFullYear()}, ${siteConfig.name}`,
-    updated: latestBlogPostDate,
-    generator: `Feed for ${siteConfig.name}, using open-source Node.js Feed generator by jpmonette. `,
+    description: siteConfig.description,
     feedLinks: {
       atom: `${siteConfig.url}/feed`,
     },
-    author: {
-      name: siteConfig.name,
-      email: "admin@allthingslinux.org",
-      link: siteConfig.url,
-    },
+    generator: `Feed for ${siteConfig.name}, using open-source Node.js Feed generator by jpmonette. `,
+    id: siteConfig.url,
+    language: "en",
+    link: `${siteConfig.url}/blog`,
+    title: `${siteConfig.name} - Blog`,
+    updated: latestBlogPostDate,
   });
 
   const feedEntries = await Promise.all(
     posts.map(async (post) => ({
-      title: post.title,
-      id: `${siteConfig.url}${post.url}`,
-      link: `${siteConfig.url}${post.url}`,
-      description: post.description,
-      content: await marked(post.body.raw),
       author: [
         {
-          name: siteConfig.name,
           email: "admin@allthingslinux.org",
           link: siteConfig.url,
+          name: siteConfig.name,
         },
       ],
+      content: await marked(post.body.raw),
       date: new Date(post.date),
+      description: post.description,
+      id: `${siteConfig.url}${post.url}`,
+      link: `${siteConfig.url}${post.url}`,
+      title: post.title,
     }))
   );
 

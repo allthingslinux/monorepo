@@ -22,6 +22,10 @@
         "GIT_COMMIT_SHA"
       ]
     },
+    "//#check": {},
+    "//#fix": {
+      "cache": false
+    },
     "transit": {
       "dependsOn": ["^transit"]
     },

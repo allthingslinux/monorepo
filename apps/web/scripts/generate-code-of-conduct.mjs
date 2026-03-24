@@ -19,7 +19,7 @@ function processMarkdownContent(content) {
   }
 
   // Remove HTML comments and table of contents section
-  content = content.replace(/<!--[\s\S]*?-->/g, "");
+  content = content.replaceAll(/<!--[\s\S]*?-->/g, "");
   const tocStart = content.indexOf("**Table of Contents**");
   const tocEnd = content.indexOf("## Preface");
 
@@ -70,7 +70,7 @@ try {
 }
 
 // Escape special characters in the content to make it safe for inserting into JS template literals
-readmeContent = readmeContent.replace(/`/g, "\\`").replace(/\$/g, "\\$");
+readmeContent = readmeContent.replaceAll("`", "\\`").replaceAll("$", "\\$");
 
 // Create a TypeScript file with the content as a constant
 const tsContent = `/**

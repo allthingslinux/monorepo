@@ -57,7 +57,7 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
     return [];
   }
   for (let i = 0; i < text.length; i += maxLength) {
-    chunks.push(text.substring(i, i + maxLength));
+    chunks.push(text.slice(i, i + maxLength));
   }
   return chunks;
 }
@@ -69,8 +69,8 @@ function createMondayClient(apiKey: string): GraphQLClient {
   // Use a more basic fetch-based configuration to avoid any compatibility issues
   const client = new GraphQLClient("https://api.monday.com/v2", {
     headers: {
-      "Content-Type": "application/json",
       Authorization: apiKey,
+      "Content-Type": "application/json",
     },
     // Avoid any Node.js specific features
     fetch: globalThis.fetch,
@@ -141,7 +141,7 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
         ) as MondayStatusSettings;
         // Parse the status settings properly - labels is an object, not an array
         if (settings && settings.labels) {
-          const labels = settings.labels;
+          const { labels } = settings;
           // Find the status by name or use the first one (index 5 is "Needs Review" based on the logs)
           if (value && typeof value === "string") {
             for (const [index, label] of Object.entries(labels)) {
@@ -169,8 +169,11 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
           return { index: Number.parseInt(firstIndex, 10) };
         }
         return { index: 5 }; // Default to 5 which is "Needs Review" based on the logs
-      } catch (e) {
-        console.warn(`Failed to parse status settings for ${column.id}:`, e);
+      } catch (error) {
+        console.warn(
+          `Failed to parse status settings for ${column.id}:`,
+          error
+        );
         return { index: 5 }; // Default to "Needs Review" based on the logs
       }
     }
@@ -221,8 +224,11 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
           return { ids: [] };
         }
         return { ids: [] };
-      } catch (e) {
-        console.warn(`Failed to parse dropdown settings for ${column.id}:`, e);
+      } catch (error) {
+        console.warn(
+          `Failed to parse dropdown settings for ${column.id}:`,
+          error
+        );
         return { ids: [] };
       }
     }
@@ -268,8 +274,8 @@ async function createMondayItem(
 
   const variables = {
     boardId,
-    itemName,
     columnValues: JSON.stringify(columnValues),
+    itemName,
   };
 
   try {
@@ -316,7 +322,7 @@ async function addDetailsToItem(
       `;
       try {
         console.log(`Sending update with body: ${body.slice(0, 50)}...`);
-        await client.request(updateMutation, { itemId, body });
+        await client.request(updateMutation, { body, itemId });
         // Optional: Add a small delay between requests if rate limiting becomes an issue
         // await new Promise(resolve => setTimeout(resolve, 200));
         return true;
@@ -367,8 +373,8 @@ async function addDetailsToItem(
                 `Retrying with chunk ${i + 1}/${chunks.length}: ${chunkBody.slice(0, 50)}...`
               );
               await client.request(updateMutation, {
-                itemId,
                 body: retryPrefix + chunkBody,
+                itemId,
               });
               // Optional delay?
               // await new Promise(resolve => setTimeout(resolve, 100));
@@ -429,11 +435,8 @@ async function addDetailsToItem(
     }
 
     // 3. Send Role-Specific Questions Header
-    if (roleQuestions.length > 0) {
-      // Only send header if there are questions
-      if (!(await sendUpdate(roleQuestionsHeader))) {
-        allUpdatesSuccessful = false;
-      }
+    if (roleQuestions.length > 0 && !(await sendUpdate(roleQuestionsHeader))) {
+      allUpdatesSuccessful = false;
     }
 
     // 2. Send General Questions (in reverse order)
@@ -446,11 +449,11 @@ async function addDetailsToItem(
     }
 
     // 1. Send General Questions Header
-    if (generalQuestions.length > 0) {
-      // Only send header if there are questions
-      if (!(await sendUpdate(generalQuestionsHeader))) {
-        allUpdatesSuccessful = false;
-      }
+    if (
+      generalQuestions.length > 0 &&
+      !(await sendUpdate(generalQuestionsHeader))
+    ) {
+      allUpdatesSuccessful = false;
     }
 
     // 0. Send Header Info (Sent last to appear first in Monday)

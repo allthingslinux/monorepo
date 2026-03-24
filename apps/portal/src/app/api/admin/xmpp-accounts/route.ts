@@ -41,8 +41,8 @@ export async function GET(request: NextRequest) {
       db
         .select({
           user: {
-            id: user.id,
             email: user.email,
+            id: user.id,
             name: user.name,
           },
           xmppAccount,
@@ -65,10 +65,10 @@ export async function GET(request: NextRequest) {
 
     return Response.json({
       pagination: {
-        total,
+        hasMore: offset + limit < total,
         limit,
         offset,
-        hasMore: offset + limit < total,
+        total,
       },
       xmppAccounts,
     });

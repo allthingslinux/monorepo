@@ -27,6 +27,45 @@ interface CodeOfConductContentProps {
 
 // Define custom components with improved styling
 const components = {
+  a: ({
+    href,
+    className,
+    children,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    // Handle case where href might not be a string
+    if (href === undefined || href === null) {
+      return <span className="text-neutral-300">{children}</span>;
+    }
+
+    // Make sure href is a string
+    const hrefString = String(href);
+    const isExternal = hrefString.startsWith("http");
+
+    return (
+      <a
+        className={`font-medium text-blue-400 underline underline-offset-4 hover:text-blue-300 ${className || ""}`}
+        href={hrefString}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        target={isExternal ? "_blank" : undefined}
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  },
+  code: ({
+    className,
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLElement>) => (
+    <code
+      className={`rounded bg-neutral-800 px-1.5 py-0.5 font-mono text-foreground text-sm ${className || ""}`}
+      {...props}
+    >
+      {children}
+    </code>
+  ),
   h1: ({
     id,
     className,
@@ -119,44 +158,17 @@ const components = {
       )}
     </h4>
   ),
-  a: ({
-    href,
+  li: ({
     className,
     children,
     ...props
-  }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    // Handle case where href might not be a string
-    if (href === undefined || href === null) {
-      return <span className="text-neutral-300">{children}</span>;
-    }
-
-    // Make sure href is a string
-    const hrefString = String(href);
-    const isExternal = hrefString.startsWith("http");
-
-    return (
-      <a
-        className={`font-medium text-blue-400 underline underline-offset-4 hover:text-blue-300 ${className || ""}`}
-        href={hrefString}
-        rel={isExternal ? "noopener noreferrer" : undefined}
-        target={isExternal ? "_blank" : undefined}
-        {...props}
-      >
-        {children}
-      </a>
-    );
-  },
-  ul: ({
-    className,
-    children,
-    ...props
-  }: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul
-      className={`my-6 ml-6 list-disc space-y-2 text-neutral-300 ${className || ""}`}
+  }: React.LiHTMLAttributes<HTMLLIElement>) => (
+    <li
+      className={`text-neutral-300 leading-relaxed ${className || ""}`}
       {...props}
     >
       {children}
-    </ul>
+    </li>
   ),
   ol: ({
     className,
@@ -170,18 +182,6 @@ const components = {
       {children}
     </ol>
   ),
-  li: ({
-    className,
-    children,
-    ...props
-  }: React.LiHTMLAttributes<HTMLLIElement>) => (
-    <li
-      className={`text-neutral-300 leading-relaxed ${className || ""}`}
-      {...props}
-    >
-      {children}
-    </li>
-  ),
   p: ({
     className,
     children,
@@ -193,18 +193,6 @@ const components = {
     >
       {children}
     </p>
-  ),
-  code: ({
-    className,
-    children,
-    ...props
-  }: React.HTMLAttributes<HTMLElement>) => (
-    <code
-      className={`rounded bg-neutral-800 px-1.5 py-0.5 font-mono text-foreground text-sm ${className || ""}`}
-      {...props}
-    >
-      {children}
-    </code>
   ),
   pre: ({
     className,
@@ -224,15 +212,6 @@ const components = {
       {...props}
     />
   ),
-  th: ({
-    className,
-    ...props
-  }: React.ThHTMLAttributes<HTMLTableCellElement>) => (
-    <th
-      className={`border-b px-4 py-2 text-left text-foreground ${className || ""}`}
-      {...props}
-    />
-  ),
   td: ({
     className,
     ...props
@@ -242,8 +221,29 @@ const components = {
       {...props}
     />
   ),
+  th: ({
+    className,
+    ...props
+  }: React.ThHTMLAttributes<HTMLTableCellElement>) => (
+    <th
+      className={`border-b px-4 py-2 text-left text-foreground ${className || ""}`}
+      {...props}
+    />
+  ),
   tr: ({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
     <tr className={`text-foreground ${className || ""}`} {...props} />
+  ),
+  ul: ({
+    className,
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLUListElement>) => (
+    <ul
+      className={`my-6 ml-6 list-disc space-y-2 text-neutral-300 ${className || ""}`}
+      {...props}
+    >
+      {children}
+    </ul>
   ),
 };
 
@@ -272,8 +272,8 @@ const CodeOfConductContent = memo(function CodeOfConductContent({
                 {
                   behavior: "append",
                   properties: {
-                    className: ["anchor"],
                     ariaHidden: true,
+                    className: ["anchor"],
                     tabIndex: -1,
                   },
                 },

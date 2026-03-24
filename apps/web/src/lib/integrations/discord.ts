@@ -1,3 +1,5 @@
+import { setTimeout as delay } from "node:timers/promises";
+
 import type { FormData, Question, Role } from "../types";
 
 /**
@@ -27,38 +29,38 @@ export async function sendToDiscordWebhook(
       try {
         // Create a complete backup JSON file with all data
         const backupData = {
-          timestamp,
           application: {
             role: {
-              name: roleData.name,
-              slug: roleData.slug,
               department: roleData.department,
               description: roleData.description,
+              name: roleData.name,
+              slug: roleData.slug,
             },
             applicant: {
-              discord_username: formData.discord_username,
               discord_id: formData.discord_id,
+              discord_username: formData.discord_username,
             },
             // Include all form data organized by questions
             generalAnswers: roleData.generalQuestions
               .filter((q: Question) => formData[q.name])
               .map((q: Question) => ({
-                question: q.question,
                 answer: formData[q.name],
                 name: q.name,
                 optional: q.optional,
+                question: q.question,
               })),
             roleAnswers: roleData.questions
               .filter((q: Question) => formData[q.name])
               .map((q: Question) => ({
-                question: q.question,
                 answer: formData[q.name],
                 name: q.name,
                 optional: q.optional,
+                question: q.question,
               })),
             // Include raw form data for complete backup
             rawFormData: formData,
           },
+          timestamp,
         };
 
         // Stringify the JSON data with nice formatting
@@ -66,13 +68,13 @@ export async function sendToDiscordWebhook(
 
         // First send a simple header message - using the safe variable
         const headerResponse = await fetch(webhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
             content: `**NEW APPLICATION**\nRole: ${roleData.name}\nDepartment: ${roleData.department}\nApplicant: ${formData.discord_username} (${formData.discord_id})\nTimestamp: ${timestamp}`,
           }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
         });
 
         if (!headerResponse.ok) {
@@ -86,19 +88,19 @@ export async function sendToDiscordWebhook(
         const chunks = [];
 
         for (let i = 0; i < jsonString.length; i += chunkSize) {
-          chunks.push(jsonString.substring(i, i + chunkSize));
+          chunks.push(jsonString.slice(i, i + chunkSize));
         }
 
         // Send each chunk as a code block - using the safe variable
         for (let i = 0; i < chunks.length; i++) {
           const chunkResponse = await fetch(webhookUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
             body: JSON.stringify({
               content: `**Application Data (Part ${i + 1}/${chunks.length})**\n\`\`\`json\n${chunks[i]}\n\`\`\``,
             }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
           });
 
           if (!chunkResponse.ok) {
@@ -109,7 +111,7 @@ export async function sendToDiscordWebhook(
 
           // Add a small delay between chunk messages to avoid rate limiting
           if (i < chunks.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await delay(500);
           }
         }
 
@@ -129,7 +131,7 @@ export async function sendToDiscordWebhook(
 
         // Exponential backoff for retry
         const backoffDelay = Math.min(1000 * 2 ** retryCount, 10_000);
-        await new Promise((resolve) => setTimeout(resolve, backoffDelay));
+        await delay(backoffDelay);
 
         // Increment retry counter
         retryCount++;

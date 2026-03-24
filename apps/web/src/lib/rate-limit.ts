@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Simple in-memory store for rate limiting
-const store: Record<string, { count: number; resetTime: number }> = {};
+const store = new Map<string, { count: number; resetTime: number }>();
 
 // Get client IP address
 function getClientIP(req: NextRequest): string {
@@ -29,15 +29,17 @@ export async function formSubmissionRateLimit(
   const resetTime = now + windowMs;
 
   // Clean up expired entries
-  Object.keys(store).forEach((key) => {
-    if (store[key].resetTime < now) {
-      delete store[key];
+  for (const key of store.keys()) {
+    const entry = store.get(key);
+    if (entry && entry.resetTime < now) {
+      store.delete(key);
     }
-  });
+  }
 
   // Check if IP exists and is within window
-  if (!store[ip] || store[ip].resetTime < now) {
-    store[ip] = { count: 1, resetTime };
+  const existing = store.get(ip);
+  if (!existing || existing.resetTime < now) {
+    store.set(ip, { count: 1, resetTime });
     return null; // Allow request
   }
 
@@ -62,21 +64,24 @@ export async function apiRateLimit(
   const resetTime = now + windowMs;
 
   // Clean up expired entries
-  Object.keys(store).forEach((key) => {
-    if (store[key].resetTime < now) {
-      delete store[key];
+  for (const key of store.keys()) {
+    const entry = store.get(key);
+    if (entry && entry.resetTime < now) {
+      store.delete(key);
     }
-  });
+  }
 
   // Check if IP exists and is within window
-  if (!store[ip] || store[ip].resetTime < now) {
-    store[ip] = { count: 1, resetTime };
+  const existing = store.get(ip);
+  if (!existing || existing.resetTime < now) {
+    store.set(ip, { count: 1, resetTime });
     return null; // Allow request
   }
 
   // Increment count if within window
-  if (store[ip].count < maxRequests) {
-    store[ip].count++;
+  const current = store.get(ip);
+  if (current && current.count < maxRequests) {
+    current.count++;
     return null; // Allow request
   }
 

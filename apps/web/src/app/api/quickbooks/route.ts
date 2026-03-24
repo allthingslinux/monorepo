@@ -25,7 +25,7 @@ export const runtime = "nodejs";
  * Data includes: transaction amounts, types, dates, and basic descriptions.
  * Sensitive details like full customer/vendor information are limited.
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get Cloudflare environment
     // Uses getCloudflareContext() which is the recommended way in OpenNext Cloudflare
@@ -46,9 +46,9 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json({
-      success: true,
-      data: transactions,
       count: transactions.length,
+      data: transactions,
+      success: true,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -58,23 +58,25 @@ export async function GET(request: NextRequest) {
       error instanceof Error ? error.stack : "No stack trace"
     );
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch QuickBooks data",
-        details:
-          env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : "Unknown error"
-            : undefined,
-        // Always include error in dev environment for debugging
-        ...(env.NODE_ENV === "development" && error instanceof Error
-          ? { stack: error.stack }
-          : {}),
-      },
-      { status: 500 }
-    );
+    let devDetails: string | undefined;
+    if (env.NODE_ENV === "development") {
+      devDetails = error instanceof Error ? error.message : "Unknown error";
+    }
+    let devStack: string | undefined;
+    if (env.NODE_ENV === "development" && error instanceof Error) {
+      devStack = error.stack;
+    }
+
+    const body: Record<string, unknown> = {
+      details: devDetails,
+      error: "Failed to fetch QuickBooks data",
+      success: false,
+    };
+    if (devStack !== undefined) {
+      body.stack = devStack;
+    }
+
+    return NextResponse.json(body, { status: 500 });
   }
 }
 
@@ -92,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     if (!adminKey || authHeader !== `Bearer ${adminKey}`) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized - admin access required" },
+        { error: "Unauthorized - admin access required", success: false },
         { status: 401 }
       );
     }
@@ -106,31 +108,31 @@ export async function POST(request: NextRequest) {
       const transactions = await fetchQuickBooksTransactions(cfEnv);
 
       return NextResponse.json({
-        success: true,
-        message: "Latest transactions fetched successfully",
-        data: transactions,
         count: transactions.length,
+        data: transactions,
+        message: "Latest transactions fetched successfully",
+        success: true,
         timestamp: new Date().toISOString(),
       });
     }
 
     return NextResponse.json(
-      { success: false, error: "Invalid action" },
+      { error: "Invalid action", success: false },
       { status: 400 }
     );
   } catch (error) {
     console.error("Error in QuickBooks API:", error);
 
+    let postDevDetails: string | undefined;
+    if (env.NODE_ENV === "development") {
+      postDevDetails = error instanceof Error ? error.message : "Unknown error";
+    }
+
     return NextResponse.json(
       {
-        success: false,
+        details: postDevDetails,
         error: "API request failed",
-        details:
-          env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : "Unknown error"
-            : undefined,
+        success: false,
       },
       { status: 500 }
     );

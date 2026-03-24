@@ -26,14 +26,14 @@ function Tabs({
 const tabsListVariants = cva(
   "rounded-lg p-[3px] group-data-horizontal/tabs:h-9 data-[variant=line]:rounded-none group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
   {
+    defaultVariants: {
+      variant: "default",
+    },
     variants: {
       variant: {
         default: "bg-muted",
         line: "gap-1 bg-transparent",
       },
-    },
-    defaultVariants: {
-      variant: "default",
     },
   }
 );

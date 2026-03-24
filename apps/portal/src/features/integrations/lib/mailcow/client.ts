@@ -188,8 +188,8 @@ export function updateMailbox(
     async () => {
       const result = await mailcowRequest("/api/v1/edit/mailbox", {
         body: JSON.stringify({
-          items: [username],
           attr: data,
+          items: [username],
         }),
         method: "POST",
       });

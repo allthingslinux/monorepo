@@ -72,14 +72,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/:path*",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
         ],
+        source: "/:path*",
       },
       {
-        source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
@@ -90,6 +89,7 @@ const nextConfig: NextConfig = {
               "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
           },
         ],
+        source: "/api/:path*",
       },
     ];
   },
@@ -98,24 +98,24 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/donate",
         destination: "/contribute",
         permanent: true,
+        source: "/donate",
       },
       {
+        destination: "/apply",
+        permanent: true,
         source: "/get-involved",
-        destination: "/apply",
-        permanent: true,
       },
       {
+        destination: "/apply",
+        permanent: true,
         source: "/roles",
-        destination: "/apply",
-        permanent: true,
       },
       {
-        source: "/careers",
         destination: "/apply",
         permanent: true,
+        source: "/careers",
       },
     ];
   },
@@ -124,28 +124,28 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https" as const,
         hostname: "contrib.rocks",
+        protocol: "https" as const,
       },
       {
-        protocol: "https" as const,
         hostname: "allthingslinux.org",
+        protocol: "https" as const,
       },
       {
-        protocol: "https" as const,
         hostname: "dcbadge.limes.pink",
+        protocol: "https" as const,
       },
       {
-        protocol: "https" as const,
         hostname: "discord.gg",
+        protocol: "https" as const,
       },
       {
-        protocol: "https" as const,
         hostname: "i.imgur.com",
+        protocol: "https" as const,
       },
       {
-        protocol: "https" as const,
         hostname: "sprut.ai",
+        protocol: "https" as const,
       },
     ],
     dangerouslyAllowSVG: true,

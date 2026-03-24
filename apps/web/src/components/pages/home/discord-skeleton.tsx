@@ -208,19 +208,17 @@ const Description = memo(() => (
 ));
 
 // Main Discord skeleton component
-const DiscordSkeleton = memo(() => {
-  return (
-    <>
-      <Card className="mx-auto w-full max-w-3xl overflow-hidden bg-card text-foreground shadow-lg">
-        <div className="relative z-10 flex">
-          <ChannelList />
-          <CentralContent />
-        </div>
-      </Card>
-      <Description />
-    </>
-  );
-});
+const DiscordSkeleton = memo(() => (
+  <>
+    <Card className="mx-auto w-full max-w-3xl overflow-hidden bg-card text-foreground shadow-lg">
+      <div className="relative z-10 flex">
+        <ChannelList />
+        <CentralContent />
+      </div>
+    </Card>
+    <Description />
+  </>
+));
 
 // Add display names for all components
 ChannelList.displayName = "ChannelList";

@@ -408,19 +408,19 @@ const createTracesSampler =
   (isProduction: boolean) => (samplingContext: any) => {
     // Adapt Sentry's TracesSamplerContext to portalSampler's SamplingContext
     const adaptedContext = {
-      name:
-        samplingContext?.transactionContext?.name ||
-        samplingContext?.name ||
-        "",
       attributes: samplingContext?.transactionContext?.data,
-      parentSampled: samplingContext?.parentSampled,
-      parentSampleRate: samplingContext?.parentSampleRate,
       inheritOrSampleWith: (fallbackRate: number) => {
         if (samplingContext?.parentSampled !== undefined) {
           return samplingContext.parentSampled ? 1 : 0;
         }
         return Math.random() < fallbackRate ? 1 : 0;
       },
+      name:
+        samplingContext?.transactionContext?.name ||
+        samplingContext?.name ||
+        "",
+      parentSampleRate: samplingContext?.parentSampleRate,
+      parentSampled: samplingContext?.parentSampled,
     };
 
     return portalSampler(isProduction)(adaptedContext);
@@ -485,7 +485,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
           browserTracingIntegration({
             // Filter out health checks and monitoring endpoints
             shouldCreateSpanForRequest: (url: string) =>
-              !url.match(HEALTH_METRICS_REGEX),
+              !HEALTH_METRICS_REGEX.test(url),
             // Ignore noisy resource spans
             ignoreResourceSpans: ["resource.css", "resource.font"],
             // Enable INP tracking for performance insights
