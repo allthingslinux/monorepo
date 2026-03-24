@@ -1,0 +1,24 @@
+---
+title: "atl.chat"
+description: "Unified IRC, XMPP, web clients, and Discord↔IRC↔XMPP bridges for All Things Linux—Docker, Just, Apache 2.0"
+---
+
+## Overview
+
+**atl.chat** is All Things Linux’s **unified chat infrastructure**: **IRC** (UnrealIRCd + Atheme services), **XMPP** (Prosody), web apps and clients (Next.js, The Lounge, ObsidianIRC, Fluux Messenger), and a **Python bridge** that connects **Discord ↔ IRC ↔ XMPP** with multi-presence and format conversion.
+
+The stack is designed as a **Docker Compose** monorepo with a **`just`** task runner: `just init`, `just dev` (localhost + Dozzle), `just prod`, plus per-service recipes for IRC, XMPP, the bridge, and web clients.
+
+## Identity ↔ portal
+
+When the bridge resolves users against **portal**, use the **same secret** on both sides: **`BRIDGE_PORTAL_TOKEN`** (atl.chat) and **`BRIDGE_SERVICE_TOKEN`** (portal). See each repo’s env documentation for details.
+
+## Source and deep docs
+
+- **Repository:** [github.com/allthingslinux/atl.chat](https://github.com/allthingslinux/atl.chat) (Apache 2.0)
+- In-repo documentation under `docs-old/` and `apps/docs/` (Fumadocs) covers architecture, onboarding, IRC/XMPP/bridge services, and data layout.
+
+## Related
+
+- [portal](/products/portal/index) — accounts and bridge identity
+- [atl.sh](/products/atl-sh/index) — community `#support` on `irc.atl.chat` (see atl.sh README)

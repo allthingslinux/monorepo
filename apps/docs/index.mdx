@@ -1,15 +1,14 @@
 ---
 title: "All Things Linux documentation"
-description: "Technical documentation for our open-source monorepo: Mintlify, contributing, and sample API reference—served by a 501(c)(3) Linux community"
+description: "Product docs for portal, atl.chat, atl.sh, atl.dev, atl.tools, atl.wiki, and tux—plus Mintlify authoring and API reference for the monorepo"
 ---
 
 ## Overview
 
-Welcome. **[All Things Linux](https://allthingslinux.org) (ATL)** is a volunteer-driven **501(c)(3)** non-profit Linux community—open education, community-built tools, and a welcoming hub for contributors and learners. This site documents **how we build and publish docs** for the **[allthingslinux monorepo](https://github.com/allthingslinux)**: Mintlify, MDX, CI checks, and interactive **sample** OpenAPI pages for the playground.
+Welcome. **[All Things Linux](https://allthingslinux.org) (ATL)** is a volunteer-driven **501(c)(3)** non-profit Linux community. Documentation is organized **by product** (tabs in the header): **portal** is the first product tab **after Overview**. Use **Overview** for onboarding and **Authoring** for how this Mintlify site itself is built.
 
 <Card title="About ATL" icon="heart" href="/about" horizontal>
-  Mission, ecosystem names (atl.wiki, Portal, …), and where to find the main
-  site and Discord.
+  Mission, terminology, and links to the main site and Discord.
 </Card>
 
 ## Getting started
@@ -18,48 +17,78 @@ Welcome. **[All Things Linux](https://allthingslinux.org) (ATL)** is a volunteer
   Clone the monorepo, install dependencies, and preview these docs locally.
 </Card>
 
-## Common tasks
+## Products
+
+Documentation for each major ATL surface lives on its own tab:
 
 <Columns cols={2}>
-  <Card title="Local development" icon="pen-to-square" href="/development">
-    Run the Mintlify CLI preview and validate links before you push.
+  <Card title="portal" icon="user" href="/products/portal/index">
+    Identity, authentication, and the portal app.
   </Card>
-  <Card title="Contribute" icon="git-pull-request" href="/contributing">
-    Branch workflow, quality checks, and where files live in the repo.
+  <Card title="atl.chat" icon="comments" href="/products/atl-chat/index">
+    IRC, XMPP, and multi-protocol chat.
   </Card>
-  <Card title="Site configuration" icon="palette" href="/essentials/settings">
-    Branding and global options in `docs.json`.
+  <Card title="atl.sh" icon="terminal" href="/products/atl-sh/index">
+    Public Unix (pubnix) and shell access.
   </Card>
-  <Card title="Navigation" icon="map" href="/essentials/navigation">
-    Structure the sidebar and tabs so readers can find content.
+  <Card title="atl.dev" icon="code" href="/products/atl-dev/index">
+    Developer platform and FOSS hosting.
   </Card>
-  <Card
-    title="API reference"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    OpenAPI-backed examples and the interactive playground.
+  <Card title="atl.tools" icon="server" href="/products/atl-tools/index">
+    Self-hosted services and mirrors.
+  </Card>
+  <Card title="atl.wiki" icon="book" href="/products/atl-wiki/index">
+    MediaWiki knowledge base.
+  </Card>
+  <Card title="tux" icon="robot" href="/products/tux/index">
+    Discord bot—moderation, leveling, utilities.
   </Card>
 </Columns>
 
-## Authoring
+## Monorepo and this site
+
+<Columns cols={2}>
+  <Card title="Local development" icon="pen-to-square" href="/development">
+    Mintlify CLI preview and validation.
+  </Card>
+  <Card title="Contribute" icon="git-pull-request" href="/contributing">
+    Branches, CI, and file layout for these docs.
+  </Card>
+  <Card title="Site configuration" icon="palette" href="/essentials/settings">
+    `docs.json` and branding (Authoring tab).
+  </Card>
+  <Card title="Navigation" icon="map" href="/essentials/navigation">
+    Tabs, groups, and page paths.
+  </Card>
+  <Card
+    title="API reference"
+    icon="square-terminal"
+    href="/api-reference/introduction"
+  >
+    Sample OpenAPI playground (not production ATL APIs).
+  </Card>
+</Columns>
+
+## Editing the documentation site
+
+The **Authoring** tab has MDX, code blocks, images, snippets, and AI-tool guides for contributors working on Mintlify content.
 
 <Columns cols={2}>
   <Card title="MDX" icon="pen-fancy" href="/essentials/markdown">
-    Write pages with Mintlify components and frontmatter.
+    Components and frontmatter.
   </Card>
   <Card title="Code samples" icon="code" href="/essentials/code">
-    Syntax highlighting, filenames, and good snippet habits.
+    Fences, languages, and titles.
   </Card>
-  <Card title="Images and embeds" icon="image" href="/essentials/images">
-    Media, frames, and accessibility-friendly alt text.
+  <Card title="Images" icon="image" href="/essentials/images">
+    Media and embeds.
   </Card>
   <Card
     title="Reusable snippets"
     icon="recycle"
     href="/essentials/reusable-snippets"
   >
-    Share fragments across pages with snippets.
+    Shared fragments.
   </Card>
 </Columns>
 
@@ -77,6 +106,6 @@ Welcome. **[All Things Linux](https://allthingslinux.org) (ATL)** is a volunteer
     Chat with the community.
   </Card>
   <Card title="GitHub" icon="github" href="https://github.com/allthingslinux">
-    Repositories, issues, and contributions.
+    Source code and issues.
   </Card>
 </Columns>

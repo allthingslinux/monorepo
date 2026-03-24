@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "All Things Linux",
-  "description": "Technical docs for the All Things Linux open-source monorepo—Mintlify guides, contributing, and API playground examples. ATL is a volunteer-driven 501(c)(3) Linux community (allthingslinux.org).",
+  "description": "Product and platform documentation for All Things Linux: portal, atl.chat, atl.sh, atl.dev, atl.tools, atl.wiki, tux, plus Mintlify authoring guides. 501(c)(3) Linux community.",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -32,7 +32,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Overview",
         "groups": [
           {
             "group": "Getting started",
@@ -43,9 +43,77 @@
               "development",
               "contributing"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "portal",
+        "groups": [
           {
-            "group": "Project",
+            "group": "Documentation",
+            "pages": ["products/portal/index"]
+          }
+        ]
+      },
+      {
+        "tab": "atl.chat",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/atl-chat/index"]
+          }
+        ]
+      },
+      {
+        "tab": "atl.sh",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/atl-sh/index"]
+          }
+        ]
+      },
+      {
+        "tab": "atl.dev",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/atl-dev/index"]
+          }
+        ]
+      },
+      {
+        "tab": "atl.tools",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/atl-tools/index"]
+          }
+        ]
+      },
+      {
+        "tab": "atl.wiki",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/atl-wiki/index"]
+          }
+        ]
+      },
+      {
+        "tab": "tux",
+        "groups": [
+          {
+            "group": "Documentation",
+            "pages": ["products/tux/index"]
+          }
+        ]
+      },
+      {
+        "tab": "Authoring",
+        "groups": [
+          {
+            "group": "Site configuration",
             "pages": ["essentials/settings", "essentials/navigation"]
           },
           {

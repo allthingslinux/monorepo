@@ -1,0 +1,17 @@
+---
+title: "atl.wiki"
+description: "MediaWiki at atl.wiki—Docker deployment configs, MariaDB, S3/R2, Citizen skin; operator-focused repo"
+---
+
+## Overview
+
+**[atl.wiki](https://atl.wiki)** is All Things Linux’s **MediaWiki**-based **community knowledge base**. This Mintlify site stays high level; collaborative, long-form articles belong on the wiki itself.
+
+## Deployment repository
+
+The **[atl-wiki](https://github.com/allthingslinux/atl-wiki)** GitHub repository holds **MediaWiki configuration**, **Docker** / **Compose** templates, **`just`** automation, and environment variables for MariaDB, S3-compatible object storage (e.g. **Cloudflare R2**), SMTP, Turnstile, OpenID, and related settings. The maintainers note a goal to generalize a base image in a future release; **third-party reuse of this repo is not the focus today**—see the upstream README for caveats.
+
+## Related
+
+- [atl.tools](/products/atl-tools/index) — adjacent self-hosted services
+- [About ATL](/about) — editorial tone and community links

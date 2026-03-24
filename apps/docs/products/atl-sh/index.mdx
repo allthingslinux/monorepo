@@ -1,0 +1,23 @@
+---
+title: "atl.sh"
+description: "Public Unix (pubnix) for ATL—SSH, static sites, Gemini, Gopher, community tools; Ansible, Terraform, docs.atl.sh"
+---
+
+## Overview
+
+**atl.sh** is All Things Linux’s **public Unix** (**pubnix**): shared shell access, personal sites, and small protocols on **`atl.sh`**. Users get **SSH** (key-only), common shells and language runtimes, **static sites** at `https://atl.sh/~username` (with CGI), **Gemini** and **Gopher** capsules, FTP/S, **finger**, a **webring**, games, and community messaging—plus **IRC** **`#support`** on **`irc.atl.chat`** (TLS).
+
+## Accounts and documentation
+
+- **Request access:** [portal.allthingslinux.org](https://portal.allthingslinux.org)
+- **User-facing docs:** [docs.atl.sh](https://docs.atl.sh) (Fumadocs on Cloudflare Workers), including FAQ, user guide, admin guide, operations, testing, and code of conduct
+
+## Operations
+
+The deployment repo uses **Ansible** (roles for packages, security, users, services, FTP, monitoring, backup), **Terraform** (Hetzner + Cloudflare for staging), **Debian**, **nginx**, **Borgmatic**, and **`just`** for deploy/smoke tests. Source: [github.com/allthingslinux/atl.sh](https://github.com/allthingslinux/atl.sh) (GPL-3.0).
+
+## Related
+
+- [portal](/products/portal/index) — account provisioning
+- [atl.chat](/products/atl-chat/index) — IRC network for support
+- [atl.dev](/products/atl-dev/index) — developer-facing services

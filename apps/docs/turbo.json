@@ -13,7 +13,8 @@
         "logo/**",
         "api-reference/**",
         "ai-tools/**",
-        "essentials/**"
+        "essentials/**",
+        "products/**"
       ],
       "outputs": []
     },

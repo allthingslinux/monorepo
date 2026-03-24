@@ -1,0 +1,24 @@
+---
+title: "portal"
+description: "Centralized ATL identity—BetterAuth, Drizzle, integrations for email, chat, pubnix, wiki, Discord, and cross-domain services"
+---
+
+## Overview
+
+**portal** is All Things Linux’s **centralized hub** for identity and access: one ATL account that provisions and manages services across **`atl.dev`**, **`atl.sh`**, **`atl.tools`**, **`atl.chat`**, and related domains—covering email, IRC/XMPP, SSH pubnix, web hosting, Discord, wiki access, developer tools, and more.
+
+Implementation in this organization is a **Next.js** (App Router) + **React** app with **BetterAuth**, **Drizzle** + **PostgreSQL**, **TanStack Query**, **next-intl**, and shared packages in a Turborepo layout.
+
+## Where the code lives
+
+- **Monorepo app:** [`apps/portal`](https://github.com/allthingslinux/monorepo/tree/main/apps/portal) in [allthingslinux/monorepo](https://github.com/allthingslinux/monorepo)
+- **Standalone tree:** [github.com/allthingslinux/portal](https://github.com/allthingslinux/portal) carries the full portal README, architecture notes, API docs, and env/bridge mappings (`docs/ENV_VARS.md`, integrations, etc.)
+
+## Bridge ↔ atl.chat
+
+Set **`BRIDGE_SERVICE_TOKEN`** (portal) to the same value as atl.chat’s **`BRIDGE_PORTAL_TOKEN`** when using the chat bridge identity API.
+
+## Related
+
+- [atl.chat](/products/atl-chat/index) — IRC/XMPP/bridge stack
+- [tux](/products/tux/index) — Discord bot and server tooling
