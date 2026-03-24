@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarMenuButton, SidebarMenuItem } from "@atl/ui/ui/sidebar";
+import { SidebarMenuButton, SidebarMenuItem } from "@atl/ui/components/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

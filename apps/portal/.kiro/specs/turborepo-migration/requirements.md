@@ -95,7 +95,7 @@ This document defines the requirements for migrating the Portal project from a s
 2. WHEN imports are rewritten, THE migration SHALL use direct subpath imports (e.g., `@portal/utils/constants`) instead of barrel re-exports.
 3. THE migration SHALL preserve `@/` path aliases for app-internal modules that remain in Portal_App (`@/auth`, `@/features/*`, `@/hooks/*`, `@/config`, `@/env`).
 4. WHEN the `@/db` alias is migrated, THE migration SHALL rewrite it to `@portal/db/client` or the appropriate `@portal/db/*` subpath.
-5. WHEN the `@/ui/*` alias is migrated, THE migration SHALL rewrite it to `@atl/ui/ui/*`.
+5. WHEN the `@/ui/*` alias is migrated, THE migration SHALL rewrite it to `@atl/ui/components/*`.
 6. WHEN all imports are rewritten, THE Portal_App SHALL pass `pnpm type-check` without errors.
 
 ### Requirement 7: Portal App Restructuring

@@ -1,5 +1,5 @@
-import { buttonVariants } from "@atl/ui/ui/button";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { buttonVariants } from "@atl/ui/components/button";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 

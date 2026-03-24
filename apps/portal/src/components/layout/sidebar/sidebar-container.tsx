@@ -6,7 +6,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@atl/ui/ui/sidebar";
+} from "@atl/ui/components/sidebar";
 
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 import {

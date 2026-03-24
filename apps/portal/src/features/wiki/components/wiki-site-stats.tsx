@@ -1,4 +1,4 @@
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { BookOpen } from "lucide-react";
 import { Suspense } from "react";
 

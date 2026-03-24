@@ -5,7 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@atl/ui/ui/sidebar";
+} from "@atl/ui/components/sidebar";
 import { UserAvatar } from "@daveyplate/better-auth-ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

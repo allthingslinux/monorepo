@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
-import { Card, CardContent } from "@atl/ui/ui/card";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Card, CardContent } from "@atl/ui/components/card";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";

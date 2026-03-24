@@ -27,6 +27,5 @@ apps/docs/**
 
 # Portal: vendored / generated / references
 apps/portal/references/
-apps/portal/packages/ui/src/ui/
 apps/portal/drizzle/
 apps/portal/.cursor/skills/

@@ -6,7 +6,6 @@ const IGNORE_PATH_PREFIXES = [
   "apps/web/",
   "apps/docs/",
   "apps/portal/references/",
-  "apps/portal/packages/ui/src/ui/",
   "apps/portal/drizzle/",
   "apps/portal/.cursor/skills/",
 ];

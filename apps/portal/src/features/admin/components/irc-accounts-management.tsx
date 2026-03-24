@@ -1,20 +1,20 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
+import { Badge } from "@atl/ui/components/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
+} from "@atl/ui/components/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@atl/ui/ui/select";
+} from "@atl/ui/components/select";
 import type { IrcAccountWithUser } from "@portal/api/types";
 import { formatDate } from "@portal/utils/date";
 import { createColumnHelper } from "@tanstack/react-table";

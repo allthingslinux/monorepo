@@ -9,23 +9,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@atl/ui/ui/alert-dialog";
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
+} from "@atl/ui/components/alert-dialog";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@atl/ui/ui/dropdown-menu";
+} from "@atl/ui/components/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@atl/ui/ui/select";
+} from "@atl/ui/components/select";
 import type { User } from "@portal/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";

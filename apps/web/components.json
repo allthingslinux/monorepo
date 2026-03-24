@@ -13,7 +13,7 @@
   "aliases": {
     "components": "@atl/ui",
     "utils": "@atl/ui/lib/utils",
-    "ui": "@atl/ui/ui",
+    "ui": "@atl/ui/components",
     "lib": "@/lib",
     "hooks": "@/hooks",
     "types": "@/types",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import { defineStepper } from "@stepperize/react";
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";

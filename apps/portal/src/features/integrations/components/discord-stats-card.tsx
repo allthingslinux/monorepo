@@ -1,5 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@atl/ui/ui/card";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import Image from "next/image";
 import { Suspense } from "react";
 

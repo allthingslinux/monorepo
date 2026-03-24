@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@atl/ui/ui/card";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { Card, CardContent } from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { ArrowRight, Receipt, TrendingDown, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";

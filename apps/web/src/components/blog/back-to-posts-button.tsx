@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/ui/button";
+import { buttonVariants } from "@atl/ui/components/button";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -53,7 +53,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
         <p class="text-neutral-200">Loading posts...</p>
       </div>
     `;
-    document.body.append(overlay);
+    document.body.appendChild(overlay);
 
     // Fade in the overlay
     setTimeout(() => {

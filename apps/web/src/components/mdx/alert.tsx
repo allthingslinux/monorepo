@@ -2,7 +2,7 @@ import {
   AlertDescription,
   AlertTitle,
   Alert as AlertUI,
-} from "@atl/ui/ui/alert";
+} from "@atl/ui/components/alert";
 import {
   AlertCircleIcon,
   AlertTriangleIcon,

@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@atl/ui/ui/loading-spinner";
+import { LoadingSpinner } from "@atl/ui/components/loading-spinner";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 

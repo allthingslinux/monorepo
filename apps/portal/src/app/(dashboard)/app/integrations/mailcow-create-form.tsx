@@ -1,10 +1,15 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@atl/ui/ui/card";
-import { DialogFooter } from "@atl/ui/ui/dialog";
-import { Input } from "@atl/ui/ui/input";
-import { Label } from "@atl/ui/ui/label";
+import { Button } from "@atl/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@atl/ui/components/card";
+import { DialogFooter } from "@atl/ui/components/dialog";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateMailboxRequestSchema } from "@portal/schemas/integrations/mailcow";
 import { captureException } from "@sentry/nextjs";

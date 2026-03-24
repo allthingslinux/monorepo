@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert, AlertDescription } from "@atl/ui/ui/alert";
-import { Button } from "@atl/ui/ui/button";
-import { Form } from "@atl/ui/ui/form";
+import { Alert, AlertDescription } from "@atl/ui/components/alert";
+import { Button } from "@atl/ui/components/button";
+import { Form } from "@atl/ui/components/form";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";

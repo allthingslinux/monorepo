@@ -1,5 +1,5 @@
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
 import type { Metadata } from "next";
 import Link from "next/link";
 

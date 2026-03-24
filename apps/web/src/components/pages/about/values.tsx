@@ -1,4 +1,4 @@
-import { Card } from "@atl/ui/ui/card";
+import { Card } from "@atl/ui/components/card";
 import {
   ArrowUpRight,
   FileText,

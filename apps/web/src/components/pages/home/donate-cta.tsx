@@ -1,4 +1,4 @@
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import Link from "next/link";
 import { memo } from "react";
 import { BsOpencollective } from "react-icons/bs";

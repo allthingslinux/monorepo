@@ -218,9 +218,9 @@ Migrate the Portal project from a single Next.js 16 app into a Turborepo monorep
     - _Requirements: 5.3_
 
   - [x] 14.3 Update all imports from `@/components/*` and `@/ui/*` to `@atl/ui/*`
-    - Rewrite `@/components/ui/button` → `@atl/ui/ui/button`
+    - Rewrite `@/components/ui/button` → `@atl/ui/components/button`
     - Rewrite `@/components/layout` → `@atl/ui/layout`
-    - Rewrite `@/ui/*` → `@atl/ui/ui/*`
+    - Rewrite `@/ui/*` → `@atl/ui/components/*`
     - _Requirements: 6.1, 6.5_
 
   - [x] 14.4 Update `components.json` in `apps/portal/` for shadcn CLI

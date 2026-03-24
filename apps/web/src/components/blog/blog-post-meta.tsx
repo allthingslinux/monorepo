@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@atl/ui/ui/avatar";
-import { Badge } from "@atl/ui/ui/badge";
-import { Card, CardContent } from "@atl/ui/ui/card";
+import { Avatar, AvatarFallback } from "@atl/ui/components/avatar";
+import { Badge } from "@atl/ui/components/badge";
+import { Card, CardContent } from "@atl/ui/components/card";
 import { Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 

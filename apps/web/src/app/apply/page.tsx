@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
+import { Badge } from "@atl/ui/components/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
-import { Input } from "@atl/ui/ui/input";
+} from "@atl/ui/components/card";
+import { Input } from "@atl/ui/components/input";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { memo, useCallback, useMemo, useState } from "react";

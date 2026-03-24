@@ -1,7 +1,7 @@
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
-import { Card, CardContent } from "@atl/ui/ui/card";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Card, CardContent } from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { ChevronRight, Hash, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

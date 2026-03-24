@@ -4,7 +4,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@atl/ui/ui/sidebar";
+} from "@atl/ui/components/sidebar";
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 

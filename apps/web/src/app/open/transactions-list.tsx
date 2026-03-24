@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
-import { Card, CardContent } from "@atl/ui/ui/card";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Card, CardContent } from "@atl/ui/components/card";
 import {
   ArrowDownRight,
   ArrowUpRight,

@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
-import { Separator } from "@atl/ui/ui/separator";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Separator } from "@atl/ui/components/separator";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
-import { FormDescription, FormItem, FormLabel } from "@atl/ui/ui/form";
-import { Input } from "@atl/ui/ui/input";
+import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
+import { Input } from "@atl/ui/components/input";
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 

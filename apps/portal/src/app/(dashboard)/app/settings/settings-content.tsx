@@ -8,8 +8,13 @@
 // Tab (account / security / api-keys) is synced to URL via nuqs so deep links
 // and back/forward work.
 
-import { Card } from "@atl/ui/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@atl/ui/ui/tabs";
+import { Card } from "@atl/ui/components/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@atl/ui/components/tabs";
 import dynamic from "next/dynamic";
 
 import { useSession } from "@/auth/session-context";

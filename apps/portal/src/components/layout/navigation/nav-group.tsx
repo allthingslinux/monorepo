@@ -4,7 +4,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-} from "@atl/ui/ui/sidebar";
+} from "@atl/ui/components/sidebar";
 
 import type {
   NavigationGroup,

@@ -1,18 +1,18 @@
 "use client";
 
-import { cn } from "@atl/ui/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@atl/ui/ui/collapsible";
+} from "@atl/ui/components/collapsible";
 import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@atl/ui/ui/sidebar";
+} from "@atl/ui/components/sidebar";
+import { cn } from "@atl/ui/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

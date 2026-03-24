@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- module augmentation: type params must match upstream */
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@atl/ui/ui/dropdown-menu";
-import { Input } from "@atl/ui/ui/input";
-import { Label } from "@atl/ui/ui/label";
+} from "@atl/ui/components/dropdown-menu";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@atl/ui/ui/select";
+} from "@atl/ui/components/select";
 import {
   Table,
   TableBody,
@@ -24,7 +24,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@atl/ui/ui/table";
+} from "@atl/ui/components/table";
 import { cn } from "@portal/utils/utils";
 import {
   flexRender,

@@ -1,5 +1,5 @@
-import { SidebarInset, SidebarProvider } from "@atl/ui/ui/sidebar";
-import { TooltipProvider } from "@atl/ui/ui/tooltip";
+import { SidebarInset, SidebarProvider } from "@atl/ui/components/sidebar";
+import { TooltipProvider } from "@atl/ui/components/tooltip";
 
 import { AppHeader } from "./header/app-header";
 import { SidebarContainer } from "./sidebar/sidebar-container";

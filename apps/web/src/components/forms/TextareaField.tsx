@@ -1,7 +1,7 @@
 "use client";
 
-import { FormDescription, FormItem, FormLabel } from "@atl/ui/ui/form";
-import { Textarea } from "@atl/ui/ui/textarea";
+import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
+import { Textarea } from "@atl/ui/components/textarea";
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 

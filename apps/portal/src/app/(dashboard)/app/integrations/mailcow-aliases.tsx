@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge } from "@atl/ui/ui/badge";
-import { Button } from "@atl/ui/ui/button";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@atl/ui/ui/dialog";
-import { Input } from "@atl/ui/ui/input";
+} from "@atl/ui/components/dialog";
+import { Input } from "@atl/ui/components/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Globe, Loader2, Mail, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";

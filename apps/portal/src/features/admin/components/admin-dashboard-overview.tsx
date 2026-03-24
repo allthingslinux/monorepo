@@ -1,6 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@atl/ui/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
 import { UserCheck, Users } from "lucide-react";
 import Link from "next/link";
 

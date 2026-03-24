@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/ui/button-variants";
+import { buttonVariants } from "@atl/ui/components/button-variants";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@atl/ui/ui/dialog";
+} from "@atl/ui/components/dialog";
 import { Info } from "lucide-react";
 
 import { cn } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import { Separator } from "@atl/ui/ui/separator";
+import { Separator } from "@atl/ui/components/separator";
 import { BsOpencollective } from "react-icons/bs";
 import {
   FaDiscord,

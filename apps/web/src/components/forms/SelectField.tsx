@@ -1,13 +1,13 @@
 "use client";
 
-import { FormDescription, FormItem, FormLabel } from "@atl/ui/ui/form";
+import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@atl/ui/ui/select";
+} from "@atl/ui/components/select";
 import { memo } from "react";
 import { useFormContext } from "react-hook-form";
 

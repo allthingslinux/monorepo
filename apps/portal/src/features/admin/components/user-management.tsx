@@ -6,16 +6,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
-import { Input } from "@atl/ui/ui/input";
-import { Label } from "@atl/ui/ui/label";
+} from "@atl/ui/components/card";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@atl/ui/ui/select";
+} from "@atl/ui/components/select";
 import type { User } from "@portal/api/types";
 import type { UserListResponse } from "@portal/types/api";
 import type { ColumnDef } from "@tanstack/react-table";

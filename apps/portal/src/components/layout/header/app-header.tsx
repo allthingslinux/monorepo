@@ -1,7 +1,7 @@
 "use client";
 
-import { Separator } from "@atl/ui/ui/separator";
-import { SidebarTrigger } from "@atl/ui/ui/sidebar";
+import { Separator } from "@atl/ui/components/separator";
+import { SidebarTrigger } from "@atl/ui/components/sidebar";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 

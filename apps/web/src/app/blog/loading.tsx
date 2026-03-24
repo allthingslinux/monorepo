@@ -1,6 +1,6 @@
-import { Badge } from "@atl/ui/ui/badge";
-import { Separator } from "@atl/ui/ui/separator";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { Badge } from "@atl/ui/components/badge";
+import { Separator } from "@atl/ui/components/separator";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 export default function Loading() {
   // This component will only show for full page loads, not during soft navigation transitions

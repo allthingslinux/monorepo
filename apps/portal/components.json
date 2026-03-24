@@ -14,7 +14,7 @@
   "aliases": {
     "utils": "@atl/ui/lib/utils",
     "components": "@atl/ui",
-    "ui": "@atl/ui/ui",
+    "ui": "@atl/ui/components",
     "lib": "@/shared",
     "hooks": "@/hooks",
     "styles": "@/styles",

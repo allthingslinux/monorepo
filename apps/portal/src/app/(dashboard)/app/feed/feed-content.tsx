@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
-import { Input } from "@atl/ui/ui/input";
-import { Separator } from "@atl/ui/ui/separator";
+import { Button } from "@atl/ui/components/button";
+import { Input } from "@atl/ui/components/input";
+import { Separator } from "@atl/ui/components/separator";
 import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";

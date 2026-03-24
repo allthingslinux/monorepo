@@ -1,5 +1,5 @@
-import { Badge } from "@atl/ui/ui/badge";
-import { Card } from "@atl/ui/ui/card";
+import { Badge } from "@atl/ui/components/badge";
+import { Card } from "@atl/ui/components/card";
 import Link from "next/link";
 import { memo } from "react";
 import { PiLinuxLogoBold, PiNetworkBold } from "react-icons/pi";

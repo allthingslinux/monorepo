@@ -1,7 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@atl/ui/ui/card";
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen } from "lucide-react";
 

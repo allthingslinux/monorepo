@@ -1,11 +1,11 @@
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
+} from "@atl/ui/components/card";
 import {
   BarChart3,
   BookOpen,

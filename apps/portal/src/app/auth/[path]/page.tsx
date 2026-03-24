@@ -1,4 +1,4 @@
-import { Skeleton } from "@atl/ui/ui/skeleton";
+import { Skeleton } from "@atl/ui/components/skeleton";
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
 import { createPageMetadata } from "@portal/seo/metadata";

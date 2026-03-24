@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@atl/ui/ui/card";
+import { Card } from "@atl/ui/components/card";
 import { memo } from "react";
 
 // Stats data with minimal information

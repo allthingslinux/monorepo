@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
+} from "@atl/ui/components/card";
 import type { Session } from "@portal/api/types";
 import type { SessionListResponse } from "@portal/types/api";
 import { memo, useMemo } from "react";

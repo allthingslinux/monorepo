@@ -1,11 +1,11 @@
-import { buttonVariants } from "@atl/ui/ui/button-variants";
+import { buttonVariants } from "@atl/ui/components/button-variants";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@atl/ui/ui/card";
+} from "@atl/ui/components/card";
 import { getRouteMetadata } from "@portal/seo/metadata";
 import { BarChart3, BookOpen, Code, MessageSquare, Users } from "lucide-react";
 import type { Metadata } from "next";

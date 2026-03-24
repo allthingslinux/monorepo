@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@atl/ui/ui/dialog";
-import { Label } from "@atl/ui/ui/label";
+} from "@atl/ui/components/dialog";
+import { Label } from "@atl/ui/components/label";
 import { captureException, startSpan } from "@sentry/nextjs";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";

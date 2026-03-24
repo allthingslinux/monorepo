@@ -9,13 +9,13 @@
       "default": "./src/lib/utils.ts"
     },
     "./styles/design-tokens.css": "./src/styles/design-tokens.css",
-    "./ui/button-variants": {
-      "types": "./src/ui/button-variants.ts",
-      "default": "./src/ui/button-variants.ts"
+    "./components/button-variants": {
+      "types": "./src/components/button-variants.ts",
+      "default": "./src/components/button-variants.ts"
     },
-    "./ui/*": {
-      "types": "./src/ui/*.tsx",
-      "default": "./src/ui/*.tsx"
+    "./components/*": {
+      "types": "./src/components/*.tsx",
+      "default": "./src/components/*.tsx"
     }
   },
   "scripts": {

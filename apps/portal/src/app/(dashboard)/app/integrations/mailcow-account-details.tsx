@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import { captureException, startSpan } from "@sentry/nextjs";
 import { Copy, ExternalLink } from "lucide-react";
 import { toast } from "sonner";

@@ -325,9 +325,9 @@ import { keys } from "@portal/db/keys";
 // Consumers import specific subpaths (no barrel file):
 
 // shadcn primitives
-import { Button } from "@atl/ui/ui/button";
-import { Card } from "@atl/ui/ui/card";
-// ... all shadcn components via @atl/ui/ui/<name>
+import { Button } from "@atl/ui/components/button";
+import { Card } from "@atl/ui/components/card";
+// ... all shadcn components via @atl/ui/components/<name>
 
 // Custom components
 import { CommandMenu } from "@atl/ui/command-menu";
@@ -609,7 +609,7 @@ The migration rewrites `@/` path aliases to package imports:
 | `@/shared/schemas`           | `@portal/schemas/user` (or specific file)    |
 | `@/db`                       | `@portal/db/client`                          |
 | `@/db/schema`                | `@portal/db/schema`                          |
-| `@/components/ui/button`     | `@atl/ui/ui/button`                          |
+| `@/components/ui/button`     | `@atl/ui/components/button`                  |
 | `@/components/layout`        | `@atl/ui/layout`                             |
 | `@/shared/api`               | `@portal/api/query-client` (or specific)     |
 | `@/shared/email`             | `@portal/email`                              |
@@ -626,7 +626,7 @@ Note: `@/` inside `apps/portal` still resolves to `apps/portal/src/` for app-int
 **Existing dedicated aliases that change**:
 
 - `@/db` / `@/db/*` → `@portal/db` / `@portal/db/*` (currently aliased to `src/shared/db`)
-- `@/ui/*` → `@atl/ui/ui/*` (currently aliased to `src/components/ui/*`)
+- `@/ui/*` → `@atl/ui/components/*` (currently aliased to `src/components/ui/*`)
 
 **Existing dedicated aliases that stay**:
 
@@ -1306,7 +1306,7 @@ import { sendEmail } from "@/shared/email";
 import { cn } from "@portal/utils/utils";
 import { USER_ROLES } from "@portal/utils/constants";
 import type { SessionData } from "@portal/types/auth";
-import { Button } from "@atl/ui/ui/button";
+import { Button } from "@atl/ui/components/button";
 import { db } from "@portal/db/client";
 import { userSchema } from "@portal/schemas/user";
 import { queryKeys } from "@portal/api/query-keys";
@@ -1500,8 +1500,8 @@ _For all_ internal packages, every runtime import in the package's source files 
 
 **Condition**: Running `pnpm dlx shadcn add <component>` fails because `components.json` paths no longer resolve.
 **Response**: shadcn can't find the target directory for new components.
-**Recovery**: Update `components.json` in `apps/portal/` to point to the UI package paths, or configure shadcn to write to `packages/ui/src/ui/`. Alternatively, run shadcn from within the UI package directory.
-**Prevention**: Update `components.json` aliases during the UI extraction step. Set `"ui": "@atl/ui/ui"` and configure the output directory.
+**Recovery**: Update `components.json` in `apps/portal/` to point to the UI package paths, or configure shadcn to write to `packages/ui/src/components/`. Alternatively, run shadcn from within the UI package directory.
+**Prevention**: Update `components.json` aliases during the UI extraction step. Set `"ui": "@atl/ui/components"` and configure the output directory.
 
 ### Error Scenario 6: Vitest Path Aliases Break
 

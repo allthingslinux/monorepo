@@ -10,9 +10,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@atl/ui/ui/alert-dialog";
-import { Button } from "@atl/ui/ui/button";
-import { Card } from "@atl/ui/ui/card";
+} from "@atl/ui/components/alert-dialog";
+import { Button } from "@atl/ui/components/button";
+import { Card } from "@atl/ui/components/card";
 import {
   Dialog,
   DialogContent,
@@ -20,9 +20,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@atl/ui/ui/dialog";
-import { Input } from "@atl/ui/ui/input";
-import { Label } from "@atl/ui/ui/label";
+} from "@atl/ui/components/dialog";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@portal/utils/utils";
 import * as Sentry from "@sentry/nextjs";

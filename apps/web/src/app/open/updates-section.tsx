@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@atl/ui/ui/card";
+import { Card, CardContent } from "@atl/ui/components/card";
 import { FileText } from "lucide-react";
 import Link from "next/link";
 

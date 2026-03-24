@@ -1,14 +1,14 @@
 "use client";
 
-import { Button } from "@atl/ui/ui/button";
-import { buttonVariants } from "@atl/ui/ui/button-variants";
+import { Button } from "@atl/ui/components/button";
+import { buttonVariants } from "@atl/ui/components/button-variants";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@atl/ui/ui/sheet";
+} from "@atl/ui/components/sheet";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@atl/ui/ui/breadcrumb";
+} from "@atl/ui/components/breadcrumb";
 import type { BreadcrumbItem as BreadcrumbItemType } from "@portal/types/routes";
 import { Fragment } from "react";
 

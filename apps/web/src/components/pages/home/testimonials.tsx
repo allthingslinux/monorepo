@@ -1,8 +1,12 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@atl/ui/ui/avatar";
-import { Card } from "@atl/ui/ui/card";
-import { Carousel, CarouselContent, CarouselItem } from "@atl/ui/ui/carousel";
+import { Avatar, AvatarImage } from "@atl/ui/components/avatar";
+import { Card } from "@atl/ui/components/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@atl/ui/components/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { memo, useRef } from "react";
 
