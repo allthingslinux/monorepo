@@ -4,6 +4,8 @@
   "private": true,
   "description": "All Things Linux documentation (Mintlify)",
   "scripts": {
+    "transit": "true",
+    "clean": "true",
     "dev": "mint dev",
     "build": "mint validate",
     "broken-links": "mint broken-links"
