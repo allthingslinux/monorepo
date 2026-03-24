@@ -4,18 +4,20 @@ This document describes Portal's continuous integration and deployment setup.
 
 ## GitHub Actions Workflows
 
-### CI Workflow (`.github/workflows/ci.yml`)
+Workflow YAML files live at the **repository root** (monorepo): `/.github/workflows/` (for example `portal-ci.yml`). Nested `apps/portal/.github/workflows` is not used by GitHub.
+
+### CI Workflow (`portal-ci.yml`)
 
 Runs on every pull request and push to `main` branch.
 
 **Jobs:**
 
-- **lint**: Runs Biome linting and formatting checks
+- **lint**: Runs Ultracite (Oxlint + Oxfmt) checks at repo root (`pnpm check`)
 - **type-check**: Runs TypeScript type checking
 - **build**: Builds the Next.js application
 - **test**: Runs test suite with coverage reporting
 
-### PR Title Validation (`.github/workflows/pr-title.yml`)
+### PR Title Validation (`pr-title.yml`)
 
 Validates that pull request titles follow Conventional Commits format.
 

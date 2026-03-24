@@ -2,7 +2,6 @@ packages:
   - "apps/web"
   - "apps/docs"
   - "apps/portal"
-  - "apps/portal/apps/*"
   - "apps/portal/packages/*"
 
 onlyBuiltDependencies:

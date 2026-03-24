@@ -51,7 +51,10 @@ export class IrcIntegration extends IntegrationBase<
         parsed.error.issues[0]?.message ?? "Invalid input: password is invalid";
       throw new Error(msg);
     }
-    return { userProvidedPassword: parsed.data.password };
+    const pwd = parsed.data.password;
+    return {
+      userProvidedPassword: typeof pwd === "string" ? pwd : undefined,
+    };
   }
 
   private async resolveUserIdentity(

@@ -56,10 +56,7 @@
     ".env.secrets.prod": "dotenv",
     ".dev.vars": "dotenv"
   },
-  "i18n-ally.localesPaths": [
-    "apps/portal/apps/portal/locale",
-    "apps/portal/apps/portal/src/i18n"
-  ],
+  "i18n-ally.localesPaths": ["apps/portal/locale", "apps/portal/src/i18n"],
   "i18n-ally.enabledParsers": ["json"],
   "i18n-ally.namespace": true,
   "i18n-ally.pathMatcher": "{locale}/{namespaces}.json",

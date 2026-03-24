@@ -87,9 +87,11 @@ compose.yaml
 **/*.tsbuildinfo
 
 # Linting / Formatting (not needed for build)
-**/biome.jsonc
-.lintstagedrc.json
-commitlint.config.cjs
+**/.oxlintrc.json
+**/.oxfmtrc.jsonc
+.eslintignore
+.prettierignore
+lint-staged.config.mjs
 .eslintrc*
 .prettierrc*
 .releaserc.json

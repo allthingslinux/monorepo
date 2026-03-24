@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
  * conforms to the JIT-package conventions defined in the design doc.
  */
 
-const PACKAGES_DIR = path.resolve(import.meta.dirname, "../../../../packages");
+const PACKAGES_DIR = path.resolve(import.meta.dirname, "../../packages");
 
 /** Config-only packages that don't follow the standard library pattern */
 const CONFIG_PACKAGES = new Set(["typescript-config"]);

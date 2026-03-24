@@ -183,11 +183,11 @@ git push origin feat/your-feature-name
 Husky runs pre-commit hooks automatically:
 
 - **Linting and formatting** via `lint-staged` (runs only on changed files)
-- **Commit message validation** via `commitlint` (enforces conventional commits)
+- **Commit message validation** via `commitlint` (enforces conventional commits; single config at the monorepo root: `commitlint.config.cjs`)
 
 **What runs on pre-commit:**
 
-- Biome formatting and linting on staged files only
+- Ultracite (Oxlint + Oxfmt) on staged files only
 - Fast checks (< 5 seconds) to avoid slowing down commits
 - Type checking is skipped in pre-commit (runs in CI)
 

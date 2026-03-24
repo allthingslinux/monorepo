@@ -18,6 +18,8 @@
     }
   },
   "scripts": {
+    "transit": "true",
+    "clean": "true",
     "type-check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate --config src/config.ts",
     "db:migrate": "drizzle-kit migrate --config src/config.ts",

@@ -14,10 +14,12 @@ import { describe, expect, it } from "vitest";
  * and package dependency completeness.
  */
 
-const ROOT_DIR = path.resolve(import.meta.dirname, "../../../..");
+const ROOT_DIR = path.resolve(import.meta.dirname, "../..");
+/** Repository root (parent of `apps/`) — root `turbo.json` holds globalEnv and task env for the graph */
+const MONOREPO_ROOT = path.resolve(import.meta.dirname, "../../../..");
 const PACKAGES_DIR = path.join(ROOT_DIR, "packages");
-const APP_SRC_DIR = path.join(ROOT_DIR, "apps/portal/src");
-const TURBO_JSON_PATH = path.join(ROOT_DIR, "turbo.json");
+const APP_SRC_DIR = path.join(ROOT_DIR, "src");
+const MONOREPO_TURBO_JSON_PATH = path.join(MONOREPO_ROOT, "turbo.json");
 
 /** Config-only packages that don't have src/ directories */
 const CONFIG_PACKAGES = new Set(["typescript-config"]);
@@ -464,7 +466,9 @@ describe("Property 8: Environment variable completeness", () => {
 
   /** Get all declared env vars from turbo.json (all task env + globalEnv) */
   function getTurboEnvVars(): { exact: Set<string>; wildcards: string[] } {
-    const turboJson = JSON.parse(fs.readFileSync(TURBO_JSON_PATH, "utf8"));
+    const turboJson = JSON.parse(
+      fs.readFileSync(MONOREPO_TURBO_JSON_PATH, "utf8")
+    );
     const exact = new Set<string>();
     const wildcards: string[] = [];
 
@@ -913,7 +917,7 @@ describe("Property 14: Package dependency completeness", () => {
       // For packages that retain @/ app imports, also include the app's
       // dependencies since they resolve through the app's bundler
       if (PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
-        const appPkgPath = path.join(ROOT_DIR, "apps/portal/package.json");
+        const appPkgPath = path.join(ROOT_DIR, "package.json");
         const appPkg = JSON.parse(fs.readFileSync(appPkgPath, "utf8"));
         for (const dep of Object.keys(
           (appPkg.dependencies ?? {}) as Record<string, string>

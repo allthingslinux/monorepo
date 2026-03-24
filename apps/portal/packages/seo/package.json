@@ -10,6 +10,8 @@
     }
   },
   "scripts": {
+    "transit": "true",
+    "clean": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
