@@ -66,10 +66,10 @@ This document explains all available pnpm scripts in the project.
 ## Secrets Management
 
 - `pnpm run secrets:dev`
-  Uploads secrets from `.env.secrets.dev` to the development Cloudflare Worker (uses `.github/scripts/secrets.sh`).
+  Uploads secrets from `.env.secrets.dev` to the development Cloudflare Worker (uses `../../.github/scripts/web/secrets.sh` from `apps/web`).
 
 - `pnpm run secrets:prod`
-  Uploads secrets from `.env.secrets.prod` to the production Cloudflare Worker (uses `.github/scripts/secrets.sh`).
+  Uploads secrets from `.env.secrets.prod` to the production Cloudflare Worker (uses `../../.github/scripts/web/secrets.sh` from `apps/web`).
 
 ## Code Quality
 

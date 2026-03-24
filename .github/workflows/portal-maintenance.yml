@@ -1,4 +1,4 @@
-name: Maintenance
+name: Portal Maintenance
 
 on:
   push:
@@ -35,7 +35,6 @@ jobs:
           CLOSE_ISSUES: true
           INSERT_ISSUE_URLS: true
           AUTO_ASSIGN: true
-          # Only actionable markers; exclude NOTE to avoid issues from doc comments
           IDENTIFIERS: |
             [
               {"name": "TODO", "labels": ["todo-to-issue"]},

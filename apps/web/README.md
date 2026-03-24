@@ -261,8 +261,8 @@ pnpm run version:list   # List all versions
 pnpm run version:deploy # Deploy latest version
 
 # Secrets
-pnpm run secrets:dev    # Upload dev secrets to dev worker (.github/scripts/secrets.sh)
-pnpm run secrets:prod   # Upload prod secrets to prod worker (.github/scripts/secrets.sh)
+pnpm run secrets:dev    # Upload dev secrets to dev worker (repo .github/scripts/web/secrets.sh)
+pnpm run secrets:prod   # Upload prod secrets to prod worker (repo .github/scripts/web/secrets.sh)
 
 # Infrastructure
 pnpm run setup:bindings # Setup Cloudflare bindings (R2, KV)

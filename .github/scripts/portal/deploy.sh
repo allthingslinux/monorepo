@@ -17,7 +17,10 @@
 set -e
 
 # Navigate to deployment directory
-cd ~/portal || { echo 'Deployment directory not found'; exit 1; }
+cd ~/portal || {
+    echo 'Deployment directory not found'
+    exit 1
+}
 
 # Authenticate to GitHub Container Registry
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
@@ -45,26 +48,26 @@ echo "Waiting for application to be healthy..."
 timeout=120
 elapsed=0
 while [ $elapsed -lt $timeout ]; do
-  if docker compose --profile "${COMPOSE_PROFILES:-$ENVIRONMENT}" ps "$APP_SVC" | grep -q "healthy"; then
-    echo "Application is healthy!"
-    break
-  fi
-  sleep 5
-  elapsed=$((elapsed + 5))
+    if docker compose --profile "${COMPOSE_PROFILES:-$ENVIRONMENT}" ps "$APP_SVC" | grep -q "healthy"; then
+        echo "Application is healthy!"
+        break
+    fi
+    sleep 5
+    elapsed=$((elapsed + 5))
 done
 
 # Check if health check timed out
 if [ $elapsed -ge $timeout ]; then
-  echo "Health check timeout! Rolling back..."
-  docker compose --profile "${COMPOSE_PROFILES:-$ENVIRONMENT}" down
-  exit 1
+    echo "Health check timeout! Rolling back..."
+    docker compose --profile "${COMPOSE_PROFILES:-$ENVIRONMENT}" down
+    exit 1
 fi
 
 # Handle database migrations for production
 if [ "$ENVIRONMENT" == "production" ]; then
-  echo "Note: Database migrations should be run manually or via a separate migration step."
-  echo "Run: docker compose --profile production exec portal-app-production pnpm db:migrate"
-  echo "Or run migrations from host machine with database connection."
+    echo "Note: Database migrations should be run manually or via a separate migration step."
+    echo "Run: docker compose --profile production exec portal-app-production pnpm db:migrate"
+    echo "Or run migrations from host machine with database connection."
 fi
 
 # Clean up old images (keep images from last 7 days)

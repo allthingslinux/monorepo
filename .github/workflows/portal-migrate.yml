@@ -1,19 +1,20 @@
-name: Rollback
+name: Portal Database Migration
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to rollback"
+        description: "Environment to run migrations on"
         required: true
         type: choice
         options:
           - staging
           - production
-      previous_commit:
-        description: "Previous commit SHA or image tag to rollback to"
-        required: true
-        type: string
+      dry_run:
+        description: "Dry run (preview SQL without executing)"
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,13 +23,9 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
-  rollback:
-    name: Rollback ${{ github.event.inputs.environment }}
+  migrate:
+    name: Run Database Migrations
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -36,6 +33,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
 
       - name: Determine compose profile
         id: env
@@ -44,30 +43,31 @@ jobs:
           echo "compose_profile=$ENV" >> $GITHUB_OUTPUT
           echo "environment=$ENV" >> $GITHUB_OUTPUT
 
-      - name: Rollback deployment
+      - name: Run database migrations
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1
         env:
           COMPOSE_PROFILES: ${{ steps.env.outputs.compose_profile }}
           ENVIRONMENT: ${{ steps.env.outputs.environment }}
-          PREVIOUS_COMMIT: ${{ github.event.inputs.previous_commit }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          timeout: 5m
-          envs: COMPOSE_PROFILES,ENVIRONMENT,PREVIOUS_COMMIT,GITHUB_REPOSITORY,GITHUB_ACTOR,GITHUB_TOKEN,IMAGE_NAME
-          script_path: .github/scripts/rollback.sh
+          timeout: 10m
+          envs: COMPOSE_PROFILES,ENVIRONMENT,DRY_RUN,DATABASE_URL
+          script_path: .github/scripts/portal/migrate.sh
 
-      - name: Rollback summary
+      - name: Migration summary
         run: |
-          echo "## Rollback Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Migration Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Rolled back to: \`${{ github.event.inputs.previous_commit }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry Run: ${{ github.event.inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
           echo "- Compose profile: \`${{ steps.env.outputs.compose_profile }}\` (compose.yaml)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "⚠️ Verify the rollback was successful by checking application health and logs." >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "⚠️ This was a dry run. No migrations were applied." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Migrations have been applied to the database." >> $GITHUB_STEP_SUMMARY
+          fi

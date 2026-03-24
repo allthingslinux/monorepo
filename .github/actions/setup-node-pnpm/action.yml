@@ -1,0 +1,26 @@
+name: Setup Node and pnpm
+description: Install pnpm, set up Node with pnpm cache, and run frozen lockfile install at repo root
+inputs:
+  node-version:
+    description: Node.js version (major or semver)
+    required: true
+  pnpm-version:
+    description: pnpm major version or exact version
+    required: false
+    default: "10.28.2"
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+    - name: Setup Node.js
+      uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash
+      working-directory: ${{ github.workspace }}

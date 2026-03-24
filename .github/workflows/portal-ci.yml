@@ -1,4 +1,4 @@
-name: CI
+name: Portal CI
 
 on:
   pull_request:
@@ -12,7 +12,9 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  NODE_VERSION: "22"
+  # Align with root package.json packageManager + mise.toml
+  NODE_VERSION: "24"
+  PNPM_VERSION: "10.28.2"
 
 jobs:
   changes:
@@ -36,10 +38,12 @@ jobs:
         with:
           files: |
             apps/portal/src/**/*.{ts,tsx}
-            packages/*/src/**/*.{ts,tsx}
+            apps/portal/packages/*/src/**/*.{ts,tsx}
             **/tsconfig.json
             package.json
             pnpm-lock.yaml
+            apps/portal/package.json
+            apps/portal/packages/**/package.json
       - name: Check Config
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
         id: config_changes
@@ -51,7 +55,7 @@ jobs:
             apps/portal/vitest.config.ts
             turbo.json
             apps/portal/turbo.json
-            .github/workflows/ci.yml
+            .github/workflows/portal-ci.yml
       - name: Check Tests
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
         id: test_changes
@@ -72,15 +76,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Run lint
         run: pnpm check
 
@@ -95,19 +95,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Generate Next.js types
-        run: pnpm typegen
+        run: pnpm --filter @portal/portal typegen
       - name: Run type check
-        run: pnpm type-check
+        run: pnpm exec turbo run type-check --filter=@portal/portal
 
   build:
     name: Build
@@ -118,19 +114,16 @@ jobs:
     permissions:
       contents: read
     env:
-      # Placeholders so Next.js build can prerender; not used for real requests
       DATABASE_URL: postgresql://localhost:5432/__build_placeholder__
       BETTER_AUTH_SECRET: __ci_build_placeholder_do_not_use_in_production__
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Cache Next.js build
         uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
         with:
@@ -139,10 +132,8 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
       - name: Build
-        run: pnpm build
+        run: pnpm exec turbo run build --filter=@portal/portal
 
   test:
     name: Test
@@ -156,17 +147,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Run tests
-        run: pnpm test:coverage
+        run: pnpm exec turbo run test:coverage --filter=@portal/portal
       - name: Upload coverage reports
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
         if: always()
@@ -192,19 +179,15 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: pnpm run release
+        run: pnpm --filter @portal/portal run release
