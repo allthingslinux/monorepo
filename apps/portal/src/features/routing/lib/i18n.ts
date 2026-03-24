@@ -273,8 +273,6 @@ export function createRouteTranslationResolver(
       }
       // Return undefined to fall back to original
     }
-
-    return;
   };
 }
 

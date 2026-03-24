@@ -440,13 +440,13 @@ export class IrcIntegration extends IntegrationBase<
 
     const updates: Partial<typeof ircAccount.$inferInsert> = {};
 
-    if (status != null && status !== account.status) {
+    if (status !== null && status !== undefined && status !== account.status) {
       updates.status = status;
     }
     if (metadata !== undefined) {
       updates.metadata = metadata;
     }
-    if (nick != null && nick.trim() !== account.nick) {
+    if (nick !== null && nick !== undefined && nick.trim() !== account.nick) {
       throw new Error(
         "Nick cannot be changed. Delete your account and create a new one with the desired nick."
       );

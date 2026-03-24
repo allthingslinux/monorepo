@@ -21,7 +21,9 @@ export function ReleaseCard({ entry }: ReleaseCardProps) {
     year: "numeric",
   });
 
-  const hasStats = entry.commitCount != null || entry.contributors != null;
+  const hasStats =
+    (entry.commitCount !== null && entry.commitCount !== undefined) ||
+    (entry.contributors !== null && entry.contributors !== undefined);
 
   return (
     <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/5 px-3 py-2 dark:border-green-500/20 dark:bg-green-500/5">
@@ -47,25 +49,27 @@ export function ReleaseCard({ entry }: ReleaseCardProps) {
       )}
       {hasStats ? (
         <span className="inline-flex shrink-0 items-center gap-2.5">
-          {entry.commitCount == null ? null : (
+          {entry.commitCount === null ||
+          entry.commitCount === undefined ? null : (
             <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
               <GitCommitHorizontal className="size-3" />
               {entry.commitCount}
             </span>
           )}
-          {entry.contributors == null ? null : (
+          {entry.contributors === null ||
+          entry.contributors === undefined ? null : (
             <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
               <Users className="size-3" />
               {entry.contributors}
             </span>
           )}
-          {entry.additions == null ? null : (
+          {entry.additions === null || entry.additions === undefined ? null : (
             <span className="inline-flex items-center gap-0.5 font-mono text-green-600 text-xs dark:text-green-400">
               <Plus className="size-3" />
               {entry.additions.toLocaleString()}
             </span>
           )}
-          {entry.deletions == null ? null : (
+          {entry.deletions === null || entry.deletions === undefined ? null : (
             <span className="inline-flex items-center gap-0.5 font-mono text-red-500 text-xs dark:text-red-400">
               <Minus className="size-3" />
               {entry.deletions.toLocaleString()}

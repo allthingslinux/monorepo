@@ -257,7 +257,6 @@ function StepperFormContent({
         // If validation fails on the final step, show field errors
         console.log("Validation failed:", validationResult.error);
         scrollToFirstError();
-        return;
       }
     } catch (error) {
       console.error("Error submitting form:", error);

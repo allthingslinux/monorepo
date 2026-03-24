@@ -41,8 +41,6 @@
     "promise/prefer-await-to-then": "off",
     "import/no-named-as-default-member": "off",
     "require-await": "off",
-    "no-eq-null": "off",
-    "eqeqeq": "off",
     "no-shadow": "off",
     "no-warning-comments": "off",
     "no-empty-function": "off",
@@ -63,7 +61,6 @@
     "unicorn/no-empty-file": "off",
     "unicorn/no-array-for-each": "off",
     "react/no-danger": "off",
-    "no-useless-return": "off",
     "max-classes-per-file": "off",
     "complexity": "off"
   },

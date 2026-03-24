@@ -258,7 +258,11 @@ export class MediaWikiIntegration extends IntegrationBase<
 
     const updates: Partial<typeof mediawikiAccount.$inferInsert> = {};
 
-    if (data.status != null && data.status !== account.status) {
+    if (
+      data.status !== null &&
+      data.status !== undefined &&
+      data.status !== account.status
+    ) {
       await this.handleStatusTransition(account, data.status);
       updates.status = data.status;
     }
@@ -268,7 +272,8 @@ export class MediaWikiIntegration extends IntegrationBase<
     }
 
     if (
-      data.wikiUsername != null &&
+      data.wikiUsername !== null &&
+      data.wikiUsername !== undefined &&
       data.wikiUsername.trim() !== account.wikiUsername
     ) {
       throw new Error(
