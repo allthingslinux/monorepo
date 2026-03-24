@@ -1,0 +1,14 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "dev": {
+      "dependsOn": []
+    },
+    "test": {
+      "dependsOn": []
+    },
+    "type-check": {
+      "dependsOn": []
+    }
+  }
+}

@@ -1,0 +1,12 @@
+packages:
+  - "apps/web"
+  - "apps/docs"
+  - "apps/portal"
+  - "apps/portal/apps/*"
+  - "apps/portal/packages/*"
+
+onlyBuiltDependencies:
+  - core-js
+  - esbuild
+  - sharp
+  - unrs-resolver

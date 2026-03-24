@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss",
+    "mikestead.dotenv",
+    "editorconfig.editorconfig",
+    "usernamehw.errorlens",
+    "redhat.vscode-yaml",
+    "lokalise.i18n-ally",
+    "DavidAnson.vscode-markdownlint"
+  ]
+}
