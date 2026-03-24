@@ -25,7 +25,7 @@ This document explains all available pnpm scripts in the project.
   Compiles Next.js application for production.
 
 - `pnpm run build:all`
-  Builds both Next.js and OpenNext.js Cloudflare adapter for complete deployment preparation.
+  Alias for `build:opennext` (OpenNext Cloudflare worker bundle). Use after `pnpm run build` when you need the full pipeline locally.
 
 - `pnpm run build:opennext`
   Compiles the application using OpenNext.js Cloudflare adapter for Cloudflare Workers deployment.
@@ -33,35 +33,19 @@ This document explains all available pnpm scripts in the project.
 - `pnpm run build:opennext:profile`
   Compiles with --noMinify flag for performance profiling and debugging (unminified code).
 
-## Testing & Preview
+## Local Cloudflare testing
 
-- `pnpm run preview`
-  Builds and runs the Cloudflare application locally to test the production build.
-
-- `pnpm run preview:profile`
-  Builds with profiling settings and runs locally for performance analysis.
+After `pnpm run build:opennext`, use `pnpm run wrangler` to run the worker locally (`wrangler dev --env local`). There is no separate `preview` script; CI deploys with Alchemy (`web-deploy` workflow).
 
 ## Deployment
 
-- `pnpm run deploy:dev`
-  Builds and deploys to the development Cloudflare Worker (allthingslinux-dev) with separate R2/KV bindings.
-
-- `pnpm run deploy:prod`
-  Builds and deploys to the production Cloudflare Worker (allthingslinux-prod) with separate R2/KV bindings.
-
 - `pnpm run deploy`
-  Alias for production deployment - the default deploy command.
+  Runs `alchemy deploy --app web` from `apps/web`. Use `--stage dev` or `--stage prod` when you need shared workers; default stage is your POSIX username.
 
-## Version Management
+- `pnpm run destroy`
+  Runs `alchemy destroy --app web` (tear down Alchemy-managed resources for this app).
 
-- `pnpm run version:upload`
-  Creates a new version in the development Cloudflare Worker without deploying it immediately.
-
-- `pnpm run version:deploy`
-  Deploys the latest uploaded version to the development Cloudflare Worker.
-
-- `pnpm run version:list`
-  Lists all versions of the development Cloudflare Worker with metadata.
+**CI:** production and dev deploys use [`.github/workflows/web-deploy.yml`](../../.github/workflows/web-deploy.yml) with `alchemy deploy`.
 
 ## Secrets Management
 
@@ -73,23 +57,14 @@ This document explains all available pnpm scripts in the project.
 
 ## Code Quality
 
-- `pnpm run lint`
-  Runs ESLint to check JavaScript/TypeScript code quality.
-
-- `pnpm run format`
-  Runs Prettier to format all code files.
+- `pnpm run type-check`
+  Runs `contentlayer2 build` then `tsc --noEmit` (generated types + MDX pipeline).
 
 - `pnpm run check`
-  Runs all code quality checks: TypeScript, formatting, and MDX validation.
+  Runs `type-check` then `ultracite check` (Oxlint + Oxfmt). Repo root `pnpm check` / `pnpm fix` only run Ultracite across the monorepo.
 
-- `pnpm run check:ts`
-  Runs TypeScript compiler to validate types.
-
-- `pnpm run check:format`
-  Checks if files are properly formatted with Prettier.
-
-- `pnpm run check:mdx`
-  Validates MDX files in the blog content directory.
+- `pnpm run fix`
+  Runs `ultracite fix` for this package context.
 
 ## Infrastructure
 
