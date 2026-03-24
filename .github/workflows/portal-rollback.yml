@@ -26,12 +26,9 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-# Global CI kill switch: commit `.github/CI_DISABLE` (see `.github/CI_DISABLE.example`).
-
 jobs:
   rollback:
     name: Rollback ${{ github.event.inputs.environment }}
-    if: ${{ hashFiles('.github/CI_DISABLE') == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
