@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "All Things Linux",
-  "description": "Documentation for the All Things Linux community monorepo: guides, Mintlify authoring, and API reference examples.",
+  "description": "Technical docs for the All Things Linux open-source monorepo—Mintlify guides, contributing, and API playground examples. ATL is a volunteer-driven 501(c)(3) Linux community (allthingslinux.org).",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -36,7 +36,13 @@
         "groups": [
           {
             "group": "Getting started",
-            "pages": ["index", "quickstart", "development", "contributing"]
+            "pages": [
+              "index",
+              "about",
+              "quickstart",
+              "development",
+              "contributing"
+            ]
           },
           {
             "group": "Project",

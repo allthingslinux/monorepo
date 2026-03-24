@@ -1,6 +1,6 @@
 # Contribute to the documentation
 
-Thank you for helping improve **All Things Linux** documentation. This site lives in the monorepo under `apps/docs` and deploys with [Mintlify](https://mintlify.com).
+Thank you for helping improve **All Things Linux** documentation. ATL is a volunteer-driven **501(c)(3)** non-profit Linux community ([allthingslinux.org](https://allthingslinux.org)). This site lives in the monorepo under `apps/docs` and deploys with [Mintlify](https://mintlify.com). For who we are and ecosystem names, see the published **About** page (`about.mdx`).
 
 ## How to contribute
 

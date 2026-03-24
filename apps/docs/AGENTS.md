@@ -4,7 +4,7 @@
 
 ## About this project
 
-- This is the **All Things Linux** documentation site, built on [Mintlify](https://mintlify.com).
+- This is **All Things Linux** technical documentation, built on [Mintlify](https://mintlify.com). ATL is a volunteer-driven **501(c)(3)** non-profit Linux community; see [About All Things Linux](about.mdx) for positioning and links.
 - Pages are MDX files with YAML frontmatter.
 - Configuration lives in `docs.json` at the project root.
 - Run `pnpm dev` from `apps/docs` (or `mint dev`) to preview locally.
@@ -12,9 +12,11 @@
 
 ## Terminology
 
-- **All Things Linux** / **ATL** — The community and GitHub organization ([allthingslinux](https://github.com/allthingslinux)).
-- **Docs** — This Mintlify site; not the main marketing site or app UI unless a page says otherwise.
-- **Monorepo** — The repository that contains `apps/docs`, `apps/web`, `apps/portal`, and shared packages.
+- **All Things Linux** / **ATL** — The organization ([allthingslinux.org](https://allthingslinux.org), [GitHub](https://github.com/allthingslinux)).
+- **Docs** — This Mintlify site; not the full internal org handbook unless we add explicit pages.
+- **Monorepo** — The repository containing `apps/docs`, `apps/web`, `apps/portal`, and shared packages.
+- **non-profit** — Hyphenated in ATL communications (501(c)(3) status).
+- Prefer **FOSS** / **open source**, **community-driven**, **beginner** (not “noob”), **accessible** (honest about difficulty—see org terminology guide).
 
 ## Style preferences
 
@@ -23,10 +25,11 @@
 - Use sentence case for headings.
 - Bold for UI elements: Click **Settings**.
 - Code formatting for file names, commands, paths, and code references.
+- Avoid minimizing language (**just**, **simply**, **obviously**) when describing steps—aligned with org inclusive language norms.
 
 ## Content boundaries
 
-- Document public contributor workflows, Mintlify usage, and APIs that are explicitly described in this repo.
+- Document public contributor workflows, Mintlify usage, and APIs explicitly described in this repo.
 - The OpenAPI **Plant Store** example under API reference is illustrative only; do not imply it is a live ATL production API without an explicit source page.
 - Do not document unreleased or private admin-only features unless maintainers add a dedicated, intentional page.
 
