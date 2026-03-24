@@ -1,12 +1,12 @@
-import React, { Suspense } from 'react';
-import { CodeOfConductContent } from './CodeOfConductContent';
-import { getCodeOfConductContent, getLastUpdated } from './actions';
-import { LoadingSpinner } from '../../components/ui/loading-spinner';
+import { Suspense } from "react";
+import type { Metadata } from "next";
 
-import { getPageMetadata } from '../metadata';
-import type { Metadata } from 'next';
+import { LoadingSpinner } from "../../components/ui/loading-spinner";
+import { getPageMetadata } from "../metadata";
+import { getCodeOfConductContent, getLastUpdated } from "./actions";
+import { CodeOfConductContent } from "./CodeOfConductContent";
 
-export const metadata: Metadata = getPageMetadata('code-of-conduct');
+export const metadata: Metadata = getPageMetadata("code-of-conduct");
 
 // Loading component to display while content is loading
 function CodeOfConductLoading() {

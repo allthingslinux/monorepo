@@ -2,18 +2,18 @@
 // Runtime types generated with workerd@1.20250320.0 2025-04-02 nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
-		NEXT_PUBLIC_URL: "https://allthingslinux.org";
-		NEXT_PUBLIC_API_URL: "https://allthingslinux.org/api";
-		NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux";
-		NEXT_PUBLIC_GITHUB_REPO_NAME: "applications";
-		MONDAY_API_KEY: string;
-		MONDAY_BOARD_ID: string;
+		ASSETS: Fetcher;
 		DISCORD_WEBHOOK_URL: string;
 		GITHUB_TOKEN: string;
-		NODE_ENV: string;
+		MONDAY_API_KEY: string;
+		MONDAY_BOARD_ID: string;
+		NEXT_PUBLIC_API_URL: "https://allthingslinux.org/api";
+		NEXT_PUBLIC_GITHUB_REPO_NAME: "applications";
+		NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux";
+		NEXT_PUBLIC_URL: "https://allthingslinux.org";
 		NEXTJS_ENV: string;
+		NODE_ENV: string;
 		TRIGGER_SECRET_KEY: string;
-		ASSETS: Fetcher;
 	}
 }
 interface Env extends Cloudflare.Env {}
@@ -150,8 +150,8 @@ declare namespace WebAssembly {
     }
     type ValueType = "anyfunc" | "externref" | "f32" | "f64" | "i32" | "i64" | "v128";
     interface GlobalDescriptor {
-        value: ValueType;
         mutable?: boolean;
+        value: ValueType;
     }
     class Global {
         constructor(descriptor: GlobalDescriptor, value?: any);
@@ -215,93 +215,93 @@ declare namespace WebAssembly {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorkerGlobalScope)
  */
 interface ServiceWorkerGlobalScope extends WorkerGlobalScope {
-    DOMException: typeof DOMException;
-    WorkerGlobalScope: typeof WorkerGlobalScope;
-    btoa(data: string): string;
+    AbortController: typeof AbortController;
+    AbortSignal: typeof AbortSignal;
     atob(data: string): string;
-    setTimeout(callback: (...args: any[]) => void, msDelay?: number): number;
-    setTimeout<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
-    clearTimeout(timeoutId: number | null): void;
-    setInterval(callback: (...args: any[]) => void, msDelay?: number): number;
-    setInterval<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
-    clearInterval(timeoutId: number | null): void;
-    queueMicrotask(task: Function): void;
-    structuredClone<T>(value: T, options?: StructuredSerializeOptions): T;
-    reportError(error: any): void;
-    fetch(input: RequestInfo | URL, init?: RequestInit<RequestInitCfProperties>): Promise<Response>;
-    self: ServiceWorkerGlobalScope;
-    crypto: Crypto;
-    caches: CacheStorage;
-    scheduler: Scheduler;
-    performance: Performance;
-    Cloudflare: Cloudflare;
-    readonly origin: string;
-    Event: typeof Event;
-    ExtendableEvent: typeof ExtendableEvent;
-    CustomEvent: typeof CustomEvent;
-    PromiseRejectionEvent: typeof PromiseRejectionEvent;
-    FetchEvent: typeof FetchEvent;
-    TailEvent: typeof TailEvent;
-    TraceEvent: typeof TailEvent;
-    ScheduledEvent: typeof ScheduledEvent;
-    MessageEvent: typeof MessageEvent;
-    CloseEvent: typeof CloseEvent;
-    ReadableStreamDefaultReader: typeof ReadableStreamDefaultReader;
-    ReadableStreamBYOBReader: typeof ReadableStreamBYOBReader;
-    ReadableStream: typeof ReadableStream;
-    WritableStream: typeof WritableStream;
-    WritableStreamDefaultWriter: typeof WritableStreamDefaultWriter;
-    TransformStream: typeof TransformStream;
+    Blob: typeof Blob;
+    Body: typeof Body;
     ByteLengthQueuingStrategy: typeof ByteLengthQueuingStrategy;
+    btoa(data: string): string;
+    Cache: typeof Cache;
+    CacheStorage: typeof CacheStorage;
+    CloseEvent: typeof CloseEvent;
+    Cloudflare: Cloudflare;
+    CompressionStream: typeof CompressionStream;
     CountQueuingStrategy: typeof CountQueuingStrategy;
+    Crypto: typeof Crypto;
+    CryptoKey: typeof CryptoKey;
+    CustomEvent: typeof CustomEvent;
+    caches: CacheStorage;
+    clearInterval(timeoutId: number | null): void;
+    clearTimeout(timeoutId: number | null): void;
+    crypto: Crypto;
+    DecompressionStream: typeof DecompressionStream;
+    DOMException: typeof DOMException;
     ErrorEvent: typeof ErrorEvent;
+    Event: typeof Event;
     EventSource: typeof EventSource;
+    ExtendableEvent: typeof ExtendableEvent;
+    FetchEvent: typeof FetchEvent;
+    File: typeof File;
+    FixedLengthStream: typeof FixedLengthStream;
+    FormData: typeof FormData;
+    fetch(input: RequestInfo | URL, init?: RequestInit<RequestInitCfProperties>): Promise<Response>;
+    GPUAdapter: typeof GPUAdapter;
+    GPUBufferUsage: typeof GPUBufferUsage;
+    GPUColorWrite: typeof GPUColorWrite;
+    GPUDeviceLostInfo: typeof GPUDeviceLostInfo;
+    GPUInternalError: typeof GPUInternalError;
+    GPUMapMode: typeof GPUMapMode;
+    GPUOutOfMemoryError: typeof GPUOutOfMemoryError;
+    GPUShaderStage: typeof GPUShaderStage;
+    GPUTextureUsage: typeof GPUTextureUsage;
+    GPUValidationError: typeof GPUValidationError;
+    Headers: typeof Headers;
+    HTMLRewriter: typeof HTMLRewriter;
+    IdentityTransformStream: typeof IdentityTransformStream;
+    MessageEvent: typeof MessageEvent;
+    Navigator: typeof Navigator;
+    navigator: Navigator;
+    readonly origin: string;
+    PromiseRejectionEvent: typeof PromiseRejectionEvent;
+    performance: Performance;
+    queueMicrotask(task: Function): void;
+    ReadableByteStreamController: typeof ReadableByteStreamController;
+    ReadableStream: typeof ReadableStream;
+    ReadableStreamBYOBReader: typeof ReadableStreamBYOBReader;
     ReadableStreamBYOBRequest: typeof ReadableStreamBYOBRequest;
     ReadableStreamDefaultController: typeof ReadableStreamDefaultController;
-    ReadableByteStreamController: typeof ReadableByteStreamController;
-    WritableStreamDefaultController: typeof WritableStreamDefaultController;
-    TransformStreamDefaultController: typeof TransformStreamDefaultController;
-    CompressionStream: typeof CompressionStream;
-    DecompressionStream: typeof DecompressionStream;
-    TextEncoderStream: typeof TextEncoderStream;
-    TextDecoderStream: typeof TextDecoderStream;
-    Headers: typeof Headers;
-    Body: typeof Body;
+    ReadableStreamDefaultReader: typeof ReadableStreamDefaultReader;
     Request: typeof Request;
     Response: typeof Response;
+    reportError(error: any): void;
+    ScheduledEvent: typeof ScheduledEvent;
+    SubtleCrypto: typeof SubtleCrypto;
+    scheduler: Scheduler;
+    self: ServiceWorkerGlobalScope;
+    setInterval(callback: (...args: any[]) => void, msDelay?: number): number;
+    setInterval<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
+    setTimeout(callback: (...args: any[]) => void, msDelay?: number): number;
+    setTimeout<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
+    structuredClone<T>(value: T, options?: StructuredSerializeOptions): T;
+    TailEvent: typeof TailEvent;
+    TextDecoder: typeof TextDecoder;
+    TextDecoderStream: typeof TextDecoderStream;
+    TextEncoder: typeof TextEncoder;
+    TextEncoderStream: typeof TextEncoderStream;
+    TraceEvent: typeof TailEvent;
+    TransformStream: typeof TransformStream;
+    TransformStreamDefaultController: typeof TransformStreamDefaultController;
+    URL: typeof URL;
+    URLPattern: typeof URLPattern;
+    URLSearchParams: typeof URLSearchParams;
     WebSocket: typeof WebSocket;
     WebSocketPair: typeof WebSocketPair;
     WebSocketRequestResponsePair: typeof WebSocketRequestResponsePair;
-    AbortController: typeof AbortController;
-    AbortSignal: typeof AbortSignal;
-    TextDecoder: typeof TextDecoder;
-    TextEncoder: typeof TextEncoder;
-    navigator: Navigator;
-    Navigator: typeof Navigator;
-    URL: typeof URL;
-    URLSearchParams: typeof URLSearchParams;
-    URLPattern: typeof URLPattern;
-    Blob: typeof Blob;
-    File: typeof File;
-    FormData: typeof FormData;
-    Crypto: typeof Crypto;
-    SubtleCrypto: typeof SubtleCrypto;
-    CryptoKey: typeof CryptoKey;
-    CacheStorage: typeof CacheStorage;
-    Cache: typeof Cache;
-    FixedLengthStream: typeof FixedLengthStream;
-    IdentityTransformStream: typeof IdentityTransformStream;
-    HTMLRewriter: typeof HTMLRewriter;
-    GPUAdapter: typeof GPUAdapter;
-    GPUOutOfMemoryError: typeof GPUOutOfMemoryError;
-    GPUValidationError: typeof GPUValidationError;
-    GPUInternalError: typeof GPUInternalError;
-    GPUDeviceLostInfo: typeof GPUDeviceLostInfo;
-    GPUBufferUsage: typeof GPUBufferUsage;
-    GPUShaderStage: typeof GPUShaderStage;
-    GPUMapMode: typeof GPUMapMode;
-    GPUTextureUsage: typeof GPUTextureUsage;
-    GPUColorWrite: typeof GPUColorWrite;
+    WorkerGlobalScope: typeof WorkerGlobalScope;
+    WritableStream: typeof WritableStream;
+    WritableStreamDefaultController: typeof WritableStreamDefaultController;
+    WritableStreamDefaultWriter: typeof WritableStreamDefaultWriter;
 }
 declare function addEventListener<Type extends keyof WorkerGlobalScopeEventMap>(type: Type, handler: EventListenerOrEventListenerObject<WorkerGlobalScopeEventMap[Type]>, options?: EventTargetAddEventListenerOptions | boolean): void;
 declare function removeEventListener<Type extends keyof WorkerGlobalScopeEventMap>(type: Type, handler: EventListenerOrEventListenerObject<WorkerGlobalScopeEventMap[Type]>, options?: EventTargetEventListenerOptions | boolean): void;
@@ -365,9 +365,9 @@ declare const navigator: Navigator;
 interface TestController {
 }
 interface ExecutionContext {
-    waitUntil(promise: Promise<any>): void;
     passThroughOnException(): void;
     props: any;
+    waitUntil(promise: Promise<any>): void;
 }
 type ExportedHandlerFetchHandler<Env = unknown, CfHostMetadata = unknown> = (request: Request<CfHostMetadata, IncomingRequestCfProperties<CfHostMetadata>>, env: Env, ctx: ExecutionContext) => Response | Promise<Response>;
 type ExportedHandlerTailHandler<Env = unknown> = (events: TraceItem[], env: Env, ctx: ExecutionContext) => void | Promise<void>;
@@ -377,14 +377,14 @@ type ExportedHandlerScheduledHandler<Env = unknown> = (controller: ScheduledCont
 type ExportedHandlerQueueHandler<Env = unknown, Message = unknown> = (batch: MessageBatch<Message>, env: Env, ctx: ExecutionContext) => void | Promise<void>;
 type ExportedHandlerTestHandler<Env = unknown> = (controller: TestController, env: Env, ctx: ExecutionContext) => void | Promise<void>;
 interface ExportedHandler<Env = unknown, QueueHandlerMessage = unknown, CfHostMetadata = unknown> {
-    fetch?: ExportedHandlerFetchHandler<Env, CfHostMetadata>;
-    tail?: ExportedHandlerTailHandler<Env>;
-    trace?: ExportedHandlerTraceHandler<Env>;
-    tailStream?: ExportedHandlerTailStreamHandler<Env>;
-    scheduled?: ExportedHandlerScheduledHandler<Env>;
-    test?: ExportedHandlerTestHandler<Env>;
     email?: EmailExportedHandler<Env>;
+    fetch?: ExportedHandlerFetchHandler<Env, CfHostMetadata>;
     queue?: ExportedHandlerQueueHandler<Env, QueueHandlerMessage>;
+    scheduled?: ExportedHandlerScheduledHandler<Env>;
+    tail?: ExportedHandlerTailHandler<Env>;
+    tailStream?: ExportedHandlerTailStreamHandler<Env>;
+    test?: ExportedHandlerTestHandler<Env>;
+    trace?: ExportedHandlerTraceHandler<Env>;
 }
 interface StructuredSerializeOptions {
     transfer?: any[];
@@ -408,10 +408,10 @@ declare abstract class Navigator {
 * [Cloudflare Docs Reference](https://developers.cloudflare.com/workers/runtime-apis/performance/)
 */
 interface Performance {
-    /* [Cloudflare Docs Reference](https://developers.cloudflare.com/workers/runtime-apis/performance/#performancetimeorigin) */
-    readonly timeOrigin: number;
     /* [Cloudflare Docs Reference](https://developers.cloudflare.com/workers/runtime-apis/performance/#performancenow) */
     now(): number;
+    /* [Cloudflare Docs Reference](https://developers.cloudflare.com/workers/runtime-apis/performance/#performancetimeorigin) */
+    readonly timeOrigin: number;
 }
 interface AlarmInvocationInfo {
     readonly isRetry: boolean;
@@ -421,27 +421,27 @@ interface Cloudflare {
     readonly compatibilityFlags: Record<string, boolean>;
 }
 interface DurableObject {
-    fetch(request: Request): Response | Promise<Response>;
     alarm?(alarmInfo?: AlarmInvocationInfo): void | Promise<void>;
-    webSocketMessage?(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void>;
+    fetch(request: Request): Response | Promise<Response>;
     webSocketClose?(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void>;
     webSocketError?(ws: WebSocket, error: unknown): void | Promise<void>;
+    webSocketMessage?(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void>;
 }
 type DurableObjectStub<T extends Rpc.DurableObjectBranded | undefined = undefined> = Fetcher<T, "alarm" | "webSocketMessage" | "webSocketClose" | "webSocketError"> & {
     readonly id: DurableObjectId;
     readonly name?: string;
 };
 interface DurableObjectId {
-    toString(): string;
     equals(other: DurableObjectId): boolean;
     readonly name?: string;
+    toString(): string;
 }
 interface DurableObjectNamespace<T extends Rpc.DurableObjectBranded | undefined = undefined> {
-    newUniqueId(options?: DurableObjectNamespaceNewUniqueIdOptions): DurableObjectId;
+    get(id: DurableObjectId, options?: DurableObjectNamespaceGetDurableObjectOptions): DurableObjectStub<T>;
     idFromName(name: string): DurableObjectId;
     idFromString(id: string): DurableObjectId;
-    get(id: DurableObjectId, options?: DurableObjectNamespaceGetDurableObjectOptions): DurableObjectStub<T>;
     jurisdiction(jurisdiction: DurableObjectJurisdiction): DurableObjectNamespace<T>;
+    newUniqueId(options?: DurableObjectNamespaceNewUniqueIdOptions): DurableObjectId;
 }
 type DurableObjectJurisdiction = "eu" | "fedramp";
 interface DurableObjectNamespaceNewUniqueIdOptions {
@@ -452,63 +452,63 @@ interface DurableObjectNamespaceGetDurableObjectOptions {
     locationHint?: DurableObjectLocationHint;
 }
 interface DurableObjectState {
-    waitUntil(promise: Promise<any>): void;
-    readonly id: DurableObjectId;
-    readonly storage: DurableObjectStorage;
-    container?: Container;
-    blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+    abort(reason?: string): void;
     acceptWebSocket(ws: WebSocket, tags?: string[]): void;
-    getWebSockets(tag?: string): WebSocket[];
-    setWebSocketAutoResponse(maybeReqResp?: WebSocketRequestResponsePair): void;
-    getWebSocketAutoResponse(): WebSocketRequestResponsePair | null;
-    getWebSocketAutoResponseTimestamp(ws: WebSocket): Date | null;
-    setHibernatableWebSocketEventTimeout(timeoutMs?: number): void;
+    blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+    container?: Container;
     getHibernatableWebSocketEventTimeout(): number | null;
     getTags(ws: WebSocket): string[];
-    abort(reason?: string): void;
+    getWebSocketAutoResponse(): WebSocketRequestResponsePair | null;
+    getWebSocketAutoResponseTimestamp(ws: WebSocket): Date | null;
+    getWebSockets(tag?: string): WebSocket[];
+    readonly id: DurableObjectId;
+    setHibernatableWebSocketEventTimeout(timeoutMs?: number): void;
+    setWebSocketAutoResponse(maybeReqResp?: WebSocketRequestResponsePair): void;
+    readonly storage: DurableObjectStorage;
+    waitUntil(promise: Promise<any>): void;
 }
 interface DurableObjectTransaction {
+    delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
+    delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
+    deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
     get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
     get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
+    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
     put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
     put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
-    delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
-    delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
     rollback(): void;
-    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
-    deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
 }
 interface DurableObjectStorage {
-    get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
-    get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
-    list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
-    put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
-    put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
     delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
     delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
-    deleteAll(options?: DurableObjectPutOptions): Promise<void>;
-    transaction<T>(closure: (txn: DurableObjectTransaction) => Promise<T>): Promise<T>;
-    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
-    setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
     deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
-    sync(): Promise<void>;
-    sql: SqlStorage;
-    transactionSync<T>(closure: () => T): T;
-    getCurrentBookmark(): Promise<string>;
+    deleteAll(options?: DurableObjectPutOptions): Promise<void>;
+    get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
+    get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
+    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     getBookmarkForTime(timestamp: number | Date): Promise<string>;
+    getCurrentBookmark(): Promise<string>;
+    list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
     onNextSessionRestoreBookmark(bookmark: string): Promise<string>;
+    put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
+    put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
+    setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
+    sql: SqlStorage;
+    sync(): Promise<void>;
+    transaction<T>(closure: (txn: DurableObjectTransaction) => Promise<T>): Promise<T>;
+    transactionSync<T>(closure: () => T): T;
 }
 interface DurableObjectListOptions {
-    start?: string;
-    startAfter?: string;
+    allowConcurrency?: boolean;
     end?: string;
+    limit?: number;
+    noCache?: boolean;
     prefix?: string;
     reverse?: boolean;
-    limit?: number;
-    allowConcurrency?: boolean;
-    noCache?: boolean;
+    start?: string;
+    startAfter?: string;
 }
 interface DurableObjectGetOptions {
     allowConcurrency?: boolean;
@@ -535,9 +535,9 @@ interface AnalyticsEngineDataset {
     writeDataPoint(event?: AnalyticsEngineDataPoint): void;
 }
 interface AnalyticsEngineDataPoint {
-    indexes?: ((ArrayBuffer | string) | null)[];
-    doubles?: number[];
     blobs?: ((ArrayBuffer | string) | null)[];
+    doubles?: number[];
+    indexes?: ((ArrayBuffer | string) | null)[];
 }
 /**
  * An event which takes place in the DOM.
@@ -712,8 +712,8 @@ interface EventTargetEventListenerOptions {
 }
 interface EventTargetAddEventListenerOptions {
     capture?: boolean;
-    passive?: boolean;
     once?: boolean;
+    passive?: boolean;
     signal?: AbortSignal;
 }
 interface EventTargetHandlerObject {
@@ -834,8 +834,8 @@ declare class File extends Blob {
     get lastModified(): number;
 }
 interface FileOptions {
-    type?: string;
     lastModified?: number;
+    type?: string;
 }
 /**
 * The Cache API allows fine grained control of reading and writing from the Cloudflare global network cache.
@@ -938,102 +938,102 @@ declare abstract class CryptoKey {
     readonly usages: string[];
 }
 interface CryptoKeyPair {
-    publicKey: CryptoKey;
     privateKey: CryptoKey;
+    publicKey: CryptoKey;
 }
 interface JsonWebKey {
-    kty: string;
-    use?: string;
-    key_ops?: string[];
     alg?: string;
-    ext?: boolean;
     crv?: string;
-    x?: string;
-    y?: string;
     d?: string;
-    n?: string;
-    e?: string;
-    p?: string;
-    q?: string;
     dp?: string;
     dq?: string;
-    qi?: string;
-    oth?: RsaOtherPrimesInfo[];
+    e?: string;
+    ext?: boolean;
     k?: string;
+    key_ops?: string[];
+    kty: string;
+    n?: string;
+    oth?: RsaOtherPrimesInfo[];
+    p?: string;
+    q?: string;
+    qi?: string;
+    use?: string;
+    x?: string;
+    y?: string;
 }
 interface RsaOtherPrimesInfo {
-    r?: string;
     d?: string;
+    r?: string;
     t?: string;
 }
 interface SubtleCryptoDeriveKeyAlgorithm {
+    $public?: CryptoKey;
+    hash?: (string | SubtleCryptoHashAlgorithm);
+    info?: ArrayBuffer;
+    iterations?: number;
     name: string;
     salt?: ArrayBuffer;
-    iterations?: number;
-    hash?: (string | SubtleCryptoHashAlgorithm);
-    $public?: CryptoKey;
-    info?: ArrayBuffer;
 }
 interface SubtleCryptoEncryptAlgorithm {
-    name: string;
-    iv?: ArrayBuffer;
     additionalData?: ArrayBuffer;
-    tagLength?: number;
     counter?: ArrayBuffer;
-    length?: number;
+    iv?: ArrayBuffer;
     label?: ArrayBuffer;
+    length?: number;
+    name: string;
+    tagLength?: number;
 }
 interface SubtleCryptoGenerateKeyAlgorithm {
-    name: string;
     hash?: (string | SubtleCryptoHashAlgorithm);
-    modulusLength?: number;
-    publicExponent?: ArrayBuffer;
     length?: number;
+    modulusLength?: number;
+    name: string;
     namedCurve?: string;
+    publicExponent?: ArrayBuffer;
 }
 interface SubtleCryptoHashAlgorithm {
     name: string;
 }
 interface SubtleCryptoImportKeyAlgorithm {
-    name: string;
+    compressed?: boolean;
     hash?: (string | SubtleCryptoHashAlgorithm);
     length?: number;
+    name: string;
     namedCurve?: string;
-    compressed?: boolean;
 }
 interface SubtleCryptoSignAlgorithm {
-    name: string;
-    hash?: (string | SubtleCryptoHashAlgorithm);
     dataLength?: number;
+    hash?: (string | SubtleCryptoHashAlgorithm);
+    name: string;
     saltLength?: number;
 }
 interface CryptoKeyKeyAlgorithm {
     name: string;
 }
 interface CryptoKeyAesKeyAlgorithm {
-    name: string;
     length: number;
+    name: string;
 }
 interface CryptoKeyHmacKeyAlgorithm {
-    name: string;
     hash: CryptoKeyKeyAlgorithm;
     length: number;
+    name: string;
 }
 interface CryptoKeyRsaKeyAlgorithm {
-    name: string;
-    modulusLength: number;
-    publicExponent: ArrayBuffer | (ArrayBuffer | ArrayBufferView);
     hash?: CryptoKeyKeyAlgorithm;
+    modulusLength: number;
+    name: string;
+    publicExponent: ArrayBuffer | (ArrayBuffer | ArrayBufferView);
 }
 interface CryptoKeyEllipticKeyAlgorithm {
     name: string;
     namedCurve: string;
 }
 interface CryptoKeyArbitraryKeyAlgorithm {
-    name: string;
     hash?: CryptoKeyKeyAlgorithm;
-    namedCurve?: string;
     length?: number;
+    name: string;
+    namedCurve?: string;
 }
 declare class DigestStream extends WritableStream<ArrayBuffer | ArrayBufferView> {
     constructor(algorithm: string | SubtleCryptoHashAlgorithm);
@@ -1113,11 +1113,11 @@ declare class ErrorEvent extends Event {
     get error(): any;
 }
 interface ErrorEventErrorEventInit {
-    message?: string;
-    filename?: string;
-    lineno?: number;
     colno?: number;
     error?: any;
+    filename?: string;
+    lineno?: number;
+    message?: string;
 }
 /**
  * Provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the XMLHttpRequest.send() method. It uses the same format a form would use if the encoding type were set to "multipart/form-data".
@@ -1167,15 +1167,15 @@ declare class HTMLRewriter {
     transform(response: Response): Response;
 }
 interface HTMLRewriterElementContentHandlers {
-    element?(element: Element): void | Promise<void>;
     comments?(comment: Comment): void | Promise<void>;
+    element?(element: Element): void | Promise<void>;
     text?(element: Text): void | Promise<void>;
 }
 interface HTMLRewriterDocumentContentHandlers {
-    doctype?(doctype: Doctype): void | Promise<void>;
     comments?(comment: Comment): void | Promise<void>;
-    text?(text: Text): void | Promise<void>;
+    doctype?(doctype: Doctype): void | Promise<void>;
     end?(end: DocumentEnd): void | Promise<void>;
+    text?(text: Text): void | Promise<void>;
 }
 interface Doctype {
     readonly name: string | null;
@@ -1183,46 +1183,46 @@ interface Doctype {
     readonly systemId: string | null;
 }
 interface Element {
-    tagName: string;
+    after(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    append(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     readonly attributes: IterableIterator<string[]>;
-    readonly removed: boolean;
-    readonly namespaceURI: string;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     getAttribute(name: string): string | null;
     hasAttribute(name: string): boolean;
-    setAttribute(name: string, value: string): Element;
-    removeAttribute(name: string): Element;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    after(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    readonly namespaceURI: string;
+    onEndTag(handler: (tag: EndTag) => void | Promise<void>): void;
     prepend(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    append(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    replace(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     remove(): Element;
     removeAndKeepContent(): Element;
+    removeAttribute(name: string): Element;
+    readonly removed: boolean;
+    replace(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    setAttribute(name: string, value: string): Element;
     setInnerContent(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    onEndTag(handler: (tag: EndTag) => void | Promise<void>): void;
+    tagName: string;
 }
 interface EndTag {
-    name: string;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
     after(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
+    name: string;
     remove(): EndTag;
 }
 interface Comment {
-    text: string;
-    readonly removed: boolean;
-    before(content: string, options?: ContentOptions): Comment;
     after(content: string, options?: ContentOptions): Comment;
-    replace(content: string, options?: ContentOptions): Comment;
+    before(content: string, options?: ContentOptions): Comment;
     remove(): Comment;
+    readonly removed: boolean;
+    replace(content: string, options?: ContentOptions): Comment;
+    text: string;
 }
 interface Text {
-    readonly text: string;
-    readonly lastInTextNode: boolean;
-    readonly removed: boolean;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): Text;
     after(content: string | ReadableStream | Response, options?: ContentOptions): Text;
-    replace(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    readonly lastInTextNode: boolean;
     remove(): Text;
+    readonly removed: boolean;
+    replace(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    readonly text: string;
 }
 interface DocumentEnd {
     append(content: string, options?: ContentOptions): DocumentEnd;
@@ -1311,32 +1311,32 @@ declare var Response: {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response)
  */
 interface Response extends Body {
+    cf: any | undefined;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/clone) */
     clone(): Response;
-    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/status) */
-    status: number;
-    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/statusText) */
-    statusText: string;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/headers) */
     headers: Headers;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/ok) */
     ok: boolean;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/redirected) */
     redirected: boolean;
+    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/status) */
+    status: number;
+    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/statusText) */
+    statusText: string;
+    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/type) */
+    type: "default" | "error";
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/url) */
     url: string;
     webSocket: WebSocket | null;
-    cf: any | undefined;
-    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/type) */
-    type: "default" | "error";
 }
 interface ResponseInit {
+    cf?: any;
+    encodeBody?: "automatic" | "manual";
+    headers?: HeadersInit;
     status?: number;
     statusText?: string;
-    headers?: HeadersInit;
-    cf?: any;
     webSocket?: (WebSocket | null);
-    encodeBody?: "automatic" | "manual";
 }
 type RequestInfo<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> = Request<CfHostMetadata, Cf> | string;
 /**
@@ -1354,40 +1354,22 @@ declare var Request: {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request)
  */
 interface Request<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> extends Body {
+    /**
+     * Returns the cache mode associated with request, which is a string indicating how the request will interact with the browser's cache when fetching.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/cache)
+     */
+    cache?: "no-store";
+    cf: Cf | undefined;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/clone) */
     clone(): Request<CfHostMetadata, Cf>;
-    /**
-     * Returns request's HTTP method, which is "GET" by default.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/method)
-     */
-    method: string;
-    /**
-     * Returns the URL of request as a string.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/url)
-     */
-    url: string;
+    fetcher: Fetcher | null;
     /**
      * Returns a Headers object consisting of the headers associated with request. Note that headers added in the network layer by the user agent will not be accounted for in this object, e.g., the "Host" header.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/headers)
      */
     headers: Headers;
-    /**
-     * Returns the redirect mode associated with request, which is a string indicating how redirects for the request will be handled during fetching. A request will follow redirects by default.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/redirect)
-     */
-    redirect: string;
-    fetcher: Fetcher | null;
-    /**
-     * Returns the signal associated with request, which is an AbortSignal object indicating whether or not request has been aborted, and its abort event handler.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/signal)
-     */
-    signal: AbortSignal;
-    cf: Cf | undefined;
     /**
      * Returns request's subresource integrity metadata, which is a cryptographic hash of the resource being fetched. Its value consists of multiple hashes separated by whitespace. [SRI]
      *
@@ -1397,30 +1379,48 @@ interface Request<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> e
     /* Returns a boolean indicating whether or not request can outlive the global in which it was created. */
     keepalive: boolean;
     /**
-     * Returns the cache mode associated with request, which is a string indicating how the request will interact with the browser's cache when fetching.
+     * Returns request's HTTP method, which is "GET" by default.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/cache)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/method)
      */
-    cache?: "no-store";
+    method: string;
+    /**
+     * Returns the redirect mode associated with request, which is a string indicating how redirects for the request will be handled during fetching. A request will follow redirects by default.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/redirect)
+     */
+    redirect: string;
+    /**
+     * Returns the signal associated with request, which is an AbortSignal object indicating whether or not request has been aborted, and its abort event handler.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/signal)
+     */
+    signal: AbortSignal;
+    /**
+     * Returns the URL of request as a string.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/url)
+     */
+    url: string;
 }
 interface RequestInit<Cf = CfProperties> {
-    /* A string to set request's method. */
-    method?: string;
-    /* A Headers object, an object literal, or an array of two-item arrays to set request's headers. */
-    headers?: HeadersInit;
     /* A BodyInit object or null to set request's body. */
     body?: BodyInit | null;
-    /* A string indicating whether request follows redirects, results in an error upon encountering a redirect, or returns the redirect (in an opaque fashion). Sets request's redirect. */
-    redirect?: string;
-    fetcher?: (Fetcher | null);
-    cf?: Cf;
     /* A string indicating how the request will interact with the browser's cache to set request's cache. */
     cache?: "no-store";
+    cf?: Cf;
+    encodeResponseBody?: "automatic" | "manual";
+    fetcher?: (Fetcher | null);
+    /* A Headers object, an object literal, or an array of two-item arrays to set request's headers. */
+    headers?: HeadersInit;
     /* A cryptographic hash of the resource to be fetched by request. Sets request's integrity. */
     integrity?: string;
+    /* A string to set request's method. */
+    method?: string;
+    /* A string indicating whether request follows redirects, results in an error upon encountering a redirect, or returns the redirect (in an opaque fashion). Sets request's redirect. */
+    redirect?: string;
     /* An AbortSignal to set request's signal. */
     signal?: (AbortSignal | null);
-    encodeResponseBody?: "automatic" | "manual";
 }
 type Service<T extends Rpc.WorkerEntrypointBranded | undefined = undefined> = Fetcher<T>;
 type Fetcher<T extends Rpc.EntrypointBranded | undefined = undefined, Reserved extends string = never> = (T extends Rpc.EntrypointBranded ? Rpc.Provider<T, Reserved | "fetch" | "connect"> : unknown) & {
@@ -1428,9 +1428,9 @@ type Fetcher<T extends Rpc.EntrypointBranded | undefined = undefined, Reserved e
     connect(address: SocketAddress | string, options?: SocketOptions): Socket;
 };
 interface KVNamespaceListKey<Metadata, Key extends string = string> {
-    name: Key;
     expiration?: number;
     metadata?: Metadata;
+    name: Key;
 }
 type KVNamespaceListResult<Metadata, Key extends string = string> = {
     list_complete: false;
@@ -1443,6 +1443,7 @@ type KVNamespaceListResult<Metadata, Key extends string = string> = {
     cacheStatus: string | null;
 };
 interface KVNamespace<Key extends string = string> {
+    delete(key: Key): Promise<void>;
     get(key: Key, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<string | null>;
     get(key: Key, type: "text"): Promise<string | null>;
     get<ExpectedValue = unknown>(key: Key, type: "json"): Promise<ExpectedValue | null>;
@@ -1457,8 +1458,6 @@ interface KVNamespace<Key extends string = string> {
     get(key: Array<Key>, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<Map<string, string | null>>;
     get(key: Array<Key>, options?: KVNamespaceGetOptions<"text">): Promise<Map<string, string | null>>;
     get<ExpectedValue = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"json">): Promise<Map<string, ExpectedValue | null>>;
-    list<Metadata = unknown>(options?: KVNamespaceListOptions): Promise<KVNamespaceListResult<Metadata, Key>>;
-    put(key: Key, value: string | ArrayBuffer | ArrayBufferView | ReadableStream, options?: KVNamespacePutOptions): Promise<void>;
     getWithMetadata<Metadata = unknown>(key: Key, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<KVNamespaceGetWithMetadataResult<string, Metadata>>;
     getWithMetadata<Metadata = unknown>(key: Key, type: "text"): Promise<KVNamespaceGetWithMetadataResult<string, Metadata>>;
     getWithMetadata<ExpectedValue = unknown, Metadata = unknown>(key: Key, type: "json"): Promise<KVNamespaceGetWithMetadataResult<ExpectedValue, Metadata>>;
@@ -1473,16 +1472,17 @@ interface KVNamespace<Key extends string = string> {
     getWithMetadata<Metadata = unknown>(key: Array<Key>, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<Map<string, KVNamespaceGetWithMetadataResult<string, Metadata>>>;
     getWithMetadata<Metadata = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"text">): Promise<Map<string, KVNamespaceGetWithMetadataResult<string, Metadata>>>;
     getWithMetadata<ExpectedValue = unknown, Metadata = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"json">): Promise<Map<string, KVNamespaceGetWithMetadataResult<ExpectedValue, Metadata>>>;
-    delete(key: Key): Promise<void>;
+    list<Metadata = unknown>(options?: KVNamespaceListOptions): Promise<KVNamespaceListResult<Metadata, Key>>;
+    put(key: Key, value: string | ArrayBuffer | ArrayBufferView | ReadableStream, options?: KVNamespacePutOptions): Promise<void>;
 }
 interface KVNamespaceListOptions {
+    cursor?: (string | null);
     limit?: number;
     prefix?: (string | null);
-    cursor?: (string | null);
 }
 interface KVNamespaceGetOptions<Type> {
-    type: Type;
     cacheTtl?: number;
+    type: Type;
 }
 interface KVNamespacePutOptions {
     expiration?: number;
@@ -1490,9 +1490,9 @@ interface KVNamespacePutOptions {
     metadata?: (any | null);
 }
 interface KVNamespaceGetWithMetadataResult<Value, Metadata> {
-    value: Value | null;
-    metadata: Metadata | null;
     cacheStatus: string | null;
+    metadata: Metadata | null;
+    value: Value | null;
 }
 type QueueContentType = "text" | "bytes" | "json" | "v8";
 interface Queue<Body = unknown> {
@@ -1515,39 +1515,39 @@ interface QueueRetryOptions {
     delaySeconds?: number;
 }
 interface Message<Body = unknown> {
-    readonly id: string;
-    readonly timestamp: Date;
-    readonly body: Body;
-    readonly attempts: number;
-    retry(options?: QueueRetryOptions): void;
     ack(): void;
+    readonly attempts: number;
+    readonly body: Body;
+    readonly id: string;
+    retry(options?: QueueRetryOptions): void;
+    readonly timestamp: Date;
 }
 interface QueueEvent<Body = unknown> extends ExtendableEvent {
+    ackAll(): void;
     readonly messages: readonly Message<Body>[];
     readonly queue: string;
     retryAll(options?: QueueRetryOptions): void;
-    ackAll(): void;
 }
 interface MessageBatch<Body = unknown> {
+    ackAll(): void;
     readonly messages: readonly Message<Body>[];
     readonly queue: string;
     retryAll(options?: QueueRetryOptions): void;
-    ackAll(): void;
 }
 interface R2Error extends Error {
-    readonly name: string;
+    readonly action: string;
     readonly code: number;
     readonly message: string;
-    readonly action: string;
+    readonly name: string;
     readonly stack: any;
 }
 interface R2ListOptions {
-    limit?: number;
-    prefix?: string;
     cursor?: string;
     delimiter?: string;
-    startAfter?: string;
     include?: ("httpMetadata" | "customMetadata")[];
+    limit?: number;
+    prefix?: string;
+    startAfter?: string;
 }
 declare abstract class R2Bucket {
     head(key: string): Promise<R2Object | null>;
@@ -1565,15 +1565,15 @@ declare abstract class R2Bucket {
     list(options?: R2ListOptions): Promise<R2Objects>;
 }
 interface R2MultipartUpload {
+    abort(): Promise<void>;
+    complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
     readonly key: string;
     readonly uploadId: string;
     uploadPart(partNumber: number, value: ReadableStream | (ArrayBuffer | ArrayBufferView) | string | Blob, options?: R2UploadPartOptions): Promise<R2UploadedPart>;
-    abort(): Promise<void>;
-    complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
 }
 interface R2UploadedPart {
-    partNumber: number;
     etag: string;
+    partNumber: number;
 }
 declare abstract class R2Object {
     readonly key: string;
@@ -1591,12 +1591,12 @@ declare abstract class R2Object {
     writeHttpMetadata(headers: Headers): void;
 }
 interface R2ObjectBody extends R2Object {
+    arrayBuffer(): Promise<ArrayBuffer>;
+    blob(): Promise<Blob>;
     get body(): ReadableStream;
     get bodyUsed(): boolean;
-    arrayBuffer(): Promise<ArrayBuffer>;
-    text(): Promise<string>;
     json<T>(): Promise<T>;
-    blob(): Promise<Blob>;
+    text(): Promise<string>;
 }
 type R2Range = {
     offset: number;
@@ -1608,11 +1608,11 @@ type R2Range = {
     suffix: number;
 };
 interface R2Conditional {
-    etagMatches?: string;
     etagDoesNotMatch?: string;
-    uploadedBefore?: Date;
-    uploadedAfter?: Date;
+    etagMatches?: string;
     secondsGranularity?: boolean;
+    uploadedAfter?: Date;
+    uploadedBefore?: Date;
 }
 interface R2GetOptions {
     onlyIf?: (R2Conditional | Headers);
@@ -1620,22 +1620,22 @@ interface R2GetOptions {
     ssecKey?: (ArrayBuffer | string);
 }
 interface R2PutOptions {
-    onlyIf?: (R2Conditional | Headers);
-    httpMetadata?: (R2HTTPMetadata | Headers);
     customMetadata?: Record<string, string>;
+    httpMetadata?: (R2HTTPMetadata | Headers);
     md5?: (ArrayBuffer | string);
+    onlyIf?: (R2Conditional | Headers);
     sha1?: (ArrayBuffer | string);
     sha256?: (ArrayBuffer | string);
     sha384?: (ArrayBuffer | string);
     sha512?: (ArrayBuffer | string);
-    storageClass?: string;
     ssecKey?: (ArrayBuffer | string);
+    storageClass?: string;
 }
 interface R2MultipartOptions {
-    httpMetadata?: (R2HTTPMetadata | Headers);
     customMetadata?: Record<string, string>;
-    storageClass?: string;
+    httpMetadata?: (R2HTTPMetadata | Headers);
     ssecKey?: (ArrayBuffer | string);
+    storageClass?: string;
 }
 interface R2Checksums {
     readonly md5?: ArrayBuffer;
@@ -1653,12 +1653,12 @@ interface R2StringChecksums {
     sha512?: string;
 }
 interface R2HTTPMetadata {
-    contentType?: string;
-    contentLanguage?: string;
-    contentDisposition?: string;
-    contentEncoding?: string;
     cacheControl?: string;
     cacheExpiry?: Date;
+    contentDisposition?: string;
+    contentEncoding?: string;
+    contentLanguage?: string;
+    contentType?: string;
 }
 type R2Objects = {
     objects: R2Object[];
@@ -1678,45 +1678,47 @@ declare abstract class ScheduledEvent extends ExtendableEvent {
     noRetry(): void;
 }
 interface ScheduledController {
-    readonly scheduledTime: number;
     readonly cron: string;
     noRetry(): void;
+    readonly scheduledTime: number;
 }
 interface QueuingStrategy<T = any> {
     highWaterMark?: (number | bigint);
     size?: (chunk: T) => number | bigint;
 }
 interface UnderlyingSink<W = any> {
-    type?: string;
-    start?: (controller: WritableStreamDefaultController) => void | Promise<void>;
-    write?: (chunk: W, controller: WritableStreamDefaultController) => void | Promise<void>;
     abort?: (reason: any) => void | Promise<void>;
     close?: () => void | Promise<void>;
+    start?: (controller: WritableStreamDefaultController) => void | Promise<void>;
+    type?: string;
+    write?: (chunk: W, controller: WritableStreamDefaultController) => void | Promise<void>;
 }
 interface UnderlyingByteSource {
-    type: "bytes";
     autoAllocateChunkSize?: number;
-    start?: (controller: ReadableByteStreamController) => void | Promise<void>;
-    pull?: (controller: ReadableByteStreamController) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
+    pull?: (controller: ReadableByteStreamController) => void | Promise<void>;
+    start?: (controller: ReadableByteStreamController) => void | Promise<void>;
+    type: "bytes";
 }
 interface UnderlyingSource<R = any> {
-    type?: "" | undefined;
-    start?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
-    pull?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
     expectedLength?: (number | bigint);
+    pull?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
+    start?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
+    type?: "" | undefined;
 }
 interface Transformer<I = any, O = any> {
-    readableType?: string;
-    writableType?: string;
-    start?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
-    transform?: (chunk: I, controller: TransformStreamDefaultController<O>) => void | Promise<void>;
-    flush?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
     expectedLength?: number;
+    flush?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    readableType?: string;
+    start?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    transform?: (chunk: I, controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    writableType?: string;
 }
 interface StreamPipeOptions {
+    preventAbort?: boolean;
+    preventCancel?: boolean;
     /**
      * Pipes this readable stream to a given writable stream destination. The way in which the piping process behaves under various error conditions can be customized with a number of passed options. It returns a promise that fulfills when the piping process completes successfully, or rejects if any errors were encountered.
      *
@@ -1735,8 +1737,6 @@ interface StreamPipeOptions {
      * The signal option can be set to an AbortSignal to allow aborting an ongoing pipe operation via the corresponding AbortController. In this case, this source readable stream will be canceled, and destination aborted, unless the respective options preventCancel or preventAbort are set.
      */
     preventClose?: boolean;
-    preventAbort?: boolean;
-    preventCancel?: boolean;
     signal?: AbortSignal;
 }
 type ReadableStreamReadResult<R = any> = {
@@ -1752,14 +1752,14 @@ type ReadableStreamReadResult<R = any> = {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream)
  */
 interface ReadableStream<R = any> {
-    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/locked) */
-    get locked(): boolean;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/cancel) */
     cancel(reason?: any): Promise<void>;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/getReader) */
     getReader(): ReadableStreamDefaultReader<R>;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/getReader) */
     getReader(options: ReadableStreamGetReaderOptions): ReadableStreamBYOBReader;
+    /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/locked) */
+    get locked(): boolean;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/pipeThrough) */
     pipeThrough<T>(transform: ReadableWritablePair<T, R>, options?: StreamPipeOptions): ReadableStream<T>;
     /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/pipeTo) */
@@ -1871,13 +1871,13 @@ declare abstract class TransformStreamDefaultController<O = any> {
     terminate(): void;
 }
 interface ReadableWritablePair<R = any, W = any> {
+    readable: ReadableStream<R>;
     /**
      * Provides a convenient, chainable way of piping this readable stream through a transform stream (or any other { writable, readable } pair). It simply pipes the stream into the writable side of the supplied pair, and returns the readable side for further use.
      *
      * Piping a stream will lock it for the duration of the pipe, preventing any other consumer from acquiring a reader.
      */
     writable: WritableStream<W>;
-    readable: ReadableStream<R>;
 }
 /**
  * This Streams API interface provides a standard abstraction for writing streaming data to a destination, known as a sink. This object comes with built-in backpressure and queuing.
@@ -1995,28 +1995,28 @@ interface QueuingStrategyInit {
 }
 interface ScriptVersion {
     id?: string;
-    tag?: string;
     message?: string;
+    tag?: string;
 }
 declare abstract class TailEvent extends ExtendableEvent {
     readonly events: TraceItem[];
     readonly traces: TraceItem[];
 }
 interface TraceItem {
+    readonly cpuTime: number;
+    readonly diagnosticsChannelEvents: TraceDiagnosticChannelEvent[];
+    readonly dispatchNamespace?: string;
+    readonly entrypoint?: string;
     readonly event: (TraceItemFetchEventInfo | TraceItemJsRpcEventInfo | TraceItemScheduledEventInfo | TraceItemAlarmEventInfo | TraceItemQueueEventInfo | TraceItemEmailEventInfo | TraceItemTailEventInfo | TraceItemCustomEventInfo | TraceItemHibernatableWebSocketEventInfo) | null;
     readonly eventTimestamp: number | null;
-    readonly logs: TraceLog[];
     readonly exceptions: TraceException[];
-    readonly diagnosticsChannelEvents: TraceDiagnosticChannelEvent[];
-    readonly scriptName: string | null;
-    readonly entrypoint?: string;
-    readonly scriptVersion?: ScriptVersion;
-    readonly dispatchNamespace?: string;
-    readonly scriptTags?: string[];
-    readonly outcome: string;
     readonly executionModel: string;
+    readonly logs: TraceLog[];
+    readonly outcome: string;
+    readonly scriptName: string | null;
+    readonly scriptTags?: string[];
+    readonly scriptVersion?: ScriptVersion;
     readonly truncated: boolean;
-    readonly cpuTime: number;
     readonly wallTime: number;
 }
 interface TraceItemAlarmEventInfo {
@@ -2025,17 +2025,17 @@ interface TraceItemAlarmEventInfo {
 interface TraceItemCustomEventInfo {
 }
 interface TraceItemScheduledEventInfo {
-    readonly scheduledTime: number;
     readonly cron: string;
+    readonly scheduledTime: number;
 }
 interface TraceItemQueueEventInfo {
-    readonly queue: string;
     readonly batchSize: number;
+    readonly queue: string;
 }
 interface TraceItemEmailEventInfo {
     readonly mailFrom: string;
-    readonly rcptTo: string;
     readonly rawSize: number;
+    readonly rcptTo: string;
 }
 interface TraceItemTailEventInfo {
     readonly consumedEvents: TraceItemTailEventInfoTailItem[];
@@ -2044,15 +2044,15 @@ interface TraceItemTailEventInfoTailItem {
     readonly scriptName: string | null;
 }
 interface TraceItemFetchEventInfo {
-    readonly response?: TraceItemFetchEventInfoResponse;
     readonly request: TraceItemFetchEventInfoRequest;
+    readonly response?: TraceItemFetchEventInfoResponse;
 }
 interface TraceItemFetchEventInfoRequest {
     readonly cf?: any;
+    getUnredacted(): TraceItemFetchEventInfoRequest;
     readonly headers: Record<string, string>;
     readonly method: string;
     readonly url: string;
-    getUnredacted(): TraceItemFetchEventInfoRequest;
 }
 interface TraceItemFetchEventInfoResponse {
     readonly status: number;
@@ -2067,28 +2067,28 @@ interface TraceItemHibernatableWebSocketEventInfoMessage {
     readonly webSocketEventType: string;
 }
 interface TraceItemHibernatableWebSocketEventInfoClose {
-    readonly webSocketEventType: string;
     readonly code: number;
     readonly wasClean: boolean;
+    readonly webSocketEventType: string;
 }
 interface TraceItemHibernatableWebSocketEventInfoError {
     readonly webSocketEventType: string;
 }
 interface TraceLog {
-    readonly timestamp: number;
     readonly level: string;
     readonly message: any;
+    readonly timestamp: number;
 }
 interface TraceException {
-    readonly timestamp: number;
     readonly message: string;
     readonly name: string;
     readonly stack?: string;
+    readonly timestamp: number;
 }
 interface TraceDiagnosticChannelEvent {
-    readonly timestamp: number;
     readonly channel: string;
     readonly message: any;
+    readonly timestamp: number;
 }
 interface TraceMetrics {
     readonly cpuTime: number;
@@ -2235,30 +2235,30 @@ declare class URLPattern {
     exec(input?: (string | URLPatternURLPatternInit), baseURL?: string): URLPatternURLPatternResult | null;
 }
 interface URLPatternURLPatternInit {
-    protocol?: string;
-    username?: string;
-    password?: string;
-    hostname?: string;
-    port?: string;
-    pathname?: string;
-    search?: string;
-    hash?: string;
     baseURL?: string;
+    hash?: string;
+    hostname?: string;
+    password?: string;
+    pathname?: string;
+    port?: string;
+    protocol?: string;
+    search?: string;
+    username?: string;
 }
 interface URLPatternURLPatternComponentResult {
-    input: string;
     groups: Record<string, string>;
+    input: string;
 }
 interface URLPatternURLPatternResult {
-    inputs: (string | URLPatternURLPatternInit)[];
-    protocol: URLPatternURLPatternComponentResult;
-    username: URLPatternURLPatternComponentResult;
-    password: URLPatternURLPatternComponentResult;
-    hostname: URLPatternURLPatternComponentResult;
-    port: URLPatternURLPatternComponentResult;
-    pathname: URLPatternURLPatternComponentResult;
-    search: URLPatternURLPatternComponentResult;
     hash: URLPatternURLPatternComponentResult;
+    hostname: URLPatternURLPatternComponentResult;
+    inputs: (string | URLPatternURLPatternInit)[];
+    password: URLPatternURLPatternComponentResult;
+    pathname: URLPatternURLPatternComponentResult;
+    port: URLPatternURLPatternComponentResult;
+    protocol: URLPatternURLPatternComponentResult;
+    search: URLPatternURLPatternComponentResult;
+    username: URLPatternURLPatternComponentResult;
 }
 interface URLPatternURLPatternOptions {
     ignoreCase?: boolean;
@@ -2342,31 +2342,18 @@ declare var WebSocket: {
 interface WebSocket extends EventTarget<WebSocketEventMap> {
     accept(): void;
     /**
-     * Transmits data using the WebSocket connection. data can be a string, a Blob, an ArrayBuffer, or an ArrayBufferView.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/send)
-     */
-    send(message: (ArrayBuffer | ArrayBufferView) | string): void;
-    /**
      * Closes the WebSocket connection, optionally using code as the the WebSocket connection close code and reason as the the WebSocket connection close reason.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/close)
      */
     close(code?: number, reason?: string): void;
-    serializeAttachment(attachment: any): void;
     deserializeAttachment(): any | null;
     /**
-     * Returns the state of the WebSocket object's connection. It can have the values described below.
+     * Returns the extensions selected by the server, if any.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/readyState)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/extensions)
      */
-    readyState: number;
-    /**
-     * Returns the URL that was used to establish the WebSocket connection.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/url)
-     */
-    url: string | null;
+    extensions: string | null;
     /**
      * Returns the subprotocol selected by the server, if any. It can be used in conjunction with the array form of the constructor's second argument to perform subprotocol negotiation.
      *
@@ -2374,11 +2361,24 @@ interface WebSocket extends EventTarget<WebSocketEventMap> {
      */
     protocol: string | null;
     /**
-     * Returns the extensions selected by the server, if any.
+     * Returns the state of the WebSocket object's connection. It can have the values described below.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/extensions)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/readyState)
      */
-    extensions: string | null;
+    readyState: number;
+    /**
+     * Transmits data using the WebSocket connection. data can be a string, a Blob, an ArrayBuffer, or an ArrayBufferView.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/send)
+     */
+    send(message: (ArrayBuffer | ArrayBufferView) | string): void;
+    serializeAttachment(attachment: any): void;
+    /**
+     * Returns the URL that was used to establish the WebSocket connection.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/url)
+     */
+    url: string | null;
 }
 declare const WebSocketPair: {
     new (): {
@@ -2387,9 +2387,9 @@ declare const WebSocketPair: {
     };
 };
 interface SqlStorage {
-    exec<T extends Record<string, SqlStorageValue>>(query: string, ...bindings: any[]): SqlStorageCursor<T>;
-    get databaseSize(): number;
     Cursor: typeof SqlStorageCursor;
+    get databaseSize(): number;
+    exec<T extends Record<string, SqlStorageValue>>(query: string, ...bindings: any[]): SqlStorageCursor<T>;
     Statement: typeof SqlStorageStatement;
 }
 declare abstract class SqlStorageStatement {
@@ -2412,17 +2412,17 @@ declare abstract class SqlStorageCursor<T extends Record<string, SqlStorageValue
     [Symbol.iterator](): IterableIterator<T>;
 }
 interface Socket {
-    get readable(): ReadableStream;
-    get writable(): WritableStream;
+    close(): Promise<void>;
     get closed(): Promise<void>;
     get opened(): Promise<SocketInfo>;
-    close(): Promise<void>;
+    get readable(): ReadableStream;
     startTls(options?: TlsOptions): Socket;
+    get writable(): WritableStream;
 }
 interface SocketOptions {
-    secureTransport?: string;
     allowHalfOpen: boolean;
     highWaterMark?: (number | bigint);
+    secureTransport?: string;
 }
 interface SocketAddress {
     hostname: string;
@@ -2432,8 +2432,8 @@ interface TlsOptions {
     expectedServerHostname?: string;
 }
 interface SocketInfo {
-    remoteAddress?: string;
     localAddress?: string;
+    remoteAddress?: string;
 }
 interface GPU {
     requestAdapter(param1?: GPURequestAdapterOptions): Promise<GPUAdapter | null>;
@@ -2445,36 +2445,36 @@ declare abstract class GPUAdapter {
     get limits(): GPUSupportedLimits;
 }
 interface GPUDevice extends EventTarget {
-    createBuffer(param1: GPUBufferDescriptor): GPUBuffer;
-    createBindGroupLayout(descriptor: GPUBindGroupLayoutDescriptor): GPUBindGroupLayout;
     createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
+    createBindGroupLayout(descriptor: GPUBindGroupLayoutDescriptor): GPUBindGroupLayout;
+    createBuffer(param1: GPUBufferDescriptor): GPUBuffer;
+    createCommandEncoder(descriptor?: GPUCommandEncoderDescriptor): GPUCommandEncoder;
+    createComputePipeline(descriptor: GPUComputePipelineDescriptor): GPUComputePipeline;
+    createPipelineLayout(descriptor: GPUPipelineLayoutDescriptor): GPUPipelineLayout;
+    createQuerySet(descriptor: GPUQuerySetDescriptor): GPUQuerySet;
+    createRenderPipeline(descriptor: GPURenderPipelineDescriptor): GPURenderPipeline;
     createSampler(descriptor: GPUSamplerDescriptor): GPUSampler;
     createShaderModule(descriptor: GPUShaderModuleDescriptor): GPUShaderModule;
-    createPipelineLayout(descriptor: GPUPipelineLayoutDescriptor): GPUPipelineLayout;
-    createComputePipeline(descriptor: GPUComputePipelineDescriptor): GPUComputePipeline;
-    createRenderPipeline(descriptor: GPURenderPipelineDescriptor): GPURenderPipeline;
-    createCommandEncoder(descriptor?: GPUCommandEncoderDescriptor): GPUCommandEncoder;
     createTexture(param1: GPUTextureDescriptor): GPUTexture;
     destroy(): void;
-    createQuerySet(descriptor: GPUQuerySetDescriptor): GPUQuerySet;
-    pushErrorScope(filter: string): void;
-    popErrorScope(): Promise<GPUError | null>;
-    get queue(): GPUQueue;
-    get lost(): Promise<GPUDeviceLostInfo>;
     get features(): GPUSupportedFeatures;
     get limits(): GPUSupportedLimits;
+    get lost(): Promise<GPUDeviceLostInfo>;
+    popErrorScope(): Promise<GPUError | null>;
+    pushErrorScope(filter: string): void;
+    get queue(): GPUQueue;
 }
 interface GPUDeviceDescriptor {
+    defaultQueue?: GPUQueueDescriptor;
     label?: string;
     requiredFeatures?: string[];
     requiredLimits?: Record<string, number | bigint>;
-    defaultQueue?: GPUQueueDescriptor;
 }
 interface GPUBufferDescriptor {
     label: string;
+    mappedAtCreation: boolean;
     size: number | bigint;
     usage: number;
-    mappedAtCreation: boolean;
 }
 interface GPUQueueDescriptor {
     label?: string;
@@ -2492,13 +2492,13 @@ declare abstract class GPUBufferUsage {
     static readonly QUERY_RESOLVE: number;
 }
 interface GPUBuffer {
-    getMappedRange(size?: (number | bigint), param2?: (number | bigint)): ArrayBuffer;
-    unmap(): void;
     destroy(): void;
+    getMappedRange(size?: (number | bigint), param2?: (number | bigint)): ArrayBuffer;
     mapAsync(offset: number, size?: (number | bigint), param3?: (number | bigint)): Promise<void>;
-    get size(): number | bigint;
-    get usage(): number;
     get mapState(): string;
+    get size(): number | bigint;
+    unmap(): void;
+    get usage(): number;
 }
 declare abstract class GPUShaderStage {
     static readonly VERTEX: number;
@@ -2506,16 +2506,16 @@ declare abstract class GPUShaderStage {
     static readonly COMPUTE: number;
 }
 interface GPUBindGroupLayoutDescriptor {
-    label?: string;
     entries: GPUBindGroupLayoutEntry[];
+    label?: string;
 }
 interface GPUBindGroupLayoutEntry {
     binding: number;
-    visibility: number;
     buffer?: GPUBufferBindingLayout;
     sampler?: GPUSamplerBindingLayout;
-    texture?: GPUTextureBindingLayout;
     storageTexture?: GPUStorageTextureBindingLayout;
+    texture?: GPUTextureBindingLayout;
+    visibility: number;
 }
 interface GPUStorageTextureBindingLayout {
     access?: string;
@@ -2523,26 +2523,26 @@ interface GPUStorageTextureBindingLayout {
     viewDimension?: string;
 }
 interface GPUTextureBindingLayout {
+    multisampled?: boolean;
     sampleType?: string;
     viewDimension?: string;
-    multisampled?: boolean;
 }
 interface GPUSamplerBindingLayout {
     type?: string;
 }
 interface GPUBufferBindingLayout {
-    type?: string;
     hasDynamicOffset?: boolean;
     minBindingSize?: (number | bigint);
+    type?: string;
 }
 interface GPUBindGroupLayout {
 }
 interface GPUBindGroup {
 }
 interface GPUBindGroupDescriptor {
+    entries: GPUBindGroupEntry[];
     label?: string;
     layout: GPUBindGroupLayout;
-    entries: GPUBindGroupEntry[];
 }
 interface GPUBindGroupEntry {
     binding: number;
@@ -2556,63 +2556,63 @@ interface GPUBufferBinding {
 interface GPUSampler {
 }
 interface GPUSamplerDescriptor {
-    label?: string;
     addressModeU?: string;
     addressModeV?: string;
     addressModeW?: string;
+    compare: string;
+    label?: string;
+    lodMaxClamp?: number;
+    lodMinClamp?: number;
     magFilter?: string;
+    maxAnisotropy?: number;
     minFilter?: string;
     mipmapFilter?: string;
-    lodMinClamp?: number;
-    lodMaxClamp?: number;
-    compare: string;
-    maxAnisotropy?: number;
 }
 interface GPUShaderModule {
     getCompilationInfo(): Promise<GPUCompilationInfo>;
 }
 interface GPUShaderModuleDescriptor {
-    label?: string;
     code: string;
+    label?: string;
 }
 interface GPUPipelineLayout {
 }
 interface GPUPipelineLayoutDescriptor {
-    label?: string;
     bindGroupLayouts: GPUBindGroupLayout[];
+    label?: string;
 }
 interface GPUComputePipeline {
     getBindGroupLayout(index: number): GPUBindGroupLayout;
 }
 interface GPUComputePipelineDescriptor {
-    label?: string;
     compute: GPUProgrammableStage;
+    label?: string;
     layout: string | GPUPipelineLayout;
 }
 interface GPUProgrammableStage {
-    module: GPUShaderModule;
-    entryPoint: string;
     constants?: Record<string, number>;
+    entryPoint: string;
+    module: GPUShaderModule;
 }
 interface GPUCommandEncoder {
-    get label(): string;
     beginComputePass(descriptor?: GPUComputePassDescriptor): GPUComputePassEncoder;
     beginRenderPass(descriptor: GPURenderPassDescriptor): GPURenderPassEncoder;
-    copyBufferToBuffer(source: GPUBuffer, sourceOffset: number | bigint, destination: GPUBuffer, destinationOffset: number | bigint, size: number | bigint): void;
-    finish(param0?: GPUCommandBufferDescriptor): GPUCommandBuffer;
-    copyTextureToBuffer(source: GPUImageCopyTexture, destination: GPUImageCopyBuffer, copySize: Iterable<number> | GPUExtent3DDict): void;
-    copyBufferToTexture(source: GPUImageCopyBuffer, destination: GPUImageCopyTexture, copySize: Iterable<number> | GPUExtent3DDict): void;
-    copyTextureToTexture(source: GPUImageCopyTexture, destination: GPUImageCopyTexture, copySize: Iterable<number> | GPUExtent3DDict): void;
     clearBuffer(buffer: GPUBuffer, offset?: (number | bigint), size?: (number | bigint)): void;
+    copyBufferToBuffer(source: GPUBuffer, sourceOffset: number | bigint, destination: GPUBuffer, destinationOffset: number | bigint, size: number | bigint): void;
+    copyBufferToTexture(source: GPUImageCopyBuffer, destination: GPUImageCopyTexture, copySize: Iterable<number> | GPUExtent3DDict): void;
+    copyTextureToBuffer(source: GPUImageCopyTexture, destination: GPUImageCopyBuffer, copySize: Iterable<number> | GPUExtent3DDict): void;
+    copyTextureToTexture(source: GPUImageCopyTexture, destination: GPUImageCopyTexture, copySize: Iterable<number> | GPUExtent3DDict): void;
+    finish(param0?: GPUCommandBufferDescriptor): GPUCommandBuffer;
+    get label(): string;
 }
 interface GPUCommandEncoderDescriptor {
     label?: string;
 }
 interface GPUComputePassEncoder {
-    setPipeline(pipeline: GPUComputePipeline): void;
-    setBindGroup(index: number, bindGroup: GPUBindGroup | null, dynamicOffsets?: Iterable<number>): void;
     dispatchWorkgroups(workgroupCountX: number, workgroupCountY?: number, workgroupCountZ?: number): void;
     end(): void;
+    setBindGroup(index: number, bindGroup: GPUBindGroup | null, dynamicOffsets?: Iterable<number>): void;
+    setPipeline(pipeline: GPUComputePipeline): void;
 }
 interface GPUComputePassDescriptor {
     label?: string;
@@ -2624,9 +2624,9 @@ interface GPUQuerySetDescriptor {
     label?: string;
 }
 interface GPUComputePassTimestampWrites {
-    querySet: GPUQuerySet;
     beginningOfPassWriteIndex?: number;
     endOfPassWriteIndex?: number;
+    querySet: GPUQuerySet;
 }
 interface GPUCommandBufferDescriptor {
     label?: string;
@@ -2642,51 +2642,51 @@ declare abstract class GPUMapMode {
     static readonly WRITE: number;
 }
 interface GPURequestAdapterOptions {
-    powerPreference: string;
     forceFallbackAdapter?: boolean;
+    powerPreference: string;
 }
 interface GPUAdapterInfo {
-    get vendor(): string;
     get architecture(): string;
-    get device(): string;
     get description(): string;
+    get device(): string;
+    get vendor(): string;
 }
 interface GPUSupportedFeatures {
     has(name: string): boolean;
     keys(): string[];
 }
 interface GPUSupportedLimits {
-    get maxTextureDimension1D(): number;
-    get maxTextureDimension2D(): number;
-    get maxTextureDimension3D(): number;
-    get maxTextureArrayLayers(): number;
     get maxBindGroups(): number;
     get maxBindingsPerBindGroup(): number;
-    get maxDynamicUniformBuffersPerPipelineLayout(): number;
-    get maxDynamicStorageBuffersPerPipelineLayout(): number;
-    get maxSampledTexturesPerShaderStage(): number;
-    get maxSamplersPerShaderStage(): number;
-    get maxStorageBuffersPerShaderStage(): number;
-    get maxStorageTexturesPerShaderStage(): number;
-    get maxUniformBuffersPerShaderStage(): number;
-    get maxUniformBufferBindingSize(): number | bigint;
-    get maxStorageBufferBindingSize(): number | bigint;
-    get minUniformBufferOffsetAlignment(): number;
-    get minStorageBufferOffsetAlignment(): number;
-    get maxVertexBuffers(): number;
     get maxBufferSize(): number | bigint;
-    get maxVertexAttributes(): number;
-    get maxVertexBufferArrayStride(): number;
-    get maxInterStageShaderComponents(): number;
-    get maxInterStageShaderVariables(): number;
-    get maxColorAttachments(): number;
     get maxColorAttachmentBytesPerSample(): number;
-    get maxComputeWorkgroupStorageSize(): number;
+    get maxColorAttachments(): number;
     get maxComputeInvocationsPerWorkgroup(): number;
     get maxComputeWorkgroupSizeX(): number;
     get maxComputeWorkgroupSizeY(): number;
     get maxComputeWorkgroupSizeZ(): number;
+    get maxComputeWorkgroupStorageSize(): number;
     get maxComputeWorkgroupsPerDimension(): number;
+    get maxDynamicStorageBuffersPerPipelineLayout(): number;
+    get maxDynamicUniformBuffersPerPipelineLayout(): number;
+    get maxInterStageShaderComponents(): number;
+    get maxInterStageShaderVariables(): number;
+    get maxSampledTexturesPerShaderStage(): number;
+    get maxSamplersPerShaderStage(): number;
+    get maxStorageBufferBindingSize(): number | bigint;
+    get maxStorageBuffersPerShaderStage(): number;
+    get maxStorageTexturesPerShaderStage(): number;
+    get maxTextureArrayLayers(): number;
+    get maxTextureDimension1D(): number;
+    get maxTextureDimension2D(): number;
+    get maxTextureDimension3D(): number;
+    get maxUniformBufferBindingSize(): number | bigint;
+    get maxUniformBuffersPerShaderStage(): number;
+    get maxVertexAttributes(): number;
+    get maxVertexBufferArrayStride(): number;
+    get maxVertexBuffers(): number;
+    get minStorageBufferOffsetAlignment(): number;
+    get minUniformBufferOffsetAlignment(): number;
 }
 declare abstract class GPUError {
     get message(): string;
@@ -2702,12 +2702,12 @@ declare abstract class GPUDeviceLostInfo {
     get reason(): string;
 }
 interface GPUCompilationMessage {
-    get message(): string;
-    get type(): string;
+    get length(): number;
     get lineNum(): number;
     get linePos(): number;
+    get message(): string;
     get offset(): number;
-    get length(): number;
+    get type(): string;
 }
 interface GPUCompilationInfo {
     get messages(): GPUCompilationMessage[];
@@ -2720,42 +2720,42 @@ declare abstract class GPUTextureUsage {
     static readonly RENDER_ATTACHMENT: number;
 }
 interface GPUTextureDescriptor {
-    label: string;
-    size: number[] | GPUExtent3DDict;
-    mipLevelCount?: number;
-    sampleCount?: number;
     dimension?: string;
     format: string;
+    label: string;
+    mipLevelCount?: number;
+    sampleCount?: number;
+    size: number[] | GPUExtent3DDict;
     usage: number;
     viewFormats?: string[];
 }
 interface GPUExtent3DDict {
-    width: number;
-    height?: number;
     depthOrArrayLayers?: number;
+    height?: number;
+    width: number;
 }
 interface GPUTexture {
     createView(descriptor?: GPUTextureViewDescriptor): GPUTextureView;
-    destroy(): void;
-    get width(): number;
-    get height(): number;
     get depthOrArrayLayers(): number;
-    get mipLevelCount(): number;
+    destroy(): void;
     get dimension(): string;
     get format(): string;
+    get height(): number;
+    get mipLevelCount(): number;
     get usage(): number;
+    get width(): number;
 }
 interface GPUTextureView {
 }
 interface GPUTextureViewDescriptor {
-    label: string;
-    format: string;
-    dimension: string;
-    aspect?: string;
-    baseMipLevel?: number;
-    mipLevelCount: number;
-    baseArrayLayer?: number;
     arrayLayerCount: number;
+    aspect?: string;
+    baseArrayLayer?: number;
+    baseMipLevel?: number;
+    dimension: string;
+    format: string;
+    label: string;
+    mipLevelCount: number;
 }
 declare abstract class GPUColorWrite {
     static readonly RED: number;
@@ -2767,24 +2767,24 @@ declare abstract class GPUColorWrite {
 interface GPURenderPipeline {
 }
 interface GPURenderPipelineDescriptor {
+    depthStencil?: GPUDepthStencilState;
+    fragment?: GPUFragmentState;
     label?: string;
     layout: string | GPUPipelineLayout;
-    vertex: GPUVertexState;
-    primitive?: GPUPrimitiveState;
-    depthStencil?: GPUDepthStencilState;
     multisample?: GPUMultisampleState;
-    fragment?: GPUFragmentState;
+    primitive?: GPUPrimitiveState;
+    vertex: GPUVertexState;
 }
 interface GPUVertexState {
-    module: GPUShaderModule;
-    entryPoint: string;
-    constants?: Record<string, number>;
     buffers?: GPUVertexBufferLayout[];
+    constants?: Record<string, number>;
+    entryPoint: string;
+    module: GPUShaderModule;
 }
 interface GPUVertexBufferLayout {
     arrayStride: number | bigint;
-    stepMode?: string;
     attributes: GPUVertexAttribute[];
+    stepMode?: string;
 }
 interface GPUVertexAttribute {
     format: string;
@@ -2792,108 +2792,108 @@ interface GPUVertexAttribute {
     shaderLocation: number;
 }
 interface GPUPrimitiveState {
-    topology?: string;
-    stripIndexFormat?: string;
-    frontFace?: string;
     cullMode?: string;
+    frontFace?: string;
+    stripIndexFormat?: string;
+    topology?: string;
     unclippedDepth?: boolean;
 }
 interface GPUStencilFaceState {
     compare?: string;
-    failOp?: string;
     depthFailOp?: string;
+    failOp?: string;
     passOp?: string;
 }
 interface GPUDepthStencilState {
-    format: string;
-    depthWriteEnabled: boolean;
+    depthBias?: number;
+    depthBiasClamp?: number;
+    depthBiasSlopeScale?: number;
     depthCompare: string;
-    stencilFront?: GPUStencilFaceState;
+    depthWriteEnabled: boolean;
+    format: string;
     stencilBack?: GPUStencilFaceState;
+    stencilFront?: GPUStencilFaceState;
     stencilReadMask?: number;
     stencilWriteMask?: number;
-    depthBias?: number;
-    depthBiasSlopeScale?: number;
-    depthBiasClamp?: number;
 }
 interface GPUMultisampleState {
+    alphaToCoverageEnabled?: boolean;
     count?: number;
     mask?: number;
-    alphaToCoverageEnabled?: boolean;
 }
 interface GPUFragmentState {
-    module: GPUShaderModule;
-    entryPoint: string;
     constants?: Record<string, number>;
+    entryPoint: string;
+    module: GPUShaderModule;
     targets: GPUColorTargetState[];
 }
 interface GPUColorTargetState {
-    format: string;
     blend: GPUBlendState;
+    format: string;
     writeMask?: number;
 }
 interface GPUBlendState {
-    color: GPUBlendComponent;
     alpha: GPUBlendComponent;
+    color: GPUBlendComponent;
 }
 interface GPUBlendComponent {
+    dstFactor?: string;
     operation?: string;
     srcFactor?: string;
-    dstFactor?: string;
 }
 interface GPURenderPassEncoder {
-    setPipeline(pipeline: GPURenderPipeline): void;
     draw(vertexCount: number, instanceCount?: number, firstVertex?: number, firstInstance?: number): void;
     end(): void;
+    setPipeline(pipeline: GPURenderPipeline): void;
 }
 interface GPURenderPassDescriptor {
-    label?: string;
     colorAttachments: GPURenderPassColorAttachment[];
     depthStencilAttachment?: GPURenderPassDepthStencilAttachment;
+    label?: string;
+    maxDrawCount?: (number | bigint);
     occlusionQuerySet?: GPUQuerySet;
     timestampWrites?: GPURenderPassTimestampWrites;
-    maxDrawCount?: (number | bigint);
 }
 interface GPURenderPassColorAttachment {
-    view: GPUTextureView;
-    depthSlice?: number;
-    resolveTarget?: GPUTextureView;
     clearValue?: (number[] | GPUColorDict);
+    depthSlice?: number;
     loadOp: string;
+    resolveTarget?: GPUTextureView;
     storeOp: string;
+    view: GPUTextureView;
 }
 interface GPUColorDict {
-    r: number;
-    g: number;
-    b: number;
     a: number;
+    b: number;
+    g: number;
+    r: number;
 }
 interface GPURenderPassDepthStencilAttachment {
-    view: GPUTextureView;
     depthClearValue?: number;
     depthLoadOp?: string;
-    depthStoreOp?: string;
     depthReadOnly?: boolean;
+    depthStoreOp?: string;
     stencilClearValue?: number;
     stencilLoadOp?: string;
-    stencilStoreOp?: string;
     stencilReadOnly?: boolean;
+    stencilStoreOp?: string;
+    view: GPUTextureView;
 }
 interface GPURenderPassTimestampWrites {
-    querySet: GPUQuerySet;
     beginningOfPassWriteIndex?: number;
     endOfPassWriteIndex?: number;
+    querySet: GPUQuerySet;
 }
 interface GPUImageCopyTexture {
-    texture: GPUTexture;
+    aspect?: string;
     mipLevel?: number;
     origin?: (number[] | GPUOrigin3DDict);
-    aspect?: string;
+    texture: GPUTexture;
 }
 interface GPUImageCopyBuffer {
     buffer: GPUBuffer;
-    offset?: (number | bigint);
     bytesPerRow?: number;
+    offset?: (number | bigint);
     rowsPerImage?: number;
 }
 interface GPUOrigin3DDict {
@@ -2946,20 +2946,20 @@ declare class EventSource extends EventTarget {
     static from(stream: ReadableStream): EventSource;
 }
 interface EventSourceEventSourceInit {
-    withCredentials?: boolean;
     fetcher?: Fetcher;
+    withCredentials?: boolean;
 }
 interface Container {
-    get running(): boolean;
-    start(options?: ContainerStartupOptions): void;
-    monitor(): Promise<void>;
     destroy(error?: any): Promise<void>;
-    signal(signo: number): void;
     getTcpPort(port: number): Fetcher;
+    monitor(): Promise<void>;
+    get running(): boolean;
+    signal(signo: number): void;
+    start(options?: ContainerStartupOptions): void;
 }
 interface ContainerStartupOptions {
-    entrypoint?: string[];
     enableInternet: boolean;
+    entrypoint?: string[];
     env?: Record<string, string>;
 }
 type AiImageClassificationInput = {
@@ -3187,6 +3187,7 @@ interface Ai_Cf_Openai_Whisper_Output {
      * The transcription
      */
     text: string;
+    vtt?: string;
     word_count?: number;
     words?: {
         word?: string;
@@ -3199,7 +3200,6 @@ interface Ai_Cf_Openai_Whisper_Output {
          */
         end?: number;
     }[];
-    vtt?: string;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper {
     inputs: Ai_Cf_Openai_Whisper_Input;
@@ -3262,6 +3262,7 @@ interface Ai_Cf_Openai_Whisper_Tiny_En_Output {
      * The transcription
      */
     text: string;
+    vtt?: string;
     word_count?: number;
     words?: {
         word?: string;
@@ -3274,7 +3275,6 @@ interface Ai_Cf_Openai_Whisper_Tiny_En_Output {
          */
         end?: number;
     }[];
-    vtt?: string;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper_Tiny_En {
     inputs: Ai_Cf_Openai_Whisper_Tiny_En_Input;
@@ -3286,53 +3286,27 @@ interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Input {
      */
     audio: string;
     /**
-     * Supported tasks are 'translate' or 'transcribe'.
+     * A text prompt to help provide context to the model on the contents of the audio.
      */
-    task?: string;
+    initial_prompt?: string;
     /**
      * The language of the audio being transcribed or translated.
      */
     language?: string;
     /**
-     * Preprocess the audio with a voice activity detection model.
-     */
-    vad_filter?: string;
-    /**
-     * A text prompt to help provide context to the model on the contents of the audio.
-     */
-    initial_prompt?: string;
-    /**
      * The prefix it appended the the beginning of the output of the transcription and can guide the transcription result.
      */
     prefix?: string;
+    /**
+     * Supported tasks are 'translate' or 'transcribe'.
+     */
+    task?: string;
+    /**
+     * Preprocess the audio with a voice activity detection model.
+     */
+    vad_filter?: string;
 }
 interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Output {
-    transcription_info?: {
-        /**
-         * The language of the audio being transcribed or translated.
-         */
-        language?: string;
-        /**
-         * The confidence level or probability of the detected language being accurate, represented as a decimal between 0 and 1.
-         */
-        language_probability?: number;
-        /**
-         * The total duration of the original audio file, in seconds.
-         */
-        duration?: number;
-        /**
-         * The duration of the audio after applying Voice Activity Detection (VAD) to remove silent or irrelevant sections, in seconds.
-         */
-        duration_after_vad?: number;
-    };
-    /**
-     * The complete transcription of the audio.
-     */
-    text: string;
-    /**
-     * The total number of words in the transcription.
-     */
-    word_count?: number;
     segments?: {
         /**
          * The starting time of the segment within the audio, in seconds.
@@ -3378,9 +3352,35 @@ interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Output {
         }[];
     }[];
     /**
+     * The complete transcription of the audio.
+     */
+    text: string;
+    transcription_info?: {
+        /**
+         * The language of the audio being transcribed or translated.
+         */
+        language?: string;
+        /**
+         * The confidence level or probability of the detected language being accurate, represented as a decimal between 0 and 1.
+         */
+        language_probability?: number;
+        /**
+         * The total duration of the original audio file, in seconds.
+         */
+        duration?: number;
+        /**
+         * The duration of the audio after applying Voice Activity Detection (VAD) to remove silent or irrelevant sections, in seconds.
+         */
+        duration_after_vad?: number;
+    };
+    /**
      * The transcription in WebVTT format, which includes timing and text information for use in subtitles.
      */
     vtt?: string;
+    /**
+     * The total number of words in the transcription.
+     */
+    word_count?: number;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo {
     inputs: Ai_Cf_Openai_Whisper_Large_V3_Turbo_Input;
@@ -3409,56 +3409,69 @@ declare abstract class Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell {
 type Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Input = Prompt | Messages;
 interface Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     image?: number[] | (string & NonNullable<unknown>);
     /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
+    lora?: string;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
-    /**
-     * Random seed for reproducibility of the generation.
-     */
-    seed?: number;
+    raw?: boolean;
     /**
      * Penalty for repeated tokens; higher values discourage repetition.
      */
     repetition_penalty?: number;
     /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Messages {
+    /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
+    image?: number[] | string;
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-    /**
-     * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
-     */
-    lora?: string;
-}
-interface Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -3472,11 +3485,26 @@ interface Messages {
          */
         content: string;
     }[];
-    image?: number[] | string;
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -3565,41 +3593,13 @@ interface Messages {
         };
     })[];
     /**
-     * If true, the response will be streamed back incrementally.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Controls the creativity of the AI's responses by adjusting how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
-    /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Controls the creativity of the AI's responses by adjusting how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Output = {
     /**
@@ -3626,6 +3626,10 @@ declare abstract class Base_Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct {
 }
 interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
     /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
+    /**
      * An array of message objects representing the conversation history.
      */
     messages: {
@@ -3639,14 +3643,6 @@ interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
         content: string;
     }[];
     /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
      * Dictate the output format of the generated response.
      */
     response_format?: {
@@ -3655,6 +3651,10 @@ interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
          */
         type?: string;
     };
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
 }
 interface Ai_Cf_Meta_Llama_Guard_3_8B_Output {
     response?: string | {
@@ -3690,68 +3690,68 @@ declare abstract class Base_Ai_Cf_Meta_Llama_Guard_3_8B {
     postProcessedOutputs: Ai_Cf_Meta_Llama_Guard_3_8B_Output;
 }
 interface AiModels {
-    "@cf/huggingface/distilbert-sst-2-int8": BaseAiTextClassification;
-    "@cf/stabilityai/stable-diffusion-xl-base-1.0": BaseAiTextToImage;
-    "@cf/runwayml/stable-diffusion-v1-5-inpainting": BaseAiTextToImage;
-    "@cf/runwayml/stable-diffusion-v1-5-img2img": BaseAiTextToImage;
-    "@cf/lykon/dreamshaper-8-lcm": BaseAiTextToImage;
-    "@cf/bytedance/stable-diffusion-xl-lightning": BaseAiTextToImage;
     "@cf/baai/bge-base-en-v1.5": BaseAiTextEmbeddings;
-    "@cf/baai/bge-small-en-v1.5": BaseAiTextEmbeddings;
     "@cf/baai/bge-large-en-v1.5": BaseAiTextEmbeddings;
-    "@cf/microsoft/resnet-50": BaseAiImageClassification;
-    "@cf/facebook/detr-resnet-50": BaseAiObjectDetection;
-    "@cf/meta/llama-2-7b-chat-int8": BaseAiTextGeneration;
-    "@cf/mistral/mistral-7b-instruct-v0.1": BaseAiTextGeneration;
-    "@cf/meta/llama-2-7b-chat-fp16": BaseAiTextGeneration;
-    "@hf/thebloke/llama-2-13b-chat-awq": BaseAiTextGeneration;
-    "@hf/thebloke/mistral-7b-instruct-v0.1-awq": BaseAiTextGeneration;
-    "@hf/thebloke/zephyr-7b-beta-awq": BaseAiTextGeneration;
-    "@hf/thebloke/openhermes-2.5-mistral-7b-awq": BaseAiTextGeneration;
-    "@hf/thebloke/neural-chat-7b-v3-1-awq": BaseAiTextGeneration;
-    "@hf/thebloke/llamaguard-7b-awq": BaseAiTextGeneration;
-    "@hf/thebloke/deepseek-coder-6.7b-base-awq": BaseAiTextGeneration;
-    "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": BaseAiTextGeneration;
+    "@cf/baai/bge-small-en-v1.5": BaseAiTextEmbeddings;
+    "@cf/black-forest-labs/flux-1-schnell": Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell;
+    "@cf/bytedance/stable-diffusion-xl-lightning": BaseAiTextToImage;
     "@cf/deepseek-ai/deepseek-math-7b-instruct": BaseAiTextGeneration;
+    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": BaseAiTextGeneration;
     "@cf/defog/sqlcoder-7b-2": BaseAiTextGeneration;
-    "@cf/openchat/openchat-3.5-0106": BaseAiTextGeneration;
-    "@cf/tiiuae/falcon-7b-instruct": BaseAiTextGeneration;
-    "@cf/thebloke/discolm-german-7b-v1-awq": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-0.5b-chat": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-7b-chat-awq": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-14b-chat-awq": BaseAiTextGeneration;
-    "@cf/tinyllama/tinyllama-1.1b-chat-v1.0": BaseAiTextGeneration;
-    "@cf/microsoft/phi-2": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-1.8b-chat": BaseAiTextGeneration;
-    "@cf/mistral/mistral-7b-instruct-v0.2-lora": BaseAiTextGeneration;
-    "@hf/nousresearch/hermes-2-pro-mistral-7b": BaseAiTextGeneration;
-    "@hf/nexusflow/starling-lm-7b-beta": BaseAiTextGeneration;
-    "@hf/google/gemma-7b-it": BaseAiTextGeneration;
-    "@cf/meta-llama/llama-2-7b-chat-hf-lora": BaseAiTextGeneration;
+    "@cf/facebook/bart-large-cnn": BaseAiSummarization;
+    "@cf/facebook/detr-resnet-50": BaseAiObjectDetection;
+    "@cf/fblgit/una-cybertron-7b-v2-bf16": BaseAiTextGeneration;
     "@cf/google/gemma-2b-it-lora": BaseAiTextGeneration;
     "@cf/google/gemma-7b-it-lora": BaseAiTextGeneration;
-    "@hf/mistral/mistral-7b-instruct-v0.2": BaseAiTextGeneration;
-    "@cf/meta/llama-3-8b-instruct": BaseAiTextGeneration;
-    "@cf/fblgit/una-cybertron-7b-v2-bf16": BaseAiTextGeneration;
-    "@cf/meta/llama-3-8b-instruct-awq": BaseAiTextGeneration;
-    "@hf/meta-llama/meta-llama-3-8b-instruct": BaseAiTextGeneration;
-    "@cf/meta/llama-3.1-8b-instruct": BaseAiTextGeneration;
-    "@cf/meta/llama-3.1-8b-instruct-fp8": BaseAiTextGeneration;
-    "@cf/meta/llama-3.1-8b-instruct-awq": BaseAiTextGeneration;
-    "@cf/meta/llama-3.2-3b-instruct": BaseAiTextGeneration;
-    "@cf/meta/llama-3.2-1b-instruct": BaseAiTextGeneration;
-    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": BaseAiTextGeneration;
-    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": BaseAiTextGeneration;
-    "@cf/meta/m2m100-1.2b": BaseAiTranslation;
-    "@cf/facebook/bart-large-cnn": BaseAiSummarization;
+    "@cf/huggingface/distilbert-sst-2-int8": BaseAiTextClassification;
     "@cf/llava-hf/llava-1.5-7b-hf": BaseAiImageToText;
-    "@cf/openai/whisper": Base_Ai_Cf_Openai_Whisper;
-    "@cf/unum/uform-gen2-qwen-500m": Base_Ai_Cf_Unum_Uform_Gen2_Qwen_500M;
-    "@cf/openai/whisper-tiny-en": Base_Ai_Cf_Openai_Whisper_Tiny_En;
-    "@cf/openai/whisper-large-v3-turbo": Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo;
-    "@cf/black-forest-labs/flux-1-schnell": Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell;
+    "@cf/lykon/dreamshaper-8-lcm": BaseAiTextToImage;
+    "@cf/meta-llama/llama-2-7b-chat-hf-lora": BaseAiTextGeneration;
+    "@cf/meta/llama-2-7b-chat-fp16": BaseAiTextGeneration;
+    "@cf/meta/llama-2-7b-chat-int8": BaseAiTextGeneration;
+    "@cf/meta/llama-3-8b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3-8b-instruct-awq": BaseAiTextGeneration;
+    "@cf/meta/llama-3.1-8b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3.1-8b-instruct-awq": BaseAiTextGeneration;
+    "@cf/meta/llama-3.1-8b-instruct-fp8": BaseAiTextGeneration;
+    "@cf/meta/llama-3.2-1b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3.2-3b-instruct": BaseAiTextGeneration;
     "@cf/meta/llama-3.2-11b-vision-instruct": Base_Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct;
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": BaseAiTextGeneration;
     "@cf/meta/llama-guard-3-8b": Base_Ai_Cf_Meta_Llama_Guard_3_8B;
+    "@cf/meta/m2m100-1.2b": BaseAiTranslation;
+    "@cf/microsoft/phi-2": BaseAiTextGeneration;
+    "@cf/microsoft/resnet-50": BaseAiImageClassification;
+    "@cf/mistral/mistral-7b-instruct-v0.1": BaseAiTextGeneration;
+    "@cf/mistral/mistral-7b-instruct-v0.2-lora": BaseAiTextGeneration;
+    "@cf/openai/whisper": Base_Ai_Cf_Openai_Whisper;
+    "@cf/openai/whisper-large-v3-turbo": Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo;
+    "@cf/openai/whisper-tiny-en": Base_Ai_Cf_Openai_Whisper_Tiny_En;
+    "@cf/openchat/openchat-3.5-0106": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-0.5b-chat": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-1.8b-chat": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-7b-chat-awq": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-14b-chat-awq": BaseAiTextGeneration;
+    "@cf/runwayml/stable-diffusion-v1-5-img2img": BaseAiTextToImage;
+    "@cf/runwayml/stable-diffusion-v1-5-inpainting": BaseAiTextToImage;
+    "@cf/stabilityai/stable-diffusion-xl-base-1.0": BaseAiTextToImage;
+    "@cf/thebloke/discolm-german-7b-v1-awq": BaseAiTextGeneration;
+    "@cf/tiiuae/falcon-7b-instruct": BaseAiTextGeneration;
+    "@cf/tinyllama/tinyllama-1.1b-chat-v1.0": BaseAiTextGeneration;
+    "@cf/unum/uform-gen2-qwen-500m": Base_Ai_Cf_Unum_Uform_Gen2_Qwen_500M;
+    "@hf/google/gemma-7b-it": BaseAiTextGeneration;
+    "@hf/meta-llama/meta-llama-3-8b-instruct": BaseAiTextGeneration;
+    "@hf/mistral/mistral-7b-instruct-v0.2": BaseAiTextGeneration;
+    "@hf/nexusflow/starling-lm-7b-beta": BaseAiTextGeneration;
+    "@hf/nousresearch/hermes-2-pro-mistral-7b": BaseAiTextGeneration;
+    "@hf/thebloke/deepseek-coder-6.7b-base-awq": BaseAiTextGeneration;
+    "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": BaseAiTextGeneration;
+    "@hf/thebloke/llama-2-13b-chat-awq": BaseAiTextGeneration;
+    "@hf/thebloke/llamaguard-7b-awq": BaseAiTextGeneration;
+    "@hf/thebloke/mistral-7b-instruct-v0.1-awq": BaseAiTextGeneration;
+    "@hf/thebloke/neural-chat-7b-v3-1-awq": BaseAiTextGeneration;
+    "@hf/thebloke/openhermes-2.5-mistral-7b-awq": BaseAiTextGeneration;
+    "@hf/thebloke/zephyr-7b-beta-awq": BaseAiTextGeneration;
 }
 type AiOptions = {
     gateway?: GatewayOptions;
@@ -3932,13 +3932,11 @@ declare abstract class AutoRAG {
 }
 interface BasicImageTransformations {
     /**
-     * Maximum width in image pixels. The value must be an integer.
+     * Background color to add underneath the image. Applies only to images with
+     * transparency (such as PNG). Accepts any CSS color (#RRGGBB, rgba(…),
+     * hsl(…), etc.)
      */
-    width?: number;
-    /**
-     * Maximum height in image pixels. The value must be an integer.
-     */
-    height?: number;
+    background?: string;
     /**
      * Resizing mode as a string. It affects interpretation of width and height
      * options:
@@ -3978,16 +3976,18 @@ interface BasicImageTransformations {
      */
     gravity?: "left" | "right" | "top" | "bottom" | "center" | "auto" | BasicImageTransformationsGravityCoordinates;
     /**
-     * Background color to add underneath the image. Applies only to images with
-     * transparency (such as PNG). Accepts any CSS color (#RRGGBB, rgba(…),
-     * hsl(…), etc.)
+     * Maximum height in image pixels. The value must be an integer.
      */
-    background?: string;
+    height?: number;
     /**
      * Number of degrees (90, 180, 270) to rotate the image by. width and height
      * options refer to axes after rotation.
      */
     rotate?: 0 | 90 | 180 | 270 | 360;
+    /**
+     * Maximum width in image pixels. The value must be an integer.
+     */
+    width?: number;
 }
 interface BasicImageTransformationsGravityCoordinates {
     x: number;
@@ -4003,6 +4003,7 @@ interface BasicImageTransformationsGravityCoordinates {
  * playground.
  */
 interface RequestInitCfProperties extends Record<string, unknown> {
+    apps?: boolean;
     cacheEverything?: boolean;
     /**
      * A request's cache key is what determines if two requests are
@@ -4031,8 +4032,6 @@ interface RequestInitCfProperties extends Record<string, unknown> {
      * (e.g. { '200-299': 86400, '404': 1, '500-599': 0 })
      */
     cacheTtlByStatus?: Record<string, number>;
-    scrapeShield?: boolean;
-    apps?: boolean;
     image?: RequestInitCfPropertiesImage;
     minify?: RequestInitCfPropertiesImageMinify;
     mirage?: boolean;
@@ -4052,14 +4051,11 @@ interface RequestInitCfProperties extends Record<string, unknown> {
      * to point to that CNAME record.
      */
     resolveOverride?: string;
+    scrapeShield?: boolean;
 }
 interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
-    /**
-     * Absolute URL of the image file to use for the drawing. It can be any of
-     * the supported file formats. For drawing of watermarks or non-rectangular
-     * overlays we recommend using PNG or WebP images.
-     */
-    url: string;
+    bottom?: number;
+    left?: number;
     /**
      * Floating-point number between 0 (transparent) and 1 (opaque).
      * For example, opacity: 0.5 makes overlay semitransparent.
@@ -4074,6 +4070,7 @@ interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
      *   (form a line).
      */
     repeat?: true | "x" | "y";
+    right?: number;
     /**
      * Position of the overlay image relative to a given edge. Each property is
      * an offset in pixels. 0 aligns exactly to the edge. For example, left: 10
@@ -4086,46 +4083,14 @@ interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
      * If no position is specified, the image will be centered.
      */
     top?: number;
-    left?: number;
-    bottom?: number;
-    right?: number;
+    /**
+     * Absolute URL of the image file to use for the drawing. It can be any of
+     * the supported file formats. For drawing of watermarks or non-rectangular
+     * overlays we recommend using PNG or WebP images.
+     */
+    url: string;
 }
 interface RequestInitCfPropertiesImage extends BasicImageTransformations {
-    /**
-     * Device Pixel Ratio. Default 1. Multiplier for width/height that makes it
-     * easier to specify higher-DPI sizes in <img srcset>.
-     */
-    dpr?: number;
-    /**
-     * An object with four properties {left, top, right, bottom} that specify
-     * a number of pixels to cut off on each side. Allows removal of borders
-     * or cutting out a specific fragment of an image. Trimming is performed
-     * before resizing or rotation. Takes dpr into account.
-     */
-    trim?: {
-        left?: number;
-        top?: number;
-        right?: number;
-        bottom?: number;
-    };
-    /**
-     * Quality setting from 1-100 (useful values are in 60-90 range). Lower values
-     * make images look worse, but load faster. The default is 85. It applies only
-     * to JPEG and WebP images. It doesn’t have any effect on PNG.
-     */
-    quality?: number;
-    /**
-     * Output format to generate. It can be:
-     *  - avif: generate images in AVIF format.
-     *  - webp: generate images in Google WebP format. Set quality to 100 to get
-     *    the WebP-lossless format.
-     *  - json: instead of generating an image, outputs information about the
-     *    image, in JSON format. The JSON object will contain image size
-     *    (before and after resizing), source image’s MIME type, file size, etc.
-     * - jpeg: generate images in JPEG format.
-     * - png: generate images in PNG format.
-     */
-    format?: "avif" | "webp" | "json" | "jpeg" | "png";
     /**
      * Whether to preserve animation frames from input files. Default is true.
      * Setting it to false reduces animations to still images. This setting is
@@ -4136,41 +4101,10 @@ interface RequestInitCfPropertiesImage extends BasicImageTransformations {
      */
     anim?: boolean;
     /**
-     * What EXIF data should be preserved in the output image. Note that EXIF
-     * rotation and embedded color profiles are always applied ("baked in" into
-     * the image), and aren't affected by this option. Note that if the Polish
-     * feature is enabled, all metadata may have been removed already and this
-     * option may have no effect.
-     *  - keep: Preserve most of EXIF metadata, including GPS location if there's
-     *    any.
-     *  - copyright: Only keep the copyright tag, and discard everything else.
-     *    This is the default behavior for JPEG files.
-     *  - none: Discard all invisible EXIF metadata. Currently WebP and PNG
-     *    output formats always discard metadata.
-     */
-    metadata?: "keep" | "copyright" | "none";
-    /**
-     * Strength of sharpening filter to apply to the image. Floating-point
-     * number between 0 (no sharpening, default) and 10 (maximum). 1.0 is a
-     * recommended value for downscaled images.
-     */
-    sharpen?: number;
-    /**
      * Radius of a blur filter (approximate gaussian). Maximum supported radius
      * is 250.
      */
     blur?: number;
-    /**
-     * Overlays are drawn in the order they appear in the array (last array
-     * entry is the topmost layer).
-     */
-    draw?: RequestInitCfPropertiesImageDraw[];
-    /**
-     * Fetching image from authenticated origin. Setting this property will
-     * pass authentication headers (Authorization, Cookie, etc.) through to
-     * the origin.
-     */
-    "origin-auth"?: "share-publicly";
     /**
      * Adds a border around the image. The border is added after resizing. Border
      * width takes dpr into account, and can be specified either using a single
@@ -4193,17 +4127,6 @@ interface RequestInitCfPropertiesImage extends BasicImageTransformations {
      */
     brightness?: number;
     /**
-     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
-     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
-     * ignored.
-     */
-    contrast?: number;
-    /**
-     * Increase exposure by a factor. A value of 1.0 equals no change, a value of
-     * 0.5 darkens the image, and a value of 2.0 lightens the image. 0 is ignored.
-     */
-    gamma?: number;
-    /**
      * Slightly reduces latency on a cache miss by selecting a
      * quickest-to-compress file format, at a cost of increased file size and
      * lower image quality. It will usually override the format option and choose
@@ -4212,11 +4135,88 @@ interface RequestInitCfPropertiesImage extends BasicImageTransformations {
      * images.
      */
     compression?: "fast";
+    /**
+     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
+     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
+     * ignored.
+     */
+    contrast?: number;
+    /**
+     * Device Pixel Ratio. Default 1. Multiplier for width/height that makes it
+     * easier to specify higher-DPI sizes in <img srcset>.
+     */
+    dpr?: number;
+    /**
+     * Overlays are drawn in the order they appear in the array (last array
+     * entry is the topmost layer).
+     */
+    draw?: RequestInitCfPropertiesImageDraw[];
+    /**
+     * Output format to generate. It can be:
+     *  - avif: generate images in AVIF format.
+     *  - webp: generate images in Google WebP format. Set quality to 100 to get
+     *    the WebP-lossless format.
+     *  - json: instead of generating an image, outputs information about the
+     *    image, in JSON format. The JSON object will contain image size
+     *    (before and after resizing), source image’s MIME type, file size, etc.
+     * - jpeg: generate images in JPEG format.
+     * - png: generate images in PNG format.
+     */
+    format?: "avif" | "webp" | "json" | "jpeg" | "png";
+    /**
+     * Increase exposure by a factor. A value of 1.0 equals no change, a value of
+     * 0.5 darkens the image, and a value of 2.0 lightens the image. 0 is ignored.
+     */
+    gamma?: number;
+    /**
+     * What EXIF data should be preserved in the output image. Note that EXIF
+     * rotation and embedded color profiles are always applied ("baked in" into
+     * the image), and aren't affected by this option. Note that if the Polish
+     * feature is enabled, all metadata may have been removed already and this
+     * option may have no effect.
+     *  - keep: Preserve most of EXIF metadata, including GPS location if there's
+     *    any.
+     *  - copyright: Only keep the copyright tag, and discard everything else.
+     *    This is the default behavior for JPEG files.
+     *  - none: Discard all invisible EXIF metadata. Currently WebP and PNG
+     *    output formats always discard metadata.
+     */
+    metadata?: "keep" | "copyright" | "none";
+    /**
+     * Fetching image from authenticated origin. Setting this property will
+     * pass authentication headers (Authorization, Cookie, etc.) through to
+     * the origin.
+     */
+    "origin-auth"?: "share-publicly";
+    /**
+     * Quality setting from 1-100 (useful values are in 60-90 range). Lower values
+     * make images look worse, but load faster. The default is 85. It applies only
+     * to JPEG and WebP images. It doesn’t have any effect on PNG.
+     */
+    quality?: number;
+    /**
+     * Strength of sharpening filter to apply to the image. Floating-point
+     * number between 0 (no sharpening, default) and 10 (maximum). 1.0 is a
+     * recommended value for downscaled images.
+     */
+    sharpen?: number;
+    /**
+     * An object with four properties {left, top, right, bottom} that specify
+     * a number of pixels to cut off on each side. Allows removal of borders
+     * or cutting out a specific fragment of an image. Trimming is performed
+     * before resizing or rotation. Takes dpr into account.
+     */
+    trim?: {
+        left?: number;
+        top?: number;
+        right?: number;
+        bottom?: number;
+    };
 }
 interface RequestInitCfPropertiesImageMinify {
-    javascript?: boolean;
     css?: boolean;
     html?: boolean;
+    javascript?: boolean;
 }
 interface RequestInitCfPropertiesR2 {
     /**
@@ -4286,13 +4286,6 @@ interface IncomingRequestCfPropertiesBase extends Record<string, unknown> {
      */
     requestPriority: string;
     /**
-     * The TLS version of the connection to Cloudflare.
-     * In requests served over plaintext (without TLS), this property is the empty string `""`.
-     *
-     * @example "TLSv1.3"
-     */
-    tlsVersion: string;
-    /**
      * The cipher for the connection to Cloudflare.
      * In requests served over plaintext (without TLS), this property is the empty string `""`.
      *
@@ -4305,8 +4298,24 @@ interface IncomingRequestCfPropertiesBase extends Record<string, unknown> {
      * If the incoming request was served over plaintext (without TLS) this field is undefined.
      */
     tlsExportedAuthenticator?: IncomingRequestCfPropertiesExportedAuthenticatorMetadata;
+    /**
+     * The TLS version of the connection to Cloudflare.
+     * In requests served over plaintext (without TLS), this property is the empty string `""`.
+     *
+     * @example "TLSv1.3"
+     */
+    tlsVersion: string;
 }
 interface IncomingRequestCfPropertiesBotManagementBase {
+    /**
+     * A boolean value that is true if the request originates from a
+     * Cloudflare-verified proxy service.
+     */
+    corporateProxy: boolean;
+    /**
+     * List of IDs that correlate to the Bot Management heuristic detections made on a request (you can have multiple heuristic detections on the same request).
+     */
+    detectionIds: number[];
     /**
      * Cloudflare’s [level of certainty](https://developers.cloudflare.com/bots/concepts/bot-score/) that a request comes from a bot,
      * represented as an integer percentage between `1` (almost certainly a bot) and `99` (almost certainly human).
@@ -4315,23 +4324,14 @@ interface IncomingRequestCfPropertiesBotManagementBase {
      */
     score: number;
     /**
-     * A boolean value that is true if the request comes from a good bot, like Google or Bing.
-     * Most customers choose to allow this traffic. For more details, see [Traffic from known bots](https://developers.cloudflare.com/firewall/known-issues-and-faq/#how-does-firewall-rules-handle-traffic-from-known-bots).
-     */
-    verifiedBot: boolean;
-    /**
-     * A boolean value that is true if the request originates from a
-     * Cloudflare-verified proxy service.
-     */
-    corporateProxy: boolean;
-    /**
      * A boolean value that's true if the request matches [file extensions](https://developers.cloudflare.com/bots/reference/static-resources/) for many types of static resources.
      */
     staticResource: boolean;
     /**
-     * List of IDs that correlate to the Bot Management heuristic detections made on a request (you can have multiple heuristic detections on the same request).
+     * A boolean value that is true if the request comes from a good bot, like Google or Bing.
+     * Most customers choose to allow this traffic. For more details, see [Traffic from known bots](https://developers.cloudflare.com/firewall/known-issues-and-faq/#how-does-firewall-rules-handle-traffic-from-known-bots).
      */
-    detectionIds: number[];
+    verifiedBot: boolean;
 }
 interface IncomingRequestCfPropertiesBotManagement {
     /**
@@ -4388,34 +4388,46 @@ interface IncomingRequestCfPropertiesCloudflareAccessOrApiShield {
  */
 interface IncomingRequestCfPropertiesExportedAuthenticatorMetadata {
     /**
-     * The client's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
-     *
-     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
-     */
-    clientHandshake: string;
-    /**
-     * The server's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
-     *
-     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
-     */
-    serverHandshake: string;
-    /**
      * The client's [`FINISHED` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.9), encoded in hexadecimal
      *
      * @example "084ee802fe1348f688220e2a6040a05b2199a761f33cf753abb1b006792d3f8b"
      */
     clientFinished: string;
     /**
+     * The client's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
+     *
+     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
+     */
+    clientHandshake: string;
+    /**
      * The server's [`FINISHED` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.9), encoded in hexadecimal
      *
      * @example "084ee802fe1348f688220e2a6040a05b2199a761f33cf753abb1b006792d3f8b"
      */
     serverFinished: string;
+    /**
+     * The server's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
+     *
+     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
+     */
+    serverHandshake: string;
 }
 /**
  * Geographic data about the request's origin.
  */
 interface IncomingRequestCfPropertiesGeographicInformation {
+    /**
+     * The city the request originated from
+     *
+     * @example "Austin"
+     */
+    city?: string;
+    /**
+     * A two-letter code indicating the continent the request originated from.
+     *
+     * @example "AN"
+     */
+    continent?: ContinentCode;
     /**
      * The [ISO 3166-1 Alpha 2](https://www.iso.org/iso-3166-country-codes.html) country code the request originated from.
      *
@@ -4435,24 +4447,6 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     isEUCountry?: "1";
     /**
-     * A two-letter code indicating the continent the request originated from.
-     *
-     * @example "AN"
-     */
-    continent?: ContinentCode;
-    /**
-     * The city the request originated from
-     *
-     * @example "Austin"
-     */
-    city?: string;
-    /**
-     * Postal code of the incoming request
-     *
-     * @example "78701"
-     */
-    postalCode?: string;
-    /**
      * Latitude of the incoming request
      *
      * @example "30.27130"
@@ -4465,11 +4459,17 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     longitude?: string;
     /**
-     * Timezone of the incoming request
+     * Metro code (DMA) of the incoming request
      *
-     * @example "America/Chicago"
+     * @example "635"
      */
-    timezone?: string;
+    metroCode?: string;
+    /**
+     * Postal code of the incoming request
+     *
+     * @example "78701"
+     */
+    postalCode?: string;
     /**
      * If known, the ISO 3166-2 name for the first level region associated with
      * the IP address of the incoming request
@@ -4485,80 +4485,14 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     regionCode?: string;
     /**
-     * Metro code (DMA) of the incoming request
+     * Timezone of the incoming request
      *
-     * @example "635"
+     * @example "America/Chicago"
      */
-    metroCode?: string;
+    timezone?: string;
 }
 /** Data about the incoming request's TLS certificate */
 interface IncomingRequestCfPropertiesTLSClientAuth {
-    /** Always `"1"`, indicating that the certificate was presented */
-    certPresented: "1";
-    /**
-     * Result of certificate verification.
-     *
-     * @example "FAILED:self signed certificate"
-     */
-    certVerified: Exclude<CertVerificationStatus, "NONE">;
-    /** The presented certificate's revokation status.
-     *
-     * - A value of `"1"` indicates the certificate has been revoked
-     * - A value of `"0"` indicates the certificate has not been revoked
-     */
-    certRevoked: "1" | "0";
-    /**
-     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
-     *
-     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certIssuerDN: string;
-    /**
-     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
-     *
-     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certSubjectDN: string;
-    /**
-     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
-     *
-     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certIssuerDNRFC2253: string;
-    /**
-     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
-     *
-     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certSubjectDNRFC2253: string;
-    /** The certificate issuer's distinguished name (legacy policies) */
-    certIssuerDNLegacy: string;
-    /** The certificate subject's distinguished name (legacy policies) */
-    certSubjectDNLegacy: string;
-    /**
-     * The certificate's serial number
-     *
-     * @example "00936EACBE07F201DF"
-     */
-    certSerial: string;
-    /**
-     * The certificate issuer's serial number
-     *
-     * @example "2489002934BDFEA34"
-     */
-    certIssuerSerial: string;
-    /**
-     * The certificate's Subject Key Identifier
-     *
-     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
-     */
-    certSKI: string;
-    /**
-     * The certificate issuer's Subject Key Identifier
-     *
-     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
-     */
-    certIssuerSKI: string;
     /**
      * The certificate's SHA-1 fingerprint
      *
@@ -4572,37 +4506,103 @@ interface IncomingRequestCfPropertiesTLSClientAuth {
      */
     certFingerprintSHA256: string;
     /**
-     * The effective starting date of the certificate
+     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
      *
-     * @example "Dec 22 19:39:00 2018 GMT"
+     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
      */
-    certNotBefore: string;
+    certIssuerDN: string;
+    /** The certificate issuer's distinguished name (legacy policies) */
+    certIssuerDNLegacy: string;
+    /**
+     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
+     *
+     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certIssuerDNRFC2253: string;
+    /**
+     * The certificate issuer's serial number
+     *
+     * @example "2489002934BDFEA34"
+     */
+    certIssuerSerial: string;
+    /**
+     * The certificate issuer's Subject Key Identifier
+     *
+     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
+     */
+    certIssuerSKI: string;
     /**
      * The effective expiration date of the certificate
      *
      * @example "Dec 22 19:39:00 2018 GMT"
      */
     certNotAfter: string;
+    /**
+     * The effective starting date of the certificate
+     *
+     * @example "Dec 22 19:39:00 2018 GMT"
+     */
+    certNotBefore: string;
+    /** Always `"1"`, indicating that the certificate was presented */
+    certPresented: "1";
+    /** The presented certificate's revokation status.
+     *
+     * - A value of `"1"` indicates the certificate has been revoked
+     * - A value of `"0"` indicates the certificate has not been revoked
+     */
+    certRevoked: "1" | "0";
+    /**
+     * The certificate's serial number
+     *
+     * @example "00936EACBE07F201DF"
+     */
+    certSerial: string;
+    /**
+     * The certificate's Subject Key Identifier
+     *
+     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
+     */
+    certSKI: string;
+    /**
+     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
+     *
+     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certSubjectDN: string;
+    /** The certificate subject's distinguished name (legacy policies) */
+    certSubjectDNLegacy: string;
+    /**
+     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
+     *
+     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certSubjectDNRFC2253: string;
+    /**
+     * Result of certificate verification.
+     *
+     * @example "FAILED:self signed certificate"
+     */
+    certVerified: Exclude<CertVerificationStatus, "NONE">;
 }
 /** Placeholder values for TLS Client Authorization */
 interface IncomingRequestCfPropertiesTLSClientAuthPlaceholder {
-    certPresented: "0";
-    certVerified: "NONE";
-    certRevoked: "0";
-    certIssuerDN: "";
-    certSubjectDN: "";
-    certIssuerDNRFC2253: "";
-    certSubjectDNRFC2253: "";
-    certIssuerDNLegacy: "";
-    certSubjectDNLegacy: "";
-    certSerial: "";
-    certIssuerSerial: "";
-    certSKI: "";
-    certIssuerSKI: "";
     certFingerprintSHA1: "";
     certFingerprintSHA256: "";
-    certNotBefore: "";
+    certIssuerDN: "";
+    certIssuerDNLegacy: "";
+    certIssuerDNRFC2253: "";
+    certIssuerSerial: "";
+    certIssuerSKI: "";
     certNotAfter: "";
+    certNotBefore: "";
+    certPresented: "0";
+    certRevoked: "0";
+    certSerial: "";
+    certSKI: "";
+    certSubjectDN: "";
+    certSubjectDNLegacy: "";
+    certSubjectDNRFC2253: "";
+    certVerified: "NONE";
 }
 /** Possible outcomes of TLS verification */
 declare type CertVerificationStatus = 
@@ -4630,21 +4630,21 @@ declare type Iso3166Alpha2Code = "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" 
 declare type ContinentCode = "AF" | "AN" | "AS" | "EU" | "NA" | "OC" | "SA";
 type CfProperties<HostMetadata = unknown> = IncomingRequestCfProperties<HostMetadata> | RequestInitCfProperties;
 interface D1Meta {
-    duration: number;
-    size_after: number;
-    rows_read: number;
-    rows_written: number;
-    last_row_id: number;
     changed_db: boolean;
     changes: number;
-    /**
-     * The region of the database instance that executed the query.
-     */
-    served_by_region?: string;
+    duration: number;
+    last_row_id: number;
+    rows_read: number;
+    rows_written: number;
     /**
      * True if-and-only-if the database instance that executed the query was the primary.
      */
     served_by_primary?: boolean;
+    /**
+     * The region of the database instance that executed the query.
+     */
+    served_by_region?: string;
+    size_after: number;
     timings?: {
         /**
          * The duration of the SQL query execution by the database instance. It doesn't include any network time.
@@ -4653,9 +4653,9 @@ interface D1Meta {
     };
 }
 interface D1Response {
-    success: true;
-    meta: D1Meta & Record<string, unknown>;
     error?: never;
+    meta: D1Meta & Record<string, unknown>;
+    success: true;
 }
 type D1Result<T = unknown> = D1Response & {
     results: T[];
@@ -4742,24 +4742,6 @@ interface EmailMessage {
  */
 interface ForwardableEmailMessage extends EmailMessage {
     /**
-     * Stream of the email message content.
-     */
-    readonly raw: ReadableStream<Uint8Array>;
-    /**
-     * An [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
-     */
-    readonly headers: Headers;
-    /**
-     * Size of the email message content.
-     */
-    readonly rawSize: number;
-    /**
-     * Reject this email message by returning a permanent SMTP error back to the connecting client including the given reason.
-     * @param reason The reject reason.
-     * @returns void
-     */
-    setReject(reason: string): void;
-    /**
      * Forward this email message to a verified destination address of the account.
      * @param rcptTo Verified destination address.
      * @param headers A [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
@@ -4767,11 +4749,29 @@ interface ForwardableEmailMessage extends EmailMessage {
      */
     forward(rcptTo: string, headers?: Headers): Promise<void>;
     /**
+     * An [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
+     */
+    readonly headers: Headers;
+    /**
+     * Stream of the email message content.
+     */
+    readonly raw: ReadableStream<Uint8Array>;
+    /**
+     * Size of the email message content.
+     */
+    readonly rawSize: number;
+    /**
      * Reply to the sender of this email message with a new EmailMessage object.
      * @param message The reply message.
      * @returns A promise that resolves when the email message is replied.
      */
     reply(message: EmailMessage): Promise<void>;
+    /**
+     * Reject this email message by returning a permanent SMTP error back to the connecting client including the given reason.
+     * @param reason The reject reason.
+     * @returns void
+     */
+    setReject(reason: string): void;
 }
 /**
  * A binding that allows a Worker to send email messages.
@@ -4810,12 +4810,23 @@ interface Hyperdrive {
      */
     readonly connectionString: string;
     /*
+     * The name of the database to connect to.
+     */
+    readonly database: string;
+    /*
      * A randomly generated hostname that is only valid within the context of the
      * currently running Worker which, when passed into `connect()` function from
      * the "cloudflare:sockets" module, will connect to the Hyperdrive instance
      * for your database.
      */
     readonly host: string;
+    /*
+     * The randomly generated password to use when authenticating to your
+     * database via Hyperdrive. Like the host field, this password is only valid
+     * within the context of the currently running Worker instance from which
+     * it's read.
+     */
+    readonly password: string;
     /*
      * The port that must be paired the the host field when connecting.
      */
@@ -4825,17 +4836,6 @@ interface Hyperdrive {
      * Unlike the host and password, this will be the same every time
      */
     readonly user: string;
-    /*
-     * The randomly generated password to use when authenticating to your
-     * database via Hyperdrive. Like the host field, this password is only valid
-     * within the context of the currently running Worker instance from which
-     * it's read.
-     */
-    readonly password: string;
-    /*
-     * The name of the database to connect to.
-     */
-    readonly database: string;
 }
 // Copyright (c) 2024 Cloudflare, Inc.
 // Licensed under the Apache 2.0 license found in the LICENSE file or at:
@@ -4916,12 +4916,6 @@ interface ImagesBinding {
 }
 interface ImageTransformer {
     /**
-     * Apply transform next, returning a transform handle.
-     * You can then apply more transformations, draw, or retrieve the output.
-     * @param transform
-     */
-    transform(transform: ImageTransform): ImageTransformer;
-    /**
      * Draw an image on this transformer, returning a transform handle.
      * You can then apply more transformations, draw, or retrieve the output.
      * @param image The image (or transformer that will give the image) to draw
@@ -4934,12 +4928,14 @@ interface ImageTransformer {
      * @param options Options that apply to the output e.g. output format
      */
     output(options: ImageOutputOptions): Promise<ImageTransformationResult>;
+    /**
+     * Apply transform next, returning a transform handle.
+     * You can then apply more transformations, draw, or retrieve the output.
+     * @param transform
+     */
+    transform(transform: ImageTransform): ImageTransformer;
 }
 interface ImageTransformationResult {
-    /**
-     * The image as a response, ready to store in cache or return to users
-     */
-    response(): Response;
     /**
      * The content type of the returned image
      */
@@ -4948,6 +4944,10 @@ interface ImageTransformationResult {
      * The bytes of the response
      */
     image(): ReadableStream<Uint8Array>;
+    /**
+     * The image as a response, ready to store in cache or return to users
+     */
+    response(): Response;
 }
 interface ImagesError extends Error {
     readonly code: number;
@@ -5025,29 +5025,29 @@ declare module "cloudflare:pipelines" {
 // itself.
 // https://developers.cloudflare.com/pub-sub/
 interface PubSubMessage {
-    // Message ID
-    readonly mid: number;
     // MQTT broker FQDN in the form mqtts://BROKER.NAMESPACE.cloudflarepubsub.com:PORT
     readonly broker: string;
-    // The MQTT topic the message was sent on.
-    readonly topic: string;
     // The client ID of the client that published this message.
     readonly clientId: string;
-    // The unique identifier (JWT ID) used by the client to authenticate, if token
-    // auth was used.
-    readonly jti?: string;
-    // A Unix timestamp (seconds from Jan 1, 1970), set when the Pub/Sub Broker
-    // received the message from the client.
-    readonly receivedAt: number;
     // An (optional) string with the MIME type of the payload, if set by the
     // client.
     readonly contentType: string;
-    // Set to 1 when the payload is a UTF-8 string
-    // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901063
-    readonly payloadFormatIndicator: number;
+    // The unique identifier (JWT ID) used by the client to authenticate, if token
+    // auth was used.
+    readonly jti?: string;
+    // Message ID
+    readonly mid: number;
     // Pub/Sub (MQTT) payloads can be UTF-8 strings, or byte arrays.
     // You can use payloadFormatIndicator to inspect this before decoding.
     payload: string | Uint8Array;
+    // Set to 1 when the payload is a UTF-8 string
+    // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901063
+    readonly payloadFormatIndicator: number;
+    // A Unix timestamp (seconds from Jan 1, 1970), set when the Pub/Sub Broker
+    // received the message from the client.
+    readonly receivedAt: number;
+    // The MQTT topic the message was sent on.
+    readonly topic: string;
 }
 // JsonWebKey extended by kid parameter
 interface JsonWebKeyWithKid extends JsonWebKey {
@@ -5114,8 +5114,8 @@ declare namespace Rpc {
     // Base type for all RPC stubs, including common memory management methods.
     // `T` is used as a marker type for unwrapping `Stub`s later.
     interface StubBase<T extends Stubable> extends Disposable {
-        [__RPC_STUB_BRAND]: T;
         dup(): this;
+        [__RPC_STUB_BRAND]: T;
     }
     export type Stub<T extends Stubable> = Provider<T> & StubBase<T>;
     // Recursively rewrite all `Stubable` types with `Stub`s
@@ -5245,39 +5245,39 @@ declare namespace TailStream {
         readonly value: string;
     }
     interface FetchEventInfo {
-        readonly type: "fetch";
-        readonly method: string;
-        readonly url: string;
         readonly cfJson: string;
         readonly headers: Header[];
+        readonly method: string;
+        readonly type: "fetch";
+        readonly url: string;
     }
     interface JsRpcEventInfo {
-        readonly type: "jsrpc";
         readonly methodName: string;
+        readonly type: "jsrpc";
     }
     interface ScheduledEventInfo {
-        readonly type: "scheduled";
-        readonly scheduledTime: Date;
         readonly cron: string;
+        readonly scheduledTime: Date;
+        readonly type: "scheduled";
     }
     interface AlarmEventInfo {
-        readonly type: "alarm";
         readonly scheduledTime: Date;
+        readonly type: "alarm";
     }
     interface QueueEventInfo {
-        readonly type: "queue";
-        readonly queueName: string;
         readonly batchSize: number;
+        readonly queueName: string;
+        readonly type: "queue";
     }
     interface EmailEventInfo {
-        readonly type: "email";
         readonly mailFrom: string;
-        readonly rcptTo: string;
         readonly rawSize: number;
+        readonly rcptTo: string;
+        readonly type: "email";
     }
     interface TraceEventInfo {
-        readonly type: "trace";
         readonly traces: (string | null)[];
+        readonly type: "trace";
     }
     interface HibernatableWebSocketEventInfoMessage {
         readonly type: "message";
@@ -5286,104 +5286,104 @@ declare namespace TailStream {
         readonly type: "error";
     }
     interface HibernatableWebSocketEventInfoClose {
-        readonly type: "close";
         readonly code: number;
+        readonly type: "close";
         readonly wasClean: boolean;
     }
     interface HibernatableWebSocketEventInfo {
-        readonly type: "hibernatableWebSocket";
         readonly info: HibernatableWebSocketEventInfoClose | HibernatableWebSocketEventInfoError | HibernatableWebSocketEventInfoMessage;
+        readonly type: "hibernatableWebSocket";
     }
     interface Resume {
-        readonly type: "resume";
         readonly attachment?: any;
+        readonly type: "resume";
     }
     interface CustomEventInfo {
         readonly type: "custom";
     }
     interface FetchResponseInfo {
-        readonly type: "fetch";
         readonly statusCode: number;
+        readonly type: "fetch";
     }
     type EventOutcome = "ok" | "canceled" | "exception" | "unknown" | "killSwitch" | "daemonDown" | "exceededCpu" | "exceededMemory" | "loadShed" | "responseStreamDisconnected" | "scriptNotFound";
     interface ScriptVersion {
         readonly id: string;
-        readonly tag?: string;
         readonly message?: string;
+        readonly tag?: string;
     }
     interface Trigger {
-        readonly traceId: string;
         readonly invocationId: string;
         readonly spanId: string;
+        readonly traceId: string;
     }
     interface Onset {
-        readonly type: "onset";
         readonly dispatchNamespace?: string;
         readonly entrypoint?: string;
+        readonly info: FetchEventInfo | JsRpcEventInfo | ScheduledEventInfo | AlarmEventInfo | QueueEventInfo | EmailEventInfo | TraceEventInfo | HibernatableWebSocketEventInfo | Resume | CustomEventInfo;
         readonly scriptName?: string;
         readonly scriptTags?: string[];
         readonly scriptVersion?: ScriptVersion;
         readonly trigger?: Trigger;
-        readonly info: FetchEventInfo | JsRpcEventInfo | ScheduledEventInfo | AlarmEventInfo | QueueEventInfo | EmailEventInfo | TraceEventInfo | HibernatableWebSocketEventInfo | Resume | CustomEventInfo;
+        readonly type: "onset";
     }
     interface Outcome {
-        readonly type: "outcome";
-        readonly outcome: EventOutcome;
         readonly cpuTime: number;
+        readonly outcome: EventOutcome;
+        readonly type: "outcome";
         readonly wallTime: number;
     }
     interface Hibernate {
         readonly type: "hibernate";
     }
     interface SpanOpen {
-        readonly type: "spanOpen";
-        readonly op?: string;
         readonly info?: FetchEventInfo | JsRpcEventInfo | Attribute[];
+        readonly op?: string;
+        readonly type: "spanOpen";
     }
     interface SpanClose {
-        readonly type: "spanClose";
         readonly outcome: EventOutcome;
+        readonly type: "spanClose";
     }
     interface DiagnosticChannelEvent {
-        readonly type: "diagnosticChannel";
         readonly channel: string;
         readonly message: any;
+        readonly type: "diagnosticChannel";
     }
     interface Exception {
-        readonly type: "exception";
-        readonly name: string;
         readonly message: string;
+        readonly name: string;
         readonly stack?: string;
+        readonly type: "exception";
     }
     interface Log {
-        readonly type: "log";
         readonly level: "debug" | "error" | "info" | "log" | "warn";
         readonly message: string;
+        readonly type: "log";
     }
     interface Return {
-        readonly type: "return";
         readonly info?: FetchResponseInfo | Attribute[];
+        readonly type: "return";
     }
     interface Link {
-        readonly type: "link";
-        readonly label?: string;
-        readonly traceId: string;
         readonly invocationId: string;
+        readonly label?: string;
         readonly spanId: string;
+        readonly traceId: string;
+        readonly type: "link";
     }
     interface Attribute {
-        readonly type: "attribute";
         readonly name: string;
+        readonly type: "attribute";
         readonly value: string | string[] | boolean | boolean[] | number | number[];
     }
     type Mark = DiagnosticChannelEvent | Exception | Log | Return | Link | Attribute[];
     interface TailEvent {
-        readonly traceId: string;
+        readonly event: Onset | Outcome | Hibernate | SpanOpen | SpanClose | Mark;
         readonly invocationId: string;
+        readonly sequence: number;
         readonly spanId: string;
         readonly timestamp: Date;
-        readonly sequence: number;
-        readonly event: Onset | Outcome | Hibernate | SpanOpen | SpanClose | Mark;
+        readonly traceId: string;
     }
     type TailEventHandler = (event: TailEvent) => void | Promise<void>;
     type TailEventHandlerName = "onset" | "outcome" | "hibernate" | "spanOpen" | "spanClose" | "diagnosticChannel" | "exception" | "log" | "return" | "link" | "attribute";
@@ -5436,11 +5436,11 @@ type VectorizeDistanceMetric = "euclidean" | "cosine" | "dot-product";
  */
 type VectorizeMetadataRetrievalLevel = "all" | "indexed" | "none";
 interface VectorizeQueryOptions {
-    topK?: number;
-    namespace?: string;
-    returnValues?: boolean;
-    returnMetadata?: boolean | VectorizeMetadataRetrievalLevel;
     filter?: VectorizeVectorMetadataFilter;
+    namespace?: string;
+    returnMetadata?: boolean | VectorizeMetadataRetrievalLevel;
+    returnValues?: boolean;
+    topK?: number;
 }
 /**
  * Information about the configuration of an index.
@@ -5458,14 +5458,14 @@ type VectorizeIndexConfig = {
  * See {@link VectorizeIndexInfo} for its post-beta equivalent.
  */
 interface VectorizeIndexDetails {
+    /** The index configuration, including the dimension size and distance metric. */
+    config: VectorizeIndexConfig;
+    /** (optional) A human readable description for the index. */
+    description?: string;
     /** The unique ID of the index */
     readonly id: string;
     /** The name of the index. */
     name: string;
-    /** (optional) A human readable description for the index. */
-    description?: string;
-    /** The index configuration, including the dimension size and distance metric. */
-    config: VectorizeIndexConfig;
     /** The number of records containing vectors within the index. */
     vectorsCount: number;
 }
@@ -5473,14 +5473,14 @@ interface VectorizeIndexDetails {
  * Metadata about an existing index.
  */
 interface VectorizeIndexInfo {
-    /** The number of records containing vectors within the index. */
-    vectorCount: number;
     /** Number of dimensions the index has been configured for. */
     dimensions: number;
     /** ISO 8601 datetime of the last processed mutation on in the index. All changes before this mutation will be reflected in the index state. */
     processedUpToDatetime: number;
     /** UUIDv4 of the last mutation processed by the index. All changes before this mutation will be reflected in the index state. */
     processedUpToMutation: number;
+    /** The number of records containing vectors within the index. */
+    vectorCount: number;
 }
 /**
  * Represents a single vector value set along with its associated metadata.
@@ -5488,12 +5488,12 @@ interface VectorizeIndexInfo {
 interface VectorizeVector {
     /** The ID for the vector. This can be user-defined, and must be unique. It should uniquely identify the object, and is best set based on the ID of what the vector represents. */
     id: string;
-    /** The vector values */
-    values: VectorFloatArray | number[];
-    /** The namespace this vector belongs to. */
-    namespace?: string;
     /** Metadata associated with the vector. Includes the values of other fields and potentially additional details. */
     metadata?: Record<string, VectorizeVectorMetadata>;
+    /** The namespace this vector belongs to. */
+    namespace?: string;
+    /** The vector values */
+    values: VectorFloatArray | number[];
 }
 /**
  * Represents a matched vector for a query along with its score and (if specified) the matching vector information.
@@ -5506,8 +5506,8 @@ type VectorizeMatch = Pick<Partial<VectorizeVector>, "values"> & Omit<VectorizeV
  * A set of matching {@link VectorizeMatch} for a particular query.
  */
 interface VectorizeMatches {
-    matches: VectorizeMatch[];
     count: number;
+    matches: VectorizeMatch[];
 }
 /**
  * Results of an operation that performed a mutation on a set of vectors.
@@ -5517,10 +5517,10 @@ interface VectorizeMatches {
  * See {@link VectorizeAsyncMutation} for its post-beta equivalent.
  */
 interface VectorizeVectorMutation {
-    /* List of ids of vectors that were successfully processed. */
-    ids: string[];
     /* Total count of the number of processed vectors. */
     count: number;
+    /* List of ids of vectors that were successfully processed. */
+    ids: string[];
 }
 /**
  * Result type indicating a mutation on the Vectorize Index.

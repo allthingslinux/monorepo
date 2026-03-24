@@ -245,4 +245,4 @@ Above all, exercise good judgment and common sense.`;
 /**
  * The date when the code of conduct was last updated
  */
-export const LAST_UPDATED = 'December 31, 2025';
+export const LAST_UPDATED = "December 31, 2025";

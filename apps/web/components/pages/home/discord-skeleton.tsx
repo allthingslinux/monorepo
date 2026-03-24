@@ -1,37 +1,38 @@
-import { memo } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronRight, Hash, Users } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { memo } from "react";
+import { ChevronRight, Hash, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Channel list component
 const ChannelList = memo(() => {
   const channels = [
-    'announcements',
-    'suggestions',
-    'general',
-    'forum',
-    'support',
-    'random',
-    'programming',
-    'projects',
+    "announcements",
+    "suggestions",
+    "general",
+    "forum",
+    "support",
+    "random",
+    "programming",
+    "projects",
   ];
 
   return (
-    <div className="w-56 bg-card p-4 hidden sm:block">
+    <div className="hidden w-56 bg-card p-4 sm:block">
       <div>
-        <div className="text-muted-foreground font-semibold mb-2 uppercase text-xs tracking-wide">
+        <div className="mb-2 font-semibold text-muted-foreground text-xs uppercase tracking-wide">
           Text Channels
         </div>
         <div className="space-y-1">
           {channels.map((channel) => (
             <ChannelItem key={channel} name={channel} />
           ))}
-          <div className="flex items-center text-muted-foreground hover:text-foreground cursor-pointer mt-3">
-            <ChevronRight className="w-4 h-4 mr-1" />
+          <div className="mt-3 flex cursor-pointer items-center text-muted-foreground hover:text-foreground">
+            <ChevronRight className="mr-1 h-4 w-4" />
             <span className="text-sm">plus many more!</span>
           </div>
         </div>
@@ -42,8 +43,8 @@ const ChannelList = memo(() => {
 
 // Individual channel item
 const ChannelItem = memo(({ name }: { name: string }) => (
-  <div className="flex items-center text-muted-foreground hover:text-foreground py-1">
-    <Hash className="w-4 h-4 mr-2 opacity-70" />
+  <div className="flex items-center py-1 text-muted-foreground hover:text-foreground">
+    <Hash className="mr-2 h-4 w-4 opacity-70" />
     <span className="text-sm">{name}</span>
   </div>
 ));
@@ -61,11 +62,11 @@ const MessageSkeleton = memo(
       <Skeleton
         className={`w-${avatarSize} h-${avatarSize} rounded-full bg-muted`}
       />
-      <div className="space-y-2 flex-1">
+      <div className="flex-1 space-y-2">
         {contentConfig.map((config, index) => (
           <Skeleton
-            key={index}
             className={`h-${config.height} ${config.width} bg-muted`}
+            key={index}
           />
         ))}
       </div>
@@ -80,14 +81,14 @@ const BackgroundMessages = memo(() => (
     <div className="space-y-4">
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[120px]' },
-          { height: 4, width: 'w-[180px]' },
+          { height: 4, width: "w-[120px]" },
+          { height: 4, width: "w-[180px]" },
         ]}
       />
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[140px]' },
-          { height: 4, width: 'w-[160px]' },
+          { height: 4, width: "w-[140px]" },
+          { height: 4, width: "w-[160px]" },
         ]}
       />
     </div>
@@ -96,8 +97,8 @@ const BackgroundMessages = memo(() => (
     <div className="space-y-4">
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[160px]' },
-          { height: 24, width: 'w-full' },
+          { height: 4, width: "w-[160px]" },
+          { height: 24, width: "w-full" },
         ]}
       />
     </div>
@@ -106,9 +107,9 @@ const BackgroundMessages = memo(() => (
     <div className="space-y-4">
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[180px]' },
-          { height: 4, width: 'w-[320px]' },
-          { height: 4, width: 'w-[280px]' },
+          { height: 4, width: "w-[180px]" },
+          { height: 4, width: "w-[320px]" },
+          { height: 4, width: "w-[280px]" },
         ]}
       />
     </div>
@@ -117,8 +118,8 @@ const BackgroundMessages = memo(() => (
     <div className="space-y-4">
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[140px]' },
-          { height: 4, width: 'w-[200px]' },
+          { height: 4, width: "w-[140px]" },
+          { height: 4, width: "w-[200px]" },
         ]}
       />
     </div>
@@ -127,8 +128,8 @@ const BackgroundMessages = memo(() => (
     <div className="space-y-4">
       <MessageSkeleton
         contentConfig={[
-          { height: 4, width: 'w-[160px]' },
-          { height: 32, width: 'w-48' },
+          { height: 4, width: "w-[160px]" },
+          { height: 32, width: "w-48" },
         ]}
       />
     </div>
@@ -137,20 +138,20 @@ const BackgroundMessages = memo(() => (
 
 // Server info component
 const ServerInfo = memo(() => (
-  <div className="flex flex-col items-center space-y-4 mb-8">
-    <div className="bg-accent rounded-full w-16 h-16 flex items-center justify-center">
+  <div className="mb-8 flex flex-col items-center space-y-4">
+    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent">
       <Image
-        src="/images/tux.webp"
         alt="Tux the penguin"
-        width={40}
+        className="h-10 w-10"
         height={40}
-        className="w-10 h-10"
         priority
+        src="/images/tux.webp"
+        width={40}
       />
     </div>
 
     <div>
-      <h2 className="text-2xl font-bold text-foreground pb-4">
+      <h2 className="pb-4 font-bold text-2xl text-foreground">
         All Things Linux
       </h2>
       <p className="text-foreground">discord.gg/linux</p>
@@ -161,10 +162,10 @@ const ServerInfo = memo(() => (
 // Online status component
 const OnlineStatus = memo(() => (
   <div className="mb-6 flex items-center justify-center space-x-2 text-foreground">
-    <Users className="w-6 h-6 text-foreground" />
+    <Users className="h-6 w-6 text-foreground" />
     <Badge
+      className="rounded-full border-0 bg-[#43b581]/60 px-4 py-1.5 font-semibold text-foreground text-xs"
       variant="outline"
-      className="bg-[#43b581]/60 text-foreground font-semibold px-4 py-1.5 rounded-full border-0 text-xs"
     >
       1337+ online
     </Badge>
@@ -174,7 +175,7 @@ const OnlineStatus = memo(() => (
 // Join button component
 const JoinButton = memo(() => (
   <Link href="https://discord.gg/linux" passHref>
-    <Button className="w-full bg-[#5865F2] hover:bg-[#EB459E] hover:scale-105 text-white transition-all font-bold py-5 mt-3 rounded-2xl">
+    <Button className="mt-3 w-full rounded-2xl bg-[#5865F2] py-5 font-bold text-white transition-all hover:scale-105 hover:bg-[#EB459E]">
       Join Server
     </Button>
   </Link>
@@ -182,7 +183,7 @@ const JoinButton = memo(() => (
 
 // Main content component
 const MainContent = memo(() => (
-  <CardContent className="text-center w-full max-w-xs mx-auto relative z-10">
+  <CardContent className="relative z-10 mx-auto w-full max-w-xs text-center">
     <ServerInfo />
     <OnlineStatus />
     <JoinButton />
@@ -201,7 +202,7 @@ const CentralContent = memo(() => (
 
 // Description component
 const Description = memo(() => (
-  <p className="text-center text-balance text-muted-foreground text-lg sm:text-xl py-4 sm:py-8 max-w-3xl mx-auto">
+  <p className="mx-auto max-w-3xl text-balance py-4 text-center text-lg text-muted-foreground sm:py-8 sm:text-xl">
     Make new friends, share your knowledge and learn from the biggest Linux
     community on Discord.
   </p>
@@ -211,7 +212,7 @@ const Description = memo(() => (
 const DiscordSkeleton = memo(() => {
   return (
     <>
-      <Card className="w-full max-w-3xl mx-auto bg-card text-foreground shadow-lg overflow-hidden">
+      <Card className="mx-auto w-full max-w-3xl overflow-hidden bg-card text-foreground shadow-lg">
         <div className="relative z-10 flex">
           <ChannelList />
           <CentralContent />
@@ -223,16 +224,16 @@ const DiscordSkeleton = memo(() => {
 });
 
 // Add display names for all components
-ChannelList.displayName = 'ChannelList';
-ChannelItem.displayName = 'ChannelItem';
-MessageSkeleton.displayName = 'MessageSkeleton';
-BackgroundMessages.displayName = 'BackgroundMessages';
-ServerInfo.displayName = 'ServerInfo';
-OnlineStatus.displayName = 'OnlineStatus';
-JoinButton.displayName = 'JoinButton';
-MainContent.displayName = 'MainContent';
-CentralContent.displayName = 'CentralContent';
-Description.displayName = 'Description';
-DiscordSkeleton.displayName = 'DiscordSkeleton';
+ChannelList.displayName = "ChannelList";
+ChannelItem.displayName = "ChannelItem";
+MessageSkeleton.displayName = "MessageSkeleton";
+BackgroundMessages.displayName = "BackgroundMessages";
+ServerInfo.displayName = "ServerInfo";
+OnlineStatus.displayName = "OnlineStatus";
+JoinButton.displayName = "JoinButton";
+MainContent.displayName = "MainContent";
+CentralContent.displayName = "CentralContent";
+Description.displayName = "Description";
+DiscordSkeleton.displayName = "DiscordSkeleton";
 
 export default DiscordSkeleton;

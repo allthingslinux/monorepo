@@ -1,35 +1,36 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { MenuIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { MenuIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { usePathname } from 'next/navigation';
+} from "@/components/ui/sheet";
 
 // Define navigation items
 const navItems = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'CoC', href: '/code-of-conduct' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Wiki', href: 'https://atl.wiki' },
-  { name: 'Tools', href: 'https://atl.tools' },
-  { name: 'Open', href: '/open' },
-  { name: 'Apply', href: '/apply' },
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
+  { name: "CoC", href: "/code-of-conduct" },
+  { name: "Blog", href: "/blog" },
+  { name: "Wiki", href: "https://atl.wiki" },
+  { name: "Tools", href: "https://atl.tools" },
+  { name: "Open", href: "/open" },
+  { name: "Apply", href: "/apply" },
 ];
 
 // Logo component
 const Logo = () => (
-  <Link href="/" className="flex items-center mr-6">
-    <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
+  <Link className="mr-6 flex items-center" href="/">
+    <span className="font-bold text-foreground text-lg tracking-tight sm:text-xl md:text-2xl lg:text-3xl">
       All Things Linux
     </span>
   </Link>
@@ -45,20 +46,20 @@ const NavLink = ({
 }) => {
   const pathname = usePathname();
   const isActive =
-    pathname === href || (href !== '/' && pathname?.startsWith(href));
-  const isExternal = href.startsWith('http');
+    pathname === href || (href !== "/" && pathname?.startsWith(href));
+  const isExternal = href.startsWith("http");
 
   return (
     <Link
-      href={href}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
       className={cn(
-        'px-4 py-2 rounded-full text-sm transition-all relative',
+        "relative rounded-full px-4 py-2 text-sm transition-all",
         isActive
-          ? 'font-medium text-primary bg-primary/10'
-          : 'font-normal text-foreground/90 hover:bg-background/80 hover:text-foreground'
+          ? "bg-primary/10 font-medium text-primary"
+          : "font-normal text-foreground/90 hover:bg-background/80 hover:text-foreground"
       )}
+      href={href}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      target={isExternal ? "_blank" : undefined}
     >
       {children}
     </Link>
@@ -67,9 +68,9 @@ const NavLink = ({
 
 // Desktop navigation component
 const DesktopNavigation = () => (
-  <div className="hidden md:flex items-center bg-card/40 backdrop-blur-sm rounded-full px-1.5 py-1.5 border border-border/30">
+  <div className="hidden items-center rounded-full border border-border/30 bg-card/40 px-1.5 py-1.5 backdrop-blur-sm md:flex">
     {navItems.map((item) => (
-      <NavLink key={item.name} href={item.href}>
+      <NavLink href={item.href} key={item.name}>
         {item.name}
       </NavLink>
     ))}
@@ -80,13 +81,13 @@ const DesktopNavigation = () => (
 const CTAButton = ({ className }: { className?: string }) => (
   <Link href="/contribute">
     <Button
-      variant="default"
-      size="default"
       className={cn(
-        'font-semibold px-5 py-2.5 rounded-full bg-primary text-primary-foreground',
-        'hover:scale-105 hover:bg-primary/90 transition-all duration-300',
+        "rounded-full bg-primary px-5 py-2.5 font-semibold text-primary-foreground",
+        "transition-all duration-300 hover:scale-105 hover:bg-primary/90",
         className
       )}
+      size="default"
+      variant="default"
     >
       Contribute & Donate
     </Button>
@@ -102,19 +103,19 @@ const MobileNavLinks = ({ onNavigate }: { onNavigate: () => void }) => {
       {navItems.map((item) => {
         const isActive =
           pathname === item.href ||
-          (item.href !== '/' && pathname?.startsWith(item.href));
+          (item.href !== "/" && pathname?.startsWith(item.href));
 
         return (
           <Link
-            key={item.name}
-            href={item.href}
-            onClick={onNavigate}
             className={cn(
-              'py-2.5 px-4 rounded-lg font-medium transition-colors',
+              "rounded-lg px-4 py-2.5 font-medium transition-colors",
               isActive
-                ? 'bg-primary/10 text-primary'
-                : 'text-foreground/90 hover:bg-card/60'
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/90 hover:bg-card/60"
             )}
+            href={item.href}
+            key={item.name}
+            onClick={onNavigate}
           >
             {item.name}
           </Link>
@@ -133,19 +134,19 @@ const MobileNavigation = () => {
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild className="md:hidden">
         <Button
-          variant="outline"
-          size="sm"
           className="ml-2 rounded-full border-border/50"
+          size="sm"
+          variant="outline"
         >
           <MenuIcon className="h-5 w-5" />
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[280px]">
-        <SheetHeader className="mb-8 pb-4 border-b">
+      <SheetContent className="w-[280px]" side="right">
+        <SheetHeader className="mb-8 border-b pb-4">
           <SheetTitle className="text-left">
             <span className="font-bold text-foreground">All Things Linux</span>
           </SheetTitle>
@@ -164,14 +165,14 @@ const MobileNavigation = () => {
 // Main Header component
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md py-3">
+    <header className="sticky top-0 z-50 bg-background/80 py-3 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Logo />
 
           <div className="flex items-center gap-x-4">
             <DesktopNavigation />
-            <div className="hidden md:block ml-4">
+            <div className="ml-4 hidden md:block">
               <CTAButton />
             </div>
             <MobileNavigation />

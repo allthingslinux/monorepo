@@ -9,7 +9,7 @@ export type FormQuestion = {
   question: string;
 
   /** Question input type (determines rendered UI) */
-  type: 'short' | 'paragraph' | 'select' | 'number' | 'digits-only';
+  type: "short" | "paragraph" | "select" | "number" | "digits-only";
 
   /** Additional description or help text shown below the label */
   description?: string;
@@ -27,7 +27,7 @@ export type FormQuestion = {
   rows?: number;
 
   /** Input type for short text fields (only used if type is `short`) */
-  inputType?: 'text' | 'email' | 'tel' | 'url' | 'password';
+  inputType?: "text" | "email" | "tel" | "url" | "password";
 
   /** Min value for number fields (only used if type is `number`) */
   min?: number;

@@ -27,7 +27,7 @@ export type Role = {
 
 // Export the payload structure for queue messages
 export interface SubmissionPayload {
-  roleData: Role;
   formData: FormData;
+  roleData: Role;
   timestamp: string;
 }

@@ -1,15 +1,14 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { runtimeEnv as env } from '@/env';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
 import {
   fetchQuickBooksTransactions,
-  type QuickBooksCloudflareEnv,
   getCloudflareEnv,
-} from '@/lib/integrations/quickbooks';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
+} from "@/lib/integrations/quickbooks";
+import { runtimeEnv as env } from "@/env";
 
 // Cloudflare Workers runtime - using nodejs for Buffer/crypto compatibility
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 /**
  * Helper to get Cloudflare env with KV access
@@ -33,7 +32,7 @@ export async function GET(request: NextRequest) {
     const cfEnv = await getCloudflareEnv();
 
     console.log(
-      '[QuickBooks API] Request received, KV namespace available:',
+      "[QuickBooks API] Request received, KV namespace available:",
       !!cfEnv?.KV_QUICKBOOKS
     );
 
@@ -41,9 +40,9 @@ export async function GET(request: NextRequest) {
     const transactions = await fetchQuickBooksTransactions(cfEnv);
 
     console.log(
-      '[QuickBooks API] Returning',
+      "[QuickBooks API] Returning",
       transactions.length,
-      'transactions'
+      "transactions"
     );
 
     return NextResponse.json({
@@ -53,24 +52,24 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('[QuickBooks API] ❌ Error fetching QuickBooks data:', error);
+    console.error("[QuickBooks API] ❌ Error fetching QuickBooks data:", error);
     console.error(
-      '[QuickBooks API] Error stack:',
-      error instanceof Error ? error.stack : 'No stack trace'
+      "[QuickBooks API] Error stack:",
+      error instanceof Error ? error.stack : "No stack trace"
     );
 
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch QuickBooks data',
+        error: "Failed to fetch QuickBooks data",
         details:
-          env.NODE_ENV === 'development'
+          env.NODE_ENV === "development"
             ? error instanceof Error
               ? error.message
-              : 'Unknown error'
+              : "Unknown error"
             : undefined,
         // Always include error in dev environment for debugging
-        ...(env.NODE_ENV === 'development' && error instanceof Error
+        ...(env.NODE_ENV === "development" && error instanceof Error
           ? { stack: error.stack }
           : {}),
       },
@@ -88,12 +87,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Basic authentication check - require admin access
-    const authHeader = request.headers.get('authorization');
+    const authHeader = request.headers.get("authorization");
     const adminKey = env.QUICKBOOKS_ADMIN_KEY;
 
     if (!adminKey || authHeader !== `Bearer ${adminKey}`) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized - admin access required' },
+        { success: false, error: "Unauthorized - admin access required" },
         { status: 401 }
       );
     }
@@ -101,14 +100,14 @@ export async function POST(request: NextRequest) {
     const body: { action?: string } = await request.json();
     const { action } = body;
 
-    if (action === 'refresh_tokens') {
+    if (action === "refresh_tokens") {
       // Fetch latest transactions (tokens will be refreshed automatically if needed)
       const cfEnv = await getCloudflareEnv();
       const transactions = await fetchQuickBooksTransactions(cfEnv);
 
       return NextResponse.json({
         success: true,
-        message: 'Latest transactions fetched successfully',
+        message: "Latest transactions fetched successfully",
         data: transactions,
         count: transactions.length,
         timestamp: new Date().toISOString(),
@@ -116,21 +115,21 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: false, error: 'Invalid action' },
+      { success: false, error: "Invalid action" },
       { status: 400 }
     );
   } catch (error) {
-    console.error('Error in QuickBooks API:', error);
+    console.error("Error in QuickBooks API:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: 'API request failed',
+        error: "API request failed",
         details:
-          env.NODE_ENV === 'development'
+          env.NODE_ENV === "development"
             ? error instanceof Error
               ? error.message
-              : 'Unknown error'
+              : "Unknown error"
             : undefined,
       },
       { status: 500 }

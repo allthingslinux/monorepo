@@ -4,7 +4,7 @@
  * Cloudflare Workers.
  */
 
-import { CODE_OF_CONDUCT_CONTENT, LAST_UPDATED } from '@/lib/code-of-conduct';
+import { CODE_OF_CONDUCT_CONTENT, LAST_UPDATED } from "@/lib/code-of-conduct";
 
 /**
  * Get the processed content of the Code of Conduct

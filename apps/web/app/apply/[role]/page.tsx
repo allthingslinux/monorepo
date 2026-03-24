@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { useParams, notFound } from 'next/navigation';
-import { roles } from '@/data/forms/roles';
-import { generalQuestions } from '@/data/forms/questions/general';
-import { z } from 'zod';
-import StepperForm from '@/components/multi-step-form/StepperForm';
-import { generateFormSchema } from '@/lib/utils';
-import Link from 'next/link';
-import { ChevronLeftIcon } from '@radix-ui/react-icons';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState } from "react";
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { notFound, useParams } from "next/navigation";
+import type { z } from "zod";
+
+import { generateFormSchema } from "@/lib/utils";
+import StepperForm from "@/components/multi-step-form/StepperForm";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { generalQuestions } from "@/data/forms/questions/general";
+import { roles } from "@/data/forms/roles";
 
 export default function RoleApplicationPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,11 +33,11 @@ export default function RoleApplicationPage() {
 
   const onSubmit = async (data: z.infer<typeof _formSchema>) => {
     try {
-      console.log('Form data before submission:', data);
+      console.log("Form data before submission:", data);
 
       // Ensure role is still available (edge case protection)
       if (!role) {
-        console.error('Role not found during form submission');
+        console.error("Role not found during form submission");
         return;
       }
 
@@ -53,7 +54,7 @@ export default function RoleApplicationPage() {
         } else if (value === null || value === undefined) {
           // Skip null or undefined values
           console.log(`Skipping null/undefined field: ${key}`);
-        } else if (typeof value === 'object') {
+        } else if (typeof value === "object") {
           // Convert objects to JSON strings
           console.log(`Converting object to JSON for field: ${key}`, value);
           formData.append(key, JSON.stringify(value));
@@ -67,7 +68,7 @@ export default function RoleApplicationPage() {
 
       // Use relative URL instead of absolute for better compatibility with Workers
       const response = await fetch(`/api/forms/${role.slug}`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
 
@@ -77,25 +78,25 @@ export default function RoleApplicationPage() {
         setIsSubmitted(true);
         // Ensure scroll to top happens after state update
         setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }, 10);
       } else {
         // Safely get error data from response
-        let errorMessage = response.statusText || 'Unknown error';
+        let errorMessage = response.statusText || "Unknown error";
         let errorDetails = null;
 
         try {
           // Only try to parse JSON if content-type is application/json
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
             const errorData = (await response.json()) as Record<
               string,
               unknown
             >;
             errorDetails = errorData;
-            if (errorData && typeof errorData.error === 'string') {
+            if (errorData && typeof errorData.error === "string") {
               errorMessage = errorData.error;
-            } else if (errorData && typeof errorData.details === 'string') {
+            } else if (errorData && typeof errorData.details === "string") {
               errorMessage = errorData.details;
             }
           } else {
@@ -103,13 +104,13 @@ export default function RoleApplicationPage() {
             errorMessage = await response.text();
           }
         } catch (parseError) {
-          console.error('Error parsing error response:', parseError);
+          console.error("Error parsing error response:", parseError);
         }
 
         // Log the error safely
-        console.error('Form submission failed:', errorMessage);
+        console.error("Form submission failed:", errorMessage);
         if (errorDetails) {
-          console.error('Error details:', errorDetails);
+          console.error("Error details:", errorDetails);
         }
 
         // Show user-friendly error message and scroll to it
@@ -118,53 +119,53 @@ export default function RoleApplicationPage() {
         );
 
         // Scroll to top to ensure error alert is visible
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     } catch (error) {
       // Handle network or other errors
       const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      console.error('Error submitting form:', errorMessage);
+        error instanceof Error ? error.message : "Unknown error";
+      console.error("Error submitting form:", errorMessage);
 
       // Show alert and scroll to top
       alert(
-        'There was an error submitting your application. Please check your network connection and try again.'
+        "There was an error submitting your application. Please check your network connection and try again."
       );
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   if (isSubmitted) {
     return (
       <div className="mx-auto py-32">
-        <div className="grid grid-cols-1 gap-6 justify-items-center">
-          <div className="w-full max-w-[800px] flex flex-col items-center justify-center py-12 px-4 text-center">
-            <div className="bg-card p-6 rounded-xl mb-6">
+        <div className="grid grid-cols-1 justify-items-center gap-6">
+          <div className="flex w-full max-w-[800px] flex-col items-center justify-center px-4 py-12 text-center">
+            <div className="mb-6 rounded-xl bg-card p-6">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 mx-auto text-green-500"
+                className="mx-auto h-12 w-12 text-green-500"
                 fill="none"
-                viewBox="0 0 24 24"
                 stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
+                  d="M5 13l4 4L19 7"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M5 13l4 4L19 7"
                 />
               </svg>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">Application Submitted!</h1>
-            <p className="text-xl mb-8 max-w-md text-muted-foreground">
+            <h1 className="mb-4 font-bold text-3xl">Application Submitted!</h1>
+            <p className="mb-8 max-w-md text-muted-foreground text-xl">
               Thank you for your application. We'll review it and get back to
               you soon.
             </p>
 
             <Link
+              className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 font-medium text-primary-foreground text-sm shadow-sm hover:bg-green-700"
               href="/"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-green-600 hover:bg-green-700"
             >
               Return Home
             </Link>
@@ -177,16 +178,16 @@ export default function RoleApplicationPage() {
   return (
     <div className="mx-auto py-22">
       {/* Center all content */}
-      <div className="grid grid-cols-1 gap-6 justify-items-center">
+      <div className="grid grid-cols-1 justify-items-center gap-6">
         {/* Centered header with consistent width */}
         <div className="w-full max-w-[800px]">
           {/* Back button */}
           <div className="mb-6">
             <Link href="/apply" passHref>
               <Button
-                variant="ghost"
-                size="sm"
                 className="group text-muted-foreground hover:text-foreground"
+                size="sm"
+                variant="ghost"
               >
                 <ChevronLeftIcon className="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
                 Back to Roles
@@ -194,18 +195,18 @@ export default function RoleApplicationPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col items-center mb-4 text-center">
-            <Badge className="text-xs py-1 px-3 mb-4" variant="outline">
+          <div className="mb-4 flex flex-col items-center text-center">
+            <Badge className="mb-4 px-3 py-1 text-xs" variant="outline">
               {role.department}
             </Badge>
-            <h1 className="text-3xl font-bold">Apply for {role.name}</h1>
+            <h1 className="font-bold text-3xl">Apply for {role.name}</h1>
           </div>
 
           {/* Description card with same width as header */}
-          <Card className="w-full bg-muted/30 border-muted">
+          <Card className="w-full border-muted bg-muted/30">
             <CardContent className="pt-6">
-              <div className="flex gap-2 items-start">
-                <div className="w-1 h-full bg-primary rounded-full self-stretch"></div>
+              <div className="flex items-start gap-2">
+                <div className="h-full w-1 self-stretch rounded-full bg-primary" />
                 <p className="text-muted-foreground">{role.description}</p>
               </div>
             </CardContent>
@@ -215,11 +216,11 @@ export default function RoleApplicationPage() {
         {/* Form with same max-width */}
         <div className="w-full max-w-[800px]">
           <StepperForm
-            generalQuestions={generalQuestions}
             departmentalQuestions={role.questions}
-            roleQuestions={[]}
-            role={role}
+            generalQuestions={generalQuestions}
             onSubmitAction={onSubmit}
+            role={role}
+            roleQuestions={[]}
           />
         </div>
       </div>

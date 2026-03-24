@@ -1,16 +1,15 @@
-import { cpus } from 'node:os';
-
-import type { NextConfig } from 'next';
-import { withContentlayer } from 'next-contentlayer2';
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+import { cpus } from "node:os";
+import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+import { withContentlayer } from "next-contentlayer2";
 
 // Validate environment variables at build time
-import './env';
+import "./env";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   productionBrowserSourceMaps: false,
 
   // Performance optimizations
@@ -26,19 +25,15 @@ const nextConfig: NextConfig = {
     // Enable emotion optimization if used
     emotion: true,
     // Remove React properties in production
-    reactRemoveProperties: process.env.NODE_ENV === 'production',
+    reactRemoveProperties: process.env.NODE_ENV === "production",
   },
 
-  // Build optimizations
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === 'production',
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
   },
 
   // Output configuration for better caching
-  output: 'standalone',
+  output: "standalone",
   logging: {
     fetches: {
       fullUrl: true,
@@ -65,7 +60,7 @@ const nextConfig: NextConfig = {
   // Performance profiling - disable webpack minification for better debugging
   webpack: (config, { isServer }) => {
     // Only disable minification in development for easier profiling
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       config.optimization.minimize = false;
     }
 
@@ -75,7 +70,7 @@ const nextConfig: NextConfig = {
       // Only apply to server-side builds (where OpenNext/esbuild processes files)
       config.module.rules.push({
         test: /\.map$/,
-        type: 'asset/source',
+        type: "asset/source",
         generator: {
           emit: false, // Don't emit .map files
         },
@@ -83,11 +78,11 @@ const nextConfig: NextConfig = {
 
       // Ignore .map files in module resolution
       config.resolve.extensions = config.resolve.extensions.filter(
-        (ext: string) => ext !== '.map'
+        (ext: string) => ext !== ".map"
       );
 
       // Add ignore plugin to completely skip .map files
-      const { IgnorePlugin } = require('webpack');
+      const { IgnorePlugin } = require("webpack");
       config.plugins.push(
         new IgnorePlugin({
           resourceRegExp: /\.map$/,
@@ -101,22 +96,22 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
         ],
       },
       {
-        source: '/api/:path*',
+        source: "/api/:path*",
         headers: [
-          { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,OPTIONS" },
           {
-            key: 'Access-Control-Allow-Headers',
+            key: "Access-Control-Allow-Headers",
             value:
-              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+              "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
           },
         ],
       },
@@ -127,23 +122,23 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/donate',
-        destination: '/contribute',
+        source: "/donate",
+        destination: "/contribute",
         permanent: true,
       },
       {
-        source: '/get-involved',
-        destination: '/apply',
+        source: "/get-involved",
+        destination: "/apply",
         permanent: true,
       },
       {
-        source: '/roles',
-        destination: '/apply',
+        source: "/roles",
+        destination: "/apply",
         permanent: true,
       },
       {
-        source: '/careers',
-        destination: '/apply',
+        source: "/careers",
+        destination: "/apply",
         permanent: true,
       },
     ];
@@ -153,35 +148,35 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https' as const,
-        hostname: 'contrib.rocks',
+        protocol: "https" as const,
+        hostname: "contrib.rocks",
       },
       {
-        protocol: 'https' as const,
-        hostname: 'allthingslinux.org',
+        protocol: "https" as const,
+        hostname: "allthingslinux.org",
       },
       {
-        protocol: 'https' as const,
-        hostname: 'dcbadge.limes.pink',
+        protocol: "https" as const,
+        hostname: "dcbadge.limes.pink",
       },
       {
-        protocol: 'https' as const,
-        hostname: 'discord.gg',
+        protocol: "https" as const,
+        hostname: "discord.gg",
       },
       {
-        protocol: 'https' as const,
-        hostname: 'i.imgur.com',
+        protocol: "https" as const,
+        hostname: "i.imgur.com",
       },
       {
-        protocol: 'https' as const,
-        hostname: 'sprut.ai',
+        protocol: "https" as const,
+        hostname: "sprut.ai",
       },
     ],
     dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment' as const,
+    contentDispositionType: "attachment" as const,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     // Optimized image settings for better performance
-    formats: ['image/avif', 'image/webp'] as const,
+    formats: ["image/avif", "image/webp"] as const,
     // Reduced device sizes for faster processing
     deviceSizes: [640, 828, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],

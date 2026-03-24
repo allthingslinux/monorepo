@@ -1,20 +1,20 @@
 import {
-  MdOutlinePrivacyTip,
   MdCookie,
   MdGavel,
+  MdOutlinePrivacyTip,
   MdSecurity,
-} from 'react-icons/md';
+} from "react-icons/md";
 
 const Privacy = () => {
   return (
     <a
+      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
       href="https://www.iubenda.com/privacy-policy/97069484/full-legal"
-      className="text-gray-400 hover:text-gray-300 transition-colors duration-200 ease-in-out inline-flex items-center gap-2"
-      title="Privacy Policy"
-      target="_blank"
       rel="noopener noreferrer"
+      target="_blank"
+      title="Privacy Policy"
     >
-      <MdOutlinePrivacyTip className="w-4 h-4" />
+      <MdOutlinePrivacyTip className="h-4 w-4" />
       Privacy Policy
     </a>
   );
@@ -23,13 +23,13 @@ const Privacy = () => {
 const Cookies = () => {
   return (
     <a
+      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
       href="https://www.iubenda.com/privacy-policy/97069484/cookie-policy"
-      className="text-gray-400 hover:text-gray-300 transition-colors duration-200 ease-in-out inline-flex items-center gap-2"
-      title="Cookie Policy"
-      target="_blank"
       rel="noopener noreferrer"
+      target="_blank"
+      title="Cookie Policy"
     >
-      <MdCookie className="w-4 h-4" />
+      <MdCookie className="h-4 w-4" />
       Cookie Policy
     </a>
   );
@@ -38,13 +38,13 @@ const Cookies = () => {
 const Terms = () => {
   return (
     <a
+      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
       href="https://www.iubenda.com/terms-and-conditions/97069484"
-      className="text-gray-400 hover:text-gray-300 transition-colors duration-200 ease-in-out inline-flex items-center gap-2"
-      title="Terms and Conditions"
-      target="_blank"
       rel="noopener noreferrer"
+      target="_blank"
+      title="Terms and Conditions"
     >
-      <MdGavel className="w-4 h-4" />
+      <MdGavel className="h-4 w-4" />
       Terms & Conditions
     </a>
   );
@@ -53,11 +53,11 @@ const Terms = () => {
 const Security = () => {
   return (
     <a
+      className="inline-flex items-center gap-2 text-gray-400 transition-colors duration-200 ease-in-out hover:text-gray-300"
       href="/security"
-      className="text-gray-400 hover:text-gray-300 transition-colors duration-200 ease-in-out inline-flex items-center gap-2"
       title="Security - Responsible Disclosure"
     >
-      <MdSecurity className="w-4 h-4" />
+      <MdSecurity className="h-4 w-4" />
       Security
     </a>
   );

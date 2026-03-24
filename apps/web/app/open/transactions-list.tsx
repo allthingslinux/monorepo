@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ChevronDown, ChevronUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import type { QuickBooksTransaction } from '@/lib/integrations/quickbooks';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { useState } from "react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+
+import type { QuickBooksTransaction } from "@/lib/integrations/quickbooks";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const INITIAL_DISPLAY_COUNT = 20;
 
@@ -15,26 +20,33 @@ interface TransactionsListProps {
   transactions: QuickBooksTransaction[];
 }
 
-function TransactionCard({ transaction }: { transaction: QuickBooksTransaction }) {
-  const vendorName = transaction.customerName || transaction.vendorName || 'Unknown';
+function TransactionCard({
+  transaction,
+}: {
+  transaction: QuickBooksTransaction;
+}) {
+  const vendorName =
+    transaction.customerName || transaction.vendorName || "Unknown";
   const isPositive = transaction.amount >= 0;
 
   return (
     <Card className="sm:hidden">
       <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <div className="text-sm font-medium">{formatDate(transaction.txnDate)}</div>
+        <div className="mb-2 flex items-start justify-between">
+          <div className="font-medium text-sm">
+            {formatDate(transaction.txnDate)}
+          </div>
           <Badge
-            variant={isPositive ? 'default' : 'secondary'}
-            className={`text-xs ${isPositive ? '' : 'text-red-500 bg-red-50 border-red-200'}`}
+            className={`text-xs ${isPositive ? "" : "border-red-200 bg-red-50 text-red-500"}`}
+            variant={isPositive ? "default" : "secondary"}
           >
             {formatCurrency(transaction.amount)}
           </Badge>
         </div>
         <div className="space-y-1">
-          <div className="text-sm font-medium">{vendorName}</div>
+          <div className="font-medium text-sm">{vendorName}</div>
           {transaction.description && (
-            <div className="text-xs text-muted-foreground line-clamp-2">
+            <div className="line-clamp-2 text-muted-foreground text-xs">
               {transaction.description}
             </div>
           )}
@@ -44,41 +56,49 @@ function TransactionCard({ transaction }: { transaction: QuickBooksTransaction }
   );
 }
 
-function TransactionRow({ transaction }: { transaction: QuickBooksTransaction }) {
-  const vendorName = transaction.customerName || transaction.vendorName || '-';
+function TransactionRow({
+  transaction,
+}: {
+  transaction: QuickBooksTransaction;
+}) {
+  const vendorName = transaction.customerName || transaction.vendorName || "-";
   const isPositive = transaction.amount >= 0;
   const transactionType = transaction.type;
 
   return (
-    <tr className="border-b last:border-0 hover:bg-muted/30 transition-colors group">
+    <tr className="group border-b transition-colors last:border-0 hover:bg-muted/30">
       <td className="px-6 py-4">
-        <div className="text-sm font-medium">{formatDate(transaction.txnDate)}</div>
+        <div className="font-medium text-sm">
+          {formatDate(transaction.txnDate)}
+        </div>
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-2">
           {isPositive ? (
-            <ArrowUpRight className="h-4 w-4 text-green-600 flex-shrink-0" />
+            <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-green-600" />
           ) : (
-            <ArrowDownRight className="h-4 w-4 text-red-500 flex-shrink-0" />
+            <ArrowDownRight className="h-4 w-4 flex-shrink-0 text-red-500" />
           )}
           <div>
-            <div className="text-sm font-medium">{vendorName}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">{transactionType}</div>
+            <div className="font-medium text-sm">{vendorName}</div>
+            <div className="mt-0.5 text-muted-foreground text-xs">
+              {transactionType}
+            </div>
           </div>
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="text-sm text-muted-foreground max-w-md">
-          {transaction.description || '-'}
+        <div className="max-w-md text-muted-foreground text-sm">
+          {transaction.description || "-"}
         </div>
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center justify-end gap-2">
           <div
-            className={`text-sm font-semibold ${
+            className={`font-semibold text-sm ${
               isPositive
-                ? 'text-green-600 dark:text-green-500'
-                : 'text-red-500 dark:text-red-400'
+                ? "text-green-600 dark:text-green-500"
+                : "text-red-500 dark:text-red-400"
             }`}
           >
             {formatCurrency(transaction.amount)}
@@ -110,21 +130,21 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
       </div>
 
       {/* Desktop table layout */}
-      <div className="hidden sm:block rounded-lg border-2 bg-card overflow-hidden">
+      <div className="hidden overflow-hidden rounded-lg border-2 bg-card sm:block">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="border-b bg-muted/30">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
                   Vendor / Donor
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-4 text-right font-semibold text-muted-foreground text-xs uppercase tracking-wider">
                   Amount
                 </th>
               </tr>
@@ -145,9 +165,9 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
       {hasMore && (
         <div className="flex justify-center pt-6 pb-6">
           <Button
-            variant="outline"
-            onClick={() => setShowAll(!showAll)}
             className="flex items-center gap-2"
+            onClick={() => setShowAll(!showAll)}
+            variant="outline"
           >
             {showAll ? (
               <>

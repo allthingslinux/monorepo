@@ -3,34 +3,34 @@
 // Runtime types generated with workerd@1.20251210.0 2025-01-02 global_fetch_strictly_public,nodejs_compat
 declare namespace Cloudflare {
 	interface GlobalProps {
-		mainModule: typeof import("./.open-next/worker");
 		durableNamespaces: "DOQueueHandler" | "DOShardedTagCache" | "BucketCachePurge";
+		mainModule: typeof import("./.open-next/worker");
 	}
 	interface Env {
-		KV_QUICKBOOKS: KVNamespace;
-		NEXT_PUBLIC_URL: "https://allthingslinux.dev" | "https://allthingslinux.org" | "http://localhost:8788";
-		NEXT_PUBLIC_API_URL: "https://allthingslinux.dev/api" | "https://allthingslinux.org/api" | "http://localhost:8788/api";
-		NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux";
-		NEXT_PUBLIC_GITHUB_REPO_NAME: "applications";
-		NEXTJS_ENV: string;
+		ASSETS: Fetcher;
+		DISCORD_WEBHOOK_URL: string;
 		GITHUB_TOKEN: string;
+		IMAGES: ImagesBinding;
+		KV_QUICKBOOKS: KVNamespace;
 		MONDAY_API_KEY: string;
 		MONDAY_BOARD_ID: string;
-		TRIGGER_SECRET_KEY: string;
-		DISCORD_WEBHOOK_URL: string;
-		QUICKBOOKS_ENVIRONMENT: string;
+		NEXT_CACHE_DO_PURGE: DurableObjectNamespace<import("./.open-next/worker").BucketCachePurge>;
+		NEXT_CACHE_DO_QUEUE: DurableObjectNamespace<import("./.open-next/worker").DOQueueHandler>;
+		NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
+		NEXT_PUBLIC_API_URL: "https://allthingslinux.dev/api" | "https://allthingslinux.org/api" | "http://localhost:8788/api";
+		NEXT_PUBLIC_GITHUB_REPO_NAME: "applications";
+		NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux";
+		NEXT_PUBLIC_URL: "https://allthingslinux.dev" | "https://allthingslinux.org" | "http://localhost:8788";
+		NEXT_TAG_CACHE_DO_SHARDED: DurableObjectNamespace<import("./.open-next/worker").DOShardedTagCache>;
+		NEXTJS_ENV: string;
+		QUICKBOOKS_ADMIN_KEY: string;
 		QUICKBOOKS_CLIENT_ID: string;
 		QUICKBOOKS_CLIENT_SECRET: string;
-		QUICKBOOKS_REFRESH_TOKEN: string;
+		QUICKBOOKS_ENVIRONMENT: string;
 		QUICKBOOKS_REALM_ID: string;
-		QUICKBOOKS_ADMIN_KEY: string;
-		NEXT_CACHE_DO_QUEUE: DurableObjectNamespace<import("./.open-next/worker").DOQueueHandler>;
-		NEXT_TAG_CACHE_DO_SHARDED: DurableObjectNamespace<import("./.open-next/worker").DOShardedTagCache>;
-		NEXT_CACHE_DO_PURGE: DurableObjectNamespace<import("./.open-next/worker").BucketCachePurge>;
-		NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
+		QUICKBOOKS_REFRESH_TOKEN: string;
+		TRIGGER_SECRET_KEY: string;
 		WORKER_SELF_REFERENCE: Service<typeof import("./.open-next/worker").default>;
-		IMAGES: ImagesBinding;
-		ASSETS: Fetcher;
 	}
 }
 interface CloudflareEnv extends Cloudflare.Env {}
@@ -246,8 +246,8 @@ declare namespace WebAssembly {
     }
     type ValueType = "anyfunc" | "externref" | "f32" | "f64" | "i32" | "i64" | "v128";
     interface GlobalDescriptor {
-        value: ValueType;
         mutable?: boolean;
+        value: ValueType;
     }
     class Global {
         constructor(descriptor: GlobalDescriptor, value?: any);
@@ -311,83 +311,83 @@ declare namespace WebAssembly {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorkerGlobalScope)
  */
 interface ServiceWorkerGlobalScope extends WorkerGlobalScope {
-    DOMException: typeof DOMException;
-    WorkerGlobalScope: typeof WorkerGlobalScope;
-    btoa(data: string): string;
+    AbortController: typeof AbortController;
+    AbortSignal: typeof AbortSignal;
     atob(data: string): string;
-    setTimeout(callback: (...args: any[]) => void, msDelay?: number): number;
-    setTimeout<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
-    clearTimeout(timeoutId: number | null): void;
-    setInterval(callback: (...args: any[]) => void, msDelay?: number): number;
-    setInterval<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
-    clearInterval(timeoutId: number | null): void;
-    queueMicrotask(task: Function): void;
-    structuredClone<T>(value: T, options?: StructuredSerializeOptions): T;
-    reportError(error: any): void;
-    fetch(input: RequestInfo | URL, init?: RequestInit<RequestInitCfProperties>): Promise<Response>;
-    self: ServiceWorkerGlobalScope;
-    crypto: Crypto;
-    caches: CacheStorage;
-    scheduler: Scheduler;
-    performance: Performance;
-    Cloudflare: Cloudflare;
-    readonly origin: string;
-    Event: typeof Event;
-    ExtendableEvent: typeof ExtendableEvent;
-    CustomEvent: typeof CustomEvent;
-    PromiseRejectionEvent: typeof PromiseRejectionEvent;
-    FetchEvent: typeof FetchEvent;
-    TailEvent: typeof TailEvent;
-    TraceEvent: typeof TailEvent;
-    ScheduledEvent: typeof ScheduledEvent;
-    MessageEvent: typeof MessageEvent;
-    CloseEvent: typeof CloseEvent;
-    ReadableStreamDefaultReader: typeof ReadableStreamDefaultReader;
-    ReadableStreamBYOBReader: typeof ReadableStreamBYOBReader;
-    ReadableStream: typeof ReadableStream;
-    WritableStream: typeof WritableStream;
-    WritableStreamDefaultWriter: typeof WritableStreamDefaultWriter;
-    TransformStream: typeof TransformStream;
+    Blob: typeof Blob;
+    Body: typeof Body;
     ByteLengthQueuingStrategy: typeof ByteLengthQueuingStrategy;
+    btoa(data: string): string;
+    Cache: typeof Cache;
+    CacheStorage: typeof CacheStorage;
+    CloseEvent: typeof CloseEvent;
+    Cloudflare: Cloudflare;
+    CompressionStream: typeof CompressionStream;
     CountQueuingStrategy: typeof CountQueuingStrategy;
+    Crypto: typeof Crypto;
+    CryptoKey: typeof CryptoKey;
+    CustomEvent: typeof CustomEvent;
+    caches: CacheStorage;
+    clearInterval(timeoutId: number | null): void;
+    clearTimeout(timeoutId: number | null): void;
+    crypto: Crypto;
+    DecompressionStream: typeof DecompressionStream;
+    DOMException: typeof DOMException;
     ErrorEvent: typeof ErrorEvent;
+    Event: typeof Event;
     EventSource: typeof EventSource;
+    ExtendableEvent: typeof ExtendableEvent;
+    FetchEvent: typeof FetchEvent;
+    File: typeof File;
+    FixedLengthStream: typeof FixedLengthStream;
+    FormData: typeof FormData;
+    fetch(input: RequestInfo | URL, init?: RequestInit<RequestInitCfProperties>): Promise<Response>;
+    Headers: typeof Headers;
+    HTMLRewriter: typeof HTMLRewriter;
+    IdentityTransformStream: typeof IdentityTransformStream;
+    MessageEvent: typeof MessageEvent;
+    Navigator: typeof Navigator;
+    navigator: Navigator;
+    readonly origin: string;
+    PromiseRejectionEvent: typeof PromiseRejectionEvent;
+    performance: Performance;
+    queueMicrotask(task: Function): void;
+    ReadableByteStreamController: typeof ReadableByteStreamController;
+    ReadableStream: typeof ReadableStream;
+    ReadableStreamBYOBReader: typeof ReadableStreamBYOBReader;
     ReadableStreamBYOBRequest: typeof ReadableStreamBYOBRequest;
     ReadableStreamDefaultController: typeof ReadableStreamDefaultController;
-    ReadableByteStreamController: typeof ReadableByteStreamController;
-    WritableStreamDefaultController: typeof WritableStreamDefaultController;
-    TransformStreamDefaultController: typeof TransformStreamDefaultController;
-    CompressionStream: typeof CompressionStream;
-    DecompressionStream: typeof DecompressionStream;
-    TextEncoderStream: typeof TextEncoderStream;
-    TextDecoderStream: typeof TextDecoderStream;
-    Headers: typeof Headers;
-    Body: typeof Body;
+    ReadableStreamDefaultReader: typeof ReadableStreamDefaultReader;
     Request: typeof Request;
     Response: typeof Response;
+    reportError(error: any): void;
+    ScheduledEvent: typeof ScheduledEvent;
+    SubtleCrypto: typeof SubtleCrypto;
+    scheduler: Scheduler;
+    self: ServiceWorkerGlobalScope;
+    setInterval(callback: (...args: any[]) => void, msDelay?: number): number;
+    setInterval<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
+    setTimeout(callback: (...args: any[]) => void, msDelay?: number): number;
+    setTimeout<Args extends any[]>(callback: (...args: Args) => void, msDelay?: number, ...args: Args): number;
+    structuredClone<T>(value: T, options?: StructuredSerializeOptions): T;
+    TailEvent: typeof TailEvent;
+    TextDecoder: typeof TextDecoder;
+    TextDecoderStream: typeof TextDecoderStream;
+    TextEncoder: typeof TextEncoder;
+    TextEncoderStream: typeof TextEncoderStream;
+    TraceEvent: typeof TailEvent;
+    TransformStream: typeof TransformStream;
+    TransformStreamDefaultController: typeof TransformStreamDefaultController;
+    URL: typeof URL;
+    URLPattern: typeof URLPattern;
+    URLSearchParams: typeof URLSearchParams;
     WebSocket: typeof WebSocket;
     WebSocketPair: typeof WebSocketPair;
     WebSocketRequestResponsePair: typeof WebSocketRequestResponsePair;
-    AbortController: typeof AbortController;
-    AbortSignal: typeof AbortSignal;
-    TextDecoder: typeof TextDecoder;
-    TextEncoder: typeof TextEncoder;
-    navigator: Navigator;
-    Navigator: typeof Navigator;
-    URL: typeof URL;
-    URLSearchParams: typeof URLSearchParams;
-    URLPattern: typeof URLPattern;
-    Blob: typeof Blob;
-    File: typeof File;
-    FormData: typeof FormData;
-    Crypto: typeof Crypto;
-    SubtleCrypto: typeof SubtleCrypto;
-    CryptoKey: typeof CryptoKey;
-    CacheStorage: typeof CacheStorage;
-    Cache: typeof Cache;
-    FixedLengthStream: typeof FixedLengthStream;
-    IdentityTransformStream: typeof IdentityTransformStream;
-    HTMLRewriter: typeof HTMLRewriter;
+    WorkerGlobalScope: typeof WorkerGlobalScope;
+    WritableStream: typeof WritableStream;
+    WritableStreamDefaultController: typeof WritableStreamDefaultController;
+    WritableStreamDefaultWriter: typeof WritableStreamDefaultWriter;
 }
 declare function addEventListener<Type extends keyof WorkerGlobalScopeEventMap>(type: Type, handler: EventListenerOrEventListenerObject<WorkerGlobalScopeEventMap[Type]>, options?: EventTargetAddEventListenerOptions | boolean): void;
 declare function removeEventListener<Type extends keyof WorkerGlobalScopeEventMap>(type: Type, handler: EventListenerOrEventListenerObject<WorkerGlobalScopeEventMap[Type]>, options?: EventTargetEventListenerOptions | boolean): void;
@@ -451,9 +451,9 @@ declare const navigator: Navigator;
 interface TestController {
 }
 interface ExecutionContext<Props = unknown> {
-    waitUntil(promise: Promise<any>): void;
     passThroughOnException(): void;
     readonly props: Props;
+    waitUntil(promise: Promise<any>): void;
 }
 type ExportedHandlerFetchHandler<Env = unknown, CfHostMetadata = unknown> = (request: Request<CfHostMetadata, IncomingRequestCfProperties<CfHostMetadata>>, env: Env, ctx: ExecutionContext) => Response | Promise<Response>;
 type ExportedHandlerTailHandler<Env = unknown> = (events: TraceItem[], env: Env, ctx: ExecutionContext) => void | Promise<void>;
@@ -463,14 +463,14 @@ type ExportedHandlerScheduledHandler<Env = unknown> = (controller: ScheduledCont
 type ExportedHandlerQueueHandler<Env = unknown, Message = unknown> = (batch: MessageBatch<Message>, env: Env, ctx: ExecutionContext) => void | Promise<void>;
 type ExportedHandlerTestHandler<Env = unknown> = (controller: TestController, env: Env, ctx: ExecutionContext) => void | Promise<void>;
 interface ExportedHandler<Env = unknown, QueueHandlerMessage = unknown, CfHostMetadata = unknown> {
-    fetch?: ExportedHandlerFetchHandler<Env, CfHostMetadata>;
-    tail?: ExportedHandlerTailHandler<Env>;
-    trace?: ExportedHandlerTraceHandler<Env>;
-    tailStream?: ExportedHandlerTailStreamHandler<Env>;
-    scheduled?: ExportedHandlerScheduledHandler<Env>;
-    test?: ExportedHandlerTestHandler<Env>;
     email?: EmailExportedHandler<Env>;
+    fetch?: ExportedHandlerFetchHandler<Env, CfHostMetadata>;
     queue?: ExportedHandlerQueueHandler<Env, QueueHandlerMessage>;
+    scheduled?: ExportedHandlerScheduledHandler<Env>;
+    tail?: ExportedHandlerTailHandler<Env>;
+    tailStream?: ExportedHandlerTailStreamHandler<Env>;
+    test?: ExportedHandlerTestHandler<Env>;
+    trace?: ExportedHandlerTraceHandler<Env>;
 }
 interface StructuredSerializeOptions {
     transfer?: any[];
@@ -488,20 +488,20 @@ interface Cloudflare {
     readonly compatibilityFlags: Record<string, boolean>;
 }
 interface DurableObject {
-    fetch(request: Request): Response | Promise<Response>;
     alarm?(alarmInfo?: AlarmInvocationInfo): void | Promise<void>;
-    webSocketMessage?(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void>;
+    fetch(request: Request): Response | Promise<Response>;
     webSocketClose?(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void>;
     webSocketError?(ws: WebSocket, error: unknown): void | Promise<void>;
+    webSocketMessage?(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void>;
 }
 type DurableObjectStub<T extends Rpc.DurableObjectBranded | undefined = undefined> = Fetcher<T, "alarm" | "webSocketMessage" | "webSocketClose" | "webSocketError"> & {
     readonly id: DurableObjectId;
     readonly name?: string;
 };
 interface DurableObjectId {
-    toString(): string;
     equals(other: DurableObjectId): boolean;
     readonly name?: string;
+    toString(): string;
 }
 declare abstract class DurableObjectNamespace<T extends Rpc.DurableObjectBranded | undefined = undefined> {
     newUniqueId(options?: DurableObjectNamespaceNewUniqueIdOptions): DurableObjectId;
@@ -522,65 +522,65 @@ interface DurableObjectNamespaceGetDurableObjectOptions {
 interface DurableObjectClass<_T extends Rpc.DurableObjectBranded | undefined = undefined> {
 }
 interface DurableObjectState<Props = unknown> {
-    waitUntil(promise: Promise<any>): void;
-    readonly props: Props;
-    readonly id: DurableObjectId;
-    readonly storage: DurableObjectStorage;
-    container?: Container;
-    blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+    abort(reason?: string): void;
     acceptWebSocket(ws: WebSocket, tags?: string[]): void;
-    getWebSockets(tag?: string): WebSocket[];
-    setWebSocketAutoResponse(maybeReqResp?: WebSocketRequestResponsePair): void;
-    getWebSocketAutoResponse(): WebSocketRequestResponsePair | null;
-    getWebSocketAutoResponseTimestamp(ws: WebSocket): Date | null;
-    setHibernatableWebSocketEventTimeout(timeoutMs?: number): void;
+    blockConcurrencyWhile<T>(callback: () => Promise<T>): Promise<T>;
+    container?: Container;
     getHibernatableWebSocketEventTimeout(): number | null;
     getTags(ws: WebSocket): string[];
-    abort(reason?: string): void;
+    getWebSocketAutoResponse(): WebSocketRequestResponsePair | null;
+    getWebSocketAutoResponseTimestamp(ws: WebSocket): Date | null;
+    getWebSockets(tag?: string): WebSocket[];
+    readonly id: DurableObjectId;
+    readonly props: Props;
+    setHibernatableWebSocketEventTimeout(timeoutMs?: number): void;
+    setWebSocketAutoResponse(maybeReqResp?: WebSocketRequestResponsePair): void;
+    readonly storage: DurableObjectStorage;
+    waitUntil(promise: Promise<any>): void;
 }
 interface DurableObjectTransaction {
+    delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
+    delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
+    deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
     get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
     get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
+    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
     put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
     put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
-    delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
-    delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
     rollback(): void;
-    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
-    deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
 }
 interface DurableObjectStorage {
-    get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
-    get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
-    list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
-    put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
-    put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
     delete(key: string, options?: DurableObjectPutOptions): Promise<boolean>;
     delete(keys: string[], options?: DurableObjectPutOptions): Promise<number>;
-    deleteAll(options?: DurableObjectPutOptions): Promise<void>;
-    transaction<T>(closure: (txn: DurableObjectTransaction) => Promise<T>): Promise<T>;
-    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
-    setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
     deleteAlarm(options?: DurableObjectSetAlarmOptions): Promise<void>;
-    sync(): Promise<void>;
-    sql: SqlStorage;
-    kv: SyncKvStorage;
-    transactionSync<T>(closure: () => T): T;
-    getCurrentBookmark(): Promise<string>;
+    deleteAll(options?: DurableObjectPutOptions): Promise<void>;
+    get<T = unknown>(key: string, options?: DurableObjectGetOptions): Promise<T | undefined>;
+    get<T = unknown>(keys: string[], options?: DurableObjectGetOptions): Promise<Map<string, T>>;
+    getAlarm(options?: DurableObjectGetAlarmOptions): Promise<number | null>;
     getBookmarkForTime(timestamp: number | Date): Promise<string>;
+    getCurrentBookmark(): Promise<string>;
+    kv: SyncKvStorage;
+    list<T = unknown>(options?: DurableObjectListOptions): Promise<Map<string, T>>;
     onNextSessionRestoreBookmark(bookmark: string): Promise<string>;
+    put<T>(key: string, value: T, options?: DurableObjectPutOptions): Promise<void>;
+    put<T>(entries: Record<string, T>, options?: DurableObjectPutOptions): Promise<void>;
+    setAlarm(scheduledTime: number | Date, options?: DurableObjectSetAlarmOptions): Promise<void>;
+    sql: SqlStorage;
+    sync(): Promise<void>;
+    transaction<T>(closure: (txn: DurableObjectTransaction) => Promise<T>): Promise<T>;
+    transactionSync<T>(closure: () => T): T;
 }
 interface DurableObjectListOptions {
-    start?: string;
-    startAfter?: string;
+    allowConcurrency?: boolean;
     end?: string;
+    limit?: number;
+    noCache?: boolean;
     prefix?: string;
     reverse?: boolean;
-    limit?: number;
-    allowConcurrency?: boolean;
-    noCache?: boolean;
+    start?: string;
+    startAfter?: string;
 }
 interface DurableObjectGetOptions {
     allowConcurrency?: boolean;
@@ -607,9 +607,9 @@ interface AnalyticsEngineDataset {
     writeDataPoint(event?: AnalyticsEngineDataPoint): void;
 }
 interface AnalyticsEngineDataPoint {
-    indexes?: ((ArrayBuffer | string) | null)[];
-    doubles?: number[];
     blobs?: ((ArrayBuffer | string) | null)[];
+    doubles?: number[];
+    indexes?: ((ArrayBuffer | string) | null)[];
 }
 /**
  * The **`Event`** interface represents an event which takes place on an `EventTarget`.
@@ -776,8 +776,8 @@ interface EventTargetEventListenerOptions {
 }
 interface EventTargetAddEventListenerOptions {
     capture?: boolean;
-    passive?: boolean;
     once?: boolean;
+    passive?: boolean;
     signal?: AbortSignal;
 }
 interface EventTargetHandlerObject {
@@ -963,8 +963,8 @@ declare class File extends Blob {
     get lastModified(): number;
 }
 interface FileOptions {
-    type?: string;
     lastModified?: number;
+    type?: string;
 }
 /**
 * The Cache API allows fine grained control of reading and writing from the Cloudflare global network cache.
@@ -1141,102 +1141,102 @@ declare abstract class CryptoKey {
     readonly usages: string[];
 }
 interface CryptoKeyPair {
-    publicKey: CryptoKey;
     privateKey: CryptoKey;
+    publicKey: CryptoKey;
 }
 interface JsonWebKey {
-    kty: string;
-    use?: string;
-    key_ops?: string[];
     alg?: string;
-    ext?: boolean;
     crv?: string;
-    x?: string;
-    y?: string;
     d?: string;
-    n?: string;
-    e?: string;
-    p?: string;
-    q?: string;
     dp?: string;
     dq?: string;
-    qi?: string;
-    oth?: RsaOtherPrimesInfo[];
+    e?: string;
+    ext?: boolean;
     k?: string;
+    key_ops?: string[];
+    kty: string;
+    n?: string;
+    oth?: RsaOtherPrimesInfo[];
+    p?: string;
+    q?: string;
+    qi?: string;
+    use?: string;
+    x?: string;
+    y?: string;
 }
 interface RsaOtherPrimesInfo {
-    r?: string;
     d?: string;
+    r?: string;
     t?: string;
 }
 interface SubtleCryptoDeriveKeyAlgorithm {
+    $public?: CryptoKey;
+    hash?: (string | SubtleCryptoHashAlgorithm);
+    info?: (ArrayBuffer | ArrayBufferView);
+    iterations?: number;
     name: string;
     salt?: (ArrayBuffer | ArrayBufferView);
-    iterations?: number;
-    hash?: (string | SubtleCryptoHashAlgorithm);
-    $public?: CryptoKey;
-    info?: (ArrayBuffer | ArrayBufferView);
 }
 interface SubtleCryptoEncryptAlgorithm {
-    name: string;
-    iv?: (ArrayBuffer | ArrayBufferView);
     additionalData?: (ArrayBuffer | ArrayBufferView);
-    tagLength?: number;
     counter?: (ArrayBuffer | ArrayBufferView);
-    length?: number;
+    iv?: (ArrayBuffer | ArrayBufferView);
     label?: (ArrayBuffer | ArrayBufferView);
+    length?: number;
+    name: string;
+    tagLength?: number;
 }
 interface SubtleCryptoGenerateKeyAlgorithm {
-    name: string;
     hash?: (string | SubtleCryptoHashAlgorithm);
-    modulusLength?: number;
-    publicExponent?: (ArrayBuffer | ArrayBufferView);
     length?: number;
+    modulusLength?: number;
+    name: string;
     namedCurve?: string;
+    publicExponent?: (ArrayBuffer | ArrayBufferView);
 }
 interface SubtleCryptoHashAlgorithm {
     name: string;
 }
 interface SubtleCryptoImportKeyAlgorithm {
-    name: string;
+    compressed?: boolean;
     hash?: (string | SubtleCryptoHashAlgorithm);
     length?: number;
+    name: string;
     namedCurve?: string;
-    compressed?: boolean;
 }
 interface SubtleCryptoSignAlgorithm {
-    name: string;
-    hash?: (string | SubtleCryptoHashAlgorithm);
     dataLength?: number;
+    hash?: (string | SubtleCryptoHashAlgorithm);
+    name: string;
     saltLength?: number;
 }
 interface CryptoKeyKeyAlgorithm {
     name: string;
 }
 interface CryptoKeyAesKeyAlgorithm {
-    name: string;
     length: number;
+    name: string;
 }
 interface CryptoKeyHmacKeyAlgorithm {
-    name: string;
     hash: CryptoKeyKeyAlgorithm;
     length: number;
+    name: string;
 }
 interface CryptoKeyRsaKeyAlgorithm {
-    name: string;
-    modulusLength: number;
-    publicExponent: ArrayBuffer | ArrayBufferView;
     hash?: CryptoKeyKeyAlgorithm;
+    modulusLength: number;
+    name: string;
+    publicExponent: ArrayBuffer | ArrayBufferView;
 }
 interface CryptoKeyEllipticKeyAlgorithm {
     name: string;
     namedCurve: string;
 }
 interface CryptoKeyArbitraryKeyAlgorithm {
-    name: string;
     hash?: CryptoKeyKeyAlgorithm;
-    namedCurve?: string;
     length?: number;
+    name: string;
+    namedCurve?: string;
 }
 declare class DigestStream extends WritableStream<ArrayBuffer | ArrayBufferView> {
     constructor(algorithm: string | SubtleCryptoHashAlgorithm);
@@ -1331,11 +1331,11 @@ declare class ErrorEvent extends Event {
     get error(): any;
 }
 interface ErrorEventErrorEventInit {
-    message?: string;
-    filename?: string;
-    lineno?: number;
     colno?: number;
     error?: any;
+    filename?: string;
+    lineno?: number;
+    message?: string;
 }
 /**
  * The **`MessageEvent`** interface represents a message received by a target object.
@@ -1477,15 +1477,15 @@ declare class HTMLRewriter {
     transform(response: Response): Response;
 }
 interface HTMLRewriterElementContentHandlers {
-    element?(element: Element): void | Promise<void>;
     comments?(comment: Comment): void | Promise<void>;
+    element?(element: Element): void | Promise<void>;
     text?(element: Text): void | Promise<void>;
 }
 interface HTMLRewriterDocumentContentHandlers {
-    doctype?(doctype: Doctype): void | Promise<void>;
     comments?(comment: Comment): void | Promise<void>;
-    text?(text: Text): void | Promise<void>;
+    doctype?(doctype: Doctype): void | Promise<void>;
     end?(end: DocumentEnd): void | Promise<void>;
+    text?(text: Text): void | Promise<void>;
 }
 interface Doctype {
     readonly name: string | null;
@@ -1493,46 +1493,46 @@ interface Doctype {
     readonly systemId: string | null;
 }
 interface Element {
-    tagName: string;
+    after(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    append(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     readonly attributes: IterableIterator<string[]>;
-    readonly removed: boolean;
-    readonly namespaceURI: string;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     getAttribute(name: string): string | null;
     hasAttribute(name: string): boolean;
-    setAttribute(name: string, value: string): Element;
-    removeAttribute(name: string): Element;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    after(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    readonly namespaceURI: string;
+    onEndTag(handler: (tag: EndTag) => void | Promise<void>): void;
     prepend(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    append(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    replace(content: string | ReadableStream | Response, options?: ContentOptions): Element;
     remove(): Element;
     removeAndKeepContent(): Element;
+    removeAttribute(name: string): Element;
+    readonly removed: boolean;
+    replace(content: string | ReadableStream | Response, options?: ContentOptions): Element;
+    setAttribute(name: string, value: string): Element;
     setInnerContent(content: string | ReadableStream | Response, options?: ContentOptions): Element;
-    onEndTag(handler: (tag: EndTag) => void | Promise<void>): void;
+    tagName: string;
 }
 interface EndTag {
-    name: string;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
     after(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): EndTag;
+    name: string;
     remove(): EndTag;
 }
 interface Comment {
-    text: string;
-    readonly removed: boolean;
-    before(content: string, options?: ContentOptions): Comment;
     after(content: string, options?: ContentOptions): Comment;
-    replace(content: string, options?: ContentOptions): Comment;
+    before(content: string, options?: ContentOptions): Comment;
     remove(): Comment;
+    readonly removed: boolean;
+    replace(content: string, options?: ContentOptions): Comment;
+    text: string;
 }
 interface Text {
-    readonly text: string;
-    readonly lastInTextNode: boolean;
-    readonly removed: boolean;
-    before(content: string | ReadableStream | Response, options?: ContentOptions): Text;
     after(content: string | ReadableStream | Response, options?: ContentOptions): Text;
-    replace(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    before(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    readonly lastInTextNode: boolean;
     remove(): Text;
+    readonly removed: boolean;
+    replace(content: string | ReadableStream | Response, options?: ContentOptions): Text;
+    readonly text: string;
 }
 interface DocumentEnd {
     append(content: string, options?: ContentOptions): DocumentEnd;
@@ -1654,24 +1654,13 @@ declare var Response: {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response)
  */
 interface Response extends Body {
+    cf: any | undefined;
     /**
      * The **`clone()`** method of the Response interface creates a clone of a response object, identical in every way, but stored in a different variable.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/clone)
      */
     clone(): Response;
-    /**
-     * The **`status`** read-only property of the Response interface contains the HTTP status codes of the response.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/status)
-     */
-    status: number;
-    /**
-     * The **`statusText`** read-only property of the Response interface contains the status message corresponding to the HTTP status code in Response.status.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/statusText)
-     */
-    statusText: string;
     /**
      * The **`headers`** read-only property of the with the response.
      *
@@ -1691,27 +1680,38 @@ interface Response extends Body {
      */
     redirected: boolean;
     /**
-     * The **`url`** read-only property of the Response interface contains the URL of the response.
+     * The **`status`** read-only property of the Response interface contains the HTTP status codes of the response.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/url)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/status)
      */
-    url: string;
-    webSocket: WebSocket | null;
-    cf: any | undefined;
+    status: number;
+    /**
+     * The **`statusText`** read-only property of the Response interface contains the status message corresponding to the HTTP status code in Response.status.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/statusText)
+     */
+    statusText: string;
     /**
      * The **`type`** read-only property of the Response interface contains the type of the response.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/type)
      */
     type: "default" | "error";
+    /**
+     * The **`url`** read-only property of the Response interface contains the URL of the response.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/url)
+     */
+    url: string;
+    webSocket: WebSocket | null;
 }
 interface ResponseInit {
+    cf?: any;
+    encodeBody?: "automatic" | "manual";
+    headers?: HeadersInit;
     status?: number;
     statusText?: string;
-    headers?: HeadersInit;
-    cf?: any;
     webSocket?: (WebSocket | null);
-    encodeBody?: "automatic" | "manual";
 }
 type RequestInfo<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> = Request<CfHostMetadata, Cf> | string;
 /**
@@ -1730,43 +1730,25 @@ declare var Request: {
  */
 interface Request<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> extends Body {
     /**
+     * The **`cache`** read-only property of the Request interface contains the cache mode of the request.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/cache)
+     */
+    cache?: "no-store";
+    cf: Cf | undefined;
+    /**
      * The **`clone()`** method of the Request interface creates a copy of the current `Request` object.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/clone)
      */
     clone(): Request<CfHostMetadata, Cf>;
-    /**
-     * The **`method`** read-only property of the `POST`, etc.) A String indicating the method of the request.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/method)
-     */
-    method: string;
-    /**
-     * The **`url`** read-only property of the Request interface contains the URL of the request.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/url)
-     */
-    url: string;
+    fetcher: Fetcher | null;
     /**
      * The **`headers`** read-only property of the with the request.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/headers)
      */
     headers: Headers;
-    /**
-     * The **`redirect`** read-only property of the Request interface contains the mode for how redirects are handled.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/redirect)
-     */
-    redirect: string;
-    fetcher: Fetcher | null;
-    /**
-     * The read-only **`signal`** property of the Request interface returns the AbortSignal associated with the request.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/signal)
-     */
-    signal: AbortSignal;
-    cf: Cf | undefined;
     /**
      * The **`integrity`** read-only property of the Request interface contains the subresource integrity value of the request.
      *
@@ -1780,30 +1762,48 @@ interface Request<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>> e
      */
     keepalive: boolean;
     /**
-     * The **`cache`** read-only property of the Request interface contains the cache mode of the request.
+     * The **`method`** read-only property of the `POST`, etc.) A String indicating the method of the request.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/cache)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/method)
      */
-    cache?: "no-store";
+    method: string;
+    /**
+     * The **`redirect`** read-only property of the Request interface contains the mode for how redirects are handled.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/redirect)
+     */
+    redirect: string;
+    /**
+     * The read-only **`signal`** property of the Request interface returns the AbortSignal associated with the request.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/signal)
+     */
+    signal: AbortSignal;
+    /**
+     * The **`url`** read-only property of the Request interface contains the URL of the request.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/url)
+     */
+    url: string;
 }
 interface RequestInit<Cf = CfProperties> {
-    /* A string to set request's method. */
-    method?: string;
-    /* A Headers object, an object literal, or an array of two-item arrays to set request's headers. */
-    headers?: HeadersInit;
     /* A BodyInit object or null to set request's body. */
     body?: BodyInit | null;
-    /* A string indicating whether request follows redirects, results in an error upon encountering a redirect, or returns the redirect (in an opaque fashion). Sets request's redirect. */
-    redirect?: string;
-    fetcher?: (Fetcher | null);
-    cf?: Cf;
     /* A string indicating how the request will interact with the browser's cache to set request's cache. */
     cache?: "no-store";
+    cf?: Cf;
+    encodeResponseBody?: "automatic" | "manual";
+    fetcher?: (Fetcher | null);
+    /* A Headers object, an object literal, or an array of two-item arrays to set request's headers. */
+    headers?: HeadersInit;
     /* A cryptographic hash of the resource to be fetched by request. Sets request's integrity. */
     integrity?: string;
+    /* A string to set request's method. */
+    method?: string;
+    /* A string indicating whether request follows redirects, results in an error upon encountering a redirect, or returns the redirect (in an opaque fashion). Sets request's redirect. */
+    redirect?: string;
     /* An AbortSignal to set request's signal. */
     signal?: (AbortSignal | null);
-    encodeResponseBody?: "automatic" | "manual";
 }
 type Service<T extends (new (...args: any[]) => Rpc.WorkerEntrypointBranded) | Rpc.WorkerEntrypointBranded | ExportedHandler<any, any, any> | undefined = undefined> = T extends new (...args: any[]) => Rpc.WorkerEntrypointBranded ? Fetcher<InstanceType<T>> : T extends Rpc.WorkerEntrypointBranded ? Fetcher<T> : T extends Exclude<Rpc.EntrypointBranded, Rpc.WorkerEntrypointBranded> ? never : Fetcher<undefined>;
 type Fetcher<T extends Rpc.EntrypointBranded | undefined = undefined, Reserved extends string = never> = (T extends Rpc.EntrypointBranded ? Rpc.Provider<T, Reserved | "fetch" | "connect"> : unknown) & {
@@ -1811,9 +1811,9 @@ type Fetcher<T extends Rpc.EntrypointBranded | undefined = undefined, Reserved e
     connect(address: SocketAddress | string, options?: SocketOptions): Socket;
 };
 interface KVNamespaceListKey<Metadata, Key extends string = string> {
-    name: Key;
     expiration?: number;
     metadata?: Metadata;
+    name: Key;
 }
 type KVNamespaceListResult<Metadata, Key extends string = string> = {
     list_complete: false;
@@ -1826,6 +1826,7 @@ type KVNamespaceListResult<Metadata, Key extends string = string> = {
     cacheStatus: string | null;
 };
 interface KVNamespace<Key extends string = string> {
+    delete(key: Key): Promise<void>;
     get(key: Key, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<string | null>;
     get(key: Key, type: "text"): Promise<string | null>;
     get<ExpectedValue = unknown>(key: Key, type: "json"): Promise<ExpectedValue | null>;
@@ -1840,8 +1841,6 @@ interface KVNamespace<Key extends string = string> {
     get(key: Array<Key>, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<Map<string, string | null>>;
     get(key: Array<Key>, options?: KVNamespaceGetOptions<"text">): Promise<Map<string, string | null>>;
     get<ExpectedValue = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"json">): Promise<Map<string, ExpectedValue | null>>;
-    list<Metadata = unknown>(options?: KVNamespaceListOptions): Promise<KVNamespaceListResult<Metadata, Key>>;
-    put(key: Key, value: string | ArrayBuffer | ArrayBufferView | ReadableStream, options?: KVNamespacePutOptions): Promise<void>;
     getWithMetadata<Metadata = unknown>(key: Key, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<KVNamespaceGetWithMetadataResult<string, Metadata>>;
     getWithMetadata<Metadata = unknown>(key: Key, type: "text"): Promise<KVNamespaceGetWithMetadataResult<string, Metadata>>;
     getWithMetadata<ExpectedValue = unknown, Metadata = unknown>(key: Key, type: "json"): Promise<KVNamespaceGetWithMetadataResult<ExpectedValue, Metadata>>;
@@ -1856,16 +1855,17 @@ interface KVNamespace<Key extends string = string> {
     getWithMetadata<Metadata = unknown>(key: Array<Key>, options?: Partial<KVNamespaceGetOptions<undefined>>): Promise<Map<string, KVNamespaceGetWithMetadataResult<string, Metadata>>>;
     getWithMetadata<Metadata = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"text">): Promise<Map<string, KVNamespaceGetWithMetadataResult<string, Metadata>>>;
     getWithMetadata<ExpectedValue = unknown, Metadata = unknown>(key: Array<Key>, options?: KVNamespaceGetOptions<"json">): Promise<Map<string, KVNamespaceGetWithMetadataResult<ExpectedValue, Metadata>>>;
-    delete(key: Key): Promise<void>;
+    list<Metadata = unknown>(options?: KVNamespaceListOptions): Promise<KVNamespaceListResult<Metadata, Key>>;
+    put(key: Key, value: string | ArrayBuffer | ArrayBufferView | ReadableStream, options?: KVNamespacePutOptions): Promise<void>;
 }
 interface KVNamespaceListOptions {
+    cursor?: (string | null);
     limit?: number;
     prefix?: (string | null);
-    cursor?: (string | null);
 }
 interface KVNamespaceGetOptions<Type> {
-    type: Type;
     cacheTtl?: number;
+    type: Type;
 }
 interface KVNamespacePutOptions {
     expiration?: number;
@@ -1873,9 +1873,9 @@ interface KVNamespacePutOptions {
     metadata?: (any | null);
 }
 interface KVNamespaceGetWithMetadataResult<Value, Metadata> {
-    value: Value | null;
-    metadata: Metadata | null;
     cacheStatus: string | null;
+    metadata: Metadata | null;
+    value: Value | null;
 }
 type QueueContentType = "text" | "bytes" | "json" | "v8";
 interface Queue<Body = unknown> {
@@ -1898,39 +1898,39 @@ interface QueueRetryOptions {
     delaySeconds?: number;
 }
 interface Message<Body = unknown> {
-    readonly id: string;
-    readonly timestamp: Date;
-    readonly body: Body;
-    readonly attempts: number;
-    retry(options?: QueueRetryOptions): void;
     ack(): void;
+    readonly attempts: number;
+    readonly body: Body;
+    readonly id: string;
+    retry(options?: QueueRetryOptions): void;
+    readonly timestamp: Date;
 }
 interface QueueEvent<Body = unknown> extends ExtendableEvent {
+    ackAll(): void;
     readonly messages: readonly Message<Body>[];
     readonly queue: string;
     retryAll(options?: QueueRetryOptions): void;
-    ackAll(): void;
 }
 interface MessageBatch<Body = unknown> {
+    ackAll(): void;
     readonly messages: readonly Message<Body>[];
     readonly queue: string;
     retryAll(options?: QueueRetryOptions): void;
-    ackAll(): void;
 }
 interface R2Error extends Error {
-    readonly name: string;
+    readonly action: string;
     readonly code: number;
     readonly message: string;
-    readonly action: string;
+    readonly name: string;
     readonly stack: any;
 }
 interface R2ListOptions {
-    limit?: number;
-    prefix?: string;
     cursor?: string;
     delimiter?: string;
-    startAfter?: string;
     include?: ("httpMetadata" | "customMetadata")[];
+    limit?: number;
+    prefix?: string;
+    startAfter?: string;
 }
 declare abstract class R2Bucket {
     head(key: string): Promise<R2Object | null>;
@@ -1948,15 +1948,15 @@ declare abstract class R2Bucket {
     list(options?: R2ListOptions): Promise<R2Objects>;
 }
 interface R2MultipartUpload {
+    abort(): Promise<void>;
+    complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
     readonly key: string;
     readonly uploadId: string;
     uploadPart(partNumber: number, value: ReadableStream | (ArrayBuffer | ArrayBufferView) | string | Blob, options?: R2UploadPartOptions): Promise<R2UploadedPart>;
-    abort(): Promise<void>;
-    complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
 }
 interface R2UploadedPart {
-    partNumber: number;
     etag: string;
+    partNumber: number;
 }
 declare abstract class R2Object {
     readonly key: string;
@@ -1974,13 +1974,13 @@ declare abstract class R2Object {
     writeHttpMetadata(headers: Headers): void;
 }
 interface R2ObjectBody extends R2Object {
+    arrayBuffer(): Promise<ArrayBuffer>;
+    blob(): Promise<Blob>;
     get body(): ReadableStream;
     get bodyUsed(): boolean;
-    arrayBuffer(): Promise<ArrayBuffer>;
     bytes(): Promise<Uint8Array>;
-    text(): Promise<string>;
     json<T>(): Promise<T>;
-    blob(): Promise<Blob>;
+    text(): Promise<string>;
 }
 type R2Range = {
     offset: number;
@@ -1992,11 +1992,11 @@ type R2Range = {
     suffix: number;
 };
 interface R2Conditional {
-    etagMatches?: string;
     etagDoesNotMatch?: string;
-    uploadedBefore?: Date;
-    uploadedAfter?: Date;
+    etagMatches?: string;
     secondsGranularity?: boolean;
+    uploadedAfter?: Date;
+    uploadedBefore?: Date;
 }
 interface R2GetOptions {
     onlyIf?: (R2Conditional | Headers);
@@ -2004,22 +2004,22 @@ interface R2GetOptions {
     ssecKey?: (ArrayBuffer | string);
 }
 interface R2PutOptions {
-    onlyIf?: (R2Conditional | Headers);
-    httpMetadata?: (R2HTTPMetadata | Headers);
     customMetadata?: Record<string, string>;
+    httpMetadata?: (R2HTTPMetadata | Headers);
     md5?: ((ArrayBuffer | ArrayBufferView) | string);
+    onlyIf?: (R2Conditional | Headers);
     sha1?: ((ArrayBuffer | ArrayBufferView) | string);
     sha256?: ((ArrayBuffer | ArrayBufferView) | string);
     sha384?: ((ArrayBuffer | ArrayBufferView) | string);
     sha512?: ((ArrayBuffer | ArrayBufferView) | string);
-    storageClass?: string;
     ssecKey?: (ArrayBuffer | string);
+    storageClass?: string;
 }
 interface R2MultipartOptions {
-    httpMetadata?: (R2HTTPMetadata | Headers);
     customMetadata?: Record<string, string>;
-    storageClass?: string;
+    httpMetadata?: (R2HTTPMetadata | Headers);
     ssecKey?: (ArrayBuffer | string);
+    storageClass?: string;
 }
 interface R2Checksums {
     readonly md5?: ArrayBuffer;
@@ -2037,12 +2037,12 @@ interface R2StringChecksums {
     sha512?: string;
 }
 interface R2HTTPMetadata {
-    contentType?: string;
-    contentLanguage?: string;
-    contentDisposition?: string;
-    contentEncoding?: string;
     cacheControl?: string;
     cacheExpiry?: Date;
+    contentDisposition?: string;
+    contentEncoding?: string;
+    contentLanguage?: string;
+    contentType?: string;
 }
 type R2Objects = {
     objects: R2Object[];
@@ -2062,45 +2062,47 @@ declare abstract class ScheduledEvent extends ExtendableEvent {
     noRetry(): void;
 }
 interface ScheduledController {
-    readonly scheduledTime: number;
     readonly cron: string;
     noRetry(): void;
+    readonly scheduledTime: number;
 }
 interface QueuingStrategy<T = any> {
     highWaterMark?: (number | bigint);
     size?: (chunk: T) => number | bigint;
 }
 interface UnderlyingSink<W = any> {
-    type?: string;
-    start?: (controller: WritableStreamDefaultController) => void | Promise<void>;
-    write?: (chunk: W, controller: WritableStreamDefaultController) => void | Promise<void>;
     abort?: (reason: any) => void | Promise<void>;
     close?: () => void | Promise<void>;
+    start?: (controller: WritableStreamDefaultController) => void | Promise<void>;
+    type?: string;
+    write?: (chunk: W, controller: WritableStreamDefaultController) => void | Promise<void>;
 }
 interface UnderlyingByteSource {
-    type: "bytes";
     autoAllocateChunkSize?: number;
-    start?: (controller: ReadableByteStreamController) => void | Promise<void>;
-    pull?: (controller: ReadableByteStreamController) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
+    pull?: (controller: ReadableByteStreamController) => void | Promise<void>;
+    start?: (controller: ReadableByteStreamController) => void | Promise<void>;
+    type: "bytes";
 }
 interface UnderlyingSource<R = any> {
-    type?: "" | undefined;
-    start?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
-    pull?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
     expectedLength?: (number | bigint);
+    pull?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
+    start?: (controller: ReadableStreamDefaultController<R>) => void | Promise<void>;
+    type?: "" | undefined;
 }
 interface Transformer<I = any, O = any> {
-    readableType?: string;
-    writableType?: string;
-    start?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
-    transform?: (chunk: I, controller: TransformStreamDefaultController<O>) => void | Promise<void>;
-    flush?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
     cancel?: (reason: any) => void | Promise<void>;
     expectedLength?: number;
+    flush?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    readableType?: string;
+    start?: (controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    transform?: (chunk: I, controller: TransformStreamDefaultController<O>) => void | Promise<void>;
+    writableType?: string;
 }
 interface StreamPipeOptions {
+    preventAbort?: boolean;
+    preventCancel?: boolean;
     /**
      * Pipes this readable stream to a given writable stream destination. The way in which the piping process behaves under various error conditions can be customized with a number of passed options. It returns a promise that fulfills when the piping process completes successfully, or rejects if any errors were encountered.
      *
@@ -2119,8 +2121,6 @@ interface StreamPipeOptions {
      * The signal option can be set to an AbortSignal to allow aborting an ongoing pipe operation via the corresponding AbortController. In this case, this source readable stream will be canceled, and destination aborted, unless the respective options preventCancel or preventAbort are set.
      */
     preventClose?: boolean;
-    preventAbort?: boolean;
-    preventCancel?: boolean;
     signal?: AbortSignal;
 }
 type ReadableStreamReadResult<R = any> = {
@@ -2136,12 +2136,6 @@ type ReadableStreamReadResult<R = any> = {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream)
  */
 interface ReadableStream<R = any> {
-    /**
-     * The **`locked`** read-only property of the ReadableStream interface returns whether or not the readable stream is locked to a reader.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/locked)
-     */
-    get locked(): boolean;
     /**
      * The **`cancel()`** method of the ReadableStream interface returns a Promise that resolves when the stream is canceled.
      *
@@ -2160,6 +2154,12 @@ interface ReadableStream<R = any> {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/getReader)
      */
     getReader(options: ReadableStreamGetReaderOptions): ReadableStreamBYOBReader;
+    /**
+     * The **`locked`** read-only property of the ReadableStream interface returns whether or not the readable stream is locked to a reader.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ReadableStream/locked)
+     */
+    get locked(): boolean;
     /**
      * The **`pipeThrough()`** method of the ReadableStream interface provides a chainable way of piping the current stream through a transform stream or any other writable/readable pair.
      *
@@ -2395,13 +2395,13 @@ declare abstract class TransformStreamDefaultController<O = any> {
     terminate(): void;
 }
 interface ReadableWritablePair<R = any, W = any> {
+    readable: ReadableStream<R>;
     /**
      * Provides a convenient, chainable way of piping this readable stream through a transform stream (or any other { writable, readable } pair). It simply pipes the stream into the writable side of the supplied pair, and returns the readable side for further use.
      *
      * Piping a stream will lock it for the duration of the pipe, preventing any other consumer from acquiring a reader.
      */
     writable: WritableStream<W>;
-    readable: ReadableStream<R>;
 }
 /**
  * The **`WritableStream`** interface of the Streams API provides a standard abstraction for writing streaming data to a destination, known as a sink.
@@ -2599,29 +2599,29 @@ interface QueuingStrategyInit {
 }
 interface ScriptVersion {
     id?: string;
-    tag?: string;
     message?: string;
+    tag?: string;
 }
 declare abstract class TailEvent extends ExtendableEvent {
     readonly events: TraceItem[];
     readonly traces: TraceItem[];
 }
 interface TraceItem {
+    readonly cpuTime: number;
+    readonly diagnosticsChannelEvents: TraceDiagnosticChannelEvent[];
+    readonly dispatchNamespace?: string;
+    readonly durableObjectId?: string;
+    readonly entrypoint?: string;
     readonly event: (TraceItemFetchEventInfo | TraceItemJsRpcEventInfo | TraceItemScheduledEventInfo | TraceItemAlarmEventInfo | TraceItemQueueEventInfo | TraceItemEmailEventInfo | TraceItemTailEventInfo | TraceItemCustomEventInfo | TraceItemHibernatableWebSocketEventInfo) | null;
     readonly eventTimestamp: number | null;
-    readonly logs: TraceLog[];
     readonly exceptions: TraceException[];
-    readonly diagnosticsChannelEvents: TraceDiagnosticChannelEvent[];
-    readonly scriptName: string | null;
-    readonly entrypoint?: string;
-    readonly scriptVersion?: ScriptVersion;
-    readonly dispatchNamespace?: string;
-    readonly scriptTags?: string[];
-    readonly durableObjectId?: string;
-    readonly outcome: string;
     readonly executionModel: string;
+    readonly logs: TraceLog[];
+    readonly outcome: string;
+    readonly scriptName: string | null;
+    readonly scriptTags?: string[];
+    readonly scriptVersion?: ScriptVersion;
     readonly truncated: boolean;
-    readonly cpuTime: number;
     readonly wallTime: number;
 }
 interface TraceItemAlarmEventInfo {
@@ -2630,17 +2630,17 @@ interface TraceItemAlarmEventInfo {
 interface TraceItemCustomEventInfo {
 }
 interface TraceItemScheduledEventInfo {
-    readonly scheduledTime: number;
     readonly cron: string;
+    readonly scheduledTime: number;
 }
 interface TraceItemQueueEventInfo {
-    readonly queue: string;
     readonly batchSize: number;
+    readonly queue: string;
 }
 interface TraceItemEmailEventInfo {
     readonly mailFrom: string;
-    readonly rcptTo: string;
     readonly rawSize: number;
+    readonly rcptTo: string;
 }
 interface TraceItemTailEventInfo {
     readonly consumedEvents: TraceItemTailEventInfoTailItem[];
@@ -2649,15 +2649,15 @@ interface TraceItemTailEventInfoTailItem {
     readonly scriptName: string | null;
 }
 interface TraceItemFetchEventInfo {
-    readonly response?: TraceItemFetchEventInfoResponse;
     readonly request: TraceItemFetchEventInfoRequest;
+    readonly response?: TraceItemFetchEventInfoResponse;
 }
 interface TraceItemFetchEventInfoRequest {
     readonly cf?: any;
+    getUnredacted(): TraceItemFetchEventInfoRequest;
     readonly headers: Record<string, string>;
     readonly method: string;
     readonly url: string;
-    getUnredacted(): TraceItemFetchEventInfoRequest;
 }
 interface TraceItemFetchEventInfoResponse {
     readonly status: number;
@@ -2672,28 +2672,28 @@ interface TraceItemHibernatableWebSocketEventInfoMessage {
     readonly webSocketEventType: string;
 }
 interface TraceItemHibernatableWebSocketEventInfoClose {
-    readonly webSocketEventType: string;
     readonly code: number;
     readonly wasClean: boolean;
+    readonly webSocketEventType: string;
 }
 interface TraceItemHibernatableWebSocketEventInfoError {
     readonly webSocketEventType: string;
 }
 interface TraceLog {
-    readonly timestamp: number;
     readonly level: string;
     readonly message: any;
+    readonly timestamp: number;
 }
 interface TraceException {
-    readonly timestamp: number;
     readonly message: string;
     readonly name: string;
     readonly stack?: string;
+    readonly timestamp: number;
 }
 interface TraceDiagnosticChannelEvent {
-    readonly timestamp: number;
     readonly channel: string;
     readonly message: any;
+    readonly timestamp: number;
 }
 interface TraceMetrics {
     readonly cpuTime: number;
@@ -2960,30 +2960,30 @@ declare class URLPattern {
     exec(input?: (string | URLPatternInit), baseURL?: string): URLPatternResult | null;
 }
 interface URLPatternInit {
-    protocol?: string;
-    username?: string;
-    password?: string;
-    hostname?: string;
-    port?: string;
-    pathname?: string;
-    search?: string;
-    hash?: string;
     baseURL?: string;
+    hash?: string;
+    hostname?: string;
+    password?: string;
+    pathname?: string;
+    port?: string;
+    protocol?: string;
+    search?: string;
+    username?: string;
 }
 interface URLPatternComponentResult {
-    input: string;
     groups: Record<string, string>;
+    input: string;
 }
 interface URLPatternResult {
-    inputs: (string | URLPatternInit)[];
-    protocol: URLPatternComponentResult;
-    username: URLPatternComponentResult;
-    password: URLPatternComponentResult;
-    hostname: URLPatternComponentResult;
-    port: URLPatternComponentResult;
-    pathname: URLPatternComponentResult;
-    search: URLPatternComponentResult;
     hash: URLPatternComponentResult;
+    hostname: URLPatternComponentResult;
+    inputs: (string | URLPatternInit)[];
+    password: URLPatternComponentResult;
+    pathname: URLPatternComponentResult;
+    port: URLPatternComponentResult;
+    protocol: URLPatternComponentResult;
+    search: URLPatternComponentResult;
+    username: URLPatternComponentResult;
 }
 interface URLPatternOptions {
     ignoreCase?: boolean;
@@ -3050,31 +3050,18 @@ declare var WebSocket: {
 interface WebSocket extends EventTarget<WebSocketEventMap> {
     accept(): void;
     /**
-     * The **`WebSocket.send()`** method enqueues the specified data to be transmitted to the server over the WebSocket connection, increasing the value of `bufferedAmount` by the number of bytes needed to contain the data.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/send)
-     */
-    send(message: (ArrayBuffer | ArrayBufferView) | string): void;
-    /**
      * The **`WebSocket.close()`** method closes the already `CLOSED`, this method does nothing.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/close)
      */
     close(code?: number, reason?: string): void;
-    serializeAttachment(attachment: any): void;
     deserializeAttachment(): any | null;
     /**
-     * The **`WebSocket.readyState`** read-only property returns the current state of the WebSocket connection.
+     * The **`WebSocket.extensions`** read-only property returns the extensions selected by the server.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/readyState)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/extensions)
      */
-    readyState: number;
-    /**
-     * The **`WebSocket.url`** read-only property returns the absolute URL of the WebSocket as resolved by the constructor.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/url)
-     */
-    url: string | null;
+    extensions: string | null;
     /**
      * The **`WebSocket.protocol`** read-only property returns the name of the sub-protocol the server selected; this will be one of the strings specified in the `protocols` parameter when creating the WebSocket object, or the empty string if no connection is established.
      *
@@ -3082,11 +3069,24 @@ interface WebSocket extends EventTarget<WebSocketEventMap> {
      */
     protocol: string | null;
     /**
-     * The **`WebSocket.extensions`** read-only property returns the extensions selected by the server.
+     * The **`WebSocket.readyState`** read-only property returns the current state of the WebSocket connection.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/extensions)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/readyState)
      */
-    extensions: string | null;
+    readyState: number;
+    /**
+     * The **`WebSocket.send()`** method enqueues the specified data to be transmitted to the server over the WebSocket connection, increasing the value of `bufferedAmount` by the number of bytes needed to contain the data.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/send)
+     */
+    send(message: (ArrayBuffer | ArrayBufferView) | string): void;
+    serializeAttachment(attachment: any): void;
+    /**
+     * The **`WebSocket.url`** read-only property returns the absolute URL of the WebSocket as resolved by the constructor.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/url)
+     */
+    url: string | null;
 }
 declare const WebSocketPair: {
     new (): {
@@ -3095,9 +3095,9 @@ declare const WebSocketPair: {
     };
 };
 interface SqlStorage {
-    exec<T extends Record<string, SqlStorageValue>>(query: string, ...bindings: any[]): SqlStorageCursor<T>;
-    get databaseSize(): number;
     Cursor: typeof SqlStorageCursor;
+    get databaseSize(): number;
+    exec<T extends Record<string, SqlStorageValue>>(query: string, ...bindings: any[]): SqlStorageCursor<T>;
     Statement: typeof SqlStorageStatement;
 }
 declare abstract class SqlStorageStatement {
@@ -3120,19 +3120,19 @@ declare abstract class SqlStorageCursor<T extends Record<string, SqlStorageValue
     [Symbol.iterator](): IterableIterator<T>;
 }
 interface Socket {
-    get readable(): ReadableStream;
-    get writable(): WritableStream;
+    close(): Promise<void>;
     get closed(): Promise<void>;
     get opened(): Promise<SocketInfo>;
-    get upgraded(): boolean;
+    get readable(): ReadableStream;
     get secureTransport(): "on" | "off" | "starttls";
-    close(): Promise<void>;
     startTls(options?: TlsOptions): Socket;
+    get upgraded(): boolean;
+    get writable(): WritableStream;
 }
 interface SocketOptions {
-    secureTransport?: string;
     allowHalfOpen: boolean;
     highWaterMark?: (number | bigint);
+    secureTransport?: string;
 }
 interface SocketAddress {
     hostname: string;
@@ -3142,8 +3142,8 @@ interface TlsOptions {
     expectedServerHostname?: string;
 }
 interface SocketInfo {
-    remoteAddress?: string;
     localAddress?: string;
+    remoteAddress?: string;
 }
 /**
  * The **`EventSource`** interface is web content's interface to server-sent events.
@@ -3194,21 +3194,21 @@ declare class EventSource extends EventTarget {
     static from(stream: ReadableStream): EventSource;
 }
 interface EventSourceEventSourceInit {
-    withCredentials?: boolean;
     fetcher?: Fetcher;
+    withCredentials?: boolean;
 }
 interface Container {
-    get running(): boolean;
-    start(options?: ContainerStartupOptions): void;
-    monitor(): Promise<void>;
     destroy(error?: any): Promise<void>;
-    signal(signo: number): void;
     getTcpPort(port: number): Fetcher;
+    monitor(): Promise<void>;
+    get running(): boolean;
     setInactivityTimeout(durationMs: number | bigint): Promise<void>;
+    signal(signo: number): void;
+    start(options?: ContainerStartupOptions): void;
 }
 interface ContainerStartupOptions {
-    entrypoint?: string[];
     enableInternet: boolean;
+    entrypoint?: string[];
     env?: Record<string, string>;
     hardTimeout?: (number | bigint);
 }
@@ -3219,25 +3219,25 @@ interface ContainerStartupOptions {
  */
 interface MessagePort extends EventTarget {
     /**
+     * The **`close()`** method of the MessagePort interface disconnects the port, so it is no longer active.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessagePort/close)
+     */
+    close(): void;
+    get onmessage(): any | null;
+    set onmessage(value: any | null);
+    /**
      * The **`postMessage()`** method of the transfers ownership of objects to other browsing contexts.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessagePort/postMessage)
      */
     postMessage(data?: any, options?: (any[] | MessagePortPostMessageOptions)): void;
     /**
-     * The **`close()`** method of the MessagePort interface disconnects the port, so it is no longer active.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessagePort/close)
-     */
-    close(): void;
-    /**
      * The **`start()`** method of the MessagePort interface starts the sending of messages queued on the port.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessagePort/start)
      */
     start(): void;
-    get onmessage(): any | null;
-    set onmessage(value: any | null);
 }
 interface MessagePortPostMessageOptions {
     transfer?: any[];
@@ -3254,21 +3254,21 @@ type LoopbackDurableObjectClass<T extends Rpc.DurableObjectBranded | undefined =
     props?: any;
 }) => DurableObjectClass<T>);
 interface SyncKvStorage {
+    delete(key: string): boolean;
     get<T = unknown>(key: string): T | undefined;
     list<T = unknown>(options?: SyncKvListOptions): Iterable<[
         string,
         T
     ]>;
     put<T>(key: string, value: T): void;
-    delete(key: string): boolean;
 }
 interface SyncKvListOptions {
-    start?: string;
-    startAfter?: string;
     end?: string;
+    limit?: number;
     prefix?: string;
     reverse?: boolean;
-    limit?: number;
+    start?: string;
+    startAfter?: string;
 }
 interface WorkerStub {
     getEntrypoint<T extends Rpc.WorkerEntrypointBranded | undefined>(name?: string, options?: WorkerStubEntrypointOptions): Fetcher<T>;
@@ -3280,24 +3280,24 @@ interface WorkerLoader {
     get(name: string | null, getCode: () => WorkerLoaderWorkerCode | Promise<WorkerLoaderWorkerCode>): WorkerStub;
 }
 interface WorkerLoaderModule {
-    js?: string;
     cjs?: string;
-    text?: string;
     data?: ArrayBuffer;
+    js?: string;
     json?: any;
     py?: string;
+    text?: string;
     wasm?: ArrayBuffer;
 }
 interface WorkerLoaderWorkerCode {
+    allowExperimental?: boolean;
     compatibilityDate: string;
     compatibilityFlags?: string[];
-    allowExperimental?: boolean;
-    mainModule: string;
-    modules: Record<string, WorkerLoaderModule | string>;
     env?: any;
     globalOutbound?: (Fetcher | null);
-    tails?: Fetcher[];
+    mainModule: string;
+    modules: Record<string, WorkerLoaderModule | string>;
     streamingTails?: Fetcher[];
+    tails?: Fetcher[];
 }
 /**
 * The Workers runtime supports a subset of the Performance API, used to measure timing and performance,
@@ -3981,6 +3981,7 @@ interface Ai_Cf_Openai_Whisper_Output {
      * The transcription
      */
     text: string;
+    vtt?: string;
     word_count?: number;
     words?: {
         word?: string;
@@ -3993,7 +3994,6 @@ interface Ai_Cf_Openai_Whisper_Output {
          */
         end?: number;
     }[];
-    vtt?: string;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper {
     inputs: Ai_Cf_Openai_Whisper_Input;
@@ -4182,6 +4182,7 @@ interface Ai_Cf_Openai_Whisper_Tiny_En_Output {
      * The transcription
      */
     text: string;
+    vtt?: string;
     word_count?: number;
     words?: {
         word?: string;
@@ -4194,7 +4195,6 @@ interface Ai_Cf_Openai_Whisper_Tiny_En_Output {
          */
         end?: number;
     }[];
-    vtt?: string;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper_Tiny_En {
     inputs: Ai_Cf_Openai_Whisper_Tiny_En_Input;
@@ -4206,53 +4206,27 @@ interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Input {
      */
     audio: string;
     /**
-     * Supported tasks are 'translate' or 'transcribe'.
+     * A text prompt to help provide context to the model on the contents of the audio.
      */
-    task?: string;
+    initial_prompt?: string;
     /**
      * The language of the audio being transcribed or translated.
      */
     language?: string;
     /**
-     * Preprocess the audio with a voice activity detection model.
-     */
-    vad_filter?: boolean;
-    /**
-     * A text prompt to help provide context to the model on the contents of the audio.
-     */
-    initial_prompt?: string;
-    /**
      * The prefix it appended the the beginning of the output of the transcription and can guide the transcription result.
      */
     prefix?: string;
+    /**
+     * Supported tasks are 'translate' or 'transcribe'.
+     */
+    task?: string;
+    /**
+     * Preprocess the audio with a voice activity detection model.
+     */
+    vad_filter?: boolean;
 }
 interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Output {
-    transcription_info?: {
-        /**
-         * The language of the audio being transcribed or translated.
-         */
-        language?: string;
-        /**
-         * The confidence level or probability of the detected language being accurate, represented as a decimal between 0 and 1.
-         */
-        language_probability?: number;
-        /**
-         * The total duration of the original audio file, in seconds.
-         */
-        duration?: number;
-        /**
-         * The duration of the audio after applying Voice Activity Detection (VAD) to remove silent or irrelevant sections, in seconds.
-         */
-        duration_after_vad?: number;
-    };
-    /**
-     * The complete transcription of the audio.
-     */
-    text: string;
-    /**
-     * The total number of words in the transcription.
-     */
-    word_count?: number;
     segments?: {
         /**
          * The starting time of the segment within the audio, in seconds.
@@ -4298,9 +4272,35 @@ interface Ai_Cf_Openai_Whisper_Large_V3_Turbo_Output {
         }[];
     }[];
     /**
+     * The complete transcription of the audio.
+     */
+    text: string;
+    transcription_info?: {
+        /**
+         * The language of the audio being transcribed or translated.
+         */
+        language?: string;
+        /**
+         * The confidence level or probability of the detected language being accurate, represented as a decimal between 0 and 1.
+         */
+        language_probability?: number;
+        /**
+         * The total duration of the original audio file, in seconds.
+         */
+        duration?: number;
+        /**
+         * The duration of the audio after applying Voice Activity Detection (VAD) to remove silent or irrelevant sections, in seconds.
+         */
+        duration_after_vad?: number;
+    };
+    /**
      * The transcription in WebVTT format, which includes timing and text information for use in subtitles.
      */
     vtt?: string;
+    /**
+     * The total number of words in the transcription.
+     */
+    word_count?: number;
 }
 declare abstract class Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo {
     inputs: Ai_Cf_Openai_Whisper_Large_V3_Turbo_Input;
@@ -4314,10 +4314,6 @@ type Ai_Cf_Baai_Bge_M3_Input = Ai_Cf_Baai_Bge_M3_Input_QueryAnd_Contexts | Ai_Cf
 };
 interface Ai_Cf_Baai_Bge_M3_Input_QueryAnd_Contexts {
     /**
-     * A query you wish to perform against the provided contexts. If no query is provided the model with respond with embeddings for contexts
-     */
-    query?: string;
-    /**
      * List of provided contexts. Note that the index in this array is important, as the response will refer to it.
      */
     contexts: {
@@ -4326,6 +4322,10 @@ interface Ai_Cf_Baai_Bge_M3_Input_QueryAnd_Contexts {
          */
         text?: string;
     }[];
+    /**
+     * A query you wish to perform against the provided contexts. If no query is provided the model with respond with embeddings for contexts
+     */
+    query?: string;
     /**
      * When provided with too long context should the model error out or truncate the context to fit?
      */
@@ -4340,10 +4340,6 @@ interface Ai_Cf_Baai_Bge_M3_Input_Embedding {
 }
 interface Ai_Cf_Baai_Bge_M3_Input_QueryAnd_Contexts_1 {
     /**
-     * A query you wish to perform against the provided contexts. If no query is provided the model with respond with embeddings for contexts
-     */
-    query?: string;
-    /**
      * List of provided contexts. Note that the index in this array is important, as the response will refer to it.
      */
     contexts: {
@@ -4352,6 +4348,10 @@ interface Ai_Cf_Baai_Bge_M3_Input_QueryAnd_Contexts_1 {
          */
         text?: string;
     }[];
+    /**
+     * A query you wish to perform against the provided contexts. If no query is provided the model with respond with embeddings for contexts
+     */
+    query?: string;
     /**
      * When provided with too long context should the model error out or truncate the context to fit?
      */
@@ -4378,15 +4378,14 @@ interface Ai_Cf_Baai_Bge_M3_Ouput_Query {
     }[];
 }
 interface Ai_Cf_Baai_Bge_M3_Output_EmbeddingFor_Contexts {
-    response?: number[][];
-    shape?: number[];
     /**
      * The pooling method used in the embedding process.
      */
     pooling?: "mean" | "cls";
+    response?: number[][];
+    shape?: number[];
 }
 interface Ai_Cf_Baai_Bge_M3_Ouput_Embedding {
-    shape?: number[];
     /**
      * Embeddings of the requested text values
      */
@@ -4395,6 +4394,7 @@ interface Ai_Cf_Baai_Bge_M3_Ouput_Embedding {
      * The pooling method used in the embedding process.
      */
     pooling?: "mean" | "cls";
+    shape?: number[];
 }
 interface Ai_Cf_Baai_Bge_M3_AsyncResponse {
     /**
@@ -4429,56 +4429,69 @@ declare abstract class Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell {
 type Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Input = Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Prompt | Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages;
 interface Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     image?: number[] | (string & NonNullable<unknown>);
     /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
+    lora?: string;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
-    /**
-     * Random seed for reproducibility of the generation.
-     */
-    seed?: number;
+    raw?: boolean;
     /**
      * Penalty for repeated tokens; higher values discourage repetition.
      */
     repetition_penalty?: number;
     /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages {
+    /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
+    image?: number[] | (string & NonNullable<unknown>);
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-    /**
-     * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
-     */
-    lora?: string;
-}
-interface Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -4517,11 +4530,26 @@ interface Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages {
             };
         };
     }[];
-    image?: number[] | (string & NonNullable<unknown>);
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -4610,41 +4638,13 @@ interface Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages {
         };
     })[];
     /**
-     * If true, the response will be streamed back incrementally.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Controls the creativity of the AI's responses by adjusting how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
-    /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Controls the creativity of the AI's responses by adjusting how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Output = {
     /**
@@ -4672,60 +4672,72 @@ declare abstract class Base_Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct {
 type Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Input = Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Prompt | Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages | Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Async_Batch;
 interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -4739,10 +4751,31 @@ interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode_1;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -4830,51 +4863,18 @@ interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages {
             };
         };
     })[];
-    response_format?: Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode_1;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode_1 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Async_Batch {
     requests?: {
@@ -4922,8 +4922,8 @@ interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Async_Batch {
     }[];
 }
 interface Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_JSON_Mode_2 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 type Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Output = {
     /**
@@ -4973,6 +4973,10 @@ declare abstract class Base_Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast {
 }
 interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
     /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
+    /**
      * An array of message objects representing the conversation history.
      */
     messages: {
@@ -4986,14 +4990,6 @@ interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
         content: string;
     }[];
     /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
      * Dictate the output format of the generated response.
      */
     response_format?: {
@@ -5002,6 +4998,10 @@ interface Ai_Cf_Meta_Llama_Guard_3_8B_Input {
          */
         type?: string;
     };
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
 }
 interface Ai_Cf_Meta_Llama_Guard_3_8B_Output {
     response?: string | {
@@ -5038,13 +5038,6 @@ declare abstract class Base_Ai_Cf_Meta_Llama_Guard_3_8B {
 }
 interface Ai_Cf_Baai_Bge_Reranker_Base_Input {
     /**
-     * A query you wish to perform against the provided contexts.
-     */
-    /**
-     * Number of returned results starting with the best score.
-     */
-    top_k?: number;
-    /**
      * List of provided contexts. Note that the index in this array is important, as the response will refer to it.
      */
     contexts: {
@@ -5053,6 +5046,13 @@ interface Ai_Cf_Baai_Bge_Reranker_Base_Input {
          */
         text?: string;
     }[];
+    /**
+     * A query you wish to perform against the provided contexts.
+     */
+    /**
+     * Number of returned results starting with the best score.
+     */
+    top_k?: number;
 }
 interface Ai_Cf_Baai_Bge_Reranker_Base_Output {
     response?: {
@@ -5073,60 +5073,72 @@ declare abstract class Base_Ai_Cf_Baai_Bge_Reranker_Base {
 type Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Input = Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Prompt | Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Messages;
 interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Messages {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -5140,10 +5152,31 @@ interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Messages {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode_1;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -5231,51 +5264,18 @@ interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Messages {
             };
         };
     })[];
-    response_format?: Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode_1;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_JSON_Mode_1 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 type Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct_Output = {
     /**
@@ -5320,55 +5320,71 @@ declare abstract class Base_Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct {
 type Ai_Cf_Qwen_Qwq_32B_Input = Ai_Cf_Qwen_Qwq_32B_Prompt | Ai_Cf_Qwen_Qwq_32B_Messages;
 interface Ai_Cf_Qwen_Qwq_32B_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * JSON schema that should be fulfilled for the response.
      */
     guided_json?: object;
     /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
-    /**
-     * Random seed for reproducibility of the generation.
-     */
-    seed?: number;
+    raw?: boolean;
     /**
      * Penalty for repeated tokens; higher values discourage repetition.
      */
     repetition_penalty?: number;
     /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Qwen_Qwq_32B_Messages {
+    /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * JSON schema that should be fufilled for the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Qwen_Qwq_32B_Messages {
+    guided_json?: object;
+    /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -5407,10 +5423,30 @@ interface Ai_Cf_Qwen_Qwq_32B_Messages {
             };
         };
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -5499,49 +5535,13 @@ interface Ai_Cf_Qwen_Qwq_32B_Messages {
         };
     })[];
     /**
-     * JSON schema that should be fufilled for the response.
-     */
-    guided_json?: object;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
-    /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Qwen_Qwq_32B_Output = {
     /**
@@ -5586,55 +5586,71 @@ declare abstract class Base_Ai_Cf_Qwen_Qwq_32B {
 type Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Input = Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Prompt | Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Messages;
 interface Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * JSON schema that should be fulfilled for the response.
      */
     guided_json?: object;
     /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
-    /**
-     * Random seed for reproducibility of the generation.
-     */
-    seed?: number;
+    raw?: boolean;
     /**
      * Penalty for repeated tokens; higher values discourage repetition.
      */
     repetition_penalty?: number;
     /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Messages {
+    /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * JSON schema that should be fufilled for the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Messages {
+    guided_json?: object;
+    /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -5673,10 +5689,30 @@ interface Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Messages {
             };
         };
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -5765,49 +5801,13 @@ interface Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Messages {
         };
     })[];
     /**
-     * JSON schema that should be fufilled for the response.
-     */
-    guided_json?: object;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
-    /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct_Output = {
     /**
@@ -5852,55 +5852,71 @@ declare abstract class Base_Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct {
 type Ai_Cf_Google_Gemma_3_12B_It_Input = Ai_Cf_Google_Gemma_3_12B_It_Prompt | Ai_Cf_Google_Gemma_3_12B_It_Messages;
 interface Ai_Cf_Google_Gemma_3_12B_It_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * JSON schema that should be fufilled for the response.
      */
     guided_json?: object;
     /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
-    /**
-     * Random seed for reproducibility of the generation.
-     */
-    seed?: number;
+    raw?: boolean;
     /**
      * Penalty for repeated tokens; higher values discourage repetition.
      */
     repetition_penalty?: number;
     /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Google_Gemma_3_12B_It_Messages {
+    /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * JSON schema that should be fufilled for the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Google_Gemma_3_12B_It_Messages {
+    guided_json?: object;
+    /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -5923,10 +5939,30 @@ interface Ai_Cf_Google_Gemma_3_12B_It_Messages {
             };
         }[];
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -6015,49 +6051,13 @@ interface Ai_Cf_Google_Gemma_3_12B_It_Messages {
         };
     })[];
     /**
-     * JSON schema that should be fufilled for the response.
-     */
-    guided_json?: object;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
-    /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Google_Gemma_3_12B_It_Output = {
     /**
@@ -6102,60 +6102,76 @@ declare abstract class Base_Ai_Cf_Google_Gemma_3_12B_It {
 type Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Input = Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Prompt | Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages | Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Async_Batch;
 interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * JSON schema that should be fulfilled for the response.
      */
     guided_json?: object;
-    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * JSON schema that should be fufilled for the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages {
+    guided_json?: object;
+    /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -6194,10 +6210,31 @@ interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages {
             };
         };
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -6285,107 +6322,86 @@ interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages {
             };
         };
     })[];
-    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
-    /**
-     * JSON schema that should be fufilled for the response.
-     */
-    guided_json?: object;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Async_Batch {
     requests: (Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Prompt_Inner | Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages_Inner)[];
 }
 interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Prompt_Inner {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * JSON schema that should be fulfilled for the response.
      */
     guided_json?: object;
-    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages_Inner {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * JSON schema that should be fufilled for the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages_Inner {
+    guided_json?: object;
+    /**
+     * The maximum number of tokens to generate in the response.
+     */
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -6424,10 +6440,31 @@ interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages_Inner {
             };
         };
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -6515,51 +6552,14 @@ interface Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Messages_Inner {
             };
         };
     })[];
-    response_format?: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_JSON_Mode;
-    /**
-     * JSON schema that should be fufilled for the response.
-     */
-    guided_json?: object;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 type Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Output = {
     /**
@@ -6617,60 +6617,72 @@ declare abstract class Base_Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct {
 type Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Input = Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Prompt | Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages | Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Async_Batch;
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -6684,10 +6696,31 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_1;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -6775,111 +6808,90 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages {
             };
         };
     })[];
-    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_1;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_1 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Async_Batch {
     requests: (Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Prompt_1 | Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages_1)[];
 }
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Prompt_1 {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_2;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_2;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_2 {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages_1 {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_2 {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages_1 {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -6893,10 +6905,31 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages_1 {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_3;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -6984,70 +7017,21 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Messages_1 {
             };
         };
     })[];
-    response_format?: Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_3;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_JSON_Mode_3 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 type Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Output = Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Chat_Completion_Response | Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Text_Completion_Response | string | Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_AsyncResponse;
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Chat_Completion_Response {
-    /**
-     * Unique identifier for the completion
-     */
-    id?: string;
-    /**
-     * Object type identifier
-     */
-    object?: "chat.completion";
-    /**
-     * Unix timestamp of when the completion was created
-     */
-    created?: number;
-    /**
-     * Model used for the completion
-     */
-    model?: string;
     /**
      * List of completion choices
      */
@@ -7110,6 +7094,26 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Chat_Completion_Response {
         logprobs?: {} | null;
     }[];
     /**
+     * Unix timestamp of when the completion was created
+     */
+    created?: number;
+    /**
+     * Unique identifier for the completion
+     */
+    id?: string;
+    /**
+     * Model used for the completion
+     */
+    model?: string;
+    /**
+     * Object type identifier
+     */
+    object?: "chat.completion";
+    /**
+     * Log probabilities for the prompt (if requested)
+     */
+    prompt_logprobs?: {} | null;
+    /**
      * Usage statistics for the inference request
      */
     usage?: {
@@ -7126,28 +7130,8 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Chat_Completion_Response {
          */
         total_tokens?: number;
     };
-    /**
-     * Log probabilities for the prompt (if requested)
-     */
-    prompt_logprobs?: {} | null;
 }
 interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Text_Completion_Response {
-    /**
-     * Unique identifier for the completion
-     */
-    id?: string;
-    /**
-     * Object type identifier
-     */
-    object?: "text_completion";
-    /**
-     * Unix timestamp of when the completion was created
-     */
-    created?: number;
-    /**
-     * Model used for the completion
-     */
-    model?: string;
     /**
      * List of completion choices
      */
@@ -7177,6 +7161,22 @@ interface Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8_Text_Completion_Response {
          */
         prompt_logprobs?: {} | null;
     }[];
+    /**
+     * Unix timestamp of when the completion was created
+     */
+    created?: number;
+    /**
+     * Unique identifier for the completion
+     */
+    id?: string;
+    /**
+     * Model used for the completion
+     */
+    model?: string;
+    /**
+     * Object type identifier
+     */
+    object?: "text_completion";
     /**
      * Usage statistics for the inference request
      */
@@ -7211,21 +7211,25 @@ interface Ai_Cf_Deepgram_Nova_3_Input {
         contentType: string;
     };
     /**
-     * Sets how the model will interpret strings submitted to the custom_topic param. When strict, the model will only return topics submitted using the custom_topic param. When extended, the model will return its own detected topics in addition to those submitted using the custom_topic param.
+     * The number of channels in the submitted audio
      */
-    custom_topic_mode?: "extended" | "strict";
+    channels?: number;
     /**
-     * Custom topics you want the model to detect within your input audio or text if present Submit up to 100
+     * Custom intents you want the model to detect within your input audio if present
      */
-    custom_topic?: string;
+    custom_intent?: string;
     /**
      * Sets how the model will interpret intents submitted to the custom_intent param. When strict, the model will only return intents submitted using the custom_intent param. When extended, the model will return its own detected intents in addition those submitted using the custom_intents param
      */
     custom_intent_mode?: "extended" | "strict";
     /**
-     * Custom intents you want the model to detect within your input audio if present
+     * Custom topics you want the model to detect within your input audio or text if present Submit up to 100
      */
-    custom_intent?: string;
+    custom_topic?: string;
+    /**
+     * Sets how the model will interpret strings submitted to the custom_topic param. When strict, the model will only return topics submitted using the custom_topic param. When extended, the model will return its own detected topics in addition to those submitted using the custom_topic param.
+     */
+    custom_topic_mode?: "extended" | "strict";
     /**
      * Identifies and extracts key entities from content in submitted audio
      */
@@ -7247,6 +7251,10 @@ interface Ai_Cf_Deepgram_Nova_3_Input {
      */
     encoding?: "linear16" | "flac" | "mulaw" | "amr-nb" | "amr-wb" | "opus" | "speex" | "g729";
     /**
+     * Indicates how long model will wait to detect whether a speaker has finished speaking or pauses for a significant period of time. When set to a value, the streaming endpoint immediately finalizes the transcription for the processed time range and returns the transcript with a speech_final parameter set to true. Can also be set to false to disable endpointing
+     */
+    endpointing?: string;
+    /**
      * Arbitrary key-value pairs that are attached to the API response for usage in downstream processing
      */
     extra?: string;
@@ -7254,6 +7262,10 @@ interface Ai_Cf_Deepgram_Nova_3_Input {
      * Filler Words can help transcribe interruptions in your audio, like 'uh' and 'um'
      */
     filler_words?: boolean;
+    /**
+     * Specifies whether the streaming endpoint should provide ongoing transcription updates as more audio is received. When set to true, the endpoint sends continuous updates, meaning transcription results may evolve over time. Note: Supported only for webosockets.
+     */
+    interim_results?: boolean;
     /**
      * Key term prompting can boost or suppress specialized terminology and brands.
      */
@@ -7323,33 +7335,21 @@ interface Ai_Cf_Deepgram_Nova_3_Input {
      */
     topics?: boolean;
     /**
-     * Segments speech into meaningful semantic units.
-     */
-    utterances?: boolean;
-    /**
      * Seconds to wait before detecting a pause between words in submitted audio.
      */
     utt_split?: number;
     /**
-     * The number of channels in the submitted audio
+     * Indicates how long model will wait to send an UtteranceEnd message after a word has been transcribed. Use with interim_results. Note: Supported only for webosockets.
      */
-    channels?: number;
+    utterance_end_ms?: boolean;
     /**
-     * Specifies whether the streaming endpoint should provide ongoing transcription updates as more audio is received. When set to true, the endpoint sends continuous updates, meaning transcription results may evolve over time. Note: Supported only for webosockets.
+     * Segments speech into meaningful semantic units.
      */
-    interim_results?: boolean;
-    /**
-     * Indicates how long model will wait to detect whether a speaker has finished speaking or pauses for a significant period of time. When set to a value, the streaming endpoint immediately finalizes the transcription for the processed time range and returns the transcript with a speech_final parameter set to true. Can also be set to false to disable endpointing
-     */
-    endpointing?: string;
+    utterances?: boolean;
     /**
      * Indicates that speech has started. You'll begin receiving Speech Started messages upon speech starting. Note: Supported only for webosockets.
      */
     vad_events?: boolean;
-    /**
-     * Indicates how long model will wait to send an UtteranceEnd message after a word has been transcribed. Use with interim_results. Note: Supported only for webosockets.
-     */
-    utterance_end_ms?: boolean;
 }
 interface Ai_Cf_Deepgram_Nova_3_Output {
     results?: {
@@ -7389,12 +7389,12 @@ declare abstract class Base_Ai_Cf_Deepgram_Nova_3 {
     postProcessedOutputs: Ai_Cf_Deepgram_Nova_3_Output;
 }
 interface Ai_Cf_Qwen_Qwen3_Embedding_0_6B_Input {
-    queries?: string | string[];
+    documents?: string | string[];
     /**
      * Optional instruction for the task
      */
     instruction?: string;
-    documents?: string | string[];
+    queries?: string | string[];
     text?: string | string[];
 }
 interface Ai_Cf_Qwen_Qwen3_Embedding_0_6B_Output {
@@ -7451,33 +7451,33 @@ declare abstract class Base_Ai_Cf_Openai_Gpt_Oss_20B {
 }
 interface Ai_Cf_Leonardo_Phoenix_1_0_Input {
     /**
-     * A text description of the image you want to generate.
-     */
-    prompt: string;
-    /**
      * Controls how closely the generated image should adhere to the prompt; higher values make the image more aligned with the prompt
      */
     guidance?: number;
-    /**
-     * Random seed for reproducibility of the image generation
-     */
-    seed?: number;
     /**
      * The height of the generated image in pixels
      */
     height?: number;
     /**
-     * The width of the generated image in pixels
+     * Specify what to exclude from the generated images
      */
-    width?: number;
+    negative_prompt?: string;
     /**
      * The number of diffusion steps; higher values can improve quality but take longer
      */
     num_steps?: number;
     /**
-     * Specify what to exclude from the generated images
+     * A text description of the image you want to generate.
      */
-    negative_prompt?: string;
+    prompt: string;
+    /**
+     * Random seed for reproducibility of the image generation
+     */
+    seed?: number;
+    /**
+     * The width of the generated image in pixels
+     */
+    width?: number;
 }
 /**
  * The generated image in JPEG format
@@ -7489,33 +7489,33 @@ declare abstract class Base_Ai_Cf_Leonardo_Phoenix_1_0 {
 }
 interface Ai_Cf_Leonardo_Lucid_Origin_Input {
     /**
-     * A text description of the image you want to generate.
-     */
-    prompt: string;
-    /**
      * Controls how closely the generated image should adhere to the prompt; higher values make the image more aligned with the prompt
      */
     guidance?: number;
-    /**
-     * Random seed for reproducibility of the image generation
-     */
-    seed?: number;
     /**
      * The height of the generated image in pixels
      */
     height?: number;
     /**
-     * The width of the generated image in pixels
-     */
-    width?: number;
-    /**
      * The number of diffusion steps; higher values can improve quality but take longer
      */
     num_steps?: number;
     /**
+     * A text description of the image you want to generate.
+     */
+    prompt: string;
+    /**
+     * Random seed for reproducibility of the image generation
+     */
+    seed?: number;
+    /**
      * The number of diffusion steps; higher values can improve quality but take longer
      */
     steps?: number;
+    /**
+     * The width of the generated image in pixels
+     */
+    width?: number;
 }
 interface Ai_Cf_Leonardo_Lucid_Origin_Output {
     /**
@@ -7529,29 +7529,29 @@ declare abstract class Base_Ai_Cf_Leonardo_Lucid_Origin {
 }
 interface Ai_Cf_Deepgram_Aura_1_Input {
     /**
-     * Speaker used to produce the audio.
+     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
      */
-    speaker?: "angus" | "asteria" | "arcas" | "orion" | "orpheus" | "athena" | "luna" | "zeus" | "perseus" | "helios" | "hera" | "stella";
-    /**
-     * Encoding of the output audio.
-     */
-    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
+    bit_rate?: number;
     /**
      * Container specifies the file format wrapper for the output audio. The available options depend on the encoding type..
      */
     container?: "none" | "wav" | "ogg";
     /**
-     * The text content to be converted to speech
+     * Encoding of the output audio.
      */
-    text: string;
+    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
     /**
      * Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
      */
     sample_rate?: number;
     /**
-     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
+     * Speaker used to produce the audio.
      */
-    bit_rate?: number;
+    speaker?: "angus" | "asteria" | "arcas" | "orion" | "orpheus" | "athena" | "luna" | "zeus" | "perseus" | "helios" | "hera" | "stella";
+    /**
+     * The text content to be converted to speech
+     */
+    text: string;
 }
 /**
  * The generated audio in MP3 format
@@ -7563,13 +7563,13 @@ declare abstract class Base_Ai_Cf_Deepgram_Aura_1 {
 }
 interface Ai_Cf_Ai4Bharat_Indictrans2_En_Indic_1B_Input {
     /**
-     * Input text to translate. Can be a single string or a list of strings.
-     */
-    text: string | string[];
-    /**
      * Target langauge to translate to
      */
     target_language: "asm_Beng" | "awa_Deva" | "ben_Beng" | "bho_Deva" | "brx_Deva" | "doi_Deva" | "eng_Latn" | "gom_Deva" | "gon_Deva" | "guj_Gujr" | "hin_Deva" | "hne_Deva" | "kan_Knda" | "kas_Arab" | "kas_Deva" | "kha_Latn" | "lus_Latn" | "mag_Deva" | "mai_Deva" | "mal_Mlym" | "mar_Deva" | "mni_Beng" | "mni_Mtei" | "npi_Deva" | "ory_Orya" | "pan_Guru" | "san_Deva" | "sat_Olck" | "snd_Arab" | "snd_Deva" | "tam_Taml" | "tel_Telu" | "urd_Arab" | "unr_Deva";
+    /**
+     * Input text to translate. Can be a single string or a list of strings.
+     */
+    text: string | string[];
 }
 interface Ai_Cf_Ai4Bharat_Indictrans2_En_Indic_1B_Output {
     /**
@@ -7584,60 +7584,72 @@ declare abstract class Base_Ai_Cf_Ai4Bharat_Indictrans2_En_Indic_1B {
 type Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Input = Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Prompt | Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages | Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Async_Batch;
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Prompt {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -7651,10 +7663,31 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_1;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -7742,111 +7775,90 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages {
             };
         };
     })[];
-    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_1;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_1 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Async_Batch {
     requests: (Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Prompt_1 | Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages_1)[];
 }
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Prompt_1 {
     /**
-     * The input text prompt for the model to generate a response.
+     * Decreases the likelihood of the model repeating the same lines verbatim.
      */
-    prompt: string;
+    frequency_penalty?: number;
     /**
      * Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
      */
     lora?: string;
-    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_2;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
     /**
      * The maximum number of tokens to generate in the response.
      */
     max_tokens?: number;
     /**
-     * Controls the randomness of the output; higher values produce more random results.
+     * Increases the likelihood of the model introducing new topics.
      */
-    temperature?: number;
+    presence_penalty?: number;
     /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     * The input text prompt for the model to generate a response.
      */
-    top_p?: number;
+    prompt: string;
     /**
-     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
      */
-    top_k?: number;
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_2;
     /**
      * Random seed for reproducibility of the generation.
      */
     seed?: number;
     /**
-     * Penalty for repeated tokens; higher values discourage repetition.
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
      */
-    repetition_penalty?: number;
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
+    /**
+     * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+     */
+    top_k?: number;
+    /**
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+     */
+    top_p?: number;
+}
+interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_2 {
+    json_schema?: unknown;
+    type?: "json_object" | "json_schema";
+}
+interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages_1 {
     /**
      * Decreases the likelihood of the model repeating the same lines verbatim.
      */
     frequency_penalty?: number;
+    functions?: {
+        name: string;
+        code: string;
+    }[];
     /**
-     * Increases the likelihood of the model introducing new topics.
+     * The maximum number of tokens to generate in the response.
      */
-    presence_penalty?: number;
-}
-interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_2 {
-    type?: "json_object" | "json_schema";
-    json_schema?: unknown;
-}
-interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages_1 {
+    max_tokens?: number;
     /**
      * An array of message objects representing the conversation history.
      */
@@ -7860,10 +7872,31 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages_1 {
          */
         content: string;
     }[];
-    functions?: {
-        name: string;
-        code: string;
-    }[];
+    /**
+     * Increases the likelihood of the model introducing new topics.
+     */
+    presence_penalty?: number;
+    /**
+     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+     */
+    raw?: boolean;
+    /**
+     * Penalty for repeated tokens; higher values discourage repetition.
+     */
+    repetition_penalty?: number;
+    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_3;
+    /**
+     * Random seed for reproducibility of the generation.
+     */
+    seed?: number;
+    /**
+     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
+     */
+    stream?: boolean;
+    /**
+     * Controls the randomness of the output; higher values produce more random results.
+     */
+    temperature?: number;
     /**
      * A list of tools available for the assistant to use.
      */
@@ -7951,70 +7984,21 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Messages_1 {
             };
         };
     })[];
-    response_format?: Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_3;
-    /**
-     * If true, a chat template is not applied and you must adhere to the specific model's expected formatting.
-     */
-    raw?: boolean;
-    /**
-     * If true, the response will be streamed back incrementally using SSE, Server Sent Events.
-     */
-    stream?: boolean;
-    /**
-     * The maximum number of tokens to generate in the response.
-     */
-    max_tokens?: number;
-    /**
-     * Controls the randomness of the output; higher values produce more random results.
-     */
-    temperature?: number;
-    /**
-     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
-     */
-    top_p?: number;
     /**
      * Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
      */
     top_k?: number;
     /**
-     * Random seed for reproducibility of the generation.
+     * Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
      */
-    seed?: number;
-    /**
-     * Penalty for repeated tokens; higher values discourage repetition.
-     */
-    repetition_penalty?: number;
-    /**
-     * Decreases the likelihood of the model repeating the same lines verbatim.
-     */
-    frequency_penalty?: number;
-    /**
-     * Increases the likelihood of the model introducing new topics.
-     */
-    presence_penalty?: number;
+    top_p?: number;
 }
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_JSON_Mode_3 {
-    type?: "json_object" | "json_schema";
     json_schema?: unknown;
+    type?: "json_object" | "json_schema";
 }
 type Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Output = Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Chat_Completion_Response | Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Text_Completion_Response | string | Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_AsyncResponse;
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Chat_Completion_Response {
-    /**
-     * Unique identifier for the completion
-     */
-    id?: string;
-    /**
-     * Object type identifier
-     */
-    object?: "chat.completion";
-    /**
-     * Unix timestamp of when the completion was created
-     */
-    created?: number;
-    /**
-     * Model used for the completion
-     */
-    model?: string;
     /**
      * List of completion choices
      */
@@ -8077,6 +8061,26 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Chat_Completion_Response {
         logprobs?: {} | null;
     }[];
     /**
+     * Unix timestamp of when the completion was created
+     */
+    created?: number;
+    /**
+     * Unique identifier for the completion
+     */
+    id?: string;
+    /**
+     * Model used for the completion
+     */
+    model?: string;
+    /**
+     * Object type identifier
+     */
+    object?: "chat.completion";
+    /**
+     * Log probabilities for the prompt (if requested)
+     */
+    prompt_logprobs?: {} | null;
+    /**
      * Usage statistics for the inference request
      */
     usage?: {
@@ -8093,28 +8097,8 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Chat_Completion_Response {
          */
         total_tokens?: number;
     };
-    /**
-     * Log probabilities for the prompt (if requested)
-     */
-    prompt_logprobs?: {} | null;
 }
 interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Text_Completion_Response {
-    /**
-     * Unique identifier for the completion
-     */
-    id?: string;
-    /**
-     * Object type identifier
-     */
-    object?: "text_completion";
-    /**
-     * Unix timestamp of when the completion was created
-     */
-    created?: number;
-    /**
-     * Model used for the completion
-     */
-    model?: string;
     /**
      * List of completion choices
      */
@@ -8144,6 +8128,22 @@ interface Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It_Text_Completion_Response {
          */
         prompt_logprobs?: {} | null;
     }[];
+    /**
+     * Unix timestamp of when the completion was created
+     */
+    created?: number;
+    /**
+     * Unique identifier for the completion
+     */
+    id?: string;
+    /**
+     * Model used for the completion
+     */
+    model?: string;
+    /**
+     * Object type identifier
+     */
+    object?: "text_completion";
     /**
      * Usage statistics for the inference request
      */
@@ -8200,17 +8200,13 @@ declare abstract class Base_Ai_Cf_Pfnet_Plamo_Embedding_1B {
 }
 interface Ai_Cf_Deepgram_Flux_Input {
     /**
-     * Encoding of the audio stream. Currently only supports raw signed little-endian 16-bit PCM.
-     */
-    encoding: "linear16";
-    /**
-     * Sample rate of the audio stream in Hz.
-     */
-    sample_rate: string;
-    /**
      * End-of-turn confidence required to fire an eager end-of-turn event. When set, enables EagerEndOfTurn and TurnResumed events. Valid Values 0.3 - 0.9.
      */
     eager_eot_threshold?: string;
+    /**
+     * Encoding of the audio stream. Currently only supports raw signed little-endian 16-bit PCM.
+     */
+    encoding: "linear16";
     /**
      * End-of-turn confidence required to finish a turn. Valid Values 0.5 - 0.9.
      */
@@ -8228,6 +8224,10 @@ interface Ai_Cf_Deepgram_Flux_Input {
      */
     mip_opt_out?: "true" | "false";
     /**
+     * Sample rate of the audio stream in Hz.
+     */
+    sample_rate: string;
+    /**
      * Label your requests for the purpose of identification during usage reporting
      */
     tag?: string;
@@ -8237,6 +8237,22 @@ interface Ai_Cf_Deepgram_Flux_Input {
  */
 interface Ai_Cf_Deepgram_Flux_Output {
     /**
+     * End time in seconds of the audio range that was transcribed
+     */
+    audio_window_end?: number;
+    /**
+     * Start time in seconds of the audio range that was transcribed
+     */
+    audio_window_start?: number;
+    /**
+     * Confidence that no more speech is coming in this turn
+     */
+    end_of_turn_confidence?: number;
+    /**
+     * The type of event being reported.
+     */
+    event?: "Update" | "StartOfTurn" | "EagerEndOfTurn" | "TurnResumed" | "EndOfTurn";
+    /**
      * The unique identifier of the request (uuid)
      */
     request_id?: string;
@@ -8245,25 +8261,13 @@ interface Ai_Cf_Deepgram_Flux_Output {
      */
     sequence_id?: number;
     /**
-     * The type of event being reported.
+     * Text that was said over the course of the current turn
      */
-    event?: "Update" | "StartOfTurn" | "EagerEndOfTurn" | "TurnResumed" | "EndOfTurn";
+    transcript?: string;
     /**
      * The index of the current turn
      */
     turn_index?: number;
-    /**
-     * Start time in seconds of the audio range that was transcribed
-     */
-    audio_window_start?: number;
-    /**
-     * End time in seconds of the audio range that was transcribed
-     */
-    audio_window_end?: number;
-    /**
-     * Text that was said over the course of the current turn
-     */
-    transcript?: string;
     /**
      * The words in the transcript
      */
@@ -8277,10 +8281,6 @@ interface Ai_Cf_Deepgram_Flux_Output {
          */
         confidence: number;
     }[];
-    /**
-     * Confidence that no more speech is coming in this turn
-     */
-    end_of_turn_confidence?: number;
 }
 declare abstract class Base_Ai_Cf_Deepgram_Flux {
     inputs: Ai_Cf_Deepgram_Flux_Input;
@@ -8288,29 +8288,29 @@ declare abstract class Base_Ai_Cf_Deepgram_Flux {
 }
 interface Ai_Cf_Deepgram_Aura_2_En_Input {
     /**
-     * Speaker used to produce the audio.
+     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
      */
-    speaker?: "amalthea" | "andromeda" | "apollo" | "arcas" | "aries" | "asteria" | "athena" | "atlas" | "aurora" | "callista" | "cora" | "cordelia" | "delia" | "draco" | "electra" | "harmonia" | "helena" | "hera" | "hermes" | "hyperion" | "iris" | "janus" | "juno" | "jupiter" | "luna" | "mars" | "minerva" | "neptune" | "odysseus" | "ophelia" | "orion" | "orpheus" | "pandora" | "phoebe" | "pluto" | "saturn" | "thalia" | "theia" | "vesta" | "zeus";
-    /**
-     * Encoding of the output audio.
-     */
-    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
+    bit_rate?: number;
     /**
      * Container specifies the file format wrapper for the output audio. The available options depend on the encoding type..
      */
     container?: "none" | "wav" | "ogg";
     /**
-     * The text content to be converted to speech
+     * Encoding of the output audio.
      */
-    text: string;
+    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
     /**
      * Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
      */
     sample_rate?: number;
     /**
-     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
+     * Speaker used to produce the audio.
      */
-    bit_rate?: number;
+    speaker?: "amalthea" | "andromeda" | "apollo" | "arcas" | "aries" | "asteria" | "athena" | "atlas" | "aurora" | "callista" | "cora" | "cordelia" | "delia" | "draco" | "electra" | "harmonia" | "helena" | "hera" | "hermes" | "hyperion" | "iris" | "janus" | "juno" | "jupiter" | "luna" | "mars" | "minerva" | "neptune" | "odysseus" | "ophelia" | "orion" | "orpheus" | "pandora" | "phoebe" | "pluto" | "saturn" | "thalia" | "theia" | "vesta" | "zeus";
+    /**
+     * The text content to be converted to speech
+     */
+    text: string;
 }
 /**
  * The generated audio in MP3 format
@@ -8322,29 +8322,29 @@ declare abstract class Base_Ai_Cf_Deepgram_Aura_2_En {
 }
 interface Ai_Cf_Deepgram_Aura_2_Es_Input {
     /**
-     * Speaker used to produce the audio.
+     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
      */
-    speaker?: "sirio" | "nestor" | "carina" | "celeste" | "alvaro" | "diana" | "aquila" | "selena" | "estrella" | "javier";
-    /**
-     * Encoding of the output audio.
-     */
-    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
+    bit_rate?: number;
     /**
      * Container specifies the file format wrapper for the output audio. The available options depend on the encoding type..
      */
     container?: "none" | "wav" | "ogg";
     /**
-     * The text content to be converted to speech
+     * Encoding of the output audio.
      */
-    text: string;
+    encoding?: "linear16" | "flac" | "mulaw" | "alaw" | "mp3" | "opus" | "aac";
     /**
      * Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
      */
     sample_rate?: number;
     /**
-     * The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
+     * Speaker used to produce the audio.
      */
-    bit_rate?: number;
+    speaker?: "sirio" | "nestor" | "carina" | "celeste" | "alvaro" | "diana" | "aquila" | "selena" | "estrella" | "javier";
+    /**
+     * The text content to be converted to speech
+     */
+    text: string;
 }
 /**
  * The generated audio in MP3 format
@@ -8355,90 +8355,90 @@ declare abstract class Base_Ai_Cf_Deepgram_Aura_2_Es {
     postProcessedOutputs: Ai_Cf_Deepgram_Aura_2_Es_Output;
 }
 interface AiModels {
-    "@cf/huggingface/distilbert-sst-2-int8": BaseAiTextClassification;
-    "@cf/stabilityai/stable-diffusion-xl-base-1.0": BaseAiTextToImage;
-    "@cf/runwayml/stable-diffusion-v1-5-inpainting": BaseAiTextToImage;
-    "@cf/runwayml/stable-diffusion-v1-5-img2img": BaseAiTextToImage;
-    "@cf/lykon/dreamshaper-8-lcm": BaseAiTextToImage;
-    "@cf/bytedance/stable-diffusion-xl-lightning": BaseAiTextToImage;
-    "@cf/myshell-ai/melotts": BaseAiTextToSpeech;
-    "@cf/google/embeddinggemma-300m": BaseAiTextEmbeddings;
-    "@cf/microsoft/resnet-50": BaseAiImageClassification;
-    "@cf/meta/llama-2-7b-chat-int8": BaseAiTextGeneration;
-    "@cf/mistral/mistral-7b-instruct-v0.1": BaseAiTextGeneration;
-    "@cf/meta/llama-2-7b-chat-fp16": BaseAiTextGeneration;
-    "@hf/thebloke/llama-2-13b-chat-awq": BaseAiTextGeneration;
-    "@hf/thebloke/mistral-7b-instruct-v0.1-awq": BaseAiTextGeneration;
-    "@hf/thebloke/zephyr-7b-beta-awq": BaseAiTextGeneration;
-    "@hf/thebloke/openhermes-2.5-mistral-7b-awq": BaseAiTextGeneration;
-    "@hf/thebloke/neural-chat-7b-v3-1-awq": BaseAiTextGeneration;
-    "@hf/thebloke/llamaguard-7b-awq": BaseAiTextGeneration;
-    "@hf/thebloke/deepseek-coder-6.7b-base-awq": BaseAiTextGeneration;
-    "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": BaseAiTextGeneration;
-    "@cf/deepseek-ai/deepseek-math-7b-instruct": BaseAiTextGeneration;
-    "@cf/defog/sqlcoder-7b-2": BaseAiTextGeneration;
-    "@cf/openchat/openchat-3.5-0106": BaseAiTextGeneration;
-    "@cf/tiiuae/falcon-7b-instruct": BaseAiTextGeneration;
-    "@cf/thebloke/discolm-german-7b-v1-awq": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-0.5b-chat": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-7b-chat-awq": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-14b-chat-awq": BaseAiTextGeneration;
-    "@cf/tinyllama/tinyllama-1.1b-chat-v1.0": BaseAiTextGeneration;
-    "@cf/microsoft/phi-2": BaseAiTextGeneration;
-    "@cf/qwen/qwen1.5-1.8b-chat": BaseAiTextGeneration;
-    "@cf/mistral/mistral-7b-instruct-v0.2-lora": BaseAiTextGeneration;
-    "@hf/nousresearch/hermes-2-pro-mistral-7b": BaseAiTextGeneration;
-    "@hf/nexusflow/starling-lm-7b-beta": BaseAiTextGeneration;
-    "@hf/google/gemma-7b-it": BaseAiTextGeneration;
-    "@cf/meta-llama/llama-2-7b-chat-hf-lora": BaseAiTextGeneration;
-    "@cf/google/gemma-2b-it-lora": BaseAiTextGeneration;
-    "@cf/google/gemma-7b-it-lora": BaseAiTextGeneration;
-    "@hf/mistral/mistral-7b-instruct-v0.2": BaseAiTextGeneration;
-    "@cf/meta/llama-3-8b-instruct": BaseAiTextGeneration;
-    "@cf/fblgit/una-cybertron-7b-v2-bf16": BaseAiTextGeneration;
-    "@cf/meta/llama-3-8b-instruct-awq": BaseAiTextGeneration;
-    "@cf/meta/llama-3.1-8b-instruct-fp8": BaseAiTextGeneration;
-    "@cf/meta/llama-3.1-8b-instruct-awq": BaseAiTextGeneration;
-    "@cf/meta/llama-3.2-3b-instruct": BaseAiTextGeneration;
-    "@cf/meta/llama-3.2-1b-instruct": BaseAiTextGeneration;
-    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": BaseAiTextGeneration;
-    "@cf/ibm-granite/granite-4.0-h-micro": BaseAiTextGeneration;
-    "@cf/facebook/bart-large-cnn": BaseAiSummarization;
-    "@cf/llava-hf/llava-1.5-7b-hf": BaseAiImageToText;
-    "@cf/baai/bge-base-en-v1.5": Base_Ai_Cf_Baai_Bge_Base_En_V1_5;
-    "@cf/openai/whisper": Base_Ai_Cf_Openai_Whisper;
-    "@cf/meta/m2m100-1.2b": Base_Ai_Cf_Meta_M2M100_1_2B;
-    "@cf/baai/bge-small-en-v1.5": Base_Ai_Cf_Baai_Bge_Small_En_V1_5;
-    "@cf/baai/bge-large-en-v1.5": Base_Ai_Cf_Baai_Bge_Large_En_V1_5;
-    "@cf/unum/uform-gen2-qwen-500m": Base_Ai_Cf_Unum_Uform_Gen2_Qwen_500M;
-    "@cf/openai/whisper-tiny-en": Base_Ai_Cf_Openai_Whisper_Tiny_En;
-    "@cf/openai/whisper-large-v3-turbo": Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo;
-    "@cf/baai/bge-m3": Base_Ai_Cf_Baai_Bge_M3;
-    "@cf/black-forest-labs/flux-1-schnell": Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell;
-    "@cf/meta/llama-3.2-11b-vision-instruct": Base_Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct;
-    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": Base_Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast;
-    "@cf/meta/llama-guard-3-8b": Base_Ai_Cf_Meta_Llama_Guard_3_8B;
-    "@cf/baai/bge-reranker-base": Base_Ai_Cf_Baai_Bge_Reranker_Base;
-    "@cf/qwen/qwen2.5-coder-32b-instruct": Base_Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct;
-    "@cf/qwen/qwq-32b": Base_Ai_Cf_Qwen_Qwq_32B;
-    "@cf/mistralai/mistral-small-3.1-24b-instruct": Base_Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct;
-    "@cf/google/gemma-3-12b-it": Base_Ai_Cf_Google_Gemma_3_12B_It;
-    "@cf/meta/llama-4-scout-17b-16e-instruct": Base_Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct;
-    "@cf/qwen/qwen3-30b-a3b-fp8": Base_Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8;
-    "@cf/deepgram/nova-3": Base_Ai_Cf_Deepgram_Nova_3;
-    "@cf/qwen/qwen3-embedding-0.6b": Base_Ai_Cf_Qwen_Qwen3_Embedding_0_6B;
-    "@cf/pipecat-ai/smart-turn-v2": Base_Ai_Cf_Pipecat_Ai_Smart_Turn_V2;
-    "@cf/openai/gpt-oss-120b": Base_Ai_Cf_Openai_Gpt_Oss_120B;
-    "@cf/openai/gpt-oss-20b": Base_Ai_Cf_Openai_Gpt_Oss_20B;
-    "@cf/leonardo/phoenix-1.0": Base_Ai_Cf_Leonardo_Phoenix_1_0;
-    "@cf/leonardo/lucid-origin": Base_Ai_Cf_Leonardo_Lucid_Origin;
-    "@cf/deepgram/aura-1": Base_Ai_Cf_Deepgram_Aura_1;
     "@cf/ai4bharat/indictrans2-en-indic-1B": Base_Ai_Cf_Ai4Bharat_Indictrans2_En_Indic_1B;
     "@cf/aisingapore/gemma-sea-lion-v4-27b-it": Base_Ai_Cf_Aisingapore_Gemma_Sea_Lion_V4_27B_It;
-    "@cf/pfnet/plamo-embedding-1b": Base_Ai_Cf_Pfnet_Plamo_Embedding_1B;
-    "@cf/deepgram/flux": Base_Ai_Cf_Deepgram_Flux;
+    "@cf/baai/bge-base-en-v1.5": Base_Ai_Cf_Baai_Bge_Base_En_V1_5;
+    "@cf/baai/bge-large-en-v1.5": Base_Ai_Cf_Baai_Bge_Large_En_V1_5;
+    "@cf/baai/bge-m3": Base_Ai_Cf_Baai_Bge_M3;
+    "@cf/baai/bge-reranker-base": Base_Ai_Cf_Baai_Bge_Reranker_Base;
+    "@cf/baai/bge-small-en-v1.5": Base_Ai_Cf_Baai_Bge_Small_En_V1_5;
+    "@cf/black-forest-labs/flux-1-schnell": Base_Ai_Cf_Black_Forest_Labs_Flux_1_Schnell;
+    "@cf/bytedance/stable-diffusion-xl-lightning": BaseAiTextToImage;
+    "@cf/deepgram/aura-1": Base_Ai_Cf_Deepgram_Aura_1;
     "@cf/deepgram/aura-2-en": Base_Ai_Cf_Deepgram_Aura_2_En;
     "@cf/deepgram/aura-2-es": Base_Ai_Cf_Deepgram_Aura_2_Es;
+    "@cf/deepgram/flux": Base_Ai_Cf_Deepgram_Flux;
+    "@cf/deepgram/nova-3": Base_Ai_Cf_Deepgram_Nova_3;
+    "@cf/deepseek-ai/deepseek-math-7b-instruct": BaseAiTextGeneration;
+    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b": BaseAiTextGeneration;
+    "@cf/defog/sqlcoder-7b-2": BaseAiTextGeneration;
+    "@cf/facebook/bart-large-cnn": BaseAiSummarization;
+    "@cf/fblgit/una-cybertron-7b-v2-bf16": BaseAiTextGeneration;
+    "@cf/google/embeddinggemma-300m": BaseAiTextEmbeddings;
+    "@cf/google/gemma-2b-it-lora": BaseAiTextGeneration;
+    "@cf/google/gemma-3-12b-it": Base_Ai_Cf_Google_Gemma_3_12B_It;
+    "@cf/google/gemma-7b-it-lora": BaseAiTextGeneration;
+    "@cf/huggingface/distilbert-sst-2-int8": BaseAiTextClassification;
+    "@cf/ibm-granite/granite-4.0-h-micro": BaseAiTextGeneration;
+    "@cf/leonardo/lucid-origin": Base_Ai_Cf_Leonardo_Lucid_Origin;
+    "@cf/leonardo/phoenix-1.0": Base_Ai_Cf_Leonardo_Phoenix_1_0;
+    "@cf/llava-hf/llava-1.5-7b-hf": BaseAiImageToText;
+    "@cf/lykon/dreamshaper-8-lcm": BaseAiTextToImage;
+    "@cf/meta-llama/llama-2-7b-chat-hf-lora": BaseAiTextGeneration;
+    "@cf/meta/llama-2-7b-chat-fp16": BaseAiTextGeneration;
+    "@cf/meta/llama-2-7b-chat-int8": BaseAiTextGeneration;
+    "@cf/meta/llama-3-8b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3-8b-instruct-awq": BaseAiTextGeneration;
+    "@cf/meta/llama-3.1-8b-instruct-awq": BaseAiTextGeneration;
+    "@cf/meta/llama-3.1-8b-instruct-fp8": BaseAiTextGeneration;
+    "@cf/meta/llama-3.2-1b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3.2-3b-instruct": BaseAiTextGeneration;
+    "@cf/meta/llama-3.2-11b-vision-instruct": Base_Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct;
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast": Base_Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast;
+    "@cf/meta/llama-4-scout-17b-16e-instruct": Base_Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct;
+    "@cf/meta/llama-guard-3-8b": Base_Ai_Cf_Meta_Llama_Guard_3_8B;
+    "@cf/meta/m2m100-1.2b": Base_Ai_Cf_Meta_M2M100_1_2B;
+    "@cf/microsoft/phi-2": BaseAiTextGeneration;
+    "@cf/microsoft/resnet-50": BaseAiImageClassification;
+    "@cf/mistral/mistral-7b-instruct-v0.1": BaseAiTextGeneration;
+    "@cf/mistral/mistral-7b-instruct-v0.2-lora": BaseAiTextGeneration;
+    "@cf/mistralai/mistral-small-3.1-24b-instruct": Base_Ai_Cf_Mistralai_Mistral_Small_3_1_24B_Instruct;
+    "@cf/myshell-ai/melotts": BaseAiTextToSpeech;
+    "@cf/openai/gpt-oss-20b": Base_Ai_Cf_Openai_Gpt_Oss_20B;
+    "@cf/openai/gpt-oss-120b": Base_Ai_Cf_Openai_Gpt_Oss_120B;
+    "@cf/openai/whisper": Base_Ai_Cf_Openai_Whisper;
+    "@cf/openai/whisper-large-v3-turbo": Base_Ai_Cf_Openai_Whisper_Large_V3_Turbo;
+    "@cf/openai/whisper-tiny-en": Base_Ai_Cf_Openai_Whisper_Tiny_En;
+    "@cf/openchat/openchat-3.5-0106": BaseAiTextGeneration;
+    "@cf/pfnet/plamo-embedding-1b": Base_Ai_Cf_Pfnet_Plamo_Embedding_1B;
+    "@cf/pipecat-ai/smart-turn-v2": Base_Ai_Cf_Pipecat_Ai_Smart_Turn_V2;
+    "@cf/qwen/qwen1.5-0.5b-chat": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-1.8b-chat": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-7b-chat-awq": BaseAiTextGeneration;
+    "@cf/qwen/qwen1.5-14b-chat-awq": BaseAiTextGeneration;
+    "@cf/qwen/qwen2.5-coder-32b-instruct": Base_Ai_Cf_Qwen_Qwen2_5_Coder_32B_Instruct;
+    "@cf/qwen/qwen3-30b-a3b-fp8": Base_Ai_Cf_Qwen_Qwen3_30B_A3B_Fp8;
+    "@cf/qwen/qwen3-embedding-0.6b": Base_Ai_Cf_Qwen_Qwen3_Embedding_0_6B;
+    "@cf/qwen/qwq-32b": Base_Ai_Cf_Qwen_Qwq_32B;
+    "@cf/runwayml/stable-diffusion-v1-5-img2img": BaseAiTextToImage;
+    "@cf/runwayml/stable-diffusion-v1-5-inpainting": BaseAiTextToImage;
+    "@cf/stabilityai/stable-diffusion-xl-base-1.0": BaseAiTextToImage;
+    "@cf/thebloke/discolm-german-7b-v1-awq": BaseAiTextGeneration;
+    "@cf/tiiuae/falcon-7b-instruct": BaseAiTextGeneration;
+    "@cf/tinyllama/tinyllama-1.1b-chat-v1.0": BaseAiTextGeneration;
+    "@cf/unum/uform-gen2-qwen-500m": Base_Ai_Cf_Unum_Uform_Gen2_Qwen_500M;
+    "@hf/google/gemma-7b-it": BaseAiTextGeneration;
+    "@hf/mistral/mistral-7b-instruct-v0.2": BaseAiTextGeneration;
+    "@hf/nexusflow/starling-lm-7b-beta": BaseAiTextGeneration;
+    "@hf/nousresearch/hermes-2-pro-mistral-7b": BaseAiTextGeneration;
+    "@hf/thebloke/deepseek-coder-6.7b-base-awq": BaseAiTextGeneration;
+    "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": BaseAiTextGeneration;
+    "@hf/thebloke/llama-2-13b-chat-awq": BaseAiTextGeneration;
+    "@hf/thebloke/llamaguard-7b-awq": BaseAiTextGeneration;
+    "@hf/thebloke/mistral-7b-instruct-v0.1-awq": BaseAiTextGeneration;
+    "@hf/thebloke/neural-chat-7b-v3-1-awq": BaseAiTextGeneration;
+    "@hf/thebloke/openhermes-2.5-mistral-7b-awq": BaseAiTextGeneration;
+    "@hf/thebloke/zephyr-7b-beta-awq": BaseAiTextGeneration;
 }
 type AiOptions = {
     /**
@@ -8681,13 +8681,11 @@ declare abstract class AutoRAG {
 }
 interface BasicImageTransformations {
     /**
-     * Maximum width in image pixels. The value must be an integer.
+     * Background color to add underneath the image. Applies only to images with
+     * transparency (such as PNG). Accepts any CSS color (#RRGGBB, rgba(…),
+     * hsl(…), etc.)
      */
-    width?: number;
-    /**
-     * Maximum height in image pixels. The value must be an integer.
-     */
-    height?: number;
+    background?: string;
     /**
      * Resizing mode as a string. It affects interpretation of width and height
      * options:
@@ -8716,12 +8714,6 @@ interface BasicImageTransformations {
      */
     fit?: "scale-down" | "contain" | "cover" | "crop" | "pad" | "squeeze";
     /**
-     * Image segmentation using artificial intelligence models. Sets pixels not
-     * within selected segment area to transparent e.g "foreground" sets every
-     * background pixel as transparent.
-     */
-    segment?: "foreground";
-    /**
      * When cropping with fit: "cover", this defines the side or point that should
      * be left uncropped. The value is either a string
      * "left", "right", "top", "bottom", "auto", or "center" (the default),
@@ -8735,21 +8727,29 @@ interface BasicImageTransformations {
      */
     gravity?: 'face' | 'left' | 'right' | 'top' | 'bottom' | 'center' | 'auto' | 'entropy' | BasicImageTransformationsGravityCoordinates;
     /**
-     * Background color to add underneath the image. Applies only to images with
-     * transparency (such as PNG). Accepts any CSS color (#RRGGBB, rgba(…),
-     * hsl(…), etc.)
+     * Maximum height in image pixels. The value must be an integer.
      */
-    background?: string;
+    height?: number;
     /**
      * Number of degrees (90, 180, 270) to rotate the image by. width and height
      * options refer to axes after rotation.
      */
     rotate?: 0 | 90 | 180 | 270 | 360;
+    /**
+     * Image segmentation using artificial intelligence models. Sets pixels not
+     * within selected segment area to transparent e.g "foreground" sets every
+     * background pixel as transparent.
+     */
+    segment?: "foreground";
+    /**
+     * Maximum width in image pixels. The value must be an integer.
+     */
+    width?: number;
 }
 interface BasicImageTransformationsGravityCoordinates {
+    mode?: 'remainder' | 'box-center';
     x?: number;
     y?: number;
-    mode?: 'remainder' | 'box-center';
 }
 /**
  * In addition to the properties you can set in the RequestInit dict
@@ -8761,6 +8761,7 @@ interface BasicImageTransformationsGravityCoordinates {
  * playground.
  */
 interface RequestInitCfProperties extends Record<string, unknown> {
+    apps?: boolean;
     cacheEverything?: boolean;
     /**
      * A request's cache key is what determines if two requests are
@@ -8789,8 +8790,6 @@ interface RequestInitCfProperties extends Record<string, unknown> {
      * (e.g. { '200-299': 86400, '404': 1, '500-599': 0 })
      */
     cacheTtlByStatus?: Record<string, number>;
-    scrapeShield?: boolean;
-    apps?: boolean;
     image?: RequestInitCfPropertiesImage;
     minify?: RequestInitCfPropertiesImageMinify;
     mirage?: boolean;
@@ -8810,14 +8809,11 @@ interface RequestInitCfProperties extends Record<string, unknown> {
      * to point to that CNAME record.
      */
     resolveOverride?: string;
+    scrapeShield?: boolean;
 }
 interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
-    /**
-     * Absolute URL of the image file to use for the drawing. It can be any of
-     * the supported file formats. For drawing of watermarks or non-rectangular
-     * overlays we recommend using PNG or WebP images.
-     */
-    url: string;
+    bottom?: number;
+    left?: number;
     /**
      * Floating-point number between 0 (transparent) and 1 (opaque).
      * For example, opacity: 0.5 makes overlay semitransparent.
@@ -8832,6 +8828,7 @@ interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
      *   (form a line).
      */
     repeat?: true | "x" | "y";
+    right?: number;
     /**
      * Position of the overlay image relative to a given edge. Each property is
      * an offset in pixels. 0 aligns exactly to the edge. For example, left: 10
@@ -8844,16 +8841,135 @@ interface RequestInitCfPropertiesImageDraw extends BasicImageTransformations {
      * If no position is specified, the image will be centered.
      */
     top?: number;
-    left?: number;
-    bottom?: number;
-    right?: number;
+    /**
+     * Absolute URL of the image file to use for the drawing. It can be any of
+     * the supported file formats. For drawing of watermarks or non-rectangular
+     * overlays we recommend using PNG or WebP images.
+     */
+    url: string;
 }
 interface RequestInitCfPropertiesImage extends BasicImageTransformations {
+    /**
+     * Whether to preserve animation frames from input files. Default is true.
+     * Setting it to false reduces animations to still images. This setting is
+     * recommended when enlarging images or processing arbitrary user content,
+     * because large GIF animations can weigh tens or even hundreds of megabytes.
+     * It is also useful to set anim:false when using format:"json" to get the
+     * response quicker without the number of frames.
+     */
+    anim?: boolean;
+    /**
+     * Radius of a blur filter (approximate gaussian). Maximum supported radius
+     * is 250.
+     */
+    blur?: number;
+    /**
+     * Adds a border around the image. The border is added after resizing. Border
+     * width takes dpr into account, and can be specified either using a single
+     * width property, or individually for each side.
+     */
+    border?: {
+        color: string;
+        width: number;
+    } | {
+        color: string;
+        top: number;
+        right: number;
+        bottom: number;
+        left: number;
+    };
+    /**
+     * Increase brightness by a factor. A value of 1.0 equals no change, a value
+     * of 0.5 equals half brightness, and a value of 2.0 equals twice as bright.
+     * 0 is ignored.
+     */
+    brightness?: number;
+    /**
+     * Slightly reduces latency on a cache miss by selecting a
+     * quickest-to-compress file format, at a cost of increased file size and
+     * lower image quality. It will usually override the format option and choose
+     * JPEG over WebP or AVIF. We do not recommend using this option, except in
+     * unusual circumstances like resizing uncacheable dynamically-generated
+     * images.
+     */
+    compression?: "fast";
+    /**
+     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
+     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
+     * ignored.
+     */
+    contrast?: number;
     /**
      * Device Pixel Ratio. Default 1. Multiplier for width/height that makes it
      * easier to specify higher-DPI sizes in <img srcset>.
      */
     dpr?: number;
+    /**
+     * Overlays are drawn in the order they appear in the array (last array
+     * entry is the topmost layer).
+     */
+    draw?: RequestInitCfPropertiesImageDraw[];
+    /**
+     * Flips the images horizontally, vertically, or both. Flipping is applied before
+     * rotation, so if you apply flip=h,rotate=90 then the image will be flipped
+     * horizontally, then rotated by 90 degrees.
+     */
+    flip?: 'h' | 'v' | 'hv';
+    /**
+     * Output format to generate. It can be:
+     *  - avif: generate images in AVIF format.
+     *  - webp: generate images in Google WebP format. Set quality to 100 to get
+     *    the WebP-lossless format.
+     *  - json: instead of generating an image, outputs information about the
+     *    image, in JSON format. The JSON object will contain image size
+     *    (before and after resizing), source image’s MIME type, file size, etc.
+     * - jpeg: generate images in JPEG format.
+     * - png: generate images in PNG format.
+     */
+    format?: "avif" | "webp" | "json" | "jpeg" | "png" | "baseline-jpeg" | "png-force" | "svg";
+    /**
+     * Increase exposure by a factor. A value of 1.0 equals no change, a value of
+     * 0.5 darkens the image, and a value of 2.0 lightens the image. 0 is ignored.
+     */
+    gamma?: number;
+    /**
+     * What EXIF data should be preserved in the output image. Note that EXIF
+     * rotation and embedded color profiles are always applied ("baked in" into
+     * the image), and aren't affected by this option. Note that if the Polish
+     * feature is enabled, all metadata may have been removed already and this
+     * option may have no effect.
+     *  - keep: Preserve most of EXIF metadata, including GPS location if there's
+     *    any.
+     *  - copyright: Only keep the copyright tag, and discard everything else.
+     *    This is the default behavior for JPEG files.
+     *  - none: Discard all invisible EXIF metadata. Currently WebP and PNG
+     *    output formats always discard metadata.
+     */
+    metadata?: "keep" | "copyright" | "none";
+    /**
+     * Fetching image from authenticated origin. Setting this property will
+     * pass authentication headers (Authorization, Cookie, etc.) through to
+     * the origin.
+     */
+    "origin-auth"?: "share-publicly";
+    /**
+     * Quality setting from 1-100 (useful values are in 60-90 range). Lower values
+     * make images look worse, but load faster. The default is 85. It applies only
+     * to JPEG and WebP images. It doesn’t have any effect on PNG.
+     */
+    quality?: number | "low" | "medium-low" | "medium-high" | "high";
+    /**
+     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
+     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
+     * ignored.
+     */
+    saturation?: number;
+    /**
+     * Strength of sharpening filter to apply to the image. Floating-point
+     * number between 0 (no sharpening, default) and 10 (maximum). 1.0 is a
+     * recommended value for downscaled images.
+     */
+    sharpen?: number;
     /**
      * Allows you to trim your image. Takes dpr into account and is performed before
      * resizing or rotation.
@@ -8882,127 +8998,11 @@ interface RequestInitCfPropertiesImage extends BasicImageTransformations {
             keep?: number;
         };
     };
-    /**
-     * Quality setting from 1-100 (useful values are in 60-90 range). Lower values
-     * make images look worse, but load faster. The default is 85. It applies only
-     * to JPEG and WebP images. It doesn’t have any effect on PNG.
-     */
-    quality?: number | "low" | "medium-low" | "medium-high" | "high";
-    /**
-     * Output format to generate. It can be:
-     *  - avif: generate images in AVIF format.
-     *  - webp: generate images in Google WebP format. Set quality to 100 to get
-     *    the WebP-lossless format.
-     *  - json: instead of generating an image, outputs information about the
-     *    image, in JSON format. The JSON object will contain image size
-     *    (before and after resizing), source image’s MIME type, file size, etc.
-     * - jpeg: generate images in JPEG format.
-     * - png: generate images in PNG format.
-     */
-    format?: "avif" | "webp" | "json" | "jpeg" | "png" | "baseline-jpeg" | "png-force" | "svg";
-    /**
-     * Whether to preserve animation frames from input files. Default is true.
-     * Setting it to false reduces animations to still images. This setting is
-     * recommended when enlarging images or processing arbitrary user content,
-     * because large GIF animations can weigh tens or even hundreds of megabytes.
-     * It is also useful to set anim:false when using format:"json" to get the
-     * response quicker without the number of frames.
-     */
-    anim?: boolean;
-    /**
-     * What EXIF data should be preserved in the output image. Note that EXIF
-     * rotation and embedded color profiles are always applied ("baked in" into
-     * the image), and aren't affected by this option. Note that if the Polish
-     * feature is enabled, all metadata may have been removed already and this
-     * option may have no effect.
-     *  - keep: Preserve most of EXIF metadata, including GPS location if there's
-     *    any.
-     *  - copyright: Only keep the copyright tag, and discard everything else.
-     *    This is the default behavior for JPEG files.
-     *  - none: Discard all invisible EXIF metadata. Currently WebP and PNG
-     *    output formats always discard metadata.
-     */
-    metadata?: "keep" | "copyright" | "none";
-    /**
-     * Strength of sharpening filter to apply to the image. Floating-point
-     * number between 0 (no sharpening, default) and 10 (maximum). 1.0 is a
-     * recommended value for downscaled images.
-     */
-    sharpen?: number;
-    /**
-     * Radius of a blur filter (approximate gaussian). Maximum supported radius
-     * is 250.
-     */
-    blur?: number;
-    /**
-     * Overlays are drawn in the order they appear in the array (last array
-     * entry is the topmost layer).
-     */
-    draw?: RequestInitCfPropertiesImageDraw[];
-    /**
-     * Fetching image from authenticated origin. Setting this property will
-     * pass authentication headers (Authorization, Cookie, etc.) through to
-     * the origin.
-     */
-    "origin-auth"?: "share-publicly";
-    /**
-     * Adds a border around the image. The border is added after resizing. Border
-     * width takes dpr into account, and can be specified either using a single
-     * width property, or individually for each side.
-     */
-    border?: {
-        color: string;
-        width: number;
-    } | {
-        color: string;
-        top: number;
-        right: number;
-        bottom: number;
-        left: number;
-    };
-    /**
-     * Increase brightness by a factor. A value of 1.0 equals no change, a value
-     * of 0.5 equals half brightness, and a value of 2.0 equals twice as bright.
-     * 0 is ignored.
-     */
-    brightness?: number;
-    /**
-     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
-     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
-     * ignored.
-     */
-    contrast?: number;
-    /**
-     * Increase exposure by a factor. A value of 1.0 equals no change, a value of
-     * 0.5 darkens the image, and a value of 2.0 lightens the image. 0 is ignored.
-     */
-    gamma?: number;
-    /**
-     * Increase contrast by a factor. A value of 1.0 equals no change, a value of
-     * 0.5 equals low contrast, and a value of 2.0 equals high contrast. 0 is
-     * ignored.
-     */
-    saturation?: number;
-    /**
-     * Flips the images horizontally, vertically, or both. Flipping is applied before
-     * rotation, so if you apply flip=h,rotate=90 then the image will be flipped
-     * horizontally, then rotated by 90 degrees.
-     */
-    flip?: 'h' | 'v' | 'hv';
-    /**
-     * Slightly reduces latency on a cache miss by selecting a
-     * quickest-to-compress file format, at a cost of increased file size and
-     * lower image quality. It will usually override the format option and choose
-     * JPEG over WebP or AVIF. We do not recommend using this option, except in
-     * unusual circumstances like resizing uncacheable dynamically-generated
-     * images.
-     */
-    compression?: "fast";
 }
 interface RequestInitCfPropertiesImageMinify {
-    javascript?: boolean;
     css?: boolean;
     html?: boolean;
+    javascript?: boolean;
 }
 interface RequestInitCfPropertiesR2 {
     /**
@@ -9072,13 +9072,6 @@ interface IncomingRequestCfPropertiesBase extends Record<string, unknown> {
      */
     requestPriority: string;
     /**
-     * The TLS version of the connection to Cloudflare.
-     * In requests served over plaintext (without TLS), this property is the empty string `""`.
-     *
-     * @example "TLSv1.3"
-     */
-    tlsVersion: string;
-    /**
      * The cipher for the connection to Cloudflare.
      * In requests served over plaintext (without TLS), this property is the empty string `""`.
      *
@@ -9091,8 +9084,24 @@ interface IncomingRequestCfPropertiesBase extends Record<string, unknown> {
      * If the incoming request was served over plaintext (without TLS) this field is undefined.
      */
     tlsExportedAuthenticator?: IncomingRequestCfPropertiesExportedAuthenticatorMetadata;
+    /**
+     * The TLS version of the connection to Cloudflare.
+     * In requests served over plaintext (without TLS), this property is the empty string `""`.
+     *
+     * @example "TLSv1.3"
+     */
+    tlsVersion: string;
 }
 interface IncomingRequestCfPropertiesBotManagementBase {
+    /**
+     * A boolean value that is true if the request originates from a
+     * Cloudflare-verified proxy service.
+     */
+    corporateProxy: boolean;
+    /**
+     * List of IDs that correlate to the Bot Management heuristic detections made on a request (you can have multiple heuristic detections on the same request).
+     */
+    detectionIds: number[];
     /**
      * Cloudflare’s [level of certainty](https://developers.cloudflare.com/bots/concepts/bot-score/) that a request comes from a bot,
      * represented as an integer percentage between `1` (almost certainly a bot) and `99` (almost certainly human).
@@ -9101,23 +9110,14 @@ interface IncomingRequestCfPropertiesBotManagementBase {
      */
     score: number;
     /**
-     * A boolean value that is true if the request comes from a good bot, like Google or Bing.
-     * Most customers choose to allow this traffic. For more details, see [Traffic from known bots](https://developers.cloudflare.com/firewall/known-issues-and-faq/#how-does-firewall-rules-handle-traffic-from-known-bots).
-     */
-    verifiedBot: boolean;
-    /**
-     * A boolean value that is true if the request originates from a
-     * Cloudflare-verified proxy service.
-     */
-    corporateProxy: boolean;
-    /**
      * A boolean value that's true if the request matches [file extensions](https://developers.cloudflare.com/bots/reference/static-resources/) for many types of static resources.
      */
     staticResource: boolean;
     /**
-     * List of IDs that correlate to the Bot Management heuristic detections made on a request (you can have multiple heuristic detections on the same request).
+     * A boolean value that is true if the request comes from a good bot, like Google or Bing.
+     * Most customers choose to allow this traffic. For more details, see [Traffic from known bots](https://developers.cloudflare.com/firewall/known-issues-and-faq/#how-does-firewall-rules-handle-traffic-from-known-bots).
      */
-    detectionIds: number[];
+    verifiedBot: boolean;
 }
 interface IncomingRequestCfPropertiesBotManagement {
     /**
@@ -9174,34 +9174,46 @@ interface IncomingRequestCfPropertiesCloudflareAccessOrApiShield {
  */
 interface IncomingRequestCfPropertiesExportedAuthenticatorMetadata {
     /**
-     * The client's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
-     *
-     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
-     */
-    clientHandshake: string;
-    /**
-     * The server's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
-     *
-     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
-     */
-    serverHandshake: string;
-    /**
      * The client's [`FINISHED` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.9), encoded in hexadecimal
      *
      * @example "084ee802fe1348f688220e2a6040a05b2199a761f33cf753abb1b006792d3f8b"
      */
     clientFinished: string;
     /**
+     * The client's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
+     *
+     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
+     */
+    clientHandshake: string;
+    /**
      * The server's [`FINISHED` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.9), encoded in hexadecimal
      *
      * @example "084ee802fe1348f688220e2a6040a05b2199a761f33cf753abb1b006792d3f8b"
      */
     serverFinished: string;
+    /**
+     * The server's [`HELLO` message](https://www.rfc-editor.org/rfc/rfc5246#section-7.4.1.2), encoded in hexadecimal
+     *
+     * @example "44372ba35fa1270921d318f34c12f155dc87b682cf36a790cfaa3ba8737a1b5d"
+     */
+    serverHandshake: string;
 }
 /**
  * Geographic data about the request's origin.
  */
 interface IncomingRequestCfPropertiesGeographicInformation {
+    /**
+     * The city the request originated from
+     *
+     * @example "Austin"
+     */
+    city?: string;
+    /**
+     * A two-letter code indicating the continent the request originated from.
+     *
+     * @example "AN"
+     */
+    continent?: ContinentCode;
     /**
      * The [ISO 3166-1 Alpha 2](https://www.iso.org/iso-3166-country-codes.html) country code the request originated from.
      *
@@ -9221,24 +9233,6 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     isEUCountry?: "1";
     /**
-     * A two-letter code indicating the continent the request originated from.
-     *
-     * @example "AN"
-     */
-    continent?: ContinentCode;
-    /**
-     * The city the request originated from
-     *
-     * @example "Austin"
-     */
-    city?: string;
-    /**
-     * Postal code of the incoming request
-     *
-     * @example "78701"
-     */
-    postalCode?: string;
-    /**
      * Latitude of the incoming request
      *
      * @example "30.27130"
@@ -9251,11 +9245,17 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     longitude?: string;
     /**
-     * Timezone of the incoming request
+     * Metro code (DMA) of the incoming request
      *
-     * @example "America/Chicago"
+     * @example "635"
      */
-    timezone?: string;
+    metroCode?: string;
+    /**
+     * Postal code of the incoming request
+     *
+     * @example "78701"
+     */
+    postalCode?: string;
     /**
      * If known, the ISO 3166-2 name for the first level region associated with
      * the IP address of the incoming request
@@ -9271,80 +9271,14 @@ interface IncomingRequestCfPropertiesGeographicInformation {
      */
     regionCode?: string;
     /**
-     * Metro code (DMA) of the incoming request
+     * Timezone of the incoming request
      *
-     * @example "635"
+     * @example "America/Chicago"
      */
-    metroCode?: string;
+    timezone?: string;
 }
 /** Data about the incoming request's TLS certificate */
 interface IncomingRequestCfPropertiesTLSClientAuth {
-    /** Always `"1"`, indicating that the certificate was presented */
-    certPresented: "1";
-    /**
-     * Result of certificate verification.
-     *
-     * @example "FAILED:self signed certificate"
-     */
-    certVerified: Exclude<CertVerificationStatus, "NONE">;
-    /** The presented certificate's revokation status.
-     *
-     * - A value of `"1"` indicates the certificate has been revoked
-     * - A value of `"0"` indicates the certificate has not been revoked
-     */
-    certRevoked: "1" | "0";
-    /**
-     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
-     *
-     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certIssuerDN: string;
-    /**
-     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
-     *
-     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certSubjectDN: string;
-    /**
-     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
-     *
-     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certIssuerDNRFC2253: string;
-    /**
-     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
-     *
-     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
-     */
-    certSubjectDNRFC2253: string;
-    /** The certificate issuer's distinguished name (legacy policies) */
-    certIssuerDNLegacy: string;
-    /** The certificate subject's distinguished name (legacy policies) */
-    certSubjectDNLegacy: string;
-    /**
-     * The certificate's serial number
-     *
-     * @example "00936EACBE07F201DF"
-     */
-    certSerial: string;
-    /**
-     * The certificate issuer's serial number
-     *
-     * @example "2489002934BDFEA34"
-     */
-    certIssuerSerial: string;
-    /**
-     * The certificate's Subject Key Identifier
-     *
-     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
-     */
-    certSKI: string;
-    /**
-     * The certificate issuer's Subject Key Identifier
-     *
-     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
-     */
-    certIssuerSKI: string;
     /**
      * The certificate's SHA-1 fingerprint
      *
@@ -9358,37 +9292,103 @@ interface IncomingRequestCfPropertiesTLSClientAuth {
      */
     certFingerprintSHA256: string;
     /**
-     * The effective starting date of the certificate
+     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
      *
-     * @example "Dec 22 19:39:00 2018 GMT"
+     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
      */
-    certNotBefore: string;
+    certIssuerDN: string;
+    /** The certificate issuer's distinguished name (legacy policies) */
+    certIssuerDNLegacy: string;
+    /**
+     * The certificate issuer's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
+     *
+     * @example "CN=cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certIssuerDNRFC2253: string;
+    /**
+     * The certificate issuer's serial number
+     *
+     * @example "2489002934BDFEA34"
+     */
+    certIssuerSerial: string;
+    /**
+     * The certificate issuer's Subject Key Identifier
+     *
+     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
+     */
+    certIssuerSKI: string;
     /**
      * The effective expiration date of the certificate
      *
      * @example "Dec 22 19:39:00 2018 GMT"
      */
     certNotAfter: string;
+    /**
+     * The effective starting date of the certificate
+     *
+     * @example "Dec 22 19:39:00 2018 GMT"
+     */
+    certNotBefore: string;
+    /** Always `"1"`, indicating that the certificate was presented */
+    certPresented: "1";
+    /** The presented certificate's revokation status.
+     *
+     * - A value of `"1"` indicates the certificate has been revoked
+     * - A value of `"0"` indicates the certificate has not been revoked
+     */
+    certRevoked: "1" | "0";
+    /**
+     * The certificate's serial number
+     *
+     * @example "00936EACBE07F201DF"
+     */
+    certSerial: string;
+    /**
+     * The certificate's Subject Key Identifier
+     *
+     * @example "BB:AF:7E:02:3D:FA:A6:F1:3C:84:8E:AD:EE:38:98:EC:D9:32:32:D4"
+     */
+    certSKI: string;
+    /**
+     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html)
+     *
+     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certSubjectDN: string;
+    /** The certificate subject's distinguished name (legacy policies) */
+    certSubjectDNLegacy: string;
+    /**
+     * The certificate subject's [distinguished name](https://knowledge.digicert.com/generalinformation/INFO1745.html) ([RFC 2253](https://www.rfc-editor.org/rfc/rfc2253.html) formatted)
+     *
+     * @example "CN=*.cloudflareaccess.com, C=US, ST=Texas, L=Austin, O=Cloudflare"
+     */
+    certSubjectDNRFC2253: string;
+    /**
+     * Result of certificate verification.
+     *
+     * @example "FAILED:self signed certificate"
+     */
+    certVerified: Exclude<CertVerificationStatus, "NONE">;
 }
 /** Placeholder values for TLS Client Authorization */
 interface IncomingRequestCfPropertiesTLSClientAuthPlaceholder {
-    certPresented: "0";
-    certVerified: "NONE";
-    certRevoked: "0";
-    certIssuerDN: "";
-    certSubjectDN: "";
-    certIssuerDNRFC2253: "";
-    certSubjectDNRFC2253: "";
-    certIssuerDNLegacy: "";
-    certSubjectDNLegacy: "";
-    certSerial: "";
-    certIssuerSerial: "";
-    certSKI: "";
-    certIssuerSKI: "";
     certFingerprintSHA1: "";
     certFingerprintSHA256: "";
-    certNotBefore: "";
+    certIssuerDN: "";
+    certIssuerDNLegacy: "";
+    certIssuerDNRFC2253: "";
+    certIssuerSerial: "";
+    certIssuerSKI: "";
     certNotAfter: "";
+    certNotBefore: "";
+    certPresented: "0";
+    certRevoked: "0";
+    certSerial: "";
+    certSKI: "";
+    certSubjectDN: "";
+    certSubjectDNLegacy: "";
+    certSubjectDNRFC2253: "";
+    certVerified: "NONE";
 }
 /** Possible outcomes of TLS verification */
 declare type CertVerificationStatus = 
@@ -9416,21 +9416,21 @@ declare type Iso3166Alpha2Code = "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" 
 declare type ContinentCode = "AF" | "AN" | "AS" | "EU" | "NA" | "OC" | "SA";
 type CfProperties<HostMetadata = unknown> = IncomingRequestCfProperties<HostMetadata> | RequestInitCfProperties;
 interface D1Meta {
-    duration: number;
-    size_after: number;
-    rows_read: number;
-    rows_written: number;
-    last_row_id: number;
     changed_db: boolean;
     changes: number;
-    /**
-     * The region of the database instance that executed the query.
-     */
-    served_by_region?: string;
+    duration: number;
+    last_row_id: number;
+    rows_read: number;
+    rows_written: number;
     /**
      * True if-and-only-if the database instance that executed the query was the primary.
      */
     served_by_primary?: boolean;
+    /**
+     * The region of the database instance that executed the query.
+     */
+    served_by_region?: string;
+    size_after: number;
     timings?: {
         /**
          * The duration of the SQL query execution by the database instance. It doesn't include any network time.
@@ -9444,9 +9444,9 @@ interface D1Meta {
     total_attempts?: number;
 }
 interface D1Response {
-    success: true;
-    meta: D1Meta & Record<string, unknown>;
     error?: never;
+    meta: D1Meta & Record<string, unknown>;
+    success: true;
 }
 type D1Result<T = unknown> = D1Response & {
     results: T[];
@@ -9533,24 +9533,6 @@ interface EmailMessage {
  */
 interface ForwardableEmailMessage extends EmailMessage {
     /**
-     * Stream of the email message content.
-     */
-    readonly raw: ReadableStream<Uint8Array>;
-    /**
-     * An [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
-     */
-    readonly headers: Headers;
-    /**
-     * Size of the email message content.
-     */
-    readonly rawSize: number;
-    /**
-     * Reject this email message by returning a permanent SMTP error back to the connecting client including the given reason.
-     * @param reason The reject reason.
-     * @returns void
-     */
-    setReject(reason: string): void;
-    /**
      * Forward this email message to a verified destination address of the account.
      * @param rcptTo Verified destination address.
      * @param headers A [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
@@ -9558,11 +9540,29 @@ interface ForwardableEmailMessage extends EmailMessage {
      */
     forward(rcptTo: string, headers?: Headers): Promise<void>;
     /**
+     * An [Headers object](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
+     */
+    readonly headers: Headers;
+    /**
+     * Stream of the email message content.
+     */
+    readonly raw: ReadableStream<Uint8Array>;
+    /**
+     * Size of the email message content.
+     */
+    readonly rawSize: number;
+    /**
      * Reply to the sender of this email message with a new EmailMessage object.
      * @param message The reply message.
      * @returns A promise that resolves when the email message is replied.
      */
     reply(message: EmailMessage): Promise<void>;
+    /**
+     * Reject this email message by returning a permanent SMTP error back to the connecting client including the given reason.
+     * @param reason The reject reason.
+     * @returns void
+     */
+    setReject(reason: string): void;
 }
 /**
  * A binding that allows a Worker to send email messages.
@@ -9617,12 +9617,23 @@ interface Hyperdrive {
      */
     readonly connectionString: string;
     /*
+     * The name of the database to connect to.
+     */
+    readonly database: string;
+    /*
      * A randomly generated hostname that is only valid within the context of the
      * currently running Worker which, when passed into `connect()` function from
      * the "cloudflare:sockets" module, will connect to the Hyperdrive instance
      * for your database.
      */
     readonly host: string;
+    /*
+     * The randomly generated password to use when authenticating to your
+     * database via Hyperdrive. Like the host field, this password is only valid
+     * within the context of the currently running Worker instance from which
+     * it's read.
+     */
+    readonly password: string;
     /*
      * The port that must be paired the the host field when connecting.
      */
@@ -9632,17 +9643,6 @@ interface Hyperdrive {
      * Unlike the host and password, this will be the same every time
      */
     readonly user: string;
-    /*
-     * The randomly generated password to use when authenticating to your
-     * database via Hyperdrive. Like the host field, this password is only valid
-     * within the context of the currently running Worker instance from which
-     * it's read.
-     */
-    readonly password: string;
-    /*
-     * The name of the database to connect to.
-     */
-    readonly database: string;
 }
 // Copyright (c) 2024 Cloudflare, Inc.
 // Licensed under the Apache 2.0 license found in the LICENSE file or at:
@@ -9730,12 +9730,6 @@ interface ImagesBinding {
 }
 interface ImageTransformer {
     /**
-     * Apply transform next, returning a transform handle.
-     * You can then apply more transformations, draw, or retrieve the output.
-     * @param transform
-     */
-    transform(transform: ImageTransform): ImageTransformer;
-    /**
      * Draw an image on this transformer, returning a transform handle.
      * You can then apply more transformations, draw, or retrieve the output.
      * @param image The image (or transformer that will give the image) to draw
@@ -9748,15 +9742,17 @@ interface ImageTransformer {
      * @param options Options that apply to the output e.g. output format
      */
     output(options: ImageOutputOptions): Promise<ImageTransformationResult>;
+    /**
+     * Apply transform next, returning a transform handle.
+     * You can then apply more transformations, draw, or retrieve the output.
+     * @param transform
+     */
+    transform(transform: ImageTransform): ImageTransformer;
 }
 type ImageTransformationOutputOptions = {
     encoding?: 'base64';
 };
 interface ImageTransformationResult {
-    /**
-     * The image as a response, ready to store in cache or return to users
-     */
-    response(): Response;
     /**
      * The content type of the returned image
      */
@@ -9765,6 +9761,10 @@ interface ImageTransformationResult {
      * The bytes of the response
      */
     image(options?: ImageTransformationOutputOptions): ReadableStream<Uint8Array>;
+    /**
+     * The image as a response, ready to store in cache or return to users
+     */
+    response(): Response;
 }
 interface ImagesError extends Error {
     readonly code: number;
@@ -9813,6 +9813,11 @@ interface MediaTransformationGenerator {
  */
 interface MediaTransformationResult {
     /**
+     * Returns the MIME type of the transformed media.
+     * @returns The content type string (e.g., 'image/jpeg', 'video/mp4')
+     */
+    contentType(): string;
+    /**
      * Returns the transformed media as a readable stream of bytes.
      * @returns A stream containing the transformed media data
      */
@@ -9822,11 +9827,6 @@ interface MediaTransformationResult {
      * @returns The transformed media as a Response, ready to store in cache or return to users
      */
     response(): Response;
-    /**
-     * Returns the MIME type of the transformed media.
-     * @returns The content type string (e.g., 'image/jpeg', 'video/mp4')
-     */
-    contentType(): string;
 }
 /**
  * Configuration options for transforming media input.
@@ -9879,10 +9879,10 @@ interface MediaError extends Error {
 }
 declare module 'cloudflare:node' {
     interface NodeStyleServer {
-        listen(...args: unknown[]): this;
         address(): {
             port?: number | null | undefined;
         };
+        listen(...args: unknown[]): this;
     }
     export function httpServerHandler(port: number): ExportedHandler;
     export function httpServerHandler(options: {
@@ -9961,29 +9961,29 @@ declare module "cloudflare:pipelines" {
 // itself.
 // https://developers.cloudflare.com/pub-sub/
 interface PubSubMessage {
-    // Message ID
-    readonly mid: number;
     // MQTT broker FQDN in the form mqtts://BROKER.NAMESPACE.cloudflarepubsub.com:PORT
     readonly broker: string;
-    // The MQTT topic the message was sent on.
-    readonly topic: string;
     // The client ID of the client that published this message.
     readonly clientId: string;
-    // The unique identifier (JWT ID) used by the client to authenticate, if token
-    // auth was used.
-    readonly jti?: string;
-    // A Unix timestamp (seconds from Jan 1, 1970), set when the Pub/Sub Broker
-    // received the message from the client.
-    readonly receivedAt: number;
     // An (optional) string with the MIME type of the payload, if set by the
     // client.
     readonly contentType: string;
-    // Set to 1 when the payload is a UTF-8 string
-    // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901063
-    readonly payloadFormatIndicator: number;
+    // The unique identifier (JWT ID) used by the client to authenticate, if token
+    // auth was used.
+    readonly jti?: string;
+    // Message ID
+    readonly mid: number;
     // Pub/Sub (MQTT) payloads can be UTF-8 strings, or byte arrays.
     // You can use payloadFormatIndicator to inspect this before decoding.
     payload: string | Uint8Array;
+    // Set to 1 when the payload is a UTF-8 string
+    // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901063
+    readonly payloadFormatIndicator: number;
+    // A Unix timestamp (seconds from Jan 1, 1970), set when the Pub/Sub Broker
+    // received the message from the client.
+    readonly receivedAt: number;
+    // The MQTT topic the message was sent on.
+    readonly topic: string;
 }
 // JsonWebKey extended by kid parameter
 interface JsonWebKeyWithKid extends JsonWebKey {
@@ -10050,8 +10050,8 @@ declare namespace Rpc {
     // Base type for all RPC stubs, including common memory management methods.
     // `T` is used as a marker type for unwrapping `Stub`s later.
     interface StubBase<T extends Stubable> extends Disposable {
-        [__RPC_STUB_BRAND]: T;
         dup(): this;
+        [__RPC_STUB_BRAND]: T;
     }
     export type Stub<T extends Stubable> = Provider<T> & StubBase<T>;
     // This represents all the types that can be sent as-is over an RPC boundary
@@ -10301,38 +10301,38 @@ declare namespace TailStream {
         readonly value: string;
     }
     interface FetchEventInfo {
-        readonly type: "fetch";
-        readonly method: string;
-        readonly url: string;
         readonly cfJson?: object;
         readonly headers: Header[];
+        readonly method: string;
+        readonly type: "fetch";
+        readonly url: string;
     }
     interface JsRpcEventInfo {
         readonly type: "jsrpc";
     }
     interface ScheduledEventInfo {
-        readonly type: "scheduled";
-        readonly scheduledTime: Date;
         readonly cron: string;
+        readonly scheduledTime: Date;
+        readonly type: "scheduled";
     }
     interface AlarmEventInfo {
-        readonly type: "alarm";
         readonly scheduledTime: Date;
+        readonly type: "alarm";
     }
     interface QueueEventInfo {
-        readonly type: "queue";
-        readonly queueName: string;
         readonly batchSize: number;
+        readonly queueName: string;
+        readonly type: "queue";
     }
     interface EmailEventInfo {
-        readonly type: "email";
         readonly mailFrom: string;
-        readonly rcptTo: string;
         readonly rawSize: number;
+        readonly rcptTo: string;
+        readonly type: "email";
     }
     interface TraceEventInfo {
-        readonly type: "trace";
         readonly traces: (string | null)[];
+        readonly type: "trace";
     }
     interface HibernatableWebSocketEventInfoMessage {
         readonly type: "message";
@@ -10341,97 +10341,92 @@ declare namespace TailStream {
         readonly type: "error";
     }
     interface HibernatableWebSocketEventInfoClose {
-        readonly type: "close";
         readonly code: number;
+        readonly type: "close";
         readonly wasClean: boolean;
     }
     interface HibernatableWebSocketEventInfo {
-        readonly type: "hibernatableWebSocket";
         readonly info: HibernatableWebSocketEventInfoClose | HibernatableWebSocketEventInfoError | HibernatableWebSocketEventInfoMessage;
+        readonly type: "hibernatableWebSocket";
     }
     interface CustomEventInfo {
         readonly type: "custom";
     }
     interface FetchResponseInfo {
-        readonly type: "fetch";
         readonly statusCode: number;
+        readonly type: "fetch";
     }
     type EventOutcome = "ok" | "canceled" | "exception" | "unknown" | "killSwitch" | "daemonDown" | "exceededCpu" | "exceededMemory" | "loadShed" | "responseStreamDisconnected" | "scriptNotFound";
     interface ScriptVersion {
         readonly id: string;
-        readonly tag?: string;
         readonly message?: string;
+        readonly tag?: string;
     }
     interface Onset {
-        readonly type: "onset";
         readonly attributes: Attribute[];
-        // id for the span being opened by this Onset event.
-        readonly spanId: string;
         readonly dispatchNamespace?: string;
         readonly entrypoint?: string;
         readonly executionModel: string;
+        readonly info: FetchEventInfo | JsRpcEventInfo | ScheduledEventInfo | AlarmEventInfo | QueueEventInfo | EmailEventInfo | TraceEventInfo | HibernatableWebSocketEventInfo | CustomEventInfo;
         readonly scriptName?: string;
         readonly scriptTags?: string[];
         readonly scriptVersion?: ScriptVersion;
-        readonly info: FetchEventInfo | JsRpcEventInfo | ScheduledEventInfo | AlarmEventInfo | QueueEventInfo | EmailEventInfo | TraceEventInfo | HibernatableWebSocketEventInfo | CustomEventInfo;
+        // id for the span being opened by this Onset event.
+        readonly spanId: string;
+        readonly type: "onset";
     }
     interface Outcome {
-        readonly type: "outcome";
-        readonly outcome: EventOutcome;
         readonly cpuTime: number;
+        readonly outcome: EventOutcome;
+        readonly type: "outcome";
         readonly wallTime: number;
     }
     interface SpanOpen {
-        readonly type: "spanOpen";
+        readonly info?: FetchEventInfo | JsRpcEventInfo | Attributes;
         readonly name: string;
         // id for the span being opened by this SpanOpen event.
         readonly spanId: string;
-        readonly info?: FetchEventInfo | JsRpcEventInfo | Attributes;
+        readonly type: "spanOpen";
     }
     interface SpanClose {
-        readonly type: "spanClose";
         readonly outcome: EventOutcome;
+        readonly type: "spanClose";
     }
     interface DiagnosticChannelEvent {
-        readonly type: "diagnosticChannel";
         readonly channel: string;
         readonly message: any;
+        readonly type: "diagnosticChannel";
     }
     interface Exception {
-        readonly type: "exception";
-        readonly name: string;
         readonly message: string;
+        readonly name: string;
         readonly stack?: string;
+        readonly type: "exception";
     }
     interface Log {
-        readonly type: "log";
         readonly level: "debug" | "error" | "info" | "log" | "warn";
         readonly message: object;
+        readonly type: "log";
     }
     // This marks the worker handler return information.
     // This is separate from Outcome because the worker invocation can live for a long time after
     // returning. For example - Websockets that return an http upgrade response but then continue
     // streaming information or SSE http connections.
     interface Return {
-        readonly type: "return";
         readonly info?: FetchResponseInfo;
+        readonly type: "return";
     }
     interface Attribute {
         readonly name: string;
         readonly value: string | string[] | boolean | boolean[] | number | number[] | bigint | bigint[];
     }
     interface Attributes {
-        readonly type: "attributes";
         readonly info: Attribute[];
+        readonly type: "attributes";
     }
     type EventType = Onset | Outcome | SpanOpen | SpanClose | DiagnosticChannelEvent | Exception | Log | Return | Attributes;
     // Context in which this trace event lives.
     interface SpanContext {
-        // Single id for the entire top-level invocation
-        // This should be a new traceId for the first worker stage invoked in the eyeball request and then
-        // same-account service-bindings should reuse the same traceId but cross-account service-bindings
-        // should use a new traceId.
-        readonly traceId: string;
         // spanId in which this event is handled
         // for Onset and SpanOpen events this would be the parent span id
         // for Outcome and SpanClose these this would be the span id of the opening Onset and SpanOpen events
@@ -10440,16 +10435,21 @@ declare namespace TailStream {
         //  1. This is an Onset event
         //  2. We are not inherting any SpanContext. (e.g. this is a cross-account service binding or a new top-level invocation)
         readonly spanId?: string;
+        // Single id for the entire top-level invocation
+        // This should be a new traceId for the first worker stage invoked in the eyeball request and then
+        // same-account service-bindings should reuse the same traceId but cross-account service-bindings
+        // should use a new traceId.
+        readonly traceId: string;
     }
     interface TailEvent<Event extends EventType> {
+        readonly event: Event;
         // invocation id of the currently invoked worker stage.
         // invocation id will always be unique to every Onset event and will be the same until the Outcome event.
         readonly invocationId: string;
+        readonly sequence: number;
         // Inherited spanContext for this event.
         readonly spanContext: SpanContext;
         readonly timestamp: Date;
-        readonly sequence: number;
-        readonly event: Event;
     }
     type TailEventHandler<Event extends EventType = EventType> = (event: TailEvent<Event>) => void | Promise<void>;
     type TailEventHandlerObject = {
@@ -10513,11 +10513,11 @@ type VectorizeDistanceMetric = "euclidean" | "cosine" | "dot-product";
  */
 type VectorizeMetadataRetrievalLevel = "all" | "indexed" | "none";
 interface VectorizeQueryOptions {
-    topK?: number;
-    namespace?: string;
-    returnValues?: boolean;
-    returnMetadata?: boolean | VectorizeMetadataRetrievalLevel;
     filter?: VectorizeVectorMetadataFilter;
+    namespace?: string;
+    returnMetadata?: boolean | VectorizeMetadataRetrievalLevel;
+    returnValues?: boolean;
+    topK?: number;
 }
 /**
  * Information about the configuration of an index.
@@ -10535,14 +10535,14 @@ type VectorizeIndexConfig = {
  * See {@link VectorizeIndexInfo} for its post-beta equivalent.
  */
 interface VectorizeIndexDetails {
+    /** The index configuration, including the dimension size and distance metric. */
+    config: VectorizeIndexConfig;
+    /** (optional) A human readable description for the index. */
+    description?: string;
     /** The unique ID of the index */
     readonly id: string;
     /** The name of the index. */
     name: string;
-    /** (optional) A human readable description for the index. */
-    description?: string;
-    /** The index configuration, including the dimension size and distance metric. */
-    config: VectorizeIndexConfig;
     /** The number of records containing vectors within the index. */
     vectorsCount: number;
 }
@@ -10550,14 +10550,14 @@ interface VectorizeIndexDetails {
  * Metadata about an existing index.
  */
 interface VectorizeIndexInfo {
-    /** The number of records containing vectors within the index. */
-    vectorCount: number;
     /** Number of dimensions the index has been configured for. */
     dimensions: number;
     /** ISO 8601 datetime of the last processed mutation on in the index. All changes before this mutation will be reflected in the index state. */
     processedUpToDatetime: number;
     /** UUIDv4 of the last mutation processed by the index. All changes before this mutation will be reflected in the index state. */
     processedUpToMutation: number;
+    /** The number of records containing vectors within the index. */
+    vectorCount: number;
 }
 /**
  * Represents a single vector value set along with its associated metadata.
@@ -10565,12 +10565,12 @@ interface VectorizeIndexInfo {
 interface VectorizeVector {
     /** The ID for the vector. This can be user-defined, and must be unique. It should uniquely identify the object, and is best set based on the ID of what the vector represents. */
     id: string;
-    /** The vector values */
-    values: VectorFloatArray | number[];
-    /** The namespace this vector belongs to. */
-    namespace?: string;
     /** Metadata associated with the vector. Includes the values of other fields and potentially additional details. */
     metadata?: Record<string, VectorizeVectorMetadata>;
+    /** The namespace this vector belongs to. */
+    namespace?: string;
+    /** The vector values */
+    values: VectorFloatArray | number[];
 }
 /**
  * Represents a matched vector for a query along with its score and (if specified) the matching vector information.
@@ -10583,8 +10583,8 @@ type VectorizeMatch = Pick<Partial<VectorizeVector>, "values"> & Omit<VectorizeV
  * A set of matching {@link VectorizeMatch} for a particular query.
  */
 interface VectorizeMatches {
-    matches: VectorizeMatch[];
     count: number;
+    matches: VectorizeMatch[];
 }
 /**
  * Results of an operation that performed a mutation on a set of vectors.
@@ -10594,10 +10594,10 @@ interface VectorizeMatches {
  * See {@link VectorizeAsyncMutation} for its post-beta equivalent.
  */
 interface VectorizeVectorMutation {
-    /* List of ids of vectors that were successfully processed. */
-    ids: string[];
     /* Total count of the number of processed vectors. */
     count: number;
+    /* List of ids of vectors that were successfully processed. */
+    ids: string[];
 }
 /**
  * Result type indicating a mutation on the Vectorize Index.

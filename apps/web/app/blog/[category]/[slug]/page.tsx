@@ -1,12 +1,13 @@
-import { notFound } from 'next/navigation';
-import { Mdx } from '@/components/mdx-components';
-import { getPost } from '@/lib/blog';
-import { BackToAllPostsButton } from '@/components/blog/back-to-posts-button';
-import ClientScrollToTop from '@/components/blog/client-scroll-to-top';
-import { ArticleSchema } from '@/components/structured-data';
-import { getDynamicMetadata } from '@/app/metadata';
-import { getBaseUrl } from '@/lib/utils';
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import { getPost } from "@/lib/blog";
+import { getBaseUrl } from "@/lib/utils";
+import { getDynamicMetadata } from "@/app/metadata";
+import { BackToAllPostsButton } from "@/components/blog/back-to-posts-button";
+import ClientScrollToTop from "@/components/blog/client-scroll-to-top";
+import { Mdx } from "@/components/mdx-components";
+import { ArticleSchema } from "@/components/structured-data";
 
 interface PostPageProps {
   params: Promise<{
@@ -24,8 +25,8 @@ export async function generateMetadata({
 
   if (!post) {
     return getDynamicMetadata({
-      title: 'Post Not Found',
-      description: 'The requested blog post could not be found.',
+      title: "Post Not Found",
+      description: "The requested blog post could not be found.",
     });
   }
 
@@ -51,7 +52,7 @@ export async function generateMetadata({
     openGraph: {
       title: post.title,
       description: post.description || `Read our post about ${post.title}`,
-      type: 'article',
+      type: "article",
       url: `${getBaseUrl()}/blog/${category}/${slug}`,
       // images: [
       //   {
@@ -63,10 +64,10 @@ export async function generateMetadata({
       // ],
       publishedTime: post.date,
       modifiedTime: post.date,
-      authors: [post.author || 'All Things Linux'],
+      authors: [post.author || "All Things Linux"],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: post.title,
       description: post.description || `Read our post about ${post.title}`,
       // images: [ogImageUrl.toString()],
@@ -79,22 +80,22 @@ function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
     const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   } catch (e) {
-    console.error('Error formatting date:', e);
+    console.error("Error formatting date:", e);
     return dateString;
   }
 }
@@ -111,29 +112,29 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <article className="container relative max-w-4xl py-6 lg:py-10">
       <ArticleSchema
-        title={post.title}
+        authorName={post.author || "All Things Linux"}
+        dateModified={post.date}
+        datePublished={post.date}
         description={post.description || `Read our post about ${post.title}`}
         imageUrl="https://allthingslinux.org/images/og.png"
-        datePublished={post.date}
-        dateModified={post.date}
-        authorName={post.author || 'All Things Linux'}
+        title={post.title}
       />
-      <div className="absolute left-[-200px] top-14 hidden xl:block">
+      <div className="absolute top-14 left-[-200px] hidden xl:block">
         <BackToAllPostsButton />
       </div>
 
       <div>
-        <h1 className="mt-2 scroll-m-20 text-4xl font-bold tracking-tight text-balance">
+        <h1 className="mt-2 scroll-m-20 text-balance font-bold text-4xl tracking-tight">
           {post.title}
         </h1>
         {post.description && (
-          <p className="my-4 text-md text-muted-foreground text-balance">
+          <p className="my-4 text-balance text-md text-muted-foreground">
             {post.description}
           </p>
         )}
 
         {/* Author and date with card aesthetic */}
-        <div className="mt-4 items-center space-x-2 text-sm text-muted-foreground bg-card/50 px-3 py-1 rounded-md inline-flex">
+        <div className="mt-4 inline-flex items-center space-x-2 rounded-md bg-card/50 px-3 py-1 text-muted-foreground text-sm">
           {post.author && (
             <>
               <div className="font-medium">{post.author}</div>
@@ -152,7 +153,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <Mdx code={post.body.code} />
       </div>
 
-      <div className="flex justify-center items-center gap-4 py-6 lg:py-10">
+      <div className="flex items-center justify-center gap-4 py-6 lg:py-10">
         <BackToAllPostsButton />
         <ClientScrollToTop />
       </div>

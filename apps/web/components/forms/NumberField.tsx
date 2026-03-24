@@ -1,21 +1,22 @@
-'use client';
-import { useFormContext, Controller } from 'react-hook-form';
-import { FormItem, FormLabel, FormDescription } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import { memo } from 'react';
+"use client";
+import { memo } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export interface NumberFieldProps {
-  name: string;
-  label: string;
-  description?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  required?: boolean;
-  min?: number;
-  max?: number;
-  step?: number;
   className?: string;
+  description?: string;
+  disabled?: boolean;
+  label: string;
+  max?: number;
+  min?: number;
+  name: string;
+  placeholder?: string;
+  required?: boolean;
+  step?: number;
 }
 
 const NumberField = memo(function NumberField({
@@ -38,8 +39,8 @@ const NumberField = memo(function NumberField({
   // Check if this field has an error
   const hasError = !!errors[name];
   const errorMessage = hasError
-    ? String(errors[name]?.message || 'Please enter a valid number')
-    : '';
+    ? String(errors[name]?.message || "Please enter a valid number")
+    : "";
 
   return (
     <Controller
@@ -49,11 +50,11 @@ const NumberField = memo(function NumberField({
         <FormItem className={className}>
           <FormLabel
             className={cn(
-              'font-medium text-base',
+              "font-medium text-base",
               required &&
-                "after:content-['*'] after:ml-0.5 after:text-destructive after:font-bold",
+                "after:ml-0.5 after:font-bold after:text-destructive after:content-['*']",
               !required &&
-                "after:content-['(optional)'] after:ml-1.5 after:text-muted-foreground after:text-xs after:font-normal"
+                "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
             )}
           >
             {label}
@@ -62,38 +63,38 @@ const NumberField = memo(function NumberField({
             <FormDescription className="mt-2">{description}</FormDescription>
           )}
           <Input
-            type="number"
-            placeholder={placeholder}
-            disabled={disabled}
             autoComplete="off"
-            min={min}
-            max={max}
-            step={step}
             className={cn(
-              'bg-transparent dark:bg-input/30',
-              hasError && 'border-destructive focus:ring-destructive'
+              "bg-transparent dark:bg-input/30",
+              hasError && "border-destructive focus:ring-destructive"
             )}
-            // Use value directly but ensure it's a string for the input
-            value={
-              field.value === undefined || field.value === null
-                ? ''
-                : field.value
-            }
+            disabled={disabled}
+            max={max}
+            min={min}
+            name={field.name}
+            onBlur={field.onBlur}
             onChange={(e) => {
               // For number inputs, we need to convert the string value to a number
               const value =
-                e.target.value === '' ? '' : parseFloat(e.target.value);
+                e.target.value === "" ? "" : Number.parseFloat(e.target.value);
               field.onChange(value);
               // React Hook Form will handle validation automatically in onChange mode
             }}
-            onBlur={field.onBlur}
-            name={field.name}
+            placeholder={placeholder}
             ref={field.ref}
+            step={step}
+            type="number"
+            // Use value directly but ensure it's a string for the input
+            value={
+              field.value === undefined || field.value === null
+                ? ""
+                : field.value
+            }
           />
 
           {/* Add direct error display that will always show */}
           {hasError && (
-            <p className="text-sm font-medium text-destructive mt-1">
+            <p className="mt-1 font-medium text-destructive text-sm">
               {errorMessage}
             </p>
           )}

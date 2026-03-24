@@ -20,16 +20,16 @@
 
   // Performance and resource limits
   "limits": {
-    "cpu_ms": 300000, // 5 minutes max per request
+    "cpu_ms": 300000 // 5 minutes max per request
   },
 
   // Assets configuration (shared across environments)
   "assets": {
     "binding": "ASSETS",
-    "directory": ".open-next/assets",
+    "directory": ".open-next/assets"
   },
   "images": {
-    "binding": "IMAGES",
+    "binding": "IMAGES"
   },
   // KV namespaces (shared across environments for local dev)
   // initOpenNextCloudflareForDev() reads from root level during next dev
@@ -37,17 +37,17 @@
     {
       "binding": "KV_QUICKBOOKS",
       "id": "b58a50d9090b46a181322eb96d0c8c90",
-      "preview_id": "b58a50d9090b46a181322eb96d0c8c90",
-    },
+      "preview_id": "b58a50d9090b46a181322eb96d0c8c90"
+    }
   ],
 
   // Observability (full sampling for both dev and prod)
   "observability": {
     "enabled": true,
     "logs": {
-      "invocation_logs": true,
+      "invocation_logs": true
     },
-    "head_sampling_rate": 1.0,
+    "head_sampling_rate": 1.0
   },
 
   // Durable Objects for advanced caching features (shared across environments)
@@ -55,17 +55,17 @@
     "bindings": [
       {
         "name": "NEXT_CACHE_DO_QUEUE",
-        "class_name": "DOQueueHandler",
+        "class_name": "DOQueueHandler"
       },
       {
         "name": "NEXT_TAG_CACHE_DO_SHARDED",
-        "class_name": "DOShardedTagCache",
+        "class_name": "DOShardedTagCache"
       },
       {
         "name": "NEXT_CACHE_DO_PURGE",
-        "class_name": "BucketCachePurge",
-      },
-    ],
+        "class_name": "BucketCachePurge"
+      }
+    ]
   },
   "migrations": [
     {
@@ -73,9 +73,9 @@
       "new_sqlite_classes": [
         "DOQueueHandler",
         "DOShardedTagCache",
-        "BucketCachePurge",
-      ],
-    },
+        "BucketCachePurge"
+      ]
+    }
   ],
 
   // === LOCAL ENVIRONMENT (for `wrangler dev`) ===
@@ -88,106 +88,106 @@
       "routes": [
         {
           "pattern": "allthingslinux.dev",
-          "custom_domain": true,
-        },
+          "custom_domain": true
+        }
       ],
       // Bindings for dev environment
       "r2_buckets": [
         {
           "binding": "NEXT_INC_CACHE_R2_BUCKET",
-          "bucket_name": "atl-cache-dev",
-        },
+          "bucket_name": "atl-cache-dev"
+        }
       ],
       "kv_namespaces": [
         {
           "binding": "KV_QUICKBOOKS",
-          "id": "a7e7f8796625426c8355ec8bd60b75c1",
-        },
+          "id": "a7e7f8796625426c8355ec8bd60b75c1"
+        }
       ],
       "vars": {
         "NEXT_PUBLIC_URL": "https://allthingslinux.dev",
         "NEXT_PUBLIC_API_URL": "https://allthingslinux.dev/api",
         "NEXT_PUBLIC_GITHUB_REPO_OWNER": "allthingslinux",
-        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications",
+        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications"
       },
       "services": [
         {
           "binding": "WORKER_SELF_REFERENCE",
-          "service": "allthingslinux-dev",
-        },
+          "service": "allthingslinux-dev"
+        }
       ],
       "images": {
-        "binding": "IMAGES",
+        "binding": "IMAGES"
       },
       "durable_objects": {
         "bindings": [
           {
             "name": "NEXT_CACHE_DO_QUEUE",
-            "class_name": "DOQueueHandler",
+            "class_name": "DOQueueHandler"
           },
           {
             "name": "NEXT_TAG_CACHE_DO_SHARDED",
-            "class_name": "DOShardedTagCache",
+            "class_name": "DOShardedTagCache"
           },
           {
             "name": "NEXT_CACHE_DO_PURGE",
-            "class_name": "BucketCachePurge",
-          },
-        ],
-      },
+            "class_name": "BucketCachePurge"
+          }
+        ]
+      }
     },
     "prod": {
       "name": "allthingslinux-prod",
       "routes": [
         {
           "pattern": "allthingslinux.org",
-          "custom_domain": true,
-        },
+          "custom_domain": true
+        }
       ],
       // Bindings for prod environment
       "r2_buckets": [
         {
           "binding": "NEXT_INC_CACHE_R2_BUCKET",
-          "bucket_name": "atl-cache-prod",
-        },
+          "bucket_name": "atl-cache-prod"
+        }
       ],
       "kv_namespaces": [
         {
           "binding": "KV_QUICKBOOKS",
-          "id": "7bfc722d19ea48b0b35422ac27029dfa",
-        },
+          "id": "7bfc722d19ea48b0b35422ac27029dfa"
+        }
       ],
       "vars": {
         "NEXT_PUBLIC_URL": "https://allthingslinux.org",
         "NEXT_PUBLIC_API_URL": "https://allthingslinux.org/api",
         "NEXT_PUBLIC_GITHUB_REPO_OWNER": "allthingslinux",
-        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications",
+        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications"
       },
       "services": [
         {
           "binding": "WORKER_SELF_REFERENCE",
-          "service": "allthingslinux-prod",
-        },
+          "service": "allthingslinux-prod"
+        }
       ],
       "images": {
-        "binding": "IMAGES",
+        "binding": "IMAGES"
       },
       "durable_objects": {
         "bindings": [
           {
             "name": "NEXT_CACHE_DO_QUEUE",
-            "class_name": "DOQueueHandler",
+            "class_name": "DOQueueHandler"
           },
           {
             "name": "NEXT_TAG_CACHE_DO_SHARDED",
-            "class_name": "DOShardedTagCache",
+            "class_name": "DOShardedTagCache"
           },
           {
             "name": "NEXT_CACHE_DO_PURGE",
-            "class_name": "BucketCachePurge",
-          },
-        ],
-      },
+            "class_name": "BucketCachePurge"
+          }
+        ]
+      }
     },
     "local": {
       "name": "allthingslinux-local",
@@ -198,52 +198,52 @@
       "services": [
         {
           "binding": "WORKER_SELF_REFERENCE",
-          "service": "allthingslinux-local",
-        },
+          "service": "allthingslinux-local"
+        }
       ],
 
       "r2_buckets": [
         {
           "binding": "NEXT_INC_CACHE_R2_BUCKET",
-          "bucket_name": "atl-cache-local",
-        },
+          "bucket_name": "atl-cache-local"
+        }
       ],
 
       "kv_namespaces": [
         {
           "binding": "KV_QUICKBOOKS",
           "id": "b58a50d9090b46a181322eb96d0c8c90",
-          "preview_id": "b58a50d9090b46a181322eb96d0c8c90",
-        },
+          "preview_id": "b58a50d9090b46a181322eb96d0c8c90"
+        }
       ],
 
       "vars": {
         "NEXT_PUBLIC_URL": "http://localhost:8788",
         "NEXT_PUBLIC_API_URL": "http://localhost:8788/api",
         "NEXT_PUBLIC_GITHUB_REPO_OWNER": "allthingslinux",
-        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications",
+        "NEXT_PUBLIC_GITHUB_REPO_NAME": "applications"
       },
 
       "images": {
-        "binding": "IMAGES",
+        "binding": "IMAGES"
       },
 
       "durable_objects": {
         "bindings": [
           {
             "name": "NEXT_CACHE_DO_QUEUE",
-            "class_name": "DOQueueHandler",
+            "class_name": "DOQueueHandler"
           },
           {
             "name": "NEXT_TAG_CACHE_DO_SHARDED",
-            "class_name": "DOShardedTagCache",
+            "class_name": "DOShardedTagCache"
           },
           {
             "name": "NEXT_CACHE_DO_PURGE",
-            "class_name": "BucketCachePurge",
-          },
-        ],
-      },
-    },
-  },
+            "class_name": "BucketCachePurge"
+          }
+        ]
+      }
+    }
+  }
 }

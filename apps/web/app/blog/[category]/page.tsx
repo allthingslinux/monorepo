@@ -1,11 +1,12 @@
-import { notFound } from 'next/navigation';
-import { getPostsByCategory, getAllCategories } from '@/lib/blog';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { getDynamicMetadata } from '@/app/metadata';
-import { getBaseUrl } from '@/lib/utils';
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { getAllCategories, getPostsByCategory } from "@/lib/blog";
+import { getBaseUrl } from "@/lib/utils";
+import { getDynamicMetadata } from "@/app/metadata";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export const revalidate = 3600;
 
@@ -22,9 +23,9 @@ export async function generateMetadata({
 
   // Format the category name for display (capitalize first letter of each word)
   const categoryTitle = category
-    .split('-')
+    .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 
   // Build dynamic OG image URL with query parameters
   // const ogImageUrl = new URL(getApiUrl('/api/og'));
@@ -50,7 +51,7 @@ export async function generateMetadata({
       // ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: `${categoryTitle} Articles`,
       description: `Browse all our articles on ${categoryTitle}`,
       // images: [ogImageUrl.toString()],
@@ -67,9 +68,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Format the category name for display (capitalize first letter of each word)
   const categoryTitle = category
-    .split('-')
+    .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 
   if (!posts || posts.length === 0) {
     notFound();
@@ -78,14 +79,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <section className="py-16 md:py-24 lg:py-32">
       <div className="container">
-        <div className="flex flex-col items-center gap-4 md:gap-6 text-center mb-12 md:mb-16">
-          <Badge variant="secondary" className="px-3 py-1">
+        <div className="mb-12 flex flex-col items-center gap-4 text-center md:mb-16 md:gap-6">
+          <Badge className="px-3 py-1" variant="secondary">
             {categoryTitle}
           </Badge>
-          <h1 className="text-3xl font-bold md:text-5xl lg:text-6xl">
+          <h1 className="font-bold text-3xl md:text-5xl lg:text-6xl">
             {categoryTitle} Articles
           </h1>
-          <p className="text-balance max-w-3xl md:text-lg lg:text-xl text-muted-foreground">
+          <p className="max-w-3xl text-balance text-muted-foreground md:text-lg lg:text-xl">
             Stay up to date with the latest news, tutorials, and updates from
             the All Things Linux community. Our contributors share their
             knowledge to help you master Linux and open source.
@@ -94,18 +95,18 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
         {/* Categories navigation */}
         {allCategories.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center mb-10">
-            <Button variant="ghost" asChild className="rounded-full">
+          <div className="mb-10 flex flex-wrap justify-center gap-2">
+            <Button asChild className="rounded-full" variant="ghost">
               <Link href="/blog">All</Link>
             </Button>
             {allCategories.map((cat) => {
-              const catSlug = cat.toLowerCase().replace(/ /g, '-');
+              const catSlug = cat.toLowerCase().replace(/ /g, "-");
               return (
                 <Button
-                  key={catSlug}
-                  variant={catSlug === category ? 'secondary' : 'ghost'}
                   asChild
                   className="rounded-full"
+                  key={catSlug}
+                  variant={catSlug === category ? "secondary" : "ghost"}
                 >
                   <Link href={`/blog/${catSlug}`}>{cat}</Link>
                 </Button>
@@ -116,11 +117,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
         {/* Posts grid */}
         {posts.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <p className="text-lg text-muted-foreground">No posts found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {posts.map((post) => {
               // Generate dynamic OG image URL for this post
               // const postImageUrl = new URL(getApiUrl('/api/og'));
@@ -130,9 +131,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
               return (
                 <Link
-                  key={post.slug}
-                  href={`/blog/${post.categorySlug}/${post.slug}`}
                   className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md"
+                  href={`/blog/${post.categorySlug}/${post.slug}`}
+                  key={post.slug}
                 >
                   {/* <div className="relative h-48 overflow-hidden bg-muted">
                     <Image
@@ -143,19 +144,19 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div> */}
-                  <div className="flex flex-col flex-grow p-5">
-                    <Badge variant="outline" className="w-fit mb-2">
+                  <div className="flex flex-grow flex-col p-5">
+                    <Badge className="mb-2 w-fit" variant="outline">
                       {post.category}
                     </Badge>
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="mb-2 font-semibold text-xl transition-colors group-hover:text-primary">
                       {post.title}
                     </h3>
                     {post.description && (
-                      <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
+                      <p className="mb-4 line-clamp-3 text-muted-foreground text-sm">
                         {post.description}
                       </p>
                     )}
-                    <div className="mt-auto flex items-center gap-2 text-sm pt-3 border-t">
+                    <div className="mt-auto flex items-center gap-2 border-t pt-3 text-sm">
                       <span className="font-medium">{post.author}</span>
                       <span className="text-muted-foreground">
                         • {post.dateFormatted}

@@ -1,21 +1,21 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata, Viewport } from "next";
 
 export const siteConfig = {
-  name: 'All Things Linux',
+  name: "All Things Linux",
   description:
-    'A 501(c)(3) non-profit organization empowering the Linux ecosystem through education, collaboration, and support.',
-  url: 'https://allthingslinux.org',
-  ogImage: 'https://allthingslinux.org/images/og.png',
+    "A 501(c)(3) non-profit organization empowering the Linux ecosystem through education, collaboration, and support.",
+  url: "https://allthingslinux.org",
+  ogImage: "https://allthingslinux.org/images/og.png",
   links: {
-    github: 'https://github.com/allthingslinux',
-    discord: 'https://discord.gg/linux',
+    github: "https://github.com/allthingslinux",
+    discord: "https://discord.gg/linux",
   },
 };
 
 // Helper to determine if we're on the dev environment
 const isDevEnvironment = () => {
-  const url = process.env.NEXT_PUBLIC_URL || '';
-  return url.includes('allthingslinux.dev') || url.includes('workers.dev');
+  const url = process.env.NEXT_PUBLIC_URL || "";
+  return url.includes("allthingslinux.dev") || url.includes("workers.dev");
 };
 
 export const defaultMetadata: Metadata = {
@@ -24,16 +24,16 @@ export const defaultMetadata: Metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  authors: [{ name: 'All Things Linux' }],
-  creator: 'All Things Linux',
-  publisher: 'All Things Linux',
+  authors: [{ name: "All Things Linux" }],
+  creator: "All Things Linux",
+  publisher: "All Things Linux",
   robots: {
     index: !isDevEnvironment(), // noindex for dev environments
     follow: !isDevEnvironment(),
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
+    type: "website",
+    locale: "en_US",
     url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
@@ -48,11 +48,11 @@ export const defaultMetadata: Metadata = {
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: '@allthingslinux',
+    creator: "@allthingslinux",
   },
   icons: {
     // icon: [
@@ -134,13 +134,13 @@ export const defaultMetadata: Metadata = {
     //     media: '(prefers-color-scheme: dark)',
     //   },
     // ],
-    icon: '/images/logo.webp',
+    icon: "/images/logo.webp",
   },
-  manifest: '/site.webmanifest',
+  manifest: "/site.webmanifest",
   metadataBase: new URL(siteConfig.url),
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: "default",
     title: siteConfig.name,
   },
   applicationName: siteConfig.name,
@@ -150,7 +150,7 @@ export const defaultMetadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1.0,
 };
 
@@ -170,33 +170,33 @@ export const getPageMetadata = (page: string): Metadata => {
       },
     },
     about: {
-      title: 'About',
+      title: "About",
       description:
-        'Learn about All Things Linux, our mission, values, and commitment to the Linux community.',
+        "Learn about All Things Linux, our mission, values, and commitment to the Linux community.",
     },
-    'code-of-conduct': {
-      title: 'Code of Conduct',
+    "code-of-conduct": {
+      title: "Code of Conduct",
       description:
-        'Our community guidelines and code of conduct that ensures a welcoming and inclusive environment for all members.',
+        "Our community guidelines and code of conduct that ensures a welcoming and inclusive environment for all members.",
     },
     blog: {
-      title: 'Blog',
+      title: "Blog",
       description:
-        'Stay updated with the latest news, tutorials, and insights about Linux and open source software.',
+        "Stay updated with the latest news, tutorials, and insights about Linux and open source software.",
     },
     apply: {
-      title: 'Apply',
+      title: "Apply",
       description:
-        'Apply to join All Things Linux and contribute to our community projects.',
+        "Apply to join All Things Linux and contribute to our community projects.",
     },
     contribute: {
-      title: 'Contribute',
+      title: "Contribute",
       description:
-        'Support All Things Linux through donations, code contributions, volunteering, or community support.',
+        "Support All Things Linux through donations, code contributions, volunteering, or community support.",
     },
     open: {
-      title: 'Open',
-      description: 'View our public financial reports and insights.',
+      title: "Open",
+      description: "View our public financial reports and insights.",
     },
   };
 

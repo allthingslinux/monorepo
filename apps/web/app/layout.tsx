@@ -1,31 +1,31 @@
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from "next/font/google";
 
-import './globals.css';
+import "./globals.css";
 
-import Footer from '@/components/layout/footer';
-import Header from '@/components/layout/header';
+import { GoogleTagManager } from "@next/third-parties/google";
+
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
 import {
   OrganizationSchema,
   WebsiteSchema,
-} from '@/components/structured-data';
-
-import { GoogleTagManager } from '@next/third-parties/google';
-import { defaultMetadata, viewport } from './metadata';
+} from "@/components/structured-data";
+import { defaultMetadata, viewport } from "./metadata";
 
 // Initialize font with subset for better performance
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
+  subsets: ["latin"],
+  display: "swap",
   preload: true,
-  variable: '--font-inter',
+  variable: "--font-inter",
 });
 
 // Add a monospace font for code blocks
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
+  subsets: ["latin"],
+  display: "swap",
   preload: true,
-  variable: '--font-mono',
+  variable: "--font-mono",
 });
 
 export const metadata = defaultMetadata;
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html className={`${inter.variable} ${jetbrainsMono.variable}`} lang="en">
       <body>
         <GoogleTagManager gtmId="GTM-KK56FB5V" />
         <OrganizationSchema />

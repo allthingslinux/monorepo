@@ -1,16 +1,15 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import {
-  exchangeAuthorizationCode,
-  saveTokens,
-  escapeHtml,
-  type QuickBooksCloudflareEnv,
-  getCloudflareEnv,
-} from '@/lib/integrations/quickbooks';
-import { runtimeEnv as env } from '@/env';
-import { getCloudflareContext } from '@opennextjs/cloudflare';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export const runtime = 'nodejs';
+import {
+  escapeHtml,
+  exchangeAuthorizationCode,
+  getCloudflareEnv,
+  saveTokens,
+} from "@/lib/integrations/quickbooks";
+import { runtimeEnv as env } from "@/env";
+
+export const runtime = "nodejs";
 
 /**
  * Helper to get Cloudflare env with KV access
@@ -21,11 +20,11 @@ export const runtime = 'nodejs';
 export async function GET(request: NextRequest) {
   const { nextUrl, cookies } = request;
   const { searchParams } = nextUrl;
-  const code = searchParams.get('code');
-  const state = searchParams.get('state');
-  const realmId = searchParams.get('realmId');
-  const errorParam = searchParams.get('error');
-  const errorDescription = searchParams.get('error_description');
+  const code = searchParams.get("code");
+  const state = searchParams.get("state");
+  const realmId = searchParams.get("realmId");
+  const errorParam = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
 
   // Handle error case
   if (errorParam) {
@@ -39,25 +38,25 @@ export async function GET(request: NextRequest) {
   }
 
   // Validate we have the required parameters
-  if (!code || !realmId) {
+  if (!(code && realmId)) {
     return NextResponse.json(
-      { error: 'Missing required parameters' },
+      { error: "Missing required parameters" },
       { status: 400 }
     );
   }
 
   // Validate CSRF state token
-  const storedState = cookies.get('qb_oauth_state')?.value;
+  const storedState = cookies.get("qb_oauth_state")?.value;
 
   // Validate CSRF state token
   const isValidState = storedState && storedState === state;
 
   if (!isValidState) {
-    console.error('CSRF state validation failed', {
+    console.error("CSRF state validation failed", {
       storedState: storedState
         ? `[${storedState.substring(0, 8)}...]`
-        : 'missing',
-      receivedState: state ? `[${state.substring(0, 8)}...]` : 'missing',
+        : "missing",
+      receivedState: state ? `[${state.substring(0, 8)}...]` : "missing",
       allCookies: Array.from(cookies.getAll()).map((c) => c.name),
     });
 
@@ -73,15 +72,15 @@ export async function GET(request: NextRequest) {
         <li>Cross-domain cookie issues</li>
         <li>Session expired (try the OAuth flow again)</li>
       </ul>
-      <p><strong>State cookie found:</strong> ${storedState ? 'Yes' : 'No'}</p>
-      <p><strong>State parameter:</strong> ${state ? 'Present' : 'Missing'}</p>
+      <p><strong>State cookie found:</strong> ${storedState ? "Yes" : "No"}</p>
+      <p><strong>State parameter:</strong> ${state ? "Present" : "Missing"}</p>
       <p>To retry the OAuth flow, please use the admin setup endpoint with proper authentication.</p>
       <p><a href="/">Return to home</a></p>
     </body>
     </html>`;
 
     return new NextResponse(errorHtml, {
-      headers: { 'Content-Type': 'text/html' },
+      headers: { "Content-Type": "text/html" },
       status: 403,
     });
   }
@@ -95,18 +94,18 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const host = url.hostname;
   const port = url.port;
-  const protocol = url.protocol.replace(':', '');
-  
+  const protocol = url.protocol.replace(":", "");
+
   // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
-  const finalProtocol = host.includes('localhost') ? 'http' : protocol;
-  const baseUrl = port 
+  const finalProtocol = host.includes("localhost") ? "http" : protocol;
+  const baseUrl = port
     ? `${finalProtocol}://${host}:${port}`
     : `${finalProtocol}://${host}`;
   const redirectUri = `${baseUrl}/api/quickbooks/callback`;
 
-  if (!clientId || !clientSecret) {
+  if (!(clientId && clientSecret)) {
     return NextResponse.json(
-      { error: 'Missing QuickBooks credentials' },
+      { error: "Missing QuickBooks credentials" },
       { status: 500 }
     );
   }
@@ -118,12 +117,12 @@ export async function GET(request: NextRequest) {
       redirectUri,
       clientId,
       clientSecret,
-      env.QUICKBOOKS_ENVIRONMENT || 'sandbox'
+      env.QUICKBOOKS_ENVIRONMENT || "sandbox"
     );
 
     if (!tokens) {
       return NextResponse.json(
-        { error: 'Token exchange failed' },
+        { error: "Token exchange failed" },
         { status: 500 }
       );
     }
@@ -134,7 +133,7 @@ export async function GET(request: NextRequest) {
       clientSecret,
       refreshToken: tokens.refresh_token,
       realmId,
-      environment: env.QUICKBOOKS_ENVIRONMENT || 'sandbox',
+      environment: env.QUICKBOOKS_ENVIRONMENT || "sandbox",
     };
 
     // Get Cloudflare environment if available
@@ -142,10 +141,10 @@ export async function GET(request: NextRequest) {
     const cfEnv = await getCloudflareEnv();
 
     console.log(
-      '[QuickBooks Callback] KV namespace available:',
+      "[QuickBooks Callback] KV namespace available:",
       !!cfEnv?.KV_QUICKBOOKS
     );
-    console.log('[QuickBooks Callback] Attempting to save tokens...', {
+    console.log("[QuickBooks Callback] Attempting to save tokens...", {
       hasClientId: !!tokenData.clientId,
       hasClientSecret: !!tokenData.clientSecret,
       hasRefreshToken: !!tokenData.refreshToken,
@@ -158,24 +157,24 @@ export async function GET(request: NextRequest) {
 
     if (saved) {
       console.log(
-        '[QuickBooks Callback] ✅ QuickBooks tokens saved (KV or Secrets API)'
+        "[QuickBooks Callback] ✅ QuickBooks tokens saved (KV or Secrets API)"
       );
     } else {
       console.warn(
-        '[QuickBooks Callback] ⚠️ Tokens NOT saved to KV/Secrets (using environment variables)'
+        "[QuickBooks Callback] ⚠️ Tokens NOT saved to KV/Secrets (using environment variables)"
       );
-      console.log('[QuickBooks Callback] 💡 To enable automatic token saving:');
+      console.log("[QuickBooks Callback] 💡 To enable automatic token saving:");
       console.log(
-        '[QuickBooks Callback]    1. Ensure KV namespace is accessible, OR'
+        "[QuickBooks Callback]    1. Ensure KV namespace is accessible, OR"
       );
       console.log(
-        '[QuickBooks Callback]    2. Add CLOUDFLARE_API_TOKEN as a secret to enable automatic secret updates'
+        "[QuickBooks Callback]    2. Add CLOUDFLARE_API_TOKEN as a secret to enable automatic secret updates"
       );
       // Fallback for development/local environments - only log in development
-      if (env.NODE_ENV === 'development') {
-        console.log('');
+      if (env.NODE_ENV === "development") {
+        console.log("");
         console.log(
-          '🔑 QuickBooks OAuth Setup - Copy these to your environment variables:'
+          "🔑 QuickBooks OAuth Setup - Copy these to your environment variables:"
         );
         console.log(`QUICKBOOKS_CLIENT_ID=${clientId}`);
         console.log(
@@ -184,19 +183,19 @@ export async function GET(request: NextRequest) {
         // Validate realmId format (typically numeric) before logging
         const safeRealmId = /^[0-9]+$/.test(realmId)
           ? realmId
-          : '[INVALID_FORMAT]';
+          : "[INVALID_FORMAT]";
         console.log(`QUICKBOOKS_REALM_ID=${safeRealmId}`);
         console.log(
-          `QUICKBOOKS_ENVIRONMENT=${env.QUICKBOOKS_ENVIRONMENT || 'sandbox'}`
+          `QUICKBOOKS_ENVIRONMENT=${env.QUICKBOOKS_ENVIRONMENT || "sandbox"}`
         );
-        console.log('');
+        console.log("");
         console.log(
-          '⚠️  Full refresh token available in browser network tab or server logs.'
+          "⚠️  Full refresh token available in browser network tab or server logs."
         );
         console.log(
-          'Add these to your .env.local file and restart your dev server.'
+          "Add these to your .env.local file and restart your dev server."
         );
-        console.log('');
+        console.log("");
       }
     }
 
@@ -209,26 +208,26 @@ export async function GET(request: NextRequest) {
     <head><title>QuickBooks Authorization Success</title></head>
     <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center;">
       <h1>✅ Authorization Successful!</h1>
-      <p>Your QuickBooks integration is now ${isSetupMode ? 'configured' : 'updated'}.</p>
+      <p>Your QuickBooks integration is now ${isSetupMode ? "configured" : "updated"}.</p>
       <p><strong>Realm ID:</strong> ${escapeHtml(realmId)}</p>
-      <p><strong>Environment:</strong> ${escapeHtml(env.QUICKBOOKS_ENVIRONMENT || 'sandbox')}</p>
-      ${saved ? '<p>✅ Tokens have been automatically saved to Cloudflare (KV or Secrets).</p>' : '<p>⚠️ Tokens are being used from environment variables. Check server logs for details.</p>'}
+      <p><strong>Environment:</strong> ${escapeHtml(env.QUICKBOOKS_ENVIRONMENT || "sandbox")}</p>
+      ${saved ? "<p>✅ Tokens have been automatically saved to Cloudflare (KV or Secrets).</p>" : "<p>⚠️ Tokens are being used from environment variables. Check server logs for details.</p>"}
       <p>You can close this window now.</p>
     </body>
     </html>`;
 
     // Clear the state cookie after validation
     const finalResponse = new NextResponse(html, {
-      headers: { 'Content-Type': 'text/html' },
+      headers: { "Content-Type": "text/html" },
     });
-    finalResponse.cookies.delete('qb_oauth_state');
+    finalResponse.cookies.delete("qb_oauth_state");
     return finalResponse;
   } catch (error) {
-    console.error('Error in QuickBooks callback:', error);
+    console.error("Error in QuickBooks callback:", error);
     return NextResponse.json(
       {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );

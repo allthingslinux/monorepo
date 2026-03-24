@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm, FormProvider, useFormContext } from 'react-hook-form';
-import { defineStepper } from '@stepperize/react';
-import FormWrapper from '@/components/forms/FormWrapper';
-import { generateFormSchema } from '@/lib/utils';
-import type { FormQuestion } from '@/types';
-import type { Role } from '@/types';
-import StepIndicator from './StepIndicator';
-import type { StepId } from './StepIndicator';
-import { Button } from '@/components/ui/button';
-import { z } from 'zod';
+import { useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { z } from "zod";
+import { defineStepper } from "@stepperize/react";
+
+import { generateFormSchema } from "@/lib/utils";
+import FormWrapper from "@/components/forms/FormWrapper";
+import { Button } from "@/components/ui/button";
+import type { FormQuestion, Role } from "@/types";
+import type { StepId } from "./StepIndicator";
+import StepIndicator from "./StepIndicator";
 
 // Helper function to check if a question should be shown based on dependencies
 export const shouldShowQuestion = (
@@ -18,7 +18,9 @@ export const shouldShowQuestion = (
   formValues: Record<string, unknown>
 ): boolean => {
   // If the question has no showIf condition, always show it
-  if (!question.showIf) return true;
+  if (!question.showIf) {
+    return true;
+  }
 
   // Check each condition to determine if the question should be shown
   for (const [dependentField, requiredValue] of Object.entries(
@@ -30,7 +32,7 @@ export const shouldShowQuestion = (
     if (Array.isArray(requiredValue)) {
       // Convert to string for comparison since form values are often strings
       const strValue =
-        typeof fieldValue === 'string' ? fieldValue : String(fieldValue ?? '');
+        typeof fieldValue === "string" ? fieldValue : String(fieldValue ?? "");
       if (!requiredValue.includes(strValue)) {
         return false;
       }
@@ -50,21 +52,21 @@ const scrollToFirstError = () => {
     const firstErrorField = document.querySelector('[aria-invalid="true"]');
     if (firstErrorField) {
       firstErrorField.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+        behavior: "smooth",
+        block: "center",
       });
 
       if (firstErrorField instanceof HTMLElement) {
         try {
           firstErrorField.focus();
         } catch (e) {
-          console.warn('Unable to focus error field:', e);
+          console.warn("Unable to focus error field:", e);
         }
       }
     } else {
-      const form = document.querySelector('form');
+      const form = document.querySelector("form");
       if (form) {
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
   }, 150);
@@ -73,14 +75,14 @@ const scrollToFirstError = () => {
 // Define the stepper with two steps
 const { Scoped, useStepper } = defineStepper(
   {
-    id: 'general',
-    title: 'General Information',
-    description: 'Basic information about you',
+    id: "general",
+    title: "General Information",
+    description: "Basic information about you",
   },
   {
-    id: 'role_specific',
-    title: 'Department & Role Questions',
-    description: 'Questions specific to your application',
+    id: "role_specific",
+    title: "Department & Role Questions",
+    description: "Questions specific to your application",
   }
 );
 
@@ -101,9 +103,9 @@ export default function StepperForm({
     <Scoped initialStep="general">
       <StepperFormContent
         generalQuestions={generalQuestions}
-        roleQuestions={departmentalQuestions}
-        role={role}
         onSubmitAction={onSubmitAction}
+        role={role}
+        roleQuestions={departmentalQuestions}
       />
     </Scoped>
   );
@@ -136,16 +138,16 @@ function StepperFormContent({
 
   // Create a single form instance with validation options
   const form = useForm({
-    mode: 'onSubmit', // Only validate on submit
-    reValidateMode: 'onSubmit', // Never re-validate automatically
-    criteriaMode: 'all', // Show all validation errors
+    mode: "onSubmit", // Only validate on submit
+    reValidateMode: "onSubmit", // Never re-validate automatically
+    criteriaMode: "all", // Show all validation errors
     shouldFocusError: true, // Focus on first error field
     shouldUnregister: false, // Keep all fields registered
     // No resolver - we'll handle validation manually
     // Ensure every field has at least an empty string as default
     defaultValues: {
       ...Object.fromEntries(
-        [...generalQuestions, ...roleQuestions].map((q) => [q.name, ''])
+        [...generalQuestions, ...roleQuestions].map((q) => [q.name, ""])
       ),
       ...formData,
     },
@@ -167,12 +169,12 @@ function StepperFormContent({
 
     // If moving forward, validate the current step first
     if (
-      (methods.current.id === 'general' && targetStep === 'role_specific') ||
+      (methods.current.id === "general" && targetStep === "role_specific") ||
       methods.current.id === targetStep
     ) {
       // Get visible questions for the current step
       const visibleQuestions =
-        methods.current.id === 'general'
+        methods.current.id === "general"
           ? visibleGeneralQuestions
           : visibleRoleQuestions;
 
@@ -182,7 +184,7 @@ function StepperFormContent({
 
       // Manually validate using the appropriate schema
       const currentSchema =
-        methods.current.id === 'general' ? generalSchema : roleSchema;
+        methods.current.id === "general" ? generalSchema : roleSchema;
       const currentValues = form.getValues();
       const validationResult = currentSchema.safeParse(currentValues);
 
@@ -193,7 +195,7 @@ function StepperFormContent({
           // Only set errors for fields on the current step
           if (requiredFields.includes(fieldName)) {
             form.setError(fieldName, {
-              type: 'validation',
+              type: "validation",
               message: issue.message,
             });
           }
@@ -218,7 +220,7 @@ function StepperFormContent({
 
     // Make sure to scroll to top with a slight delay to ensure DOM updates
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 50);
   };
 
@@ -238,33 +240,33 @@ function StepperFormContent({
           await onSubmitAction(finalData);
 
           // Scroll to top after successful submission
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         } catch (error) {
-          console.error('Error in form submission:', error);
+          console.error("Error in form submission:", error);
           setSubmissionError(
-            'There was an error submitting your application. Please try again later.'
+            "There was an error submitting your application. Please try again later."
           );
 
           // Scroll to error message
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }, 100);
         }
       } else {
         // If validation fails on the final step, show field errors
-        console.log('Validation failed:', validationResult.error);
+        console.log("Validation failed:", validationResult.error);
         scrollToFirstError();
         return;
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
       setSubmissionError(
-        'There was an error processing your application. Please try again later.'
+        "There was an error processing your application. Please try again later."
       );
 
       // Scroll to error message
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }, 100);
     }
   };
@@ -273,33 +275,33 @@ function StepperFormContent({
     <div className="space-y-8">
       <StepIndicator
         currentStep={methods.current}
-        stepper={methods}
-        errors={{}} // Hide error indicators in step navigator
         errorCounts={{}} // Hide error counts
+        errors={{}} // Hide error indicators in step navigator
         onStepClick={navigateToStep}
+        stepper={methods}
       />
 
       {submissionError && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg
                 className="h-5 w-5 text-red-400"
-                viewBox="0 0 20 20"
                 fill="currentColor"
+                viewBox="0 0 20 20"
               >
                 <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                   clipRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  fillRule="evenodd"
                 />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
+              <h3 className="font-medium text-red-800 text-sm">
                 Submission Error
               </h3>
-              <div className="mt-2 text-sm text-red-700">
+              <div className="mt-2 text-red-700 text-sm">
                 <p>{submissionError}</p>
               </div>
             </div>
@@ -311,21 +313,21 @@ function StepperFormContent({
         {methods.switch({
           general: () => (
             <StepForm
-              questions={visibleGeneralQuestions}
-              title="General Questions"
               description="We'll use this information to get to know you better"
-              onNext={() => navigateToStep('role_specific')}
+              onNext={() => navigateToStep("role_specific")}
+              questions={visibleGeneralQuestions}
               showPrevious={false}
+              title="General Questions"
             />
           ),
           role_specific: () => (
             <StepForm
+              description={`Questions specific to the ${role.department} department and this role`}
+              isLastStep={true}
+              onPrevious={() => navigateToStep("general")}
+              onSubmit={handleSubmit}
               questions={visibleRoleQuestions}
               title="Department & Role Questions"
-              description={`Questions specific to the ${role.department} department and this role`}
-              onPrevious={() => navigateToStep('general')}
-              onSubmit={handleSubmit}
-              isLastStep={true}
             />
           ),
         })}
@@ -365,11 +367,13 @@ function StepForm({
 
   const allRequiredFilled = requiredFields.every((name) => {
     const value = watchedValues[name];
-    return value !== undefined && value !== null && String(value).trim() !== '';
+    return value !== undefined && value !== null && String(value).trim() !== "";
   });
 
   const handleFormAction = async (data: Record<string, unknown>) => {
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      return;
+    }
     try {
       setIsSubmitting(true);
       const isValid = await trigger(requiredFields, { shouldFocus: true });
@@ -382,11 +386,11 @@ function StepForm({
       } else if (onNext) {
         onNext();
         setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }, 50);
       }
     } catch (error) {
-      console.error('Form error:', error);
+      console.error("Form error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -395,13 +399,13 @@ function StepForm({
   return (
     <div className="space-y-6">
       <FormWrapper
-        questions={questions}
-        title={title}
         description={description}
-        onSubmit={() => Promise.resolve()}
-        submitText={isLastStep ? 'Submit Application' : 'Continue'}
-        hideSubmitButton={true}
         error=""
+        hideSubmitButton={true}
+        onSubmit={() => Promise.resolve()}
+        questions={questions}
+        submitText={isLastStep ? "Submit Application" : "Continue"}
+        title={title}
       />
       {/* Navigation buttons */}
       <div className="mt-8 flex justify-between">
@@ -409,12 +413,12 @@ function StepForm({
         <div>
           {showPrevious && onPrevious && (
             <Button
-              type="button"
-              onClick={onPrevious}
-              variant="outline"
-              size="lg"
-              className="md:w-auto min-w-[200px]"
+              className="min-w-[200px] md:w-auto"
               disabled={isSubmitting || formState.isSubmitting}
+              onClick={onPrevious}
+              size="lg"
+              type="button"
+              variant="outline"
             >
               Previous
             </Button>
@@ -423,23 +427,23 @@ function StepForm({
         {/* Right side - Next/Submit button */}
         <div>
           <Button
-            type="button"
+            className="min-w-[200px] md:w-auto"
+            disabled={
+              isSubmitting || formState.isSubmitting || !allRequiredFilled
+            }
             onClick={() => {
               handleSubmit(handleFormAction)();
             }}
             size="lg"
-            className="md:w-auto min-w-[200px]"
-            disabled={
-              isSubmitting || formState.isSubmitting || !allRequiredFilled
-            }
+            type="button"
           >
             {isSubmitting || formState.isSubmitting
               ? isLastStep
-                ? 'Submitting...'
-                : 'Processing...'
+                ? "Submitting..."
+                : "Processing..."
               : isLastStep
-                ? 'Submit Application'
-                : 'Next Step'}
+                ? "Submit Application"
+                : "Next Step"}
           </Button>
         </div>
       </div>

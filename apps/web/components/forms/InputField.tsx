@@ -1,25 +1,26 @@
-'use client';
-import { useFormContext, Controller } from 'react-hook-form';
-import { FormItem, FormLabel, FormDescription } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import { memo } from 'react';
+"use client";
+import { memo } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export interface InputProps {
-  name: string;
-  label: string;
-  type?: 'text' | 'email' | 'tel' | 'url' | 'password';
-  description?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  required?: boolean;
   className?: string;
+  description?: string;
+  disabled?: boolean;
+  label: string;
+  name: string;
+  placeholder?: string;
+  required?: boolean;
+  type?: "text" | "email" | "tel" | "url" | "password";
 }
 
 const InputField = memo(function InputField({
   name,
   label,
-  type = 'text',
+  type = "text",
   description,
   placeholder,
   disabled,
@@ -35,8 +36,8 @@ const InputField = memo(function InputField({
   const hasError = !!errors[name];
 
   const errorMessage = hasError
-    ? String(errors[name]?.message || 'This field is required')
-    : '';
+    ? String(errors[name]?.message || "This field is required")
+    : "";
 
   return (
     <Controller
@@ -46,11 +47,11 @@ const InputField = memo(function InputField({
         <FormItem className={className}>
           <FormLabel
             className={cn(
-              'font-medium text-base',
+              "font-medium text-base",
               required &&
-                "after:content-['*'] after:ml-0.5 after:text-red-500 after:font-bold",
+                "after:ml-0.5 after:font-bold after:text-red-500 after:content-['*']",
               !required &&
-                "after:content-['(optional)'] after:ml-1.5 after:text-muted-foreground after:text-xs after:font-normal"
+                "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
             )}
           >
             {label}
@@ -59,28 +60,28 @@ const InputField = memo(function InputField({
             <FormDescription className="mt-2">{description}</FormDescription>
           )}
           <Input
-            type={type}
-            placeholder={placeholder}
-            disabled={disabled}
             autoComplete="new-password"
-            data-lpignore="true"
             className={cn(
-              'bg-transparent dark:bg-input/30',
-              hasError && 'border-red-500 focus:ring-red-500'
+              "bg-transparent dark:bg-input/30",
+              hasError && "border-red-500 focus:ring-red-500"
             )}
-            value={field.value || ''}
+            data-lpignore="true"
+            disabled={disabled}
+            name={field.name}
+            onBlur={field.onBlur}
             onChange={(e) => {
               field.onChange(e);
               // React Hook Form will handle validation automatically in onChange mode
             }}
-            onBlur={field.onBlur}
-            name={field.name}
+            placeholder={placeholder}
             ref={field.ref}
+            type={type}
+            value={field.value || ""}
           />
 
           {/* Add direct error display that will always show */}
           {hasError && (
-            <p className="text-sm font-medium text-red-400 mt-1">
+            <p className="mt-1 font-medium text-red-400 text-sm">
               {errorMessage}
             </p>
           )}

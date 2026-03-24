@@ -1,17 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from "next/server";
 
 // Simple in-memory store for rate limiting
 const store: { [key: string]: { count: number; resetTime: number } } = {};
 
 // Get client IP address
 function getClientIP(req: NextRequest): string {
-  const cfConnectingIP = req.headers.get('cf-connecting-ip');
-  if (cfConnectingIP) return cfConnectingIP;
+  const cfConnectingIP = req.headers.get("cf-connecting-ip");
+  if (cfConnectingIP) {
+    return cfConnectingIP;
+  }
 
-  const xForwardedFor = req.headers.get('x-forwarded-for');
-  if (xForwardedFor) return xForwardedFor.split(',')[0].trim();
+  const xForwardedFor = req.headers.get("x-forwarded-for");
+  if (xForwardedFor) {
+    return xForwardedFor.split(",")[0].trim();
+  }
 
-  return 'unknown';
+  return "unknown";
 }
 
 // Simple rate limiter for form submissions: 1 per hour
@@ -40,7 +44,7 @@ export async function formSubmissionRateLimit(
   return NextResponse.json(
     {
       error:
-        'You can only submit 1 application per hour. Please try again later.',
+        "You can only submit 1 application per hour. Please try again later.",
     },
     { status: 429 }
   );
@@ -77,7 +81,7 @@ export async function apiRateLimit(
 
   // Block if rate limit exceeded
   return NextResponse.json(
-    { error: 'Rate limit exceeded. Please try again later.' },
+    { error: "Rate limit exceeded. Please try again later." },
     { status: 429 }
   );
 }

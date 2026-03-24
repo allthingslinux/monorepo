@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Info } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,15 +10,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Info } from 'lucide-react';
+} from "@/components/ui/dialog";
 
 export function FinancialSupportDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="ml-auto">
-          <Info className="h-4 w-4 mr-1" />
+        <Button className="ml-auto" size="sm" variant="ghost">
+          <Info className="mr-1 h-4 w-4" />
           Learn More
         </Button>
       </DialogTrigger>
@@ -42,7 +43,7 @@ export function FinancialSupportDialog() {
         <div className="space-y-4 pt-2">
           <div className="space-y-2">
             <h4 className="font-semibold text-foreground">Payment Methods:</h4>
-            <ul className="list-disc list-inside space-y-1 text-sm">
+            <ul className="list-inside list-disc space-y-1 text-sm">
               <li>
                 <strong>Stripe:</strong> 2.2% + $0.30, +1% for non-US, +1.3% for
                 Amex
@@ -62,11 +63,11 @@ export function FinancialSupportDialog() {
               </li>
             </ul>
           </div>
-          <p className="text-sm text-muted-foreground">
-            For large donations or questions, please contact us via{' '}
+          <p className="text-muted-foreground text-sm">
+            For large donations or questions, please contact us via{" "}
             <a href="mailto:admin@allthingslinux.org">
               admin@allthingslinux.org
-            </a>{' '}
+            </a>{" "}
             to ensure as much as your donation as possible goes directly to
             supporting our community. We will work with you to find the best way
             to donate with the lowest fees possible.

@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { ChevronUp } from 'lucide-react';
+import { ChevronUp } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 export default function ClientScrollToTop() {
   return (
     <Button
-      variant="outline"
-      size="sm"
       className="flex items-center gap-2"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      size="sm"
+      variant="outline"
     >
       <ChevronUp className="h-4 w-4" />
       Back to top

@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
+import Image from "next/image";
+import { useMDXComponent } from "next-contentlayer2/hooks";
 
-import Image from 'next/image';
-
-import { cn } from '@/lib/utils';
-import { useMDXComponent } from 'next-contentlayer2/hooks';
-import { Alert } from '@/components/mdx/alert';
+import { cn } from "@/lib/utils";
+import { Alert } from "@/components/mdx/alert";
 
 // Simple components without memoization
 const Heading1 = ({
@@ -14,7 +13,7 @@ const Heading1 = ({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h1
-    className={cn('scroll-m-20 font-bold tracking-tight mt-10 mb-6', className)}
+    className={cn("mt-10 mb-6 scroll-m-20 font-bold tracking-tight", className)}
     {...props}
   />
 );
@@ -25,7 +24,7 @@ const Heading2 = ({
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h2
     className={cn(
-      'scroll-m-20 border-b pb-2 tracking-tight first:mt-0 mt-8 mb-4',
+      "mt-8 mb-4 scroll-m-20 border-b pb-2 tracking-tight first:mt-0",
       className
     )}
     {...props}
@@ -37,7 +36,7 @@ const Heading3 = ({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h3
-    className={cn('scroll-m-20 tracking-tight mt-6 mb-3', className)}
+    className={cn("mt-6 mb-3 scroll-m-20 tracking-tight", className)}
     {...props}
   />
 );
@@ -47,7 +46,7 @@ const Heading4 = ({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h4
-    className={cn('scroll-m-20 tracking-tight mt-5 mb-2', className)}
+    className={cn("mt-5 mb-2 scroll-m-20 tracking-tight", className)}
     {...props}
   />
 );
@@ -57,7 +56,7 @@ const Heading5 = ({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h5
-    className={cn('scroll-m-20 tracking-tight mt-4 mb-2', className)}
+    className={cn("mt-4 mb-2 scroll-m-20 tracking-tight", className)}
     {...props}
   />
 );
@@ -67,7 +66,7 @@ const Heading6 = ({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h6
-    className={cn('scroll-m-20 tracking-tight mt-4 mb-1.5', className)}
+    className={cn("mt-4 mb-1.5 scroll-m-20 tracking-tight", className)}
     {...props}
   />
 );
@@ -87,14 +86,13 @@ const Blockquote = ({
 
   // Early return for non-paragraph first children
   if (
-    !firstChild ||
-    !React.isValidElement(firstChild) ||
-    firstChild.type !== 'p'
+    !(firstChild && React.isValidElement(firstChild)) ||
+    firstChild.type !== "p"
   ) {
     return (
       <blockquote
         className={cn(
-          'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground',
+          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
           className
         )}
         {...props}
@@ -107,7 +105,7 @@ const Blockquote = ({
   // Check for alert syntax in the first paragraph
   const firstChildProps = firstChild.props as { children?: React.ReactNode };
   const alertText =
-    typeof firstChildProps.children === 'string'
+    typeof firstChildProps.children === "string"
       ? firstChildProps.children
       : null;
 
@@ -116,7 +114,7 @@ const Blockquote = ({
     return (
       <blockquote
         className={cn(
-          'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground',
+          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
           className
         )}
         {...props}
@@ -132,7 +130,7 @@ const Blockquote = ({
     return (
       <blockquote
         className={cn(
-          'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground',
+          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
           className
         )}
         {...props}
@@ -144,16 +142,16 @@ const Blockquote = ({
 
   // Extract alert type and title
   const alertType = match[1].toLowerCase() as
-    | 'note'
-    | 'tip'
-    | 'important'
-    | 'warning'
-    | 'caution';
-  const title = match[2] ? match[2].trim() : '';
+    | "note"
+    | "tip"
+    | "important"
+    | "warning"
+    | "caution";
+  const title = match[2] ? match[2].trim() : "";
 
   // Return the alert component
   return (
-    <Alert type={alertType} title={title}>
+    <Alert title={title} type={alertType}>
       {childArray.slice(1)}
     </Alert>
   );
@@ -169,26 +167,26 @@ const CustomImage = ({
 
   // Use default sizes that are more reasonable for blog content
   const width = propsWidth
-    ? typeof propsWidth === 'number'
+    ? typeof propsWidth === "number"
       ? propsWidth
-      : parseInt(String(propsWidth), 10) || 800
+      : Number.parseInt(String(propsWidth), 10) || 800
     : 800;
 
   const height = propsHeight
-    ? typeof propsHeight === 'number'
+    ? typeof propsHeight === "number"
       ? propsHeight
-      : parseInt(String(propsHeight), 10) || 450
+      : Number.parseInt(String(propsHeight), 10) || 450
     : 450;
 
   return (
     <Image
+      alt={alt || ""}
       className="rounded-md border"
-      alt={alt || ''}
-      src={typeof src === 'string' ? src : ''}
-      width={width}
       height={height}
       loading="lazy"
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
+      src={typeof src === "string" ? src : ""}
+      width={width}
       {...restProps}
     />
   );
@@ -199,16 +197,16 @@ const Anchor = ({
   href,
   ...props
 }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const isExternal = href?.startsWith('http');
+  const isExternal = href?.startsWith("http");
   return (
     <a
       className={cn(
-        'font-medium text-blue-400 underline underline-offset-4 hover:text-blue-300',
+        "font-medium text-blue-400 underline underline-offset-4 hover:text-blue-300",
         className
       )}
       href={href}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      target={isExternal ? "_blank" : undefined}
       {...props}
     />
   );
@@ -219,7 +217,7 @@ const Paragraph = ({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) => (
   <p
-    className={cn('leading-7 [&:not(:first-child)]:mt-6', className)}
+    className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}
     {...props}
   />
 );
@@ -228,28 +226,28 @@ const UnorderedList = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLUListElement>) => (
-  <ul className={cn('my-6 ml-4 list-disc', className)} {...props} />
+  <ul className={cn("my-6 ml-4 list-disc", className)} {...props} />
 );
 
 const OrderedList = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLOListElement>) => (
-  <ol className={cn('my-6 ml-4 list-decimal', className)} {...props} />
+  <ol className={cn("my-6 ml-4 list-decimal", className)} {...props} />
 );
 
 const ListItem = ({
   className,
   ...props
 }: React.LiHTMLAttributes<HTMLLIElement>) => (
-  <li className={cn('mt-2', className)} {...props} />
+  <li className={cn("mt-2", className)} {...props} />
 );
 
 const HorizontalRule = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLHRElement>) => (
-  <hr className={cn('my-4 md:my-8', className)} {...props} />
+  <hr className={cn("my-4 md:my-8", className)} {...props} />
 );
 
 const Table = ({
@@ -257,7 +255,7 @@ const Table = ({
   ...props
 }: React.HTMLAttributes<HTMLTableElement>) => (
   <div className="my-6 w-full overflow-y-auto">
-    <table className={cn('w-full', className)} {...props} />
+    <table className={cn("w-full", className)} {...props} />
   </div>
 );
 
@@ -265,7 +263,7 @@ const TableRow = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableRowElement>) => (
-  <tr className={cn('m-0 border-t p-0 even:bg-muted', className)} {...props} />
+  <tr className={cn("m-0 border-t p-0 even:bg-muted", className)} {...props} />
 );
 
 const TableHeader = ({
@@ -274,7 +272,7 @@ const TableHeader = ({
 }: React.ThHTMLAttributes<HTMLTableCellElement>) => (
   <th
     className={cn(
-      'border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right',
+      "border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
       className
     )}
     {...props}
@@ -287,7 +285,7 @@ const TableCell = ({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) => (
   <td
     className={cn(
-      'border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right',
+      "border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
       className
     )}
     {...props}
@@ -300,7 +298,7 @@ const Preformatted = ({
 }: React.HTMLAttributes<HTMLPreElement>) => (
   <pre
     className={cn(
-      'mb-4 mt-6 overflow-x-auto rounded-lg border bg-black py-4',
+      "mt-6 mb-4 overflow-x-auto rounded-lg border bg-black py-4",
       className
     )}
     {...props}
@@ -308,11 +306,11 @@ const Preformatted = ({
 );
 
 const Code = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
-  const isInlineCode = !className?.includes('language-');
+  const isInlineCode = !className?.includes("language-");
   return isInlineCode ? (
     <code
       className={cn(
-        'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm',
+        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
         className
       )}
       {...props}
@@ -320,7 +318,7 @@ const Code = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
   ) : (
     <code
       className={cn(
-        'relative rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm',
+        "relative rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm",
         className
       )}
       {...props}
@@ -378,17 +376,19 @@ class MDXErrorBoundary extends React.Component<
 
 // Client-side error handling component
 function ErrorDisplay({ error }: { error: Error | null }) {
-  if (!error) return null;
+  if (!error) {
+    return null;
+  }
 
   return (
     <div className="rounded-md border border-red-500 bg-red-50 p-4 dark:bg-red-900/10">
-      <h3 className="text-lg font-medium text-red-800 dark:text-red-200">
+      <h3 className="font-medium text-lg text-red-800 dark:text-red-200">
         Error rendering MDX content
       </h3>
-      <p className="mt-2 text-sm text-red-700 dark:text-red-300">
+      <p className="mt-2 text-red-700 text-sm dark:text-red-300">
         There was an error rendering this content. Please check the MDX syntax.
       </p>
-      <pre className="mt-4 overflow-auto rounded-md bg-red-100 p-2 text-xs text-red-900 dark:bg-red-950 dark:text-red-200">
+      <pre className="mt-4 overflow-auto rounded-md bg-red-100 p-2 text-red-900 text-xs dark:bg-red-950 dark:text-red-200">
         {error.message}
       </pre>
     </div>
@@ -398,7 +398,7 @@ function ErrorDisplay({ error }: { error: Error | null }) {
 function MissingContentDisplay() {
   return (
     <div className="rounded-md border border-yellow-500 bg-yellow-50 p-4 dark:bg-yellow-900/10">
-      <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-200">
+      <h3 className="font-medium text-lg text-yellow-800 dark:text-yellow-200">
         Missing content
       </h3>
       <p className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
@@ -415,7 +415,7 @@ interface MdxProps {
 export function Mdx({ code }: MdxProps) {
   // Always call hooks at the top level
   // Since we disabled MDX compilation, we need to handle raw MDX content
-  const Component = useMDXComponent(code || '');
+  const Component = useMDXComponent(code || "");
 
   // Handle missing code
   if (!code) {
@@ -425,7 +425,7 @@ export function Mdx({ code }: MdxProps) {
   // Use the proper error boundary
   return (
     <MDXErrorBoundary>
-      <div className="mdx prose prose-invert max-w-none prose-headings:font-semibold prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-a:text-primary prose-pre:bg-black prose-code:bg-muted prose-code:before:content-none prose-code:after:content-none">
+      <div className="mdx prose prose-invert max-w-none prose-code:bg-muted prose-pre:bg-black prose-headings:font-semibold prose-a:text-primary prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-code:before:content-none prose-code:after:content-none">
         <Component components={components} />
       </div>
     </MDXErrorBoundary>

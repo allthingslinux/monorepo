@@ -1,33 +1,34 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { randomBytes } from 'crypto';
-import {
-  getQuickBooksAuthUrl,
-  escapeHtml,
-} from '@/lib/integrations/quickbooks';
-import { runtimeEnv as env } from '@/env';
+import { randomBytes } from "crypto";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export const runtime = 'nodejs';
+import {
+  escapeHtml,
+  getQuickBooksAuthUrl,
+} from "@/lib/integrations/quickbooks";
+import { runtimeEnv as env } from "@/env";
+
+export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   const clientId = env.QUICKBOOKS_CLIENT_ID;
-  const environment = env.QUICKBOOKS_ENVIRONMENT || 'sandbox';
+  const environment = env.QUICKBOOKS_ENVIRONMENT || "sandbox";
 
   // Extract host and protocol from request URL to support different ports (3000, 8787, etc.)
   const url = new URL(request.url);
   const host = url.hostname;
   const port = url.port;
-  const protocol = url.protocol.replace(':', '');
-  
+  const protocol = url.protocol.replace(":", "");
+
   // Force http for localhost (Cloudflare Workers might set forwarded headers incorrectly)
-  const finalProtocol = host.includes('localhost') ? 'http' : protocol;
-  const baseUrl = port 
+  const finalProtocol = host.includes("localhost") ? "http" : protocol;
+  const baseUrl = port
     ? `${finalProtocol}://${host}:${port}`
     : `${finalProtocol}://${host}`;
   const redirectUri = `${baseUrl}/api/quickbooks/callback`;
 
   // QuickBooks requires HTTPS for redirect URIs (except localhost for development)
-  if (!host.includes('localhost') && finalProtocol !== 'https') {
+  if (!host.includes("localhost") && finalProtocol !== "https") {
     return new NextResponse(
       `
       <!DOCTYPE html>
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       </html>
     `,
       {
-        headers: { 'Content-Type': 'text/html' },
+        headers: { "Content-Type": "text/html" },
         status: 400,
       }
     );
@@ -67,23 +68,23 @@ export async function GET(request: NextRequest) {
       </html>
     `,
       {
-        headers: { 'Content-Type': 'text/html' },
+        headers: { "Content-Type": "text/html" },
         status: 500,
       }
     );
   }
 
   // Generate CSRF state token
-  const state = randomBytes(16).toString('hex');
+  const state = randomBytes(16).toString("hex");
 
   // Get the correct OAuth URL based on environment
   const authBaseUrl = await getQuickBooksAuthUrl(environment);
   const authUrl = new URL(authBaseUrl);
-  authUrl.searchParams.set('client_id', clientId);
-  authUrl.searchParams.set('redirect_uri', redirectUri);
-  authUrl.searchParams.set('response_type', 'code');
-  authUrl.searchParams.set('scope', 'com.intuit.quickbooks.accounting');
-  authUrl.searchParams.set('state', state);
+  authUrl.searchParams.set("client_id", clientId);
+  authUrl.searchParams.set("redirect_uri", redirectUri);
+  authUrl.searchParams.set("response_type", "code");
+  authUrl.searchParams.set("scope", "com.intuit.quickbooks.accounting");
+  authUrl.searchParams.set("state", state);
 
   // Check if already configured
   const isConfigured = env.QUICKBOOKS_REFRESH_TOKEN && env.QUICKBOOKS_REALM_ID;
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
   const html = `<!DOCTYPE html>
   <html>
   <head>
-    <title>${setupMode ? 'QuickBooks Setup' : 'QuickBooks Re-authorization'}</title>
+    <title>${setupMode ? "QuickBooks Setup" : "QuickBooks Re-authorization"}</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
@@ -137,8 +138,8 @@ export async function GET(request: NextRequest) {
         font-size: 0.9rem;
       }
       .status {
-        background: ${setupMode ? '#fff3cd' : '#d4edda'};
-        border: 1px solid ${setupMode ? '#ffc107' : '#28a745'};
+        background: ${setupMode ? "#fff3cd" : "#d4edda"};
+        border: 1px solid ${setupMode ? "#ffc107" : "#28a745"};
         border-radius: 8px;
         padding: 1rem;
         margin: 1rem 0;
@@ -147,14 +148,14 @@ export async function GET(request: NextRequest) {
   </head>
   <body>
     <div class="container">
-      <h1>${setupMode ? '🔐 QuickBooks Setup' : '🔄 Re-authorize QuickBooks'}</h1>
+      <h1>${setupMode ? "🔐 QuickBooks Setup" : "🔄 Re-authorize QuickBooks"}</h1>
       
       <div class="status">
-        <strong>${setupMode ? '⚠️ First-time setup' : '✅ Updating existing connection'}</strong><br>
-        ${setupMode ? 'This will configure your QuickBooks integration' : 'This will refresh your QuickBooks connection'}
+        <strong>${setupMode ? "⚠️ First-time setup" : "✅ Updating existing connection"}</strong><br>
+        ${setupMode ? "This will configure your QuickBooks integration" : "This will refresh your QuickBooks connection"}
       </div>
       
-      <p>${setupMode ? 'Click below to connect your QuickBooks account. After authorization, tokens will be automatically saved.' : 'Your existing QuickBooks connection will be updated with new tokens.'}</p>
+      <p>${setupMode ? "Click below to connect your QuickBooks account. After authorization, tokens will be automatically saved." : "Your existing QuickBooks connection will be updated with new tokens."}</p>
       
       <div class="info">
         <strong>Environment:</strong> ${escapeHtml(environment.toUpperCase())}<br>
@@ -162,7 +163,7 @@ export async function GET(request: NextRequest) {
       </div>
       
       <a href="#" onclick="authorize()" class="btn">
-        ${setupMode ? 'Connect QuickBooks' : 'Re-authorize QuickBooks'}
+        ${setupMode ? "Connect QuickBooks" : "Re-authorize QuickBooks"}
       </a>
     </div>
     
@@ -175,16 +176,16 @@ export async function GET(request: NextRequest) {
   </html>`;
 
   const response = new NextResponse(html, {
-    headers: { 'Content-Type': 'text/html' },
+    headers: { "Content-Type": "text/html" },
   });
 
   // Set OAuth state cookie server-side with httpOnly flag for CSRF protection
-  response.cookies.set('qb_oauth_state', state, {
+  response.cookies.set("qb_oauth_state", state, {
     httpOnly: true,
-    secure: finalProtocol === 'https',
-    sameSite: 'lax',
+    secure: finalProtocol === "https",
+    sameSite: "lax",
     maxAge: 600,
-    path: '/',
+    path: "/",
   });
 
   return response;

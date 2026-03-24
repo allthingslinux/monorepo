@@ -1,34 +1,40 @@
-import { Suspense } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { getPageMetadata } from '../metadata';
-import { formatCurrency } from '@/lib/utils';
-import type { Metadata } from 'next';
-import type { QuickBooksTransaction } from '@/lib/integrations/quickbooks';
-import { fetchQuickBooksTransactions, fetchQuickBooksFinancialSummary, getCloudflareEnv } from '@/lib/integrations/quickbooks';
-import { TransactionsList } from './transactions-list';
-import { MetricsSection } from './metrics-section';
-import { UpdatesSection } from './updates-section';
-import { ArrowRight, TrendingUp, TrendingDown, Receipt } from 'lucide-react';
-import Link from 'next/link';
+import { Suspense } from "react";
+import { ArrowRight, Receipt, TrendingDown, TrendingUp } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-export const metadata: Metadata = getPageMetadata('open');
+import {
+  fetchQuickBooksFinancialSummary,
+  fetchQuickBooksTransactions,
+  getCloudflareEnv,
+} from "@/lib/integrations/quickbooks";
+import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getPageMetadata } from "../metadata";
+import { MetricsSection } from "./metrics-section";
+import { TransactionsList } from "./transactions-list";
+import { UpdatesSection } from "./updates-section";
+
+export const metadata: Metadata = getPageMetadata("open");
 
 // Explicitly set Node.js runtime for Buffer usage in dependencies
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 // Mark as dynamic since we fetch from API
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 function HeroSection() {
   return (
-    <div className="text-center space-y-6 mb-16">
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+    <div className="mb-16 space-y-6 text-center">
+      <h1 className="font-bold text-4xl tracking-tight sm:text-5xl lg:text-6xl">
         A transparent organization since 2023
       </h1>
-      <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-        As a 501(c)(3) non-profit, we practice radical transparency. Our finances, community growth, and project metrics are open for everyone to see.
+      <p className="mx-auto max-w-3xl text-lg text-muted-foreground leading-relaxed sm:text-xl">
+        As a 501(c)(3) non-profit, we practice radical transparency. Our
+        finances, community growth, and project metrics are open for everyone to
+        see.
       </p>
     </div>
   );
@@ -43,7 +49,7 @@ function TransactionsSkeleton() {
           <Card key={`mobile-skeleton-${index}`}>
             <CardContent className="p-4">
               <div className="space-y-3">
-                <div className="flex justify-between items-start">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-5 w-20" />
                 </div>
@@ -56,20 +62,31 @@ function TransactionsSkeleton() {
       </div>
 
       {/* Desktop table skeleton */}
-      <div className="hidden sm:block rounded-lg border">
+      <div className="hidden rounded-lg border sm:block">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="border-b bg-muted/50">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Vendor</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Description</th>
-                <th className="px-4 py-3 text-right text-sm font-medium">Amount</th>
+                <th className="px-4 py-3 text-left font-medium text-sm">
+                  Date
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-sm">
+                  Vendor
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-sm">
+                  Description
+                </th>
+                <th className="px-4 py-3 text-right font-medium text-sm">
+                  Amount
+                </th>
               </tr>
             </thead>
             <tbody>
               {Array.from({ length: 5 }, (_, index) => (
-                <tr key={`desktop-skeleton-${index}`} className="border-b last:border-0">
+                <tr
+                  className="border-b last:border-0"
+                  key={`desktop-skeleton-${index}`}
+                >
                   <td className="px-4 py-3">
                     <Skeleton className="h-4 w-24" />
                   </td>
@@ -80,7 +97,7 @@ function TransactionsSkeleton() {
                     <Skeleton className="h-4 w-48" />
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Skeleton className="h-4 w-20 ml-auto" />
+                    <Skeleton className="ml-auto h-4 w-20" />
                   </td>
                 </tr>
               ))}
@@ -93,91 +110,94 @@ function TransactionsSkeleton() {
 }
 
 interface TransactionStats {
-  total: number;
-  income: number;
   expenses: number;
+  income: number;
   netIncome: number;
+  total: number;
 }
-
 
 function SummaryStats({ stats }: { stats: TransactionStats }) {
   const netIsPositive = stats.netIncome >= 0;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6 pt-6">
-      <Card className="relative overflow-hidden border-2 hover:shadow-lg transition-shadow">
+    <div className="grid grid-cols-1 gap-6 px-6 pt-6 sm:grid-cols-2 lg:grid-cols-4">
+      <Card className="relative overflow-hidden border-2 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-sm font-medium text-muted-foreground">
+          <div className="mb-4 flex items-start justify-between">
+            <div className="font-medium text-muted-foreground text-sm">
               Total Transactions
             </div>
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="rounded-lg bg-primary/10 p-2">
               <Receipt className="h-5 w-5 text-primary" />
             </div>
           </div>
-          <div className="text-3xl font-bold tracking-tight">
+          <div className="font-bold text-3xl tracking-tight">
             {stats.total.toLocaleString()}
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
-            Recorded
-          </div>
+          <div className="mt-2 text-muted-foreground text-xs">Recorded</div>
         </CardContent>
       </Card>
 
-      <Card className="relative overflow-hidden border-2 border-green-500/20 bg-green-500/5 hover:shadow-lg transition-shadow">
+      <Card className="relative overflow-hidden border-2 border-green-500/20 bg-green-500/5 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-sm font-medium text-muted-foreground">
+          <div className="mb-4 flex items-start justify-between">
+            <div className="font-medium text-muted-foreground text-sm">
               Gross Income
             </div>
-            <div className="p-2 rounded-lg bg-green-500/20">
+            <div className="rounded-lg bg-green-500/20 p-2">
               <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-500" />
             </div>
           </div>
-          <div className="text-3xl font-bold tracking-tight text-green-600 dark:text-green-500">
+          <div className="font-bold text-3xl text-green-600 tracking-tight dark:text-green-500">
             {formatCurrency(stats.income)}
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
+          <div className="mt-2 text-muted-foreground text-xs">
             Donated by Supporters
           </div>
         </CardContent>
       </Card>
 
-      <Card className="relative overflow-hidden border-2 border-red-500/20 bg-red-500/5 hover:shadow-lg transition-shadow">
+      <Card className="relative overflow-hidden border-2 border-red-500/20 bg-red-500/5 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-sm font-medium text-muted-foreground">
+          <div className="mb-4 flex items-start justify-between">
+            <div className="font-medium text-muted-foreground text-sm">
               Total Expenses
             </div>
-            <div className="p-2 rounded-lg bg-red-500/20">
+            <div className="rounded-lg bg-red-500/20 p-2">
               <TrendingDown className="h-5 w-5 text-red-500 dark:text-red-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold tracking-tight text-red-500 dark:text-red-400">
+          <div className="font-bold text-3xl text-red-500 tracking-tight dark:text-red-400">
             {formatCurrency(stats.expenses)}
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
+          <div className="mt-2 text-muted-foreground text-xs">
             Spent on our Mission
           </div>
         </CardContent>
       </Card>
 
-      <Card className={`relative overflow-hidden border-2 ${netIsPositive ? 'border-blue-500/20 bg-blue-500/5' : 'border-orange-500/20 bg-orange-500/5'} hover:shadow-lg transition-shadow`}>
+      <Card
+        className={`relative overflow-hidden border-2 ${netIsPositive ? "border-blue-500/20 bg-blue-500/5" : "border-orange-500/20 bg-orange-500/5"} transition-shadow hover:shadow-lg`}
+      >
         <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-sm font-medium text-muted-foreground">
+          <div className="mb-4 flex items-start justify-between">
+            <div className="font-medium text-muted-foreground text-sm">
               Net Income
             </div>
-            <div className={`p-2 rounded-lg ${netIsPositive ? 'bg-blue-500/20' : 'bg-orange-500/20'}`}>
-              <TrendingUp className={`h-5 w-5 ${netIsPositive ? 'text-blue-600 dark:text-blue-500' : 'text-orange-600 dark:text-orange-500'}`} />
+            <div
+              className={`rounded-lg p-2 ${netIsPositive ? "bg-blue-500/20" : "bg-orange-500/20"}`}
+            >
+              <TrendingUp
+                className={`h-5 w-5 ${netIsPositive ? "text-blue-600 dark:text-blue-500" : "text-orange-600 dark:text-orange-500"}`}
+              />
             </div>
           </div>
-          <div className={`text-3xl font-bold tracking-tight ${netIsPositive ? 'text-blue-600 dark:text-blue-500' : 'text-orange-600 dark:text-orange-500'}`}>
+          <div
+            className={`font-bold text-3xl tracking-tight ${netIsPositive ? "text-blue-600 dark:text-blue-500" : "text-orange-600 dark:text-orange-500"}`}
+          >
             {formatCurrency(stats.netIncome)}
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
-            In the Bank
-          </div>
+          <div className="mt-2 text-muted-foreground text-xs">In the Bank</div>
         </CardContent>
       </Card>
     </div>
@@ -196,10 +216,13 @@ async function TransactionsContent() {
 
   if (transactions.length === 0) {
     return (
-      <div className="text-center py-16 px-4">
-        <div className="text-muted-foreground text-lg mb-2">No transactions found</div>
-        <div className="text-xs text-muted-foreground">
-          If you see "invalid_grant" errors in the logs, you may need to re-authenticate via the admin setup route.
+      <div className="px-4 py-16 text-center">
+        <div className="mb-2 text-lg text-muted-foreground">
+          No transactions found
+        </div>
+        <div className="text-muted-foreground text-xs">
+          If you see "invalid_grant" errors in the logs, you may need to
+          re-authenticate via the admin setup route.
         </div>
       </div>
     );
@@ -255,23 +278,23 @@ export default function OpenPage() {
     <div className="min-h-screen bg-background">
       <main className="w-full">
         <section className="py-12 sm:py-16 md:py-24">
-          <div className="container mx-auto px-4 max-w-7xl">
+          <div className="container mx-auto max-w-7xl px-4">
             {/* Hero Section */}
             <HeroSection />
 
             <div className="space-y-12">
               {/* Metrics Section */}
               <div>
-                <h2 className="text-2xl font-bold tracking-tight mb-6">
+                <h2 className="mb-6 font-bold text-2xl tracking-tight">
                   Monthly metrics
                 </h2>
                 <Suspense
                   fallback={
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                       {Array.from({ length: 4 }, (_, i) => (
                         <Card key={i}>
                           <CardContent className="p-6">
-                            <Skeleton className="h-4 w-24 mb-2" />
+                            <Skeleton className="mb-2 h-4 w-24" />
                             <Skeleton className="h-8 w-32" />
                           </CardContent>
                         </Card>
@@ -285,7 +308,7 @@ export default function OpenPage() {
 
               {/* Financial Section */}
               <div>
-                <h2 className="text-2xl font-bold tracking-tight mb-6">
+                <h2 className="mb-6 font-bold text-2xl tracking-tight">
                   Financial transparency
                 </h2>
                 <TransactionsSection />
@@ -293,18 +316,18 @@ export default function OpenPage() {
 
               {/* Updates Section */}
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h2 className="text-2xl font-bold tracking-tight">
+                    <h2 className="font-bold text-2xl tracking-tight">
                       Community updates
                     </h2>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="mt-1 text-muted-foreground text-sm">
                       Recent news and milestones from our community
                     </p>
                   </div>
                   <Link
+                    className="flex items-center gap-1 self-start text-muted-foreground text-sm transition-colors hover:text-foreground sm:self-auto"
                     href="/blog"
-                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors self-start sm:self-auto"
                   >
                     View all
                     <ArrowRight className="h-4 w-4" />
@@ -316,7 +339,7 @@ export default function OpenPage() {
                       {Array.from({ length: 3 }, (_, i) => (
                         <Card key={i}>
                           <CardContent className="p-4">
-                            <Skeleton className="h-5 w-32 mb-2" />
+                            <Skeleton className="mb-2 h-5 w-32" />
                             <Skeleton className="h-4 w-full" />
                           </CardContent>
                         </Card>

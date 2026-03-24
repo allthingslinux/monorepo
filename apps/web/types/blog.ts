@@ -1,12 +1,12 @@
 export interface Post {
-  slug: string;
-  title: string;
-  description: string;
   author: string;
-  dateFormatted: string;
-  date: string;
   category: string;
   categorySlug: string;
   content: string;
+  date: string;
+  dateFormatted: string;
+  description: string;
   image?: string; // Optional featured image URL
+  slug: string;
+  title: string;
 }

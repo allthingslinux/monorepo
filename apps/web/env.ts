@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-nextjs';
-import { z } from 'zod';
+import { z } from "zod";
+import { createEnv } from "@t3-oss/env-nextjs";
 
 /**
  * Environment variable configuration using T3 Env
@@ -14,10 +14,10 @@ import { z } from 'zod';
  */
 // Helper to detect deployment environment (now static per worker)
 // Each worker environment is hardcoded since we use separate workers
-function getDeploymentEnvironment(): 'dev' | 'prod' {
+function getDeploymentEnvironment(): "dev" | "prod" {
   // Since we now use separate workers for dev/prod, we can hardcode this
   // The build process will set the appropriate value based on the worker environment
-  return process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
+  return process.env.NODE_ENV === "production" ? "prod" : "dev";
 }
 
 // Helper to get environment variable
@@ -27,10 +27,10 @@ function getEnvVar(baseName: string): string | undefined {
 }
 
 // Helper to determine QuickBooks environment with auto-detection
-const getQuickBooksEnvironment = (): 'sandbox' | 'production' | undefined => {
+const getQuickBooksEnvironment = (): "sandbox" | "production" | undefined => {
   const explicitEnv = process.env.QUICKBOOKS_ENVIRONMENT as
-    | 'sandbox'
-    | 'production'
+    | "sandbox"
+    | "production"
     | undefined;
   if (explicitEnv) {
     return explicitEnv;
@@ -38,7 +38,7 @@ const getQuickBooksEnvironment = (): 'sandbox' | 'production' | undefined => {
 
   // Auto-detect: prod deployment → production QuickBooks, dev → sandbox
   const deploymentEnv = getDeploymentEnvironment();
-  return deploymentEnv === 'prod' ? 'production' : 'sandbox';
+  return deploymentEnv === "prod" ? "production" : "sandbox";
 };
 
 export const env = createEnv({
@@ -60,14 +60,14 @@ export const env = createEnv({
     QUICKBOOKS_REALM_ID: z.string().optional(),
     // QuickBooks Environment: 'sandbox' for development/testing, 'production' for live data
     // Defaults to 'sandbox' in development, 'production' in production (handled in runtimeEnv)
-    QUICKBOOKS_ENVIRONMENT: z.enum(['sandbox', 'production']).optional(),
+    QUICKBOOKS_ENVIRONMENT: z.enum(["sandbox", "production"]).optional(),
     // Admin key for QuickBooks API operations (token refresh, etc.)
     QUICKBOOKS_ADMIN_KEY: z.string().optional(),
 
     // Server configuration
     NODE_ENV: z
-      .enum(['development', 'production', 'test'])
-      .default('development'),
+      .enum(["development", "production", "test"])
+      .default("development"),
   },
 
   /**
@@ -75,15 +75,15 @@ export const env = createEnv({
    */
   client: {
     // Application URLs and public configuration
-    NEXT_PUBLIC_URL: z.string().url().default('https://allthingslinux.org'),
+    NEXT_PUBLIC_URL: z.string().url().default("https://allthingslinux.org"),
     NEXT_PUBLIC_API_URL: z
       .string()
       .url()
-      .default('https://allthingslinux.org/api'),
+      .default("https://allthingslinux.org/api"),
 
     // Public repository information (no tokens, just public identifiers)
-    NEXT_PUBLIC_GITHUB_REPO_OWNER: z.string().default('allthingslinux'),
-    NEXT_PUBLIC_GITHUB_REPO_NAME: z.string().default('applications'),
+    NEXT_PUBLIC_GITHUB_REPO_OWNER: z.string().default("allthingslinux"),
+    NEXT_PUBLIC_GITHUB_REPO_NAME: z.string().default("applications"),
   },
 
   /**
@@ -113,11 +113,11 @@ export const env = createEnv({
   /**
    * Configuration options
    */
-  skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',
+  skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
   emptyStringAsUndefined: true,
   onValidationError: (error) => {
-    console.error('❌ Invalid environment variables:', error);
-    throw new Error('Invalid environment variables, check server logs');
+    console.error("❌ Invalid environment variables:", error);
+    throw new Error("Invalid environment variables, check server logs");
   },
 });
 
@@ -132,17 +132,17 @@ export const env = createEnv({
 export const cloudflareEnv = {
   // Server variables (secrets are set directly in each environment worker)
   NODE_ENV: process.env.NODE_ENV,
-  GITHUB_TOKEN: getEnvVar('GITHUB_TOKEN'),
-  MONDAY_API_KEY: getEnvVar('MONDAY_API_KEY'),
-  MONDAY_BOARD_ID: getEnvVar('MONDAY_BOARD_ID'),
-  DISCORD_WEBHOOK_URL: getEnvVar('DISCORD_WEBHOOK_URL') as string | undefined,
+  GITHUB_TOKEN: getEnvVar("GITHUB_TOKEN"),
+  MONDAY_API_KEY: getEnvVar("MONDAY_API_KEY"),
+  MONDAY_BOARD_ID: getEnvVar("MONDAY_BOARD_ID"),
+  DISCORD_WEBHOOK_URL: getEnvVar("DISCORD_WEBHOOK_URL") as string | undefined,
   TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY, // Not prefixed (Trigger.dev handles separately)
-  QUICKBOOKS_CLIENT_ID: getEnvVar('QUICKBOOKS_CLIENT_ID'),
-  QUICKBOOKS_CLIENT_SECRET: getEnvVar('QUICKBOOKS_CLIENT_SECRET'),
-  QUICKBOOKS_REFRESH_TOKEN: getEnvVar('QUICKBOOKS_REFRESH_TOKEN'),
-  QUICKBOOKS_REALM_ID: getEnvVar('QUICKBOOKS_REALM_ID'),
+  QUICKBOOKS_CLIENT_ID: getEnvVar("QUICKBOOKS_CLIENT_ID"),
+  QUICKBOOKS_CLIENT_SECRET: getEnvVar("QUICKBOOKS_CLIENT_SECRET"),
+  QUICKBOOKS_REFRESH_TOKEN: getEnvVar("QUICKBOOKS_REFRESH_TOKEN"),
+  QUICKBOOKS_REALM_ID: getEnvVar("QUICKBOOKS_REALM_ID"),
   QUICKBOOKS_ENVIRONMENT: getQuickBooksEnvironment(),
-  QUICKBOOKS_ADMIN_KEY: getEnvVar('QUICKBOOKS_ADMIN_KEY'),
+  QUICKBOOKS_ADMIN_KEY: getEnvVar("QUICKBOOKS_ADMIN_KEY"),
 
   // Client variables (not prefixed - these are public anyway)
   NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
@@ -153,10 +153,10 @@ export const cloudflareEnv = {
 
 // Helper function to detect if running in Cloudflare Workers environment
 export const isCloudflareWorker = () =>
-  typeof process !== 'undefined' &&
-  typeof process.env !== 'undefined' &&
-  (process.env.CLOUDFLARE_WORKER === 'true' ||
-    typeof globalThis.caches !== 'undefined');
+  typeof process !== "undefined" &&
+  typeof process.env !== "undefined" &&
+  (process.env.CLOUDFLARE_WORKER === "true" ||
+    typeof globalThis.caches !== "undefined");
 
 // Combined environment that automatically selects the right source
 export const runtimeEnv = isCloudflareWorker() ? cloudflareEnv : env;

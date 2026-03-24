@@ -1,19 +1,20 @@
-'use client';
-import { useFormContext, Controller } from 'react-hook-form';
-import { FormItem, FormLabel, FormDescription } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { memo } from 'react';
+"use client";
+import { memo } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 
 export interface TextareaProps {
-  name: string;
-  label: string;
+  className?: string;
   description?: string;
-  placeholder?: string;
   disabled?: boolean;
+  label: string;
+  name: string;
+  placeholder?: string;
   required?: boolean;
   rows?: number;
-  className?: string;
 }
 
 const TextareaField = memo(function TextareaField({
@@ -34,8 +35,8 @@ const TextareaField = memo(function TextareaField({
   // Check if this field has an error
   const hasError = !!errors[name];
   const errorMessage = hasError
-    ? String(errors[name]?.message || 'This field is required')
-    : '';
+    ? String(errors[name]?.message || "This field is required")
+    : "";
 
   return (
     <Controller
@@ -45,11 +46,11 @@ const TextareaField = memo(function TextareaField({
         <FormItem className={className}>
           <FormLabel
             className={cn(
-              'font-medium text-base',
+              "font-medium text-base",
               required &&
-                "after:content-['*'] after:ml-0.5 after:text-red-500 after:font-bold",
+                "after:ml-0.5 after:font-bold after:text-red-500 after:content-['*']",
               !required &&
-                "after:content-['(optional)'] after:ml-1.5 after:text-muted-foreground after:text-xs after:font-normal"
+                "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
             )}
           >
             {label}
@@ -58,24 +59,24 @@ const TextareaField = memo(function TextareaField({
             <FormDescription className="mt-2">{description}</FormDescription>
           )}
           <Textarea
-            placeholder={placeholder || 'Enter detailed answer...'}
-            disabled={disabled}
             autoComplete="new-password"
-            rows={rows}
-            className={cn(hasError && 'border-red-500 focus:ring-red-500')}
-            value={field.value || ''}
+            className={cn(hasError && "border-red-500 focus:ring-red-500")}
+            disabled={disabled}
+            name={field.name}
+            onBlur={field.onBlur}
             onChange={(e) => {
               field.onChange(e);
               // React Hook Form will handle validation automatically in onChange mode
             }}
-            onBlur={field.onBlur}
-            name={field.name}
+            placeholder={placeholder || "Enter detailed answer..."}
             ref={field.ref}
+            rows={rows}
+            value={field.value || ""}
           />
 
           {/* Add direct error display that will always show */}
           {hasError && (
-            <p className="text-sm font-medium text-red-400 mt-1">
+            <p className="mt-1 font-medium text-red-400 text-sm">
               {errorMessage}
             </p>
           )}

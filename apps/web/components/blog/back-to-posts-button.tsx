@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 interface BackToAllPostsButtonProps {
   className?: string;
@@ -18,13 +19,15 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
   useEffect(() => {
     // This ensures the page is at the top after navigating to blog list
     const path = window.location.pathname;
-    if (path === '/blog') {
+    if (path === "/blog") {
       window.scrollTo(0, 0);
     }
   }, []);
 
   const handleGoBack = () => {
-    if (isNavigating) return;
+    if (isNavigating) {
+      return;
+    }
 
     setIsNavigating(true);
 
@@ -32,13 +35,13 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
     window.scrollTo(0, 0);
 
     // Prefetch the destination first
-    router.prefetch('/blog');
+    router.prefetch("/blog");
 
     // Use a fixed overlay during transition
-    const overlay = document.createElement('div');
+    const overlay = document.createElement("div");
     overlay.className =
-      'fixed inset-0 bg-background/70 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300';
-    overlay.style.opacity = '0';
+      "fixed inset-0 bg-background/70 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300";
+    overlay.style.opacity = "0";
 
     // Add spinner directly to overlay without a container
     overlay.innerHTML = `
@@ -54,13 +57,13 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
 
     // Fade in the overlay
     setTimeout(() => {
-      overlay.style.opacity = '1';
+      overlay.style.opacity = "1";
     }, 10);
 
     // Navigate after a short delay with the overlay visible
     setTimeout(() => {
       // Navigate with scroll:true to start at the top
-      router.push('/blog', { scroll: true });
+      router.push("/blog", { scroll: true });
 
       // After navigation, ensure we're at the top again and clean up
       setTimeout(() => {
@@ -68,7 +71,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
         window.scrollTo(0, 0);
 
         // Begin fading out the overlay
-        overlay.style.opacity = '0';
+        overlay.style.opacity = "0";
 
         // Remove overlay after fade completes
         setTimeout(() => {
@@ -81,13 +84,13 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
 
   return (
     <button
-      onClick={handleGoBack}
       className={cn(
-        buttonVariants({ variant: 'ghost' }),
-        isNavigating && 'opacity-70 pointer-events-none',
+        buttonVariants({ variant: "ghost" }),
+        isNavigating && "pointer-events-none opacity-70",
         className
       )}
       disabled={isNavigating}
+      onClick={handleGoBack}
     >
       <ChevronLeft className="mr-2 h-4 w-4" />
       See all posts

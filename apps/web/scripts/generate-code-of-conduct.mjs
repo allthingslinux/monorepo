@@ -1,27 +1,27 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { execSync } from 'child_process';
-import { fileURLToPath } from 'url';
+import { execSync } from "child_process";
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
 
 // Get the current file's directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(__dirname, "..");
 
 /**
  * Process markdown content by removing HTML comments and headers
  */
 function processMarkdownContent(content) {
   // Remove header content before "Code of Conduct"
-  const contentStartIndex = content.indexOf('# Code of Conduct');
+  const contentStartIndex = content.indexOf("# Code of Conduct");
   if (contentStartIndex !== -1) {
     content = content.slice(contentStartIndex);
   }
 
   // Remove HTML comments and table of contents section
-  content = content.replace(/<!--[\s\S]*?-->/g, '');
-  const tocStart = content.indexOf('**Table of Contents**');
-  const tocEnd = content.indexOf('## Preface');
+  content = content.replace(/<!--[\s\S]*?-->/g, "");
+  const tocStart = content.indexOf("**Table of Contents**");
+  const tocEnd = content.indexOf("## Preface");
 
   if (tocStart !== -1 && tocEnd !== -1) {
     content = content.slice(0, tocStart) + content.slice(tocEnd);
@@ -29,12 +29,12 @@ function processMarkdownContent(content) {
 
   // Remove everything after "Above all, exercise good judgment and common sense."
   const endIndex = content.indexOf(
-    'Above all, exercise good judgment and common sense.'
+    "Above all, exercise good judgment and common sense."
   );
   if (endIndex !== -1) {
     content = content.slice(
       0,
-      endIndex + 'Above all, exercise good judgment and common sense.'.length
+      endIndex + "Above all, exercise good judgment and common sense.".length
     );
   }
 
@@ -42,34 +42,34 @@ function processMarkdownContent(content) {
 }
 
 // Get the processed content
-const readmePath = path.join(rootDir, 'code-of-conduct', 'README.md');
+const readmePath = path.join(rootDir, "code-of-conduct", "README.md");
 let readmeContent;
 let lastUpdated;
 
 try {
   // Read and process the README.md content
-  readmeContent = processMarkdownContent(fs.readFileSync(readmePath, 'utf8'));
+  readmeContent = processMarkdownContent(fs.readFileSync(readmePath, "utf8"));
 
   // Get the last updated date
   const gitCommand = `git -C ${path.join(
     rootDir,
-    'code-of-conduct'
+    "code-of-conduct"
   )} log -1 --format=%cd --date=format:'%B %d, %Y' -- README.md`;
 
   lastUpdated = execSync(gitCommand).toString().trim();
 
   // If empty (no commits yet), use a fallback
   if (!lastUpdated) {
-    lastUpdated = 'Not available';
+    lastUpdated = "Not available";
   }
 } catch (error) {
-  console.error('Error processing code of conduct:', error);
-  readmeContent = '# Code of Conduct\n\nError loading code of conduct.';
-  lastUpdated = 'Not available';
+  console.error("Error processing code of conduct:", error);
+  readmeContent = "# Code of Conduct\n\nError loading code of conduct.";
+  lastUpdated = "Not available";
 }
 
 // Escape special characters in the content to make it safe for inserting into JS template literals
-readmeContent = readmeContent.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+readmeContent = readmeContent.replace(/`/g, "\\`").replace(/\$/g, "\\$");
 
 // Create a TypeScript file with the content as a constant
 const tsContent = `/**
@@ -89,25 +89,25 @@ export const LAST_UPDATED = '${lastUpdated}';
 `;
 
 // Ensure the lib directory exists
-const libDir = path.join(rootDir, 'lib');
+const libDir = path.join(rootDir, "lib");
 if (!fs.existsSync(libDir)) {
   fs.mkdirSync(libDir, { recursive: true });
 }
 
 // Write the TypeScript file
-fs.writeFileSync(path.join(libDir, 'code-of-conduct.ts'), tsContent);
+fs.writeFileSync(path.join(libDir, "code-of-conduct.ts"), tsContent);
 
 // Also write to JSON file for backwards compatibility
 fs.writeFileSync(
-  path.join(rootDir, 'public', 'code-of-conduct.json'),
+  path.join(rootDir, "public", "code-of-conduct.json"),
   JSON.stringify(
     {
       content: readmeContent,
-      lastUpdated: lastUpdated,
+      lastUpdated,
     },
     null,
     2
   )
 );
 
-console.log('✅ Code of conduct TypeScript file generated successfully');
+console.log("✅ Code of conduct TypeScript file generated successfully");

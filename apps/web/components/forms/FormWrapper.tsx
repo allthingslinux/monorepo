@@ -1,30 +1,31 @@
-'use client';
-import type { UseFormReturn } from 'react-hook-form';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import InputField from './InputField';
-import TextareaField from './TextareaField';
-import SelectField from './SelectField';
-import NumberField from './NumberField';
-import DigitsOnlyField from './DigitsOnlyField';
-import type { FormQuestion } from '@/types';
-import { useMemo } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { shouldShowQuestion } from '@/components/multi-step-form/StepperForm';
+"use client";
+import { useMemo } from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import type { UseFormReturn } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
+
+import { shouldShowQuestion } from "@/components/multi-step-form/StepperForm";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import type { FormQuestion } from "@/types";
+import DigitsOnlyField from "./DigitsOnlyField";
+import InputField from "./InputField";
+import NumberField from "./NumberField";
+import SelectField from "./SelectField";
+import TextareaField from "./TextareaField";
 
 interface FormWrapperProps {
-  form?: UseFormReturn<Record<string, unknown>>; // Replace any with more specific type
-  questions: FormQuestion[];
-  onSubmit: (values: Record<string, unknown>) => Promise<void>;
-  title: string;
-  description?: string;
-  submitText?: string;
-  isSubmitting?: boolean;
-  error?: string;
   className?: string;
+  description?: string;
+  error?: string;
+  form?: UseFormReturn<Record<string, unknown>>; // Replace any with more specific type
   hideSubmitButton?: boolean;
+  isSubmitting?: boolean;
+  onSubmit: (values: Record<string, unknown>) => Promise<void>;
+  questions: FormQuestion[];
+  submitText?: string;
+  title: string;
 }
 
 export default function FormWrapper({
@@ -33,10 +34,10 @@ export default function FormWrapper({
   onSubmit,
   title,
   description,
-  submitText = 'Submit Application',
+  submitText = "Submit Application",
   isSubmitting = false,
   error,
-  className = 'space-y-6 max-w-2xl mx-auto p-4',
+  className = "space-y-6 max-w-2xl mx-auto p-4",
   hideSubmitButton = false,
 }: FormWrapperProps) {
   // Try to get form from context, otherwise use the provided form prop
@@ -51,15 +52,15 @@ export default function FormWrapper({
   }, [form, questions]);
 
   if (!form) {
-    console.error('Form is required. Provide it as a prop or via FormProvider');
+    console.error("Form is required. Provide it as a prop or via FormProvider");
     return null;
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={className}>
+      <form className={className} onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold">{title}</h2>
+          <h2 className="font-semibold text-2xl">{title}</h2>
           {description && (
             <p className="text-muted-foreground">{description}</p>
           )}
@@ -67,7 +68,7 @@ export default function FormWrapper({
 
         {/* Only show error alert if explicitly provided and not empty */}
         {error && error.length > 0 && (
-          <Alert variant="destructive" className="mt-4">
+          <Alert className="mt-4" variant="destructive">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -83,16 +84,16 @@ export default function FormWrapper({
             };
 
             switch (q.type) {
-              case 'short':
+              case "short":
                 return (
                   <InputField
                     key={q.name}
                     {...commonProps}
-                    type={q.inputType || 'text'}
+                    type={q.inputType || "text"}
                   />
                 );
 
-              case 'paragraph':
+              case "paragraph":
                 return (
                   <TextareaField
                     key={q.name}
@@ -101,7 +102,7 @@ export default function FormWrapper({
                   />
                 );
 
-              case 'select':
+              case "select":
                 return (
                   <SelectField
                     key={q.name}
@@ -110,24 +111,24 @@ export default function FormWrapper({
                   />
                 );
 
-              case 'number':
+              case "number":
                 return (
                   <NumberField
                     key={q.name}
                     {...commonProps}
-                    min={q.min}
                     max={q.max}
+                    min={q.min}
                     step={q.step}
                   />
                 );
 
-              case 'digits-only':
+              case "digits-only":
                 return (
                   <DigitsOnlyField
                     key={q.name}
                     {...commonProps}
-                    minLength={q.minLength}
                     maxLength={q.maxLength}
+                    minLength={q.minLength}
                     placeholder={q.placeholder}
                   />
                 );
@@ -141,10 +142,10 @@ export default function FormWrapper({
         {!hideSubmitButton && (
           <div className="mt-8 flex justify-end">
             <Button
-              type="submit"
-              size="lg"
+              className="w-full min-w-[200px] md:w-auto"
               disabled={isSubmitting}
-              className="w-full md:w-auto min-w-[200px]"
+              size="lg"
+              type="submit"
             >
               {isSubmitting && (
                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />

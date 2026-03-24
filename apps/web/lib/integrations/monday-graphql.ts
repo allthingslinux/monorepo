@@ -1,12 +1,13 @@
-import type { Role, FormData, Question } from '../types';
-import { GraphQLClient, gql } from 'graphql-request';
+import { GraphQLClient, gql } from "graphql-request";
+
+import type { FormData, Question, Role } from "../types";
 
 // Define types for Monday.com API responses
 interface MondayColumn {
   id: string;
+  settings_str: string;
   title: string;
   type: string;
-  settings_str: string;
 }
 
 interface MondayBoardResponse {
@@ -16,18 +17,18 @@ interface MondayBoardResponse {
 }
 
 interface MondayItemResponse {
-  id: string;
-  name: string;
   board: {
     id: string;
     name: string;
   };
+  id: string;
+  name: string;
 }
 
 // Define types for Monday.com settings
 interface MondayStatusLabel {
-  color: string;
   border: string;
+  color: string;
   var_name: string;
 }
 
@@ -66,9 +67,9 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
  */
 function createMondayClient(apiKey: string): GraphQLClient {
   // Use a more basic fetch-based configuration to avoid any compatibility issues
-  const client = new GraphQLClient('https://api.monday.com/v2', {
+  const client = new GraphQLClient("https://api.monday.com/v2", {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: apiKey,
     },
     // Avoid any Node.js specific features
@@ -85,7 +86,7 @@ async function getMondayBoardStructure(
   boardId: string
 ): Promise<MondayColumn[] | null> {
   try {
-    console.log('Fetching Monday.com board structure to get column IDs...');
+    console.log("Fetching Monday.com board structure to get column IDs...");
 
     // Use the boards query to get columns with detailed settings
     const boardQuery = gql`
@@ -102,23 +103,23 @@ async function getMondayBoardStructure(
     `;
 
     const variables = {
-      boardId: boardId,
+      boardId,
     };
 
     const data = await client.request<MondayBoardResponse>(
       boardQuery,
       variables
     );
-    console.log('Monday.com board structure:', JSON.stringify(data, null, 2));
+    console.log("Monday.com board structure:", JSON.stringify(data, null, 2));
 
     // Return the columns from the first board
     if (data.boards && data.boards.length > 0) {
       return data.boards[0].columns;
     }
 
-    throw new Error('No board data found');
+    throw new Error("No board data found");
   } catch (error) {
-    console.error('Error fetching Monday.com board structure:', error);
+    console.error("Error fetching Monday.com board structure:", error);
     return null;
   }
 }
@@ -132,7 +133,7 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
   }
 
   switch (column.type) {
-    case 'status':
+    case "status":
       // Status columns need to use the index of the label in the settings
       try {
         const settings = JSON.parse(
@@ -142,13 +143,13 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
         if (settings && settings.labels) {
           const labels = settings.labels;
           // Find the status by name or use the first one (index 5 is "Needs Review" based on the logs)
-          if (value && typeof value === 'string') {
+          if (value && typeof value === "string") {
             for (const [index, label] of Object.entries(labels)) {
               if (
-                typeof label === 'string' &&
+                typeof label === "string" &&
                 label.toLowerCase() === value.toLowerCase()
               ) {
-                return { index: parseInt(index, 10) };
+                return { index: Number.parseInt(index, 10) };
               }
             }
           }
@@ -156,16 +157,16 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
           // If "Needs Review" exists, use that (based on the logs, it's index 5)
           for (const [index, label] of Object.entries(labels)) {
             if (
-              typeof label === 'string' &&
-              label.toLowerCase() === 'needs review'
+              typeof label === "string" &&
+              label.toLowerCase() === "needs review"
             ) {
-              return { index: parseInt(index, 10) };
+              return { index: Number.parseInt(index, 10) };
             }
           }
 
           // Default to the first status
           const firstIndex = Object.keys(labels)[0];
-          return { index: parseInt(firstIndex, 10) };
+          return { index: Number.parseInt(firstIndex, 10) };
         }
         return { index: 5 }; // Default to 5 which is "Needs Review" based on the logs
       } catch (e) {
@@ -173,22 +174,22 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
         return { index: 5 }; // Default to "Needs Review" based on the logs
       }
 
-    case 'date':
+    case "date":
       // Format date as ISO string without time part
       if (value instanceof Date) {
-        return value.toISOString().split('T')[0];
+        return value.toISOString().split("T")[0];
       }
       return String(value);
 
-    case 'long_text':
+    case "long_text":
       // Ensure long text is properly formatted
       return { text: String(value) };
 
-    case 'text':
+    case "text":
       // Just return the text value
       return String(value);
 
-    case 'dropdown':
+    case "dropdown":
       // Try to find the dropdown option
       try {
         const settings = JSON.parse(
@@ -196,7 +197,7 @@ function formatColumnValue(column: MondayColumn, value: unknown): unknown {
         ) as MondayDropdownSettings;
         if (settings && settings.labels && Array.isArray(settings.labels)) {
           // Only proceed if value is defined and labels is an array
-          if (value && typeof value === 'string') {
+          if (value && typeof value === "string") {
             const matchedOption = settings.labels.find(
               (option) =>
                 option &&
@@ -236,7 +237,7 @@ async function createMondayItem(
   itemName: string,
   columnValues: Record<string, unknown>
 ): Promise<string> {
-  console.log('Creating Monday.com item...');
+  console.log("Creating Monday.com item...");
 
   const createItemMutation = gql`
     mutation CreateItem(
@@ -260,8 +261,8 @@ async function createMondayItem(
   `;
 
   const variables = {
-    boardId: boardId,
-    itemName: itemName,
+    boardId,
+    itemName,
     columnValues: JSON.stringify(columnValues),
   };
 
@@ -270,10 +271,10 @@ async function createMondayItem(
       createItemMutation,
       variables
     );
-    console.log('Item created:', JSON.stringify(data, null, 2));
+    console.log("Item created:", JSON.stringify(data, null, 2));
     return data.create_item.id;
   } catch (error) {
-    console.error('Error creating Monday.com item:', error);
+    console.error("Error creating Monday.com item:", error);
     throw error;
   }
 }
@@ -295,7 +296,7 @@ async function addDetailsToItem(
 
   try {
     console.log(
-      'Adding application details as individual updates to the item...'
+      "Adding application details as individual updates to the item..."
     );
 
     // Reusable function to send an update, now with retry logic for length errors
@@ -315,9 +316,9 @@ async function addDetailsToItem(
         return true;
       } catch (updateError: unknown) {
         console.error(
-          'Initial error sending update:',
+          "Initial error sending update:",
           updateError,
-          'Body length:',
+          "Body length:",
           body.length
         );
 
@@ -327,18 +328,18 @@ async function addDetailsToItem(
             updateError as {
               response?: { errors?: Array<{ message?: string }> };
             }
-          )?.response?.errors?.[0]?.message?.toLowerCase() || '';
+          )?.response?.errors?.[0]?.message?.toLowerCase() || "";
         const isLengthError =
-          errorMessage.includes('limit') ||
-          errorMessage.includes('length') ||
-          errorMessage.includes('size') ||
-          errorMessage.includes('complexity') ||
-          errorMessage.includes('too long');
+          errorMessage.includes("limit") ||
+          errorMessage.includes("length") ||
+          errorMessage.includes("size") ||
+          errorMessage.includes("complexity") ||
+          errorMessage.includes("too long");
         // Optionally check body.length > threshold if needed
 
         if (isLengthError) {
           console.warn(
-            'Potential length limit error detected. Attempting to split and retry...'
+            "Potential length limit error detected. Attempting to split and retry..."
           );
           const RETRY_MAX_LENGTH = 1000; // Smaller chunk size for retry
           const chunks = splitTextIntoChunks(body, RETRY_MAX_LENGTH);
@@ -346,7 +347,7 @@ async function addDetailsToItem(
 
           if (chunks.length <= 1) {
             console.error(
-              'Splitting resulted in 1 or 0 chunks, cannot retry meaningfully.'
+              "Splitting resulted in 1 or 0 chunks, cannot retry meaningfully."
             );
             return false; // Avoid infinite loops or pointless retries
           }
@@ -376,17 +377,15 @@ async function addDetailsToItem(
           }
 
           if (retrySuccessful) {
-            console.log('Retry successful after splitting the update.');
+            console.log("Retry successful after splitting the update.");
             return true; // The overall update succeeded via splitting
-          } else {
-            console.error('Retry failed even after splitting.');
-            return false; // The overall update failed
           }
-        } else {
-          // Not a length error, or retry failed, just return false
-          console.log('Error not identified as length limit, not retrying.');
-          return false;
+          console.error("Retry failed even after splitting.");
+          return false; // The overall update failed
         }
+        // Not a length error, or retry failed, just return false
+        console.log("Error not identified as length limit, not retrying.");
+        return false;
       }
     };
 
@@ -394,16 +393,16 @@ async function addDetailsToItem(
     const headerBody =
       `🔔 NEW APPLICATION RECEIVED - ${formData.discord_username}\n` +
       `Date: ${new Date(timestamp).toLocaleString()}\n\n` +
-      `--- APPLICANT INFO ---\n` +
+      "--- APPLICANT INFO ---\n" +
       `Discord: ${formData.discord_username}\n` +
       `Discord ID: ${formData.discord_id}\n\n` +
-      `--- ROLE INFO ---\n` +
+      "--- ROLE INFO ---\n" +
       `Role: ${roleData.name}\n` +
       `Department: ${roleData.department}\n` +
       `Description: ${roleData.description}`;
 
-    const generalQuestionsHeader = '--- GENERAL QUESTIONS ---';
-    const roleQuestionsHeader = '--- ROLE-SPECIFIC QUESTIONS ---';
+    const generalQuestionsHeader = "--- GENERAL QUESTIONS ---";
+    const roleQuestionsHeader = "--- ROLE-SPECIFIC QUESTIONS ---";
 
     const generalQuestions = roleData.generalQuestions.filter(
       (q: Question) => formData[q.name]
@@ -455,18 +454,17 @@ async function addDetailsToItem(
 
     if (allUpdatesSuccessful) {
       console.log(
-        'Successfully added application details as individual updates'
+        "Successfully added application details as individual updates"
       );
       return true;
-    } else {
-      console.warn(
-        'Some updates failed to be added during the application submission.'
-      );
-      return false; // Return false if any update failed
     }
+    console.warn(
+      "Some updates failed to be added during the application submission."
+    );
+    return false; // Return false if any update failed
   } catch (error) {
     console.error(
-      'Error preparing or adding application details as individual updates:',
+      "Error preparing or adding application details as individual updates:",
       error
     );
     return false;
@@ -484,15 +482,15 @@ export async function storeApplicationInMonday(
   boardId: string
 ): Promise<boolean> {
   try {
-    if (!mondayApiKey || !boardId) {
+    if (!(mondayApiKey && boardId)) {
       console.error(
-        'Monday.com API key or board ID not configured, skipping integration'
+        "Monday.com API key or board ID not configured, skipping integration"
       );
       return false;
     }
 
     console.log(
-      'Attempting to store application in Monday.com using GraphQL Request...'
+      "Attempting to store application in Monday.com using GraphQL Request..."
     );
 
     // Create GraphQL client
@@ -502,36 +500,36 @@ export async function storeApplicationInMonday(
     const columns = await getMondayBoardStructure(client, boardId);
 
     if (!columns || columns.length === 0) {
-      console.error('Failed to get Monday.com board columns');
+      console.error("Failed to get Monday.com board columns");
       return false;
     }
 
     // Log column mapping information for debugging
-    console.log('Column mapping for reference:');
+    console.log("Column mapping for reference:");
     columns.forEach((col: MondayColumn) => {
       console.log(`  ${col.id}: ${col.title} (${col.type})`);
     });
 
     // Log all form keys to help debug
-    console.log('Form data keys:', Object.keys(formData));
+    console.log("Form data keys:", Object.keys(formData));
 
     // Create a map of field mappings (title/description to column ID)
     const fieldToColumnMap: Record<string, MondayColumn> = {};
 
     // Standard fields we want to map by title or similar names
     const fieldMappings = [
-      { field: 'name', titleMatches: ['name', 'title', 'applicant'] },
+      { field: "name", titleMatches: ["name", "title", "applicant"] },
       {
-        field: 'discord_username',
-        titleMatches: ['discord username', 'discord name', 'discord user'],
+        field: "discord_username",
+        titleMatches: ["discord username", "discord name", "discord user"],
       },
-      { field: 'discord_id', titleMatches: ['discord id', 'discord user id'] },
-      { field: 'status', titleMatches: ['status', 'application status'] },
-      { field: 'department', titleMatches: ['department', 'team', 'group'] },
-      { field: 'role', titleMatches: ['role', 'position', 'job title'] },
+      { field: "discord_id", titleMatches: ["discord id", "discord user id"] },
+      { field: "status", titleMatches: ["status", "application status"] },
+      { field: "department", titleMatches: ["department", "team", "group"] },
+      { field: "role", titleMatches: ["role", "position", "job title"] },
       {
-        field: 'submission_date',
-        titleMatches: ['date', 'submission date', 'applied on'],
+        field: "submission_date",
+        titleMatches: ["date", "submission date", "applied on"],
       },
     ];
 
@@ -550,7 +548,7 @@ export async function storeApplicationInMonday(
     }
 
     console.log(
-      'Field to column mapping:',
+      "Field to column mapping:",
       Object.entries(fieldToColumnMap).map(
         ([field, col]) => `${field} -> ${col.id} (${col.title})`
       )
@@ -569,29 +567,29 @@ export async function storeApplicationInMonday(
 
     // Set column values from the form data
     setColumnValue(
-      'name',
+      "name",
       formData.preferred_name || formData.discord_username
     );
-    setColumnValue('discord_username', formData.discord_username);
-    setColumnValue('discord_id', formData.discord_id);
-    setColumnValue('submission_date', new Date(timestamp));
-    setColumnValue('status', 'Needs Review');
-    setColumnValue('department', roleData.department);
-    setColumnValue('role', roleData.name);
+    setColumnValue("discord_username", formData.discord_username);
+    setColumnValue("discord_id", formData.discord_id);
+    setColumnValue("submission_date", new Date(timestamp));
+    setColumnValue("status", "Needs Review");
+    setColumnValue("department", roleData.department);
+    setColumnValue("role", roleData.name);
 
     // Fall back to using the actual column IDs if we couldn't find all mappings
     // Explicit mappings based on the board structure in the logs
     columnValues.name = formData.preferred_name || formData.discord_username;
     columnValues.text_mkp2jfrq = formData.discord_username; // Discord Username
     columnValues.text_mkp2d8wc = formData.discord_id; // Discord ID
-    columnValues.date4 = new Date(timestamp).toISOString().split('T')[0]; // Date
+    columnValues.date4 = new Date(timestamp).toISOString().split("T")[0]; // Date
     columnValues.color_mkp2nrgz = { index: 5 }; // Status - Needs Review (index 5)
 
     // Role & Department Columns - match against existing values by ID if possible
     console.log(`Setting role value: "${roleData.name}"`);
 
     // Find the Role dropdown column and check for existing options
-    const roleColumn = columns.find((col) => col.id === 'dropdown_mkp22pcr');
+    const roleColumn = columns.find((col) => col.id === "dropdown_mkp22pcr");
     if (roleColumn) {
       try {
         const roleSettings = JSON.parse(
@@ -625,7 +623,7 @@ export async function storeApplicationInMonday(
           }
         }
       } catch (e) {
-        console.warn(`Error parsing role dropdown settings:`, e);
+        console.warn("Error parsing role dropdown settings:", e);
         columnValues.dropdown_mkp22pcr = { text: roleData.name };
       }
     } else {
@@ -636,7 +634,7 @@ export async function storeApplicationInMonday(
     console.log(`Setting department value: "${roleData.department}"`);
 
     // Find the Department dropdown column and check for existing options
-    const deptColumn = columns.find((col) => col.id === 'dropdown_mkp2n3v9');
+    const deptColumn = columns.find((col) => col.id === "dropdown_mkp2n3v9");
     if (deptColumn) {
       try {
         const deptSettings = JSON.parse(
@@ -670,7 +668,7 @@ export async function storeApplicationInMonday(
           }
         }
       } catch (e) {
-        console.warn(`Error parsing department dropdown settings:`, e);
+        console.warn("Error parsing department dropdown settings:", e);
         columnValues.dropdown_mkp2n3v9 = { text: roleData.department };
       }
     } else {
@@ -679,7 +677,7 @@ export async function storeApplicationInMonday(
 
     // Log the complete column mapping for debugging
     console.log(
-      'Monday.com column values:',
+      "Monday.com column values:",
       JSON.stringify(columnValues, null, 2)
     );
 
@@ -703,14 +701,13 @@ export async function storeApplicationInMonday(
     );
 
     if (detailsAdded) {
-      console.log('Successfully stored application in Monday.com');
+      console.log("Successfully stored application in Monday.com");
       return true;
-    } else {
-      console.warn('Created item but failed to add full details');
-      return true; // Return true anyway since the main item was created
     }
+    console.warn("Created item but failed to add full details");
+    return true; // Return true anyway since the main item was created
   } catch (error) {
-    console.error('Error storing application in Monday.com:', error);
+    console.error("Error storing application in Monday.com:", error);
     return false;
   }
 }

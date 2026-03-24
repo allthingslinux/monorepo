@@ -1,8 +1,9 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { env } from '@/env';
-import type { FormQuestion, Role } from '@/types';
-import { z } from 'zod';
+import { z } from "zod";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+import { env } from "@/env";
+import type { FormQuestion, Role } from "@/types";
 
 /**
  * Combines multiple class names and merges Tailwind classes
@@ -16,14 +17,14 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
     questions.reduce(
       (acc, curr) => {
         // Check if this is an "other" field that depends on a parent field
-        const isOtherField = curr.name.endsWith('_other');
+        const isOtherField = curr.name.endsWith("_other");
 
         // If the question has showIf condition, make it conditionally required
         const isConditional = !!curr.showIf;
 
         switch (curr.type) {
-          case 'short':
-          case 'paragraph':
+          case "short":
+          case "paragraph":
             // If it's conditional or optional, make it optional in schema
             // Special handling for "_other" fields - they should be conditionally required
             if (isOtherField && isConditional) {
@@ -36,24 +37,24 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
               acc[curr.name] =
                 curr.optional || isConditional
                   ? z.string().optional()
-                  : z.string().min(1, { message: 'This field is required' });
+                  : z.string().min(1, { message: "This field is required" });
             }
             break;
 
-          case 'digits-only':
+          case "digits-only": {
             // Create a validator for digit-only string (like Discord IDs)
             let digitsSchema = z.string().regex(/^\d*$/, {
-              message: 'Only numeric digits (0-9) are allowed',
+              message: "Only numeric digits (0-9) are allowed",
             });
 
             // Add length constraints if specified
-            if (typeof curr.minLength === 'number') {
+            if (typeof curr.minLength === "number") {
               digitsSchema = digitsSchema.min(curr.minLength, {
                 message: `Must be at least ${curr.minLength} digits`,
               });
             }
 
-            if (typeof curr.maxLength === 'number') {
+            if (typeof curr.maxLength === "number") {
               digitsSchema = digitsSchema.max(curr.maxLength, {
                 message: `Must be at most ${curr.maxLength} digits`,
               });
@@ -63,22 +64,23 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
             acc[curr.name] =
               curr.optional || isConditional
                 ? digitsSchema.optional()
-                : digitsSchema.min(1, { message: 'This field is required' });
+                : digitsSchema.min(1, { message: "This field is required" });
             break;
+          }
 
-          case 'number':
+          case "number": {
             // Create a number validator with optional min/max constraints
             let numberSchema = z.coerce.number();
 
             // Add min constraint if specified
-            if (typeof curr.min === 'number') {
+            if (typeof curr.min === "number") {
               numberSchema = numberSchema.min(curr.min, {
                 message: `Value must be at least ${curr.min}`,
               });
             }
 
             // Add max constraint if specified
-            if (typeof curr.max === 'number') {
+            if (typeof curr.max === "number") {
               numberSchema = numberSchema.max(curr.max, {
                 message: `Value must be at most ${curr.max}`,
               });
@@ -90,8 +92,9 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
                 ? numberSchema.optional()
                 : numberSchema;
             break;
+          }
 
-          case 'select':
+          case "select": {
             // Handle select fields with comprehensive validation
             const selectOptions = curr.options as [string, ...string[]];
 
@@ -100,9 +103,9 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
                 // Accept a valid enum value
                 z.enum(selectOptions),
                 // Accept an empty string (unselected state)
-                z.literal(''),
+                z.literal(""),
                 // Handle case where options array is mistakenly passed
-                z.array(z.string()).transform(() => ''),
+                z.array(z.string()).transform(() => ""),
                 // Handle any other unexpected input
                 z.any().transform((val) => {
                   console.warn(
@@ -110,17 +113,17 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
                     val,
                     typeof val
                   );
-                  return '';
+                  return "";
                 }),
               ])
               .transform((val) => {
                 // Ensure we always return a string
-                if (typeof val !== 'string') {
+                if (typeof val !== "string") {
                   console.warn(
                     `Field ${curr.name} transformed non-string to empty string:`,
                     val
                   );
-                  return '';
+                  return "";
                 }
                 return val;
               });
@@ -129,9 +132,10 @@ export const generateFormSchema = (questions: FormQuestion[]) => {
               curr.optional || isConditional
                 ? selectSchema.optional()
                 : selectSchema.refine((val) => val && val.length > 0, {
-                    message: 'Please select an option',
+                    message: "Please select an option",
                   });
             break;
+          }
           default:
             acc[curr.name] = z.string().optional();
         }
@@ -163,12 +167,12 @@ export function getRolesByDepartment(roles: Role[]): Record<string, Role[]> {
  */
 export function getBaseUrl(): string {
   // Check if we're running on the server and in development mode
-  if (typeof window === 'undefined' && env.NODE_ENV === 'development') {
-    return 'http://localhost:3000';
+  if (typeof window === "undefined" && env.NODE_ENV === "development") {
+    return "http://localhost:3000";
   }
 
   // Check if window is available (client side)
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return window.location.origin;
   }
 
@@ -181,12 +185,12 @@ export function getBaseUrl(): string {
  */
 export function getApiUrl(path: string): string {
   const baseUrl = getBaseUrl();
-  const url = `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
+  const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 
   // Add cache busting in development mode
-  if (env.NODE_ENV === 'development') {
+  if (env.NODE_ENV === "development") {
     const cacheBuster = `_cb=${Date.now()}`;
-    return url.includes('?')
+    return url.includes("?")
       ? `${url}&${cacheBuster}`
       : `${url}?${cacheBuster}`;
   }
@@ -198,9 +202,9 @@ export function getApiUrl(path: string): string {
  * Format currency amount as USD
  */
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
   }).format(amount);
 }
 
@@ -208,9 +212,9 @@ export function formatCurrency(amount: number): string {
  * Format date string to readable format
  */
 export function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 }

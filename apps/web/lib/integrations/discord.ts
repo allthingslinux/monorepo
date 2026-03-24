@@ -1,4 +1,4 @@
-import type { Role, FormData, Question } from '../types';
+import type { FormData, Question, Role } from "../types";
 
 /**
  * Sends application data to Discord webhook with retries
@@ -14,7 +14,7 @@ export async function sendToDiscordWebhook(
     // Use passed-in webhookUrl instead of process.env
     // const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
     if (!webhookUrl) {
-      console.log('Discord webhook URL not provided, skipping backup');
+      console.log("Discord webhook URL not provided, skipping backup");
       return false;
     }
 
@@ -27,7 +27,7 @@ export async function sendToDiscordWebhook(
       try {
         // Create a complete backup JSON file with all data
         const backupData = {
-          timestamp: timestamp,
+          timestamp,
           application: {
             role: {
               name: roleData.name,
@@ -46,7 +46,7 @@ export async function sendToDiscordWebhook(
                 question: q.question,
                 answer: formData[q.name],
                 name: q.name,
-                optional: q.optional || false,
+                optional: q.optional,
               })),
             roleAnswers: roleData.questions
               .filter((q: Question) => formData[q.name])
@@ -54,7 +54,7 @@ export async function sendToDiscordWebhook(
                 question: q.question,
                 answer: formData[q.name],
                 name: q.name,
-                optional: q.optional || false,
+                optional: q.optional,
               })),
             // Include raw form data for complete backup
             rawFormData: formData,
@@ -66,9 +66,9 @@ export async function sendToDiscordWebhook(
 
         // First send a simple header message - using the safe variable
         const headerResponse = await fetch(webhookUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             content: `**NEW APPLICATION**\nRole: ${roleData.name}\nDepartment: ${roleData.department}\nApplicant: ${formData.discord_username} (${formData.discord_id})\nTimestamp: ${timestamp}`,
@@ -92,9 +92,9 @@ export async function sendToDiscordWebhook(
         // Send each chunk as a code block - using the safe variable
         for (let i = 0; i < chunks.length; i++) {
           const chunkResponse = await fetch(webhookUrl, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               content: `**Application Data (Part ${i + 1}/${chunks.length})**\n\`\`\`json\n${chunks[i]}\n\`\`\``,
@@ -113,7 +113,7 @@ export async function sendToDiscordWebhook(
           }
         }
 
-        console.log('Successfully sent application data to Discord webhook');
+        console.log("Successfully sent application data to Discord webhook");
         return true;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
@@ -128,7 +128,7 @@ export async function sendToDiscordWebhook(
         }
 
         // Exponential backoff for retry
-        const backoffDelay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+        const backoffDelay = Math.min(1000 * 2 ** retryCount, 10_000);
         await new Promise((resolve) => setTimeout(resolve, backoffDelay));
 
         // Increment retry counter
@@ -143,7 +143,7 @@ export async function sendToDiscordWebhook(
     );
     return false;
   } catch (error) {
-    console.error('Error sending to Discord webhook:', error);
+    console.error("Error sending to Discord webhook:", error);
     return false;
   }
 }

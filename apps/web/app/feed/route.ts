@@ -1,4 +1,4 @@
-import { generateFeed } from '@/lib/feed';
+import { generateFeed } from "@/lib/feed";
 
 /**
  * Handles HTTP GET requests that return an Atom feed.
@@ -14,15 +14,15 @@ export async function GET(): Promise<Response> {
 
     return new Response(atomFeed, {
       headers: {
-        'Content-Type': 'application/atom+xml; charset=utf-8',
+        "Content-Type": "application/atom+xml; charset=utf-8",
       },
     });
   } catch (e) {
-    console.error('Feed generation error:', e);
+    console.error("Feed generation error:", e);
 
-    return new Response('Internal Server Error', {
+    return new Response("Internal Server Error", {
       status: 500,
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { "Content-Type": "text/plain" },
     });
   }
 }

@@ -1,4 +1,4 @@
-import type { Role, FormData, Question } from '../types';
+import type { FormData, Question, Role } from "../types";
 
 // Create a function for base64 encoding that is Cloudflare-compatible
 function base64Encode(str: string): string {
@@ -9,7 +9,7 @@ function base64Encode(str: string): string {
   return btoa(
     Array.from(data)
       .map((byte) => String.fromCharCode(byte))
-      .join('')
+      .join("")
   );
 }
 
@@ -29,20 +29,20 @@ export async function storeApplicationDataOnGitHub(
     // Use passed-in parameters instead of process.env
     // const githubToken = process.env.GITHUB_TOKEN;
     if (!githubToken) {
-      console.log('GitHub token not provided, skipping GitHub storage');
+      console.log("GitHub token not provided, skipping GitHub storage");
       return false;
     }
 
-    console.log('Attempting to store application data on GitHub...');
+    console.log("Attempting to store application data on GitHub...");
 
     // Use passed-in parameters
     // const repoOwner =
     //   process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER || 'allthingslinux';
     // const repoName = process.env.NEXT_PUBLIC_GITHUB_REPO_NAME || 'applications';
 
-    if (!repoOwner || !repoName) {
+    if (!(repoOwner && repoName)) {
       console.error(
-        'GitHub repo owner or name not provided, skipping GitHub storage.'
+        "GitHub repo owner or name not provided, skipping GitHub storage."
       );
       return false;
     }
@@ -67,7 +67,7 @@ export async function storeApplicationDataOnGitHub(
           question: q.question,
           answer: formData[q.name],
           name: q.name,
-          optional: q.optional || false,
+          optional: q.optional,
         })),
       roleAnswers: roleData.questions
         .filter((q: Question) => formData[q.name])
@@ -75,7 +75,7 @@ export async function storeApplicationDataOnGitHub(
           question: q.question,
           answer: formData[q.name],
           name: q.name,
-          optional: q.optional || false,
+          optional: q.optional,
         })),
       // Include simplified form data for complete backup
       rawFormData: Object.fromEntries(
@@ -84,8 +84,8 @@ export async function storeApplicationDataOnGitHub(
     };
 
     // Format timestamp for filename
-    const safeTimestamp = timestamp.replace(/[:.]/g, '-');
-    const safeUsername = formData.discord_username.replace(/[^a-z0-9]/gi, '_');
+    const safeTimestamp = timestamp.replace(/[:.]/g, "-");
+    const safeUsername = formData.discord_username.replace(/[^a-z0-9]/gi, "_");
     const filename = `applications/${roleData.slug}/${safeUsername}-${safeTimestamp}.json`;
     const content = JSON.stringify(applicationData, null, 2);
 
@@ -98,17 +98,17 @@ export async function storeApplicationDataOnGitHub(
     const response = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filename}`,
       {
-        method: 'PUT',
+        method: "PUT",
         headers: {
           Authorization: `token ${githubToken}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'Cloudflare-Worker',
+          "Content-Type": "application/json",
+          Accept: "application/vnd.github.v3+json",
+          "User-Agent": "Cloudflare-Worker",
         },
         body: JSON.stringify({
           message: `Application submission: ${roleData.name} - ${formData.discord_username}`,
           content: contentEncoded,
-          branch: 'main',
+          branch: "main",
         }),
       }
     );
@@ -117,7 +117,7 @@ export async function storeApplicationDataOnGitHub(
 
     if (!response.ok) {
       const responseData = await response.json();
-      console.error('GitHub API error details:', JSON.stringify(responseData));
+      console.error("GitHub API error details:", JSON.stringify(responseData));
       throw new Error(
         `GitHub API error: ${response.status} - ${JSON.stringify(responseData)}`
       );
@@ -126,7 +126,7 @@ export async function storeApplicationDataOnGitHub(
     console.log(`Successfully stored application in GitHub at ${filename}`);
     return true;
   } catch (error) {
-    console.error('Error storing application data on GitHub:', error);
+    console.error("Error storing application data on GitHub:", error);
     return false;
   }
 }

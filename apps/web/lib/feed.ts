@@ -1,7 +1,8 @@
-import { Feed } from 'feed';
-import { getAllPosts } from '@/lib/blog';
-import { siteConfig } from '@/app/metadata';
-import { marked } from 'marked';
+import { Feed } from "feed";
+import { marked } from "marked";
+
+import { getAllPosts } from "@/lib/blog";
+import { siteConfig } from "@/app/metadata";
 
 /**
  * Generates an Atom feed containing all posts.
@@ -26,7 +27,7 @@ export async function generateFeed(): Promise<string> {
     description: siteConfig.description,
     id: siteConfig.url,
     link: `${siteConfig.url}/blog`,
-    language: 'en',
+    language: "en",
     copyright: `All Rights Reserved ${new Date().getFullYear()}, ${siteConfig.name}`,
     updated: latestBlogPostDate,
     generator: `Feed for ${siteConfig.name}, using open-source Node.js Feed generator by jpmonette. `,
@@ -35,7 +36,7 @@ export async function generateFeed(): Promise<string> {
     },
     author: {
       name: siteConfig.name,
-      email: 'admin@allthingslinux.org',
+      email: "admin@allthingslinux.org",
       link: siteConfig.url,
     },
   });
@@ -50,7 +51,7 @@ export async function generateFeed(): Promise<string> {
       author: [
         {
           name: siteConfig.name,
-          email: 'admin@allthingslinux.org',
+          email: "admin@allthingslinux.org",
           link: siteConfig.url,
         },
       ],
@@ -62,7 +63,7 @@ export async function generateFeed(): Promise<string> {
     feed.addItem(entry);
   });
 
-  feed.addCategory('News');
+  feed.addCategory("News");
 
   return feed.atom1();
 }

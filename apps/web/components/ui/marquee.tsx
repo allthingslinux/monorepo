@@ -1,14 +1,14 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface MarqueeProps {
-  className?: string;
-  reverse?: boolean;
-  pauseOnHover?: boolean;
+  "aria-label"?: string;
   children?: React.ReactNode;
-  vertical?: boolean;
+  className?: string;
+  pauseOnHover?: boolean;
   repeat?: number;
+  reverse?: boolean;
   style?: React.CSSProperties;
-  'aria-label'?: string;
+  vertical?: boolean;
 }
 
 export default function Marquee({
@@ -24,10 +24,10 @@ export default function Marquee({
     <div
       {...props}
       className={cn(
-        'flex overflow-hidden p-2 gap-4',
+        "flex gap-4 overflow-hidden p-2",
         {
-          'flex-row': !vertical,
-          'flex-col': vertical,
+          "flex-row": !vertical,
+          "flex-col": vertical,
         },
         className
       )}
@@ -36,14 +36,14 @@ export default function Marquee({
         .fill(0)
         .map((_, i) => (
           <div
-            key={i}
-            className={cn('flex shrink-0 justify-around gap-4', {
-              'animate-marquee flex-row hover:[animation-play-state:paused]':
+            className={cn("flex shrink-0 justify-around gap-4", {
+              "animate-marquee flex-row hover:[animation-play-state:paused]":
                 !vertical,
-              'animate-marquee-vertical flex-col hover:[animation-play-state:paused]':
+              "animate-marquee-vertical flex-col hover:[animation-play-state:paused]":
                 vertical,
-              '[animation-direction:reverse]': reverse,
+              "[animation-direction:reverse]": reverse,
             })}
+            key={i}
           >
             {children}
           </div>

@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Security - Responsible Disclosure',
+  title: "Security - Responsible Disclosure",
   description:
-    'Security vulnerability disclosure and responsible reporting for All Things Linux.',
+    "Security vulnerability disclosure and responsible reporting for All Things Linux.",
 };
 
 export default function SecurityPage() {
   return (
-    <div className="container mx-auto px-4 py-4 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-4">Security at All Things Linux</h1>
+    <div className="container mx-auto max-w-4xl px-4 py-4">
+      <h1 className="mb-4 font-bold text-4xl">Security at All Things Linux</h1>
 
-      <div className="prose prose-lg max-w-none dark:prose-invert [&_ul]:space-y-1 [&_ol]:space-y-1 [&_li]:my-1">
+      <div className="prose prose-lg dark:prose-invert max-w-none [&_li]:my-1 [&_ol]:space-y-1 [&_ul]:space-y-1">
         <p>
           At All Things Linux, we are committed to maintaining the highest
           security standards to protect our community and infrastructure. We
@@ -34,7 +34,7 @@ export default function SecurityPage() {
         <ul>
           <li>
             All our domains including their subdomains:
-            <ul className="text-muted-foreground text-sm mt-1 ml-4 space-y-0.5">
+            <ul className="mt-1 ml-4 space-y-0.5 text-muted-foreground text-sm">
               <li>allthingslinux.com</li>
               <li>allthingslinux.dev</li>
               <li>allthingslinux.org</li>
@@ -84,36 +84,36 @@ export default function SecurityPage() {
             Any recommendations or patches you may have for resolving the issue
           </li>
         </ol>
-        <div className="bg-card border-2 border-primary/20 rounded-lg p-4 sm:p-5 md:p-6 shadow-lg">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-medium mb-0 text-primary/90 font-mono flex items-center -mt-2">
-            <span className="text-green-500 mr-2">~/</span>Contact Information
+        <div className="rounded-lg border-2 border-primary/20 bg-card p-4 shadow-lg sm:p-5 md:p-6">
+          <h3 className="-mt-2 mb-0 flex items-center font-medium font-mono text-lg text-primary/90 sm:text-xl md:text-2xl">
+            <span className="mr-2 text-green-500">~/</span>Contact Information
           </h3>
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed mb-0 -mt-2">
-            <br></br>
+          <p className="-mt-2 mb-0 text-sm leading-relaxed sm:text-base md:text-lg">
+            <br />
             <a
+              className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
               href="mailto:security@allthingslinux.org"
-              className="text-blue-500 hover:text-blue-400 hover:underline font-medium"
             >
               security@allthingslinux.org
             </a>
           </p>
-          <p className="text-sm text-muted-foreground mb-3 mt-1 ml-4">
-            PGP Key:{' '}
+          <p className="mt-1 mb-3 ml-4 text-muted-foreground text-sm">
+            PGP Key:{" "}
             <a
+              className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
               href="https://allthingslinux.org/security@allthingslinux.org-pubkey.asc"
-              className="text-blue-500 hover:text-blue-400 hover:underline font-medium"
             >
               allthingslinux.org/security@allthingslinux.org-pubkey.asc
             </a>
           </p>
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-muted-foreground mb-0">
-            Alternatively, you may open a ticket in our Discord server at{' '}
+          <p className="mb-0 text-muted-foreground text-sm leading-relaxed sm:text-base md:text-lg">
+            Alternatively, you may open a ticket in our Discord server at{" "}
             <a
+              className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
               href="https://discord.gg/linux"
-              className="text-blue-500 hover:text-blue-400 hover:underline font-medium"
             >
               discord.gg/linux
-            </a>{' '}
+            </a>{" "}
             and request assistance from our systems team. Please do not disclose
             vulnerability details in the ticket unless requested by an
             administrator or a member of the systems team.
@@ -146,18 +146,18 @@ export default function SecurityPage() {
           ensure it is known that your actions were conducted in compliance with
           this policy.
         </p>
-        <div className="bg-card border-2 border-primary/20 rounded-lg p-4 sm:p-5 md:p-6 shadow-lg">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-medium mb-0 text-primary/90 font-mono flex items-center -mt-2">
-            <span className="text-yellow-500 mr-2">~/</span>Recognition
+        <div className="rounded-lg border-2 border-primary/20 bg-card p-4 shadow-lg sm:p-5 md:p-6">
+          <h3 className="-mt-2 mb-0 flex items-center font-medium font-mono text-lg text-primary/90 sm:text-xl md:text-2xl">
+            <span className="mr-2 text-yellow-500">~/</span>Recognition
           </h3>
-          <p className="text-muted-foreground mb-0 mt-1">
+          <p className="mt-1 mb-0 text-muted-foreground">
             We appreciate security researchers who help keep our community safe.
             If you would like to be acknowledged for your responsible
             disclosure, please let us know in your report and we'll be happy to
             recognize your contribution publicly.
           </p>
         </div>
-        <p className="text-sm text-muted-foreground mb-0">
+        <p className="mb-0 text-muted-foreground text-sm">
           Thank you for helping us keep All Things Linux secure for everyone.
         </p>
       </div>

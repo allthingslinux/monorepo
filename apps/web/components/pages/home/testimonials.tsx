@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import AutoScroll from 'embla-carousel-auto-scroll';
-import { useRef, memo } from 'react';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
+import { memo, useRef } from "react";
+import AutoScroll from "embla-carousel-auto-scroll";
+
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
-import testimonalsData from '@/data/testimonials.json';
+} from "@/components/ui/carousel";
+import testimonalsData from "@/data/testimonials.json";
 
 const reviews = testimonalsData.testimonials;
 const avatars = Array.from({ length: 15 }, (_, i) => i + 1);
@@ -30,27 +31,29 @@ export const ReviewCard = memo(
   }) => {
     return (
       <Card
-        className="max-w-[500px] select-none bg-card p-6 border border-dashed border-muted-foreground/10"
+        className="max-w-[500px] select-none border border-muted-foreground/10 border-dashed bg-card p-6"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
         <div className="mb-4">
           <div className="flex items-center gap-4">
             <Avatar className="size-12 rounded-full ring-1 ring-input">
-              <AvatarImage loading="lazy" src={avatar} alt={name} />
+              <AvatarImage alt={name} loading="lazy" src={avatar} />
             </Avatar>
             <div>
-              <p className="text-sm font-medium text-foreground">{name}</p>
+              <p className="font-medium text-foreground text-sm">{name}</p>
             </div>
           </div>
         </div>
-        <q className="text-sm text-card-foreground text-balance leading-6">{content}</q>
+        <q className="text-balance text-card-foreground text-sm leading-6">
+          {content}
+        </q>
       </Card>
     );
   }
 );
 
-ReviewCard.displayName = 'ReviewCard';
+ReviewCard.displayName = "ReviewCard";
 
 export default function Testimonials() {
   const plugin = useRef(
@@ -66,7 +69,7 @@ export default function Testimonials() {
     <section className="py-4 md:py-6">
       <div className="container mb-12">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="mb-4 text-2xl font-semibold md:text-3xl">
+          <h2 className="mb-4 font-semibold text-2xl md:text-3xl">
             See what our members are saying
           </h2>
           <p className="text-base text-muted-foreground">
@@ -80,14 +83,14 @@ export default function Testimonials() {
         <Carousel
           opts={{
             loop: true,
-            align: 'start',
+            align: "start",
             containScroll: false,
           }}
           plugins={[plugin.current]}
         >
           <CarouselContent className="-ml-4 px-4">
             {[...reviews, ...reviews].map((review, index) => (
-              <CarouselItem key={index} className="pl-4 md:basis-[520px]">
+              <CarouselItem className="pl-4 md:basis-[520px]" key={index}>
                 <ReviewCard
                   avatar={`/images/penguins/${avatars[index % avatars.length]}.webp`}
                   {...review}

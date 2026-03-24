@@ -1,5 +1,6 @@
-import type { BlogPost } from 'contentlayer/generated';
-import type { Post } from '@/types/blog';
+import type { BlogPost } from "contentlayer/generated";
+
+import type { Post } from "@/types/blog";
 
 // Convert BlogPost to Post
 function convertToPost(blogPost: BlogPost): Post {
@@ -12,7 +13,7 @@ function convertToPost(blogPost: BlogPost): Post {
 // Lazy-load blog posts only when needed (inside handlers)
 export async function getAllPosts(): Promise<BlogPost[]> {
   // Dynamic import to avoid global execution
-  const { allBlogPosts } = await import('contentlayer/generated');
+  const { allBlogPosts } = await import("contentlayer/generated");
   return [...allBlogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
@@ -34,11 +35,11 @@ export async function getPostsByCategory(
   category: string
 ): Promise<BlogPost[]> {
   // If category is empty, null, undefined, or "all-posts", return all posts
-  if (!category || category === 'all-posts') {
+  if (!category || category === "all-posts") {
     return getAllPosts();
   }
 
-  const categorySlug = category.toLowerCase().replace(/ /g, '-');
+  const categorySlug = category.toLowerCase().replace(/ /g, "-");
   const allPosts = await getAllPosts();
   return allPosts.filter((post) => post.categorySlug === categorySlug);
 }

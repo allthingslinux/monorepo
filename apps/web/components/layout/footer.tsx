@@ -1,3 +1,4 @@
+import { BsOpencollective } from "react-icons/bs";
 import {
   FaDiscord,
   FaFacebook,
@@ -5,31 +6,30 @@ import {
   FaGithub,
   FaInstagram,
   FaRss,
-} from 'react-icons/fa';
-import { BsOpencollective } from 'react-icons/bs';
+} from "react-icons/fa";
 
-import { Separator } from '@/components/ui/separator';
-import { Privacy, Cookies, Terms, Security } from '@/components/consent';
+import { Cookies, Privacy, Security, Terms } from "@/components/consent";
+import { Separator } from "@/components/ui/separator";
 
 // Define footer sections data
 const sections = [
   {
-    title: 'Information',
+    title: "Information",
     links: [
-      { name: 'About', href: '/about' },
-      { name: 'Code of Conduct', href: '/code-of-conduct' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Apply', href: '/apply' },
-      { name: 'Contribute', href: '/contribute' },
+      { name: "About", href: "/about" },
+      { name: "Code of Conduct", href: "/code-of-conduct" },
+      { name: "Blog", href: "/blog" },
+      { name: "Apply", href: "/apply" },
+      { name: "Contribute", href: "/contribute" },
     ],
   },
   {
-    title: 'Projects',
+    title: "Projects",
     links: [
-      { name: 'tux', href: 'https://github.com/allthingslinux/tux' },
-      { name: 'atl.wiki', href: 'https://atl.wiki' },
-      { name: 'atl.tools', href: 'https://atl.tools' },
-      { name: 'atl.chat', href: 'https://atl.chat' },
+      { name: "tux", href: "https://github.com/allthingslinux/tux" },
+      { name: "atl.wiki", href: "https://atl.wiki" },
+      { name: "atl.tools", href: "https://atl.tools" },
+      { name: "atl.chat", href: "https://atl.chat" },
     ],
   },
 ];
@@ -38,33 +38,33 @@ const sections = [
 const socialLinks = [
   {
     icon: FaDiscord,
-    href: 'https://discord.gg/linux',
-    label: 'Discord',
+    href: "https://discord.gg/linux",
+    label: "Discord",
   },
   {
     icon: BsOpencollective,
-    href: 'https://opencollective.com/allthingslinux',
-    label: 'Open Collective',
+    href: "https://opencollective.com/allthingslinux",
+    label: "Open Collective",
   },
   {
     icon: FaGithub,
-    href: 'https://github.com/allthingslinux',
-    label: 'GitHub',
+    href: "https://github.com/allthingslinux",
+    label: "GitHub",
   },
   {
     icon: FaInstagram,
-    href: 'https://instagram.com/allthingslinux',
-    label: 'Instagram',
+    href: "https://instagram.com/allthingslinux",
+    label: "Instagram",
   },
   {
     icon: FaFacebook,
-    href: 'https://facebook.com/allthingslinux.org',
-    label: 'Facebook',
+    href: "https://facebook.com/allthingslinux.org",
+    label: "Facebook",
   },
   {
     icon: FaRss,
-    href: 'https://allthingslinux.org/feed',
-    label: 'Atom Feed',
+    href: "https://allthingslinux.org/feed",
+    label: "Atom Feed",
   },
 ];
 
@@ -116,7 +116,7 @@ const FooterSection = ({
     <h3 className="mb-4 font-bold">{title}</h3>
     <ul className="space-y-4 text-muted-foreground">
       {links.map((link) => (
-        <FooterLink key={link.name} name={link.name} href={link.href} />
+        <FooterLink href={link.href} key={link.name} name={link.name} />
       ))}
     </ul>
   </div>
@@ -133,7 +133,7 @@ const SocialIcon = ({
   label: string;
 }) => (
   <li className="font-medium hover:text-primary">
-    <a href={href} aria-label={label}>
+    <a aria-label={label} href={href}>
       <Icon className="size-6" />
     </a>
   </li>
@@ -142,30 +142,30 @@ const SocialIcon = ({
 // Social section component
 const SocialSection = () => (
   <div>
-    <h3 className="mb-4 font-bold md:block hidden">Social</h3>
-    <ul className="flex items-center justify-center md:justify-start space-x-6 text-muted-foreground">
+    <h3 className="mb-4 hidden font-bold md:block">Social</h3>
+    <ul className="flex items-center justify-center space-x-6 text-muted-foreground md:justify-start">
       {socialLinks.map((social) => (
         <SocialIcon
-          key={social.label}
-          Icon={social.icon}
           href={social.href}
+          Icon={social.icon}
+          key={social.label}
           label={social.label}
         />
       ))}
     </ul>
     <div className="mt-6 text-center md:text-left">
-      <h4 className="mb-2 font-bold text-sm md:block hidden">Support</h4>
+      <h4 className="mb-2 hidden font-bold text-sm md:block">Support</h4>
       <a
+        className="text-muted-foreground text-sm transition-colors hover:text-primary"
         href="mailto:admin@allthingslinux.org"
-        className="text-sm text-muted-foreground hover:text-primary transition-colors"
       >
         admin@allthingslinux.org
       </a>
     </div>
     <div className="mt-5 text-center md:text-left">
       <a
+        className="font-bold text-muted-foreground text-xl transition-colors hover:text-primary"
         href="/open"
-        className="text-xl font-bold text-muted-foreground hover:text-primary transition-colors"
       >
         /open
       </a>
@@ -179,8 +179,8 @@ const FooterSections = () => (
     {sections.map((section) => (
       <FooterSection
         key={section.title}
-        title={section.title}
         links={section.links}
+        title={section.title}
       />
     ))}
     <LegalSection />
@@ -194,14 +194,14 @@ const FooterSections = () => (
 const MobileFooter = () => (
   <div className="flex flex-col items-center space-y-4 md:hidden">
     <SocialSection />
-    <p className="text-sm text-center text-muted-foreground">
+    <p className="text-center text-muted-foreground text-sm">
       All Things Linux • Made with ☕ & 💛
     </p>
     <a
+      className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-primary"
       href="https://github.com/allthingslinux/allthingslinux"
-      target="_blank"
       rel="noopener noreferrer"
-      className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2 transition-colors"
+      target="_blank"
     >
       <FaGitAlt className="size-5" />
       <span>View Source</span>
@@ -211,15 +211,15 @@ const MobileFooter = () => (
 
 // Desktop Copyright
 const DesktopCopyright = () => (
-  <div className="hidden md:flex justify-between items-center">
-    <p className="text-sm text-muted-foreground">
+  <div className="hidden items-center justify-between md:flex">
+    <p className="text-muted-foreground text-sm">
       All Things Linux • Made with ☕ & 💛
     </p>
     <a
+      className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-primary"
       href="https://github.com/allthingslinux/allthingslinux"
-      target="_blank"
       rel="noopener noreferrer"
-      className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2 transition-colors"
+      target="_blank"
     >
       <FaGitAlt className="size-5" />
       <span>View Source</span>
