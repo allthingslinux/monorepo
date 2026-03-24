@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@portal/typescript-config": "workspace:*",
-    "next": "16.1.6",
+    "next": "16.1.7",
     "server-only": "^0.0.1",
     "typescript": "^5.9.3"
   }

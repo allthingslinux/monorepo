@@ -76,7 +76,7 @@
     "graphql-request": "^7.4.0",
     "lucide-react": "^0.562.0",
     "marked": "^16.4.2",
-    "next": "16.1.6",
+    "next": "16.1.7",
     "next-contentlayer2": "^0.5.8",
     "node-quickbooks": "^2.0.47",
     "postcss": "^8.5.6",
