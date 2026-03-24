@@ -5,6 +5,7 @@ const RELEASE_HEADER_RE = /^chore\(release\):/i;
 /** @type {import('@commitlint/types').UserConfig} */
 module.exports = {
   extends: ["@commitlint/config-conventional"],
+  // semantic-release/@semantic-release/git: release commits can include a long changelog in the body
   ignores: [
     (message) => {
       const header = message.split("\n")[0]?.trim() ?? "";
