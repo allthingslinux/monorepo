@@ -1,7 +1,11 @@
 ---
 galaxy_info:
+  author: All Things Linux
   role_name: packages
   namespace: allthingslinux
+  description: Shells, languages, editors, CLI tools, and games packages for the pubnix stack.
+  license: GPL-3.0-or-later
+  min_ansible_version: "2.16"
 
 dependencies:
   - common

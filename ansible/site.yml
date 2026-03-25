@@ -18,3 +18,8 @@
     - { role: ftp, tags: ["ftp"] }
     - { role: monitoring, tags: ["monitoring"] }
     - { role: backup, tags: ["backup"] }
+
+  post_tasks:
+    - name: Run post-deploy service checks
+      ansible.builtin.import_tasks: tasks/verify-deploy.yml
+      tags: [verify]
