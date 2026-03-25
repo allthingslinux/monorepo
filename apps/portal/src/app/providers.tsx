@@ -117,7 +117,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <SentryClientInit />
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="dark"
         disableTransitionOnChange
         enableSystem
       >
