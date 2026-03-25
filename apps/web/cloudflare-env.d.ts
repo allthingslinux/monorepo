@@ -34,6 +34,9 @@ declare namespace Cloudflare {
       | "https://allthingslinux.dev"
       | "https://allthingslinux.org"
       | "http://localhost:8788";
+    NEXT_PUBLIC_PORTAL_URL:
+      | "https://portal.allthingslinux.org"
+      | "http://localhost:3000";
     NEXT_TAG_CACHE_DO_SHARDED: DurableObjectNamespace<
       import("./.open-next/worker").DOShardedTagCache
     >;

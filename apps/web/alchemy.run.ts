@@ -37,6 +37,7 @@ interface StageProfile {
   kvNamespaceId: string;
   nextPublicUrl: string;
   nextPublicApiUrl: string;
+  nextPublicPortalUrl: string;
   /** Enable workers.dev + preview subdomains (PR preview workers). */
   previewUrls: boolean;
   domains: { domainName: string; adopt?: boolean }[] | undefined;
@@ -50,6 +51,7 @@ function getStageProfile(stage: string): StageProfile {
       domains: [{ adopt: true, domainName: "allthingslinux.org" }],
       kvNamespaceId: "7bfc722d19ea48b0b35422ac27029dfa",
       nextPublicApiUrl: "https://allthingslinux.org/api",
+      nextPublicPortalUrl: "https://portal.allthingslinux.org",
       nextPublicUrl: "https://allthingslinux.org",
       previewUrls: false,
       r2BucketName: "atl-cache-prod",
@@ -62,6 +64,7 @@ function getStageProfile(stage: string): StageProfile {
       domains: [{ adopt: true, domainName: "allthingslinux.dev" }],
       kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
       nextPublicApiUrl: "https://allthingslinux.dev/api",
+      nextPublicPortalUrl: "https://portal.allthingslinux.org",
       nextPublicUrl: "https://allthingslinux.dev",
       previewUrls: false,
       r2BucketName: "atl-cache-dev",
@@ -74,6 +77,7 @@ function getStageProfile(stage: string): StageProfile {
       domains: undefined,
       kvNamespaceId: "a7e7f8796625426c8355ec8bd60b75c1",
       nextPublicApiUrl: "https://allthingslinux.dev/api",
+      nextPublicPortalUrl: "https://portal.allthingslinux.org",
       nextPublicUrl: "https://allthingslinux.dev",
       previewUrls: true,
       r2BucketName: "atl-cache-dev",
@@ -85,6 +89,7 @@ function getStageProfile(stage: string): StageProfile {
     domains: undefined,
     kvNamespaceId: "b58a50d9090b46a181322eb96d0c8c90",
     nextPublicApiUrl: "http://localhost:8788/api",
+    nextPublicPortalUrl: "http://localhost:3000",
     nextPublicUrl: "http://localhost:8788",
     previewUrls: true,
     r2BucketName: "atl-cache-local",
@@ -172,6 +177,7 @@ const website = await Nextjs("website", {
     NEXT_PUBLIC_API_URL: profile.nextPublicApiUrl,
     NEXT_PUBLIC_GITHUB_REPO_NAME: "applications",
     NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux",
+    NEXT_PUBLIC_PORTAL_URL: profile.nextPublicPortalUrl,
     NEXT_PUBLIC_URL: profile.nextPublicUrl,
     NEXT_TAG_CACHE_DO_SHARDED: DurableObjectNamespace(
       "next-tag-cache-do-sharded",

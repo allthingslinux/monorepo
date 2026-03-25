@@ -10,6 +10,7 @@ declare namespace Cloudflare {
     NEXT_PUBLIC_API_URL: "https://allthingslinux.org/api";
     NEXT_PUBLIC_GITHUB_REPO_NAME: "applications";
     NEXT_PUBLIC_GITHUB_REPO_OWNER: "allthingslinux";
+    NEXT_PUBLIC_PORTAL_URL: "https://portal.allthingslinux.org";
     NEXT_PUBLIC_URL: "https://allthingslinux.org";
     NEXTJS_ENV: string;
     NODE_ENV: string;
@@ -27,6 +28,7 @@ declare namespace NodeJS {
     Pick<
       Cloudflare.Env,
       | "NEXT_PUBLIC_URL"
+      | "NEXT_PUBLIC_PORTAL_URL"
       | "NEXT_PUBLIC_API_URL"
       | "NEXT_PUBLIC_GITHUB_REPO_OWNER"
       | "NEXT_PUBLIC_GITHUB_REPO_NAME"

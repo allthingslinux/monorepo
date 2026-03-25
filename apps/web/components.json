@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@atl/ui",
+    "components": "@/components",
     "utils": "@atl/ui/lib/utils",
     "ui": "@atl/ui/components",
     "lib": "@/lib",
@@ -19,5 +19,13 @@
     "types": "@/types",
     "config": "@/config"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "registries": {
+    "@shadcnblocks": {
+      "url": "https://shadcnblocks.com/r/{name}",
+      "headers": {
+        "Authorization": "Bearer ${SHADCNBLOCKS_API_KEY}"
+      }
+    }
+  }
 }
