@@ -1,4 +1,0 @@
----
-- name: Apply robertdebock.auditd role
-  ansible.builtin.include_role:
-    name: robertdebock.auditd

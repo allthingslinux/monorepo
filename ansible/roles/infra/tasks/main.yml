@@ -1,9 +1,0 @@
----
-- name: Import security tasks
-  ansible.builtin.import_tasks: security/main.yml
-
-- name: Import monitoring tasks
-  ansible.builtin.import_tasks: monitoring.yml
-
-- name: Import backup tasks
-  ansible.builtin.import_tasks: backup.yml
