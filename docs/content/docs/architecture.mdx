@@ -130,57 +130,52 @@ ansible/
 │   ├── create-user.yml        # onboard a new pubnix user
 │   └── remove-user.yml        # offboard a user
 └── roles/
-    ├── base/                  # OS baseline + all user packages
-    ├── infra/                 # security hardening + monitoring + backups
-    ├── users/                 # skel, MOTD, PAM limits
-    ├── environment/           # cgroup limits, quotas, tmpfs, PATH
-    └── services/              # nginx, Gemini, Gopher, finger, FTP, games, webring
+    ├── common/                # apt cache, base packages, NTP, journald
+    ├── packages/              # shells, languages, editors, CLI tools, games
+    ├── security/              # hardening, SSH, firewall, fail2ban, auditd, AIDE
+    ├── users/                 # skel, MOTD, PAM limits, social commands
+    ├── environment/           # cgroup limits, quotas, private /tmp, PATH
+    ├── services/              # nginx, Gemini, Gopher, finger, dictd, games, webring
+    ├── ftp/                   # vsftpd (FTP/S)
+    ├── monitoring/            # Prometheus node exporter, smartd, lm-sensors
+    └── backup/                # Borgmatic (BorgBackup)
 ```
 
-### Role: base
+### Role: packages
 
-Handles everything needed before any services run:
+All user-facing software:
 
-- Apt cache update and base system packages
-- NTP time synchronization (pool.ntp.org, UTC timezone)
-- All user-facing packages: shells (`zsh`, `fish`, `mksh`), compilers,
-  language runtimes (Python, Node.js, Go, Rust, Ruby, Java, Elixir, and 20+
-  more), editors, terminal multiplexers, CLI tools, games
-- Shared package caches for `pnpm`, `poetry`, and `uv` at `/var/cache/`
-- `/etc/shells` registration for available shells
+- Shells: bash, zsh, fish, mksh, tcsh, ksh93, rc, elvish, nushell, dash
+- Nushell installed via Gemfury apt repository (not in Debian repos)
+- Editors: vim, neovim, nano, emacs, micro, joe, vis, kakoune
+- File managers: ranger, lf, mc, nnn, vifm
+- Languages: Python, Node.js, Go, Rust, Ruby, C/C++, Haskell, Elixir, Java, and 20+ more
+- CLI tools: ripgrep, fzf, jq, pandoc, miller, taskwarrior, newsboat, sc-im, duf, and many more
+- Networking: gping, trippy, xh, drill, prettyping, fping, sipcalc, termshark, speedtest-cli, rclone
+- Chat: irssi, weechat, profanity, talk, talkd (with openbsd-inetd)
+- Mail: alpine, neomutt, aerc
+- Browsers: lynx, w3m, elinks, links, amfora
+- Games: nethack, crawl, angband, bsdgames, botany, arcade games
+- Fun: fortune, cowsay, figlet, cmatrix, cbonsai, boxes, asciinema, nyancat
+- `/etc/shells` registration for all available login shells
 
-### Role: infra
+### Role: security
 
-Security hardening and operational tooling, split into three internal task
-files:
-
-**`tasks/security/`** — 13 task files covering:
+Security hardening, split into task files:
 
 - CIS kernel parameter hardening via `sysctl` (ASLR, ptrace restrictions,
   network protections)
 - Kernel module blacklisting (uncommon filesystems, protocols)
 - Password and sudo policy
-- SSH configuration (key-only auth, ports 22 + 2222, `AllowGroups pubnix`)
+- SSH configuration (key-only auth, ports 22 + 2222, `AllowGroups`)
 - UFW firewall (allowlist — only required ports open)
 - Fail2ban (5 failures in 10 minutes → 1-hour ban)
 - Auditd with 40+ rules (identity files, privilege escalation, LOLBins,
   MITRE ATT&CK-tagged syscall rules)
-- journald hardening (1 GB cap, forward to syslog disabled)
+- journald hardening (1 GB cap)
 - AIDE file integrity monitoring (daily check at 05:00 UTC)
 - Automatic security updates via `unattended-upgrades`
 - Malware scanning (`rkhunter`, `chkrootkit`, `lynis`)
-
-**`tasks/monitoring.yml`** — Prometheus Node Exporter:
-
-- Runs on `127.0.0.1:9100` (not exposed publicly)
-- `smartd` for disk S.M.A.R.T. health
-- `lm-sensors` for temperature and fan readings
-
-**`tasks/backup.yml`** — Borgmatic (BorgBackup):
-
-- Backs up `/home`, `/etc`, `/var/spool/cron`
-- Retention: 7 daily, 4 weekly, 6 monthly
-- Runs on a systemd timer
 
 ### Role: users
 
@@ -189,6 +184,9 @@ Populates the shared user environment:
 - `/etc/skel/` — scaffold copied to every new user's home on account creation
 - MOTD — welcome message shown on SSH login
 - PAM resource limits — per-user caps enforced via `/etc/security/limits.conf`
+- Social commands: `menu`, `plan`, `lastplan`, `online`, `community`
+- Private `/tmp` via `pam_namespace` polyinstantiation
+- Per-user logrotate cron job
 
 ### Role: environment
 
@@ -214,9 +212,9 @@ All public-facing services and community features:
 | `gemini.yml`   | molly-brown Gemini server                            |
 | `gopher.yml`   | Gophernicus Gopher server                            |
 | `finger.yml`   | efingerd (systemd socket-activated)                  |
-| `ftp.yml`      | vsftpd (Explicit FTP over TLS, passive 40000–40100)  |
 | `games.yml`    | NetHack, Botany, Angband, Crawl, arcade games        |
 | `webring.yml`  | Self-managing member ring with nginx auto-injection  |
+| `dict.yml`     | dictd with 7 offline dictionaries (localhost:2628)   |
 
 ## Network
 
@@ -241,6 +239,8 @@ rate limiting.
 | Service         | Bind address       | Notes                              |
 |-----------------|--------------------|------------------------------------|
 | Node Exporter   | `127.0.0.1:9100`   | Prometheus metrics, not public     |
+| dictd           | `127.0.0.1:2628`   | Dictionary server (RFC 2229)       |
+| talkd           | `0.0.0.0:517-518`  | Talk daemon via inetd, UFW blocked |
 | fcgiwrap        | Unix socket        | CGI execution for tilde sites      |
 | molly-brown     | `0.0.0.0:1965`     | Gemini TLS server                  |
 | Gophernicus     | `0.0.0.0:70`       | Gopher server                      |

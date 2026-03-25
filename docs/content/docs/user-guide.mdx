@@ -25,12 +25,41 @@ Welcome to atl.sh! You have a shell account on the All Things Linux community pu
 
 ### Available Tools
 
-We provide a wide range of tools including:
+Run `menu` for an interactive guide to everything on the server. Here's a summary:
 
-- **Shells**: bash, zsh, fish, mksh
-- **Editors**: vim, neovim, nano, emacs, micro, joe
+- **Shells**: bash, zsh, fish, mksh, tcsh, ksh93, rc, elvish, nushell, dash
+- **Editors**: vim, neovim, nano, emacs, micro, joe, vis, kakoune
+- **File managers**: ranger, lf, mc, nnn, vifm
 - **Languages**: Python, Node.js, Ruby, Go, Rust, C/C++, Haskell, Elixir, and many more
-- **Utilities**: tmux, git, htop, btop, ripgrep, fzf, jq, and more
+- **Utilities**: tmux, git, htop, btop, ripgrep, fzf, jq, pandoc, miller, taskwarrior, and more
+- **Networking**: gping, trippy, xh, drill, prettyping, fping, sipcalc, termshark, speedtest-cli, rclone
+- **Browsers**: lynx, w3m, elinks, links, amfora (Gemini)
+- **Mail**: alpine, neomutt, aerc
+- **Fun**: nethack, crawl, angband, botany, cbonsai, boxes, asciinema, fortune, cowsay, figlet
+
+### Social Commands
+
+```bash
+menu            # Interactive guide to all server features
+online          # Who's logged in with their .plan summary
+community       # List all members and their status
+plan <user>     # Read someone's .plan
+lastplan        # Recent .plan updates across all users
+```
+
+### Dictionary
+
+Look up words, computing terms, jargon, and acronyms — all offline:
+
+```bash
+dict hello              # Search all 7 databases
+dict -d jargon hacker   # Hacker jargon only
+dict -d foldoc TCP      # Computing encyclopedia
+dict -d vera HTTP       # Acronym lookup
+dict -D                 # List all available databases
+```
+
+Databases: English (GCIDE), WordNet, Jargon File, FOLDOC, V.E.R.A. acronyms, Devil's Dictionary, Periodic Table.
 
 ## Finger
 
@@ -129,7 +158,7 @@ Neighbor watering is done from inside the game via the visit menu. Enter a neigh
 - **Arcade**: `ninvaders`, `moon-buggy`, `nsnake`, `bastet`, `netris`, `vitetris`
 - **Puzzle**: `nudoku` (sudoku), `typespeed`, `dopewars`
 - **BSD Games**: `bsdgames` — ~40 classic games including `hunt`, `adventure`, `backgammon`, `trek`, and more
-- **Novelty**: `asciiquarium`, `cmatrix`, `sl`, `cowsay`, `fortune`, `figlet`, `lolcat`
+- **Novelty**: `asciiquarium`, `cmatrix`, `sl`, `cowsay`, `fortune`, `figlet`, `lolcat`, `cbonsai`, `boxes`, `nyancat`
 
 ## Log Management
 
@@ -140,6 +169,9 @@ We provide a standardized way for you to manage logs from your own processes (li
 
 ## Community
 
+- **Social commands**: `menu`, `online`, `community`, `plan`, `lastplan`
+- **Messaging**: `talk` (two-way chat), `wall` (broadcast)
+- **Webring**: Join with `touch ~/.ring` — browse at `https://atl.sh/ring/`
 - **IRC**: `#support` on `irc.atl.chat` (port 6697, SSL)
 - **Web**: [allthingslinux.org](https://allthingslinux.org)
 
