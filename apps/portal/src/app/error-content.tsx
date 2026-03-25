@@ -78,7 +78,11 @@ export default function RootErrorContent({
           >
             {t("retry")}
           </Button>
-          <Button render={<Link href="/" />} variant="outline">
+          <Button
+            nativeButton={false}
+            render={<Link href="/" />}
+            variant="outline"
+          >
             {t("goHome")}
           </Button>
         </CardFooter>

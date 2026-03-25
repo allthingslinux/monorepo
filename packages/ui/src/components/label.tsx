@@ -3,7 +3,6 @@
 import { cn } from "@atl/ui/lib/utils";
 import * as React from "react";
 
-/** Native `<label>` — base-vega stack uses Base UI primitives elsewhere; labels stay semantic HTML. */
 function Label({ className, ...props }: React.ComponentProps<"label">) {
   return (
     <label

@@ -6,6 +6,7 @@ const IGNORE_PATH_PREFIXES = [
   "apps/portal/references/",
   "apps/portal/drizzle/",
   "apps/portal/.cursor/skills/",
+  "packages/ui/",
 ];
 
 function isIgnoredUltracitePath(file) {

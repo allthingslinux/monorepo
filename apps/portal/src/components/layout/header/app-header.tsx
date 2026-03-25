@@ -12,7 +12,6 @@ import {
 } from "@/features/routing/lib";
 
 import { BreadcrumbTrail } from "./breadcrumb-trail";
-import { ThemeToggle } from "./theme-toggle";
 
 export function AppHeader() {
   const pathname = usePathname();
@@ -31,9 +30,6 @@ export function AppHeader() {
           />
         </div>
         <BreadcrumbTrail items={breadcrumbs} />
-      </div>
-      <div className="ml-auto">
-        <ThemeToggle />
       </div>
     </header>
   );

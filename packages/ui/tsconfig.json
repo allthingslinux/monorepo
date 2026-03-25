@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@atl/ui/*": ["./src/*"],
       "@/auth": ["../../apps/portal/src/features/auth/lib"],
       "@/auth/*": ["../../apps/portal/src/features/auth/lib/*"],
       "@/config": ["../../apps/portal/src/shared/config"],

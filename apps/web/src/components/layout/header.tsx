@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@atl/ui/components/button";
-import { buttonVariants } from "@atl/ui/components/button-variants";
+import { buttonVariants } from "@atl/ui/components/button";
 import {
   Sheet,
   SheetContent,

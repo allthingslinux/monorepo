@@ -17,12 +17,13 @@
     "apps/web/.wrangler/**",
     "apps/portal/references/**",
     "apps/portal/drizzle/**",
-    "apps/portal/.cursor/skills/**"
+    "apps/portal/.cursor/skills/**",
+    "packages/ui/**",
   ],
   "extends": [
     "./node_modules/ultracite/config/oxlint/core/.oxlintrc.json",
     "./node_modules/ultracite/config/oxlint/react/.oxlintrc.json",
-    "./node_modules/ultracite/config/oxlint/next/.oxlintrc.json"
+    "./node_modules/ultracite/config/oxlint/next/.oxlintrc.json",
   ],
   "rules": {
     "import/no-namespace": "error",
@@ -36,7 +37,7 @@
     "no-use-before-define": "off",
     "typescript/no-explicit-any": "off",
     "promise/prefer-await-to-callbacks": "off",
-    "typescript/no-non-null-assertion": "off"
+    "typescript/no-non-null-assertion": "off",
   },
   "overrides": [
     {
@@ -49,11 +50,11 @@
         "apps/portal/src/shared/api/index.ts",
         "apps/portal/src/shared/types/api.ts",
         "apps/portal/src/app/metadata.ts",
-        "apps/portal/src/features/integrations/lib/xmpp/index.ts"
+        "apps/portal/src/features/integrations/lib/xmpp/index.ts",
       ],
       "rules": {
-        "oxc/no-barrel-file": "off"
-      }
+        "oxc/no-barrel-file": "off",
+      },
     },
     {
       "files": [
@@ -69,11 +70,11 @@
         "apps/portal/src/components/layout/index.ts",
         "apps/portal/src/components/layout/header/index.ts",
         "apps/portal/src/components/layout/navigation/index.ts",
-        "apps/portal/src/shared/config/index.ts"
+        "apps/portal/src/shared/config/index.ts",
       ],
       "rules": {
-        "oxc/no-barrel-file": "off"
-      }
+        "oxc/no-barrel-file": "off",
+      },
     },
     {
       "files": [
@@ -83,18 +84,18 @@
         "apps/portal/src/features/**/unreal/client.ts",
         "apps/portal/src/features/**/components/*.tsx",
         "apps/portal/src/app/**/integrations-content.tsx",
-        "apps/portal/src/sentry.*.ts"
+        "apps/portal/src/sentry.*.ts",
       ],
       "rules": {
-        "import/no-namespace": "off"
-      }
+        "import/no-namespace": "off",
+      },
     },
     {
       "files": ["apps/web/**/*.{ts,tsx}"],
       "rules": {
         "unicorn/filename-case": "off",
-        "react/jsx-handler-names": "off"
-      }
+        "react/jsx-handler-names": "off",
+      },
     },
     {
       "files": ["apps/web/src/components/mdx-components.tsx"],
@@ -104,68 +105,50 @@
         "jsx-a11y/heading-has-content": "off",
         "react/no-react-children": "off",
         "no-nested-ternary": "off",
-        "unicorn/no-nested-ternary": "off"
-      }
+        "unicorn/no-nested-ternary": "off",
+      },
     },
     {
       "files": ["apps/web/scripts/**/*.mjs"],
       "rules": {
         "import/no-namespace": "off",
-        "no-param-reassign": "off"
-      }
+        "no-param-reassign": "off",
+      },
     },
     {
       "files": ["apps/portal/src/features/auth/lib/localization.ts"],
       "rules": {
-        "sort-keys": "off"
-      }
+        "sort-keys": "off",
+      },
     },
     {
       "files": [
-        "apps/portal/src/features/integrations/lib/**/implementation.ts"
+        "apps/portal/src/features/integrations/lib/**/implementation.ts",
       ],
       "rules": {
-        "class-methods-use-this": "off"
-      }
+        "class-methods-use-this": "off",
+      },
     },
     {
       "files": [
         "apps/portal/packages/schemas/**/*.ts",
-        "apps/portal/src/app/**/integrations-content.tsx"
+        "apps/portal/src/app/**/integrations-content.tsx",
       ],
       "rules": {
-        "unicorn/no-useless-undefined": "off"
-      }
+        "unicorn/no-useless-undefined": "off",
+      },
     },
     {
       "files": ["apps/portal/tests/monorepo/monorepo-correctness.test.ts"],
       "rules": {
-        "unicorn/consistent-function-scoping": "off"
-      }
+        "unicorn/consistent-function-scoping": "off",
+      },
     },
     {
       "files": ["apps/portal/tests/**/*.test.ts"],
       "rules": {
-        "import/no-namespace": "off"
-      }
-    },
-    {
-      "files": ["packages/ui/**/*.{ts,tsx}"],
-      "rules": {
         "import/no-namespace": "off",
-        "jsx-a11y/label-has-associated-control": "off",
-        "unicorn/no-document-cookie": "off",
-        "react/button-has-type": "off",
-        "no-nested-ternary": "off",
-        "unicorn/no-nested-ternary": "off",
-        "jsx-a11y/prefer-tag-over-role": "off",
-        "jsx-a11y/click-events-have-key-events": "off",
-        "react/jsx-no-constructed-context-values": "off",
-        "react/no-clone-element": "off",
-        "react/no-react-children": "off",
-        "no-negated-condition": "off",
-        "jsx-a11y/anchor-has-content": "off"
-      }
-    }
-  ]
+      },
+    },
+  ],
 }

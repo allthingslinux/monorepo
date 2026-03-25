@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button-variants";
+import { buttonVariants } from "@atl/ui/components/button";
 import {
   Dialog,
   DialogContent,

@@ -119,7 +119,7 @@ export function Providers({ children }: { children: ReactNode }) {
         attribute="class"
         defaultTheme="dark"
         disableTransitionOnChange
-        enableSystem
+        forcedTheme="dark"
       >
         {/* QueryClientProvider for general data fetching hooks */}
         <QueryClientProvider client={queryClient}>

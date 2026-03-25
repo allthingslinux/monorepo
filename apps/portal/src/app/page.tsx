@@ -50,10 +50,14 @@ export default async function Page() {
 
       <SignedOut>
         <div className="flex gap-4">
-          <Button render={<Link href="/auth/sign-in" />}>
+          <Button nativeButton={false} render={<Link href="/auth/sign-in" />}>
             {t("navigation.signIn")}
           </Button>
-          <Button render={<Link href="/auth/sign-up" />} variant="outline">
+          <Button
+            nativeButton={false}
+            render={<Link href="/auth/sign-up" />}
+            variant="outline"
+          >
             {t("navigation.signUp")}
           </Button>
         </div>
@@ -62,7 +66,7 @@ export default async function Page() {
       <SignedIn>
         <div className="flex flex-col items-center gap-4">
           <UserButton size="icon" />
-          <Button render={<Link href="/app" />}>
+          <Button nativeButton={false} render={<Link href="/app" />}>
             {t("marketing.homePage.goToDashboard")}
           </Button>
         </div>

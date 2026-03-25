@@ -106,7 +106,7 @@ importers:
         version: link:packages/utils
       '@sentry/nextjs':
         specifier: ^10.45.0
-        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
+        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
       '@sentry/node-native':
         specifier: ^10.45.0
         version: 10.45.0
@@ -422,7 +422,7 @@ importers:
     dependencies:
       '@sentry/nextjs':
         specifier: ^10.45.0
-        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
+        version: 10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.11
         version: 0.13.11(arktype@2.1.27)(typescript@5.9.3)(zod@4.3.6)
@@ -749,6 +749,9 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.4)
@@ -18240,7 +18243,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.0.6
       express: 5.2.1(supports-color@10.2.2)
-      express-rate-limit: 8.3.1(express@5.2.1(supports-color@10.2.2))
+      express-rate-limit: 8.3.1(express@5.2.1)
       hono: 4.12.9
       jose: 6.2.2
       json-schema-typed: 8.0.2
@@ -20500,7 +20503,7 @@ snapshots:
 
   '@sentry/core@10.45.0': {}
 
-  '@sentry/nextjs@10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)':
+  '@sentry/nextjs@10.45.0(@opentelemetry/context-async-hooks@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.6.0(@opentelemetry/api@1.9.0))(next@16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(webpack@5.105.4)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.40.0
@@ -23982,7 +23985,7 @@ snapshots:
     dependencies:
       express: 5.2.1(supports-color@10.2.2)
 
-  express-rate-limit@8.3.1(express@5.2.1(supports-color@10.2.2)):
+  express-rate-limit@8.3.1(express@5.2.1):
     dependencies:
       express: 5.2.1(supports-color@10.2.2)
       ip-address: 10.1.0

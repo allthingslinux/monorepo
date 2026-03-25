@@ -98,6 +98,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <div className="mb-10 flex flex-wrap justify-center gap-2">
             <Button
               className="rounded-full"
+              nativeButton={false}
               render={<Link href="/blog">All</Link>}
               variant="ghost"
             />
@@ -107,6 +108,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 <Button
                   className="rounded-full"
                   key={catSlug}
+                  nativeButton={false}
                   render={<Link href={`/blog/${catSlug}`}>{cat}</Link>}
                   variant={catSlug === category ? "secondary" : "ghost"}
                 />

@@ -60,6 +60,7 @@ export default async function BlogPage() {
           <div className="mb-10 flex flex-wrap justify-center gap-2">
             <Button
               className="rounded-full"
+              nativeButton={false}
               render={<Link href="/blog">All</Link>}
               variant="ghost"
             />
@@ -70,6 +71,7 @@ export default async function BlogPage() {
                 <Button
                   className="rounded-full"
                   key={categorySlug}
+                  nativeButton={false}
                   render={<Link href={`/blog/${categorySlug}`}>{cat}</Link>}
                   variant="ghost"
                 />

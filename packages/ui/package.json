@@ -9,13 +9,13 @@
       "default": "./src/lib/utils.ts"
     },
     "./styles/design-tokens.css": "./src/styles/design-tokens.css",
-    "./components/button-variants": {
-      "types": "./src/components/button-variants.ts",
-      "default": "./src/components/button-variants.ts"
-    },
     "./components/*": {
       "types": "./src/components/*.tsx",
       "default": "./src/components/*.tsx"
+    },
+    "./hooks/*": {
+      "types": "./src/hooks/*.ts",
+      "default": "./src/hooks/*.ts"
     }
   },
   "scripts": {
@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",

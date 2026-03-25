@@ -12,10 +12,10 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@atl/ui",
+    "components": "@atl/ui/components",
     "utils": "@atl/ui/lib/utils",
     "ui": "@atl/ui/components",
-    "lib": "@atl/ui/lib/utils",
+    "lib": "@atl/ui/lib",
     "hooks": "@atl/ui/hooks"
   }
 }

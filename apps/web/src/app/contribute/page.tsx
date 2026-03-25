@@ -72,10 +72,10 @@ export default function ContributePage() {
           <CardContent>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://opencollective.com/allthingslinux"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -86,10 +86,10 @@ export default function ContributePage() {
                 }
               />
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://paypal.com/donate/?hosted_button_id=9R5Y3RDAMF6D8"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -101,10 +101,10 @@ export default function ContributePage() {
                 variant="outline"
               />
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://donate.stripe.com/bJe8wQf5O2ZccHW06u1wY07"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -116,10 +116,10 @@ export default function ContributePage() {
                 variant="outline"
               />
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://every.org/allthingslinux/donate/crypto"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -131,10 +131,10 @@ export default function ContributePage() {
                 variant="outline"
               />
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://cash.app/$allthingslinux"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -146,10 +146,10 @@ export default function ContributePage() {
                 variant="outline"
               />
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2 leading-none"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2 leading-none"
                     href="https://donate.stripe.com/28EbJ27Dm9nAcHWdXk1wY06"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -185,12 +185,10 @@ export default function ContributePage() {
             </CardHeader>
             <CardContent className="mt-auto">
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2"
+                nativeButton={false}
                 render={
-                  <Link
-                    className="flex items-center justify-center gap-2"
-                    href="/apply"
-                  >
+                  <Link href="/apply">
                     <Users className="h-4 w-4" />
                     Browse Open Roles
                   </Link>
@@ -219,10 +217,10 @@ export default function ContributePage() {
             </CardHeader>
             <CardContent className="mt-auto">
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2"
                     href="https://atl.wiki"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -253,10 +251,10 @@ export default function ContributePage() {
             </CardHeader>
             <CardContent className="mt-auto space-y-3">
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2"
                     href="https://github.com/allthingslinux"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -287,10 +285,10 @@ export default function ContributePage() {
             </CardHeader>
             <CardContent className="mt-auto">
               <Button
-                className="w-full"
+                className="flex w-full items-center justify-center gap-2"
+                nativeButton={false}
                 render={
                   <Link
-                    className="flex items-center justify-center gap-2"
                     href="https://discord.gg/linux"
                     rel="noopener noreferrer"
                     target="_blank"
@@ -348,11 +346,10 @@ export default function ContributePage() {
               all of our decisions openly with the community.
             </p>
             <Button
+              className="flex items-center justify-center gap-2"
+              nativeButton={false}
               render={
-                <Link
-                  className="flex items-center justify-center gap-2"
-                  href="/open"
-                >
+                <Link href="/open">
                   <BarChart3 className="h-4 w-4" />
                   View Our Finances
                 </Link>
