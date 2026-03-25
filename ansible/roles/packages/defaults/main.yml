@@ -96,6 +96,8 @@ editors:
   - micro
   - joe
   - hx
+  - vis
+  - kakoune
 
 # ──────────────────────────────────────────────
 # Terminal multiplexers
@@ -122,6 +124,7 @@ chat_clients:
 mail_clients:
   - alpine
   - neomutt
+  - aerc
 
 # ──────────────────────────────────────────────
 # Web/Gemini/Gopher browsers
@@ -131,6 +134,7 @@ browsers:
   - w3m
   - elinks
   - amfora
+  - links
 
 # ──────────────────────────────────────────────
 # CLI tools & utilities
@@ -228,6 +232,14 @@ cli_tools:
   - ngrep
   - termshark
   - arp-scan
+  - newsboat
+  - nnn
+  - sc-im
+  - pandoc
+  - duf
+  - miller
+  - taskwarrior
+  - vifm
 
 # ──────────────────────────────────────────────
 # Fun / community
@@ -245,6 +257,9 @@ fun_packages:
   - nethack-console
   - tty-clock
   - bastet
+  - cbonsai
+  - boxes
+  - asciinema
 
 # ──────────────────────────────────────────────
 # System tools (admin)
