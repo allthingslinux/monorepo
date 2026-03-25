@@ -1,309 +1,324 @@
 ---
 # ──────────────────────────────────────────────
-# Shells
+# Shells (bash is pre-installed; these are extras)
 # ──────────────────────────────────────────────
 user_shells:
-  - zsh
-  - fish
-  - mksh
-  - tcsh
-  - ksh93u+m
-  - rc
-  - elvish
-  - nushell
-  - dash
+  - zsh                                 # extended Bourne shell with many improvements
+  - fish                                # friendly interactive shell with autosuggestions
+  - mksh                                # MirBSD Korn Shell
+  - tcsh                                # TENEX C Shell (enhanced Berkeley csh)
+  - ksh93u+m                            # AT&T KornShell
+  - rc                                  # Plan 9 shell
+  - elvish                              # modern shell with structured data pipelines
+  - nushell                             # structured data shell (installed via Gemfury apt repo)
+  - dash                                # POSIX-compliant lightweight shell
 
 # ──────────────────────────────────────────────
 # Build tools & compilers
 # ──────────────────────────────────────────────
 build_tools:
-  - gcc
-  - g++
-  - make
-  - cmake
-  - autoconf
-  - automake
-  - libtool
-  - pkg-config
-  - libssl-dev
-  - libffi-dev
-  - libncurses-dev
-  - gdb
-  - clang
-  - llvm
-  - lldb
-  - valgrind
-  - ltrace
-  - bison
-  - flex
-  - ninja-build
-  - ccache
-  - mold
-  - cgdb
-  - linux-perf
-  - hyperfine
+  - gcc                                 # GNU C compiler
+  - g++                                 # GNU C++ compiler
+  - make                                # GNU make
+  - cmake                               # cross-platform build system generator
+  - autoconf                            # automatic configure script builder
+  - automake                            # automatic Makefile generator
+  - libtool                             # generic library support script
+  - pkg-config                          # helper tool for compiling applications and libraries
+  - libssl-dev                          # OpenSSL development headers
+  - libffi-dev                          # foreign function interface development headers
+  - libncurses-dev                      # ncurses development headers
+  - gdb                                 # GNU debugger
+  - clang                               # LLVM C/C++/Objective-C compiler
+  - llvm                                # LLVM compiler infrastructure
+  - lldb                                # LLVM debugger
+  - valgrind                            # memory debugging and profiling
+  - ltrace                              # library call tracer
+  - bison                               # parser generator (yacc replacement)
+  - flex                                # lexical analyzer generator (lex replacement)
+  - ninja-build                         # small build system with a focus on speed
+  - ccache                              # compiler cache for faster rebuilds
+  - mold                                # modern high-performance linker
+  - cgdb                                # curses-based GDB frontend
+  - linux-perf                          # Linux performance analysis tools
+  - hyperfine                           # command-line benchmarking tool
 
 # ──────────────────────────────────────────────
 # Languages & runtimes
 # ──────────────────────────────────────────────
 languages:
-  - python3
-  - python3-pip
-  - python3-venv
-  - python3-dev
-  - nodejs
-  - npm
-  - ruby
-  - ruby-dev
-  - golang
-  - rustc
-  - cargo
-  - lua5.4
-  - perl
-  - gawk
-  - php-cli
-  - default-jdk
-  - default-jre
-  - elixir
-  - erlang
-  - gnat
-  - gfortran
-  - gobjc
-  - gobjc++
-  - fp-compiler
-  - gdc
-  - ldc
-  - ghc
-  - ocaml
-  - nasm
-  - yasm
-  - mono-mcs
-  - scala
-  - racket
-  - gnucobol
-  - valac
+  - python3                             # Python 3 interpreter
+  - python3-pip                         # Python package installer
+  - python3-venv                        # Python virtual environment support
+  - python3-dev                         # Python development headers
+  - nodejs                              # Node.js JavaScript runtime
+  - npm                                 # Node.js package manager
+  - ruby                                # Ruby interpreter
+  - ruby-dev                            # Ruby development headers
+  - golang                              # Go programming language
+  - rustc                               # Rust compiler
+  - cargo                               # Rust package manager
+  - lua5.4                              # Lua scripting language
+  - perl                                # Perl interpreter
+  - gawk                                # GNU awk
+  - php-cli                             # PHP command-line interpreter
+  - default-jdk                         # Java Development Kit
+  - default-jre                         # Java Runtime Environment
+  - elixir                              # Elixir functional language (runs on Erlang VM)
+  - erlang                              # Erlang/OTP runtime
+  - gnat                                # GNU Ada compiler
+  - gfortran                            # GNU Fortran compiler
+  - gobjc                               # GNU Objective-C compiler
+  - gobjc++                             # GNU Objective-C++ compiler
+  - fp-compiler                         # Free Pascal compiler
+  - gdc                                 # GNU D compiler
+  - ldc                                 # LLVM-based D compiler
+  - ghc                                 # Glasgow Haskell Compiler
+  - ocaml                               # OCaml compiler and interpreter
+  - nasm                                # Netwide Assembler (x86/x86-64)
+  - yasm                                # modular assembler
+  - mono-mcs                            # Mono C# compiler
+  - scala                               # Scala programming language
+  - racket                              # Racket (Scheme-family) language
+  - gnucobol                            # GNU COBOL compiler
+  - valac                               # Vala compiler (compiles to C)
 
 # ──────────────────────────────────────────────
 # Editors
 # ──────────────────────────────────────────────
 editors:
-  - vim
-  - neovim
-  - nano
-  - emacs-nox
-  - ed
-  - mg
-  - micro
-  - joe
-  - hx
-  - vis
-  - kakoune
-  - nvi           # original BSD vi
+  - vim                                 # Vi IMproved
+  - neovim                              # modern vim fork
+  - nano                                # simple text editor
+  - emacs-nox                           # GNU Emacs (no X11)
+  - ed                                  # the standard Unix line editor
+  - mg                                  # micro GNU Emacs-style editor
+  - micro                               # modern terminal editor with intuitive keybindings
+  - joe                                 # Joe's Own Editor
+  - hx                                  # Helix — modal editor inspired by Kakoune/Neovim
+  - vis                                 # vim-like editor with structural regex (Plan 9 inspired)
+  - kakoune                             # modal editor with multiple selections
+  - nvi                                 # original BSD vi
 
 # ──────────────────────────────────────────────
 # Terminal multiplexers
 # ──────────────────────────────────────────────
 multiplexers:
-  - tmux
-  - screen
-  - byobu
-  - tmate
+  - tmux                                # terminal multiplexer
+  - screen                              # GNU Screen
+  - byobu                               # enhanced profiles for tmux/screen
+  - tmate                               # instant terminal sharing (tmux fork)
 
 # ──────────────────────────────────────────────
 # IRC/chat clients
 # ──────────────────────────────────────────────
 chat_clients:
-  - irssi
-  - weechat
-  - profanity
-  - talk    # user-to-user real-time chat (talk username)
-  - talkd   # talk daemon (runs via openbsd-inetd, pulled as dependency)
-  - ii      # suckless filesystem-based IRC client
-  - sic     # suckless minimal IRC client
+  - irssi                               # terminal IRC client
+  - weechat                             # extensible chat client (IRC, Matrix, etc.)
+  - profanity                           # XMPP/Jabber console client
+  - talk                                # user-to-user real-time split-screen chat
+  - talkd                               # talk daemon (runs via openbsd-inetd)
+  - ii                                  # suckless filesystem-based IRC client
+  - sic                                 # suckless minimal IRC client
 
 # ──────────────────────────────────────────────
-# Mail clients (local mail, no SMTP needed)
+# Mail clients
 # ──────────────────────────────────────────────
 mail_clients:
-  - alpine
-  - neomutt
-  - aerc
-  - s-nail         # modern mailx replacement
-  - abook          # TUI address book (mutt integration)
+  - alpine                              # easy-to-use mail client (successor to Pine)
+  - neomutt                             # patched mutt with extra features
+  - aerc                                # modern terminal email client (Go)
+  - s-nail                              # modern mailx replacement (send/read from CLI)
+  - abook                               # TUI address book (integrates with mutt/neomutt)
 
 # ──────────────────────────────────────────────
 # Web/Gemini/Gopher browsers
 # ──────────────────────────────────────────────
 browsers:
-  - lynx
-  - w3m
-  - elinks
-  - amfora
-  - links
-  - gopher         # gopher protocol client
+  - lynx                                # classic text-mode web browser
+  - w3m                                 # text-mode browser with tables/frames support
+  - elinks                              # advanced text-mode web browser
+  - amfora                              # Gemini protocol TUI browser
+  - links                               # lightweight text-mode web browser
+  - gopher                              # gopher protocol client
 
 # ──────────────────────────────────────────────
 # CLI tools & utilities
 # ──────────────────────────────────────────────
 cli_tools:
-  - git
-  - htop
-  - btop
-  - tree
-  - jq
-  - ripgrep
-  - fd-find
-  - fzf
-  - ncdu
-  - gdu
-  - bc
-  - sqlite3
-  - curl
-  - wget
-  - rsync
-  - file
-  - patch
-  - diffutils
-  - strace
-  - lsof
-  - moreutils
-  - rename
-  - dos2unix
-  - zip
-  - unzip
-  - bzip2
-  - xz-utils
-  - p7zip-full
-  - pv
-  - ncurses-bin
-  - ncurses-term
-  - mosh
-  - whois
-  - dnsutils
-  - mtr
-  - socat
-  - netcat-openbsd
-  - mc
-  - ranger
-  - lf
-  - bat
-  - tig
-  - lazygit
-  - gnupg
-  - pass
-  - units
-  - slrn
-  - tin
-  - yq
-  - shellcheck
-  - git-lfs
-  - gh
-  - postgresql-client
-  - mariadb-client
-  - redis-tools
-  - ipython3
-  - bpython
-  - universal-ctags
-  - just
-  - pipx
-  - eza
-  - zoxide
-  - tealdeer
-  - git-delta
-  - direnv
-  - tmuxinator
-  - httpie
-  - tcpdump
-  - nmap
-  - ipcalc
-  - iperf3
-  - iftop
-  - nethogs
-  - traceroute
-  - telnet
-  - gping
-  - trippy
-  - xh
-  - ldnsutils
-  - prettyping
-  - fping
-  - sipcalc
-  - autossh
-  - rclone
-  - lftp
-  - speedtest-cli
-  - geoip-bin
-  - geoip-database
-  - bmon
-  - ngrep
-  - termshark
-  - arp-scan
-  - newsboat
-  - nnn
-  - sc-im
-  - pandoc
-  - duf
-  - miller
-  - taskwarrior
-  - vifm
-  - 9base          # Plan 9 userland (rc, sam, mk, awk, troff, etc.)
-  - original-awk   # Kernighan's One True Awk
-  - dc             # RPN desk calculator
-  - sc             # original terminal spreadsheet
-  - rlwrap         # add readline to any command
-  - expect         # automate interactive programs
-  - colordiff      # colorized diff wrapper
-  - wdiff          # word-level diff
-  - par            # smart paragraph reformatter
-  - enscript       # text to PostScript
-  - a2ps           # anything to PostScript
-  - indent         # GNU C code formatter
-  - sharutils      # shar/unshar shell archives
-  - netpipes       # pipe data over TCP (faucet/hose)
-  - bsdmainutils   # cal, column, hexdump, look, ul, ncal
-  - toot           # Mastodon CLI client
-  - morse          # text to/from Morse code
+  # Core utilities
+  - git                                 # distributed version control
+  - htop                                # interactive process viewer
+  - btop                                # resource monitor (CPU, memory, disks, network)
+  - tree                                # recursive directory listing
+  - jq                                  # command-line JSON processor
+  - ripgrep                             # fast recursive grep (rg)
+  - fd-find                             # fast find alternative (fd)
+  - fzf                                 # fuzzy finder
+  - ncdu                                # ncurses disk usage analyzer
+  - gdu                                 # fast disk usage analyzer (Go)
+  - bc                                  # arbitrary precision calculator
+  - sqlite3                             # SQLite command-line interface
+  - curl                                # URL transfer tool
+  - wget                                # network downloader
+  - rsync                               # fast incremental file transfer
+  - file                                # determine file type
+  - patch                               # apply diff patches
+  - diffutils                           # diff, cmp, sdiff, diff3
+  - strace                              # system call tracer
+  - lsof                                # list open files
+  - moreutils                           # additional Unix utilities (sponge, ts, parallel, etc.)
+  - rename                              # rename files using regex
+  - dos2unix                            # convert line endings
+  # Compression
+  - zip                                 # ZIP archiver
+  - unzip                               # ZIP extractor
+  - bzip2                               # bzip2 compressor
+  - xz-utils                            # XZ/LZMA compressor
+  - p7zip-full                          # 7-Zip file archiver
+  - pv                                  # pipe viewer (monitor data through a pipe)
+  # Terminal
+  - ncurses-bin                         # ncurses utilities (tput, clear, etc.)
+  - ncurses-term                        # additional terminal type definitions
+  # Networking
+  - mosh                                # mobile shell (roaming SSH)
+  - whois                               # WHOIS client
+  - dnsutils                            # dig, nslookup, nsupdate
+  - mtr                                 # traceroute + ping combined
+  - socat                               # multipurpose relay (SOcket CAT)
+  - netcat-openbsd                      # TCP/UDP Swiss Army knife
+  - tcpdump                             # packet capture and analysis
+  - nmap                                # network scanner
+  - ipcalc                              # IP subnet calculator
+  - iperf3                              # network bandwidth measurement
+  - iftop                               # display bandwidth usage per connection
+  - nethogs                             # per-process network bandwidth monitor
+  - traceroute                          # trace packet route to host
+  - telnet                              # telnet client
+  - gping                               # ping with a live graph
+  - trippy                              # TUI traceroute/ping (binary: trip)
+  - xh                                  # modern HTTP client (like httpie, written in Rust)
+  - ldnsutils                           # DNS tools including drill
+  - prettyping                          # colorized ping wrapper
+  - fping                               # parallel ping (multiple hosts at once)
+  - sipcalc                             # advanced IPv4/IPv6 subnet calculator
+  - autossh                             # auto-reconnecting SSH tunnels
+  - rclone                              # rsync for cloud storage (S3, GDrive, etc.)
+  - lftp                                # advanced FTP/HTTP/BitTorrent client
+  - speedtest-cli                       # internet speed test (speedtest.net)
+  - geoip-bin                           # IP geolocation lookup command
+  - geoip-database                      # GeoIP country database
+  - bmon                                # bandwidth monitor with TUI
+  - ngrep                               # network grep (packet payload search)
+  - termshark                           # Wireshark TUI (read pcap files)
+  - arp-scan                            # ARP scanning and fingerprinting
+  # File managers
+  - mc                                  # Midnight Commander (dual-pane file manager)
+  - ranger                              # vim-inspired file manager with preview
+  - lf                                  # terminal file manager (Go, inspired by ranger)
+  - nnn                                 # blazing fast terminal file manager
+  - vifm                                # vim-like dual-pane file manager
+  # Git tools
+  - bat                                 # cat with syntax highlighting and git integration
+  - tig                                 # ncurses git repository browser
+  - lazygit                             # simple TUI for git commands
+  - git-lfs                             # Git Large File Storage
+  - gh                                  # GitHub CLI
+  - git-delta                           # syntax-highlighting pager for git diffs
+  # Security & encryption
+  - gnupg                               # GNU Privacy Guard (GPG)
+  - pass                                # password manager using GPG
+  # Newsreaders
+  - slrn                                # STRSTRN-like NNTP/sstrstrstrpool newsreader
+  - tin                                 # threaded STRSTRN newsreader
+  - newsboat                            # RSS/Atom feed reader TUI
+  # Data processing
+  - yq                                  # YAML/XML/TOML processor (like jq for YAML)
+  - miller                              # like awk/sed/cut but for CSV/JSON (mlr)
+  - sc-im                               # terminal spreadsheet (vim-like)
+  - pandoc                              # universal document converter
+  - duf                                 # modern df replacement with TUI
+  - taskwarrior                         # command-line task/todo manager
+  # Development
+  - shellcheck                          # shell script linter
+  - universal-ctags                     # source code indexer
+  - just                                # command runner (modern make alternative)
+  - pipx                                # install Python CLI tools in isolated environments
+  - httpie                              # human-friendly HTTP client
+  # Modern CLI replacements
+  - eza                                 # modern ls replacement (colors, icons, git)
+  - zoxide                              # smarter cd (remembers directories)
+  - tealdeer                            # fast tldr client (simplified man pages)
+  - tmuxinator                          # manage complex tmux sessions
+  - direnv                              # per-directory environment variables
+  - units                               # unit conversion calculator
+  # Database clients
+  - postgresql-client                   # PostgreSQL CLI (psql)
+  - mariadb-client                      # MySQL/MariaDB CLI
+  - redis-tools                         # Redis CLI
+  # Python REPLs
+  - ipython3                            # enhanced Python REPL
+  - bpython                             # fancy Python REPL with autocomplete
+  # Plan 9 & classic Unix
+  - 9base                               # Plan 9 userland (rc, sam, mk, awk, troff, etc.)
+  - original-awk                        # Kernighan's One True Awk
+  - dc                                  # RPN desk calculator (oldest Unix calculator)
+  - sc                                  # original terminal spreadsheet
+  - rlwrap                              # add readline to any command
+  - expect                              # automate interactive programs (Tcl)
+  - colordiff                           # colorized diff wrapper
+  - wdiff                               # word-level diff (GNU)
+  - par                                 # smart paragraph reformatter
+  - enscript                            # text to PostScript converter
+  - a2ps                                # anything to PostScript
+  - indent                              # GNU C code formatter
+  - sharutils                           # shar/unshar shell archives
+  - netpipes                            # pipe data over TCP (faucet/hose)
+  - bsdmainutils                        # BSD utilities: cal, column, hexdump, look, ul, ncal
+  # Fediverse & social
+  - toot                                # Mastodon CLI client
+  - morse                               # text to/from Morse code
 
 # ──────────────────────────────────────────────
 # Fun / community
 # ──────────────────────────────────────────────
 fun_packages:
-  - fortune-mod
-  - cowsay
-  - figlet
-  - toilet
-  - lolcat
-  - sl
-  - cmatrix
-  - nyancat
-  - bsdgames
-  - nethack-console
-  - tty-clock
-  - bastet
-  - cbonsai
-  - boxes
-  - asciinema
+  - fortune-mod                         # random quotes and jokes
+  - cowsay                              # ASCII cow with speech bubble
+  - figlet                              # large ASCII text banners
+  - toilet                              # figlet with color and extra fonts
+  - lolcat                              # rainbow pipe colorizer
+  - sl                                  # steam locomotive (ls typo punishment)
+  - cmatrix                             # Matrix digital rain
+  - nyancat                             # Nyan Cat animation
+  - bsdgames                            # ~40 classic BSD games (adventure, worm, trek, etc.)
+  - nethack-console                     # classic roguelike dungeon crawler
+  - tty-clock                           # terminal clock
+  - bastet                              # "Bastard Tetris" (deliberately gives worst pieces)
+  - cbonsai                             # terminal bonsai tree generator
+  - boxes                               # draw ASCII art boxes around text
+  - asciinema                           # record and share terminal sessions
 
 # ──────────────────────────────────────────────
 # System tools (admin)
 # ──────────────────────────────────────────────
 system_tools:
-  - acct # process accounting (sa, lastcomm)
-  - quota # disk quota tools
-  - plocate # locate files (replaces mlocate)
-  - man-db
-  - info
-  - bash-completion
-  - vnstat # bandwidth monitoring
-  - iotop # I/O monitoring
-  - fastfetch # modern system info (replaces neofetch)
-  - goaccess # web log analyzer
-  - sysstat # system performance tools
-  - glances # cross-platform system monitoring
-  - fail2ban
-  - lynis
-  - rkhunter
-  - chkrootkit
-  - cgroup-tools
-  - smartmontools
-  - lm-sensors
+  - acct                                # process accounting (sa, lastcomm)
+  - quota                               # disk quota tools
+  - plocate                             # locate files (fast, replaces mlocate)
+  - man-db                              # manual page tools
+  - info                                # GNU info documentation reader
+  - bash-completion                     # programmable completion for bash
+  - vnstat                              # network traffic monitor
+  - iotop                               # I/O usage monitor
+  - fastfetch                           # system info display (modern neofetch)
+  - goaccess                            # real-time web log analyzer
+  - sysstat                             # system performance tools (sar, iostat, mpstat)
+  - glances                             # cross-platform system monitoring TUI
+  - fail2ban                            # intrusion prevention (ban IPs after failed logins)
+  - lynis                               # security auditing tool
+  - rkhunter                            # rootkit scanner
+  - chkrootkit                          # rootkit detector
+  - cgroup-tools                        # cgroup management utilities
+  - smartmontools                       # disk S.M.A.R.T. monitoring
+  - lm-sensors                          # hardware temperature/fan/voltage sensors
