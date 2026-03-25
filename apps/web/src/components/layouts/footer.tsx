@@ -10,7 +10,12 @@ import {
   FaRss,
 } from "react-icons/fa";
 
-import { Cookies, Privacy, Security, Terms } from "@/components/consent";
+import {
+  Cookies,
+  Privacy,
+  Security,
+  Terms,
+} from "@/components/layouts/consent";
 
 // Define footer sections data
 const sections = [
