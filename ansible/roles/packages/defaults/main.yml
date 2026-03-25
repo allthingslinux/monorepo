@@ -98,6 +98,7 @@ editors:
   - hx
   - vis
   - kakoune
+  - nvi           # original BSD vi
 
 # ──────────────────────────────────────────────
 # Terminal multiplexers
@@ -117,6 +118,8 @@ chat_clients:
   - profanity
   - talk    # user-to-user real-time chat (talk username)
   - talkd   # talk daemon (runs via openbsd-inetd, pulled as dependency)
+  - ii      # suckless filesystem-based IRC client
+  - sic     # suckless minimal IRC client
 
 # ──────────────────────────────────────────────
 # Mail clients (local mail, no SMTP needed)
@@ -125,6 +128,8 @@ mail_clients:
   - alpine
   - neomutt
   - aerc
+  - s-nail         # modern mailx replacement
+  - abook          # TUI address book (mutt integration)
 
 # ──────────────────────────────────────────────
 # Web/Gemini/Gopher browsers
@@ -135,6 +140,7 @@ browsers:
   - elinks
   - amfora
   - links
+  - gopher         # gopher protocol client
 
 # ──────────────────────────────────────────────
 # CLI tools & utilities
@@ -240,6 +246,23 @@ cli_tools:
   - miller
   - taskwarrior
   - vifm
+  - 9base          # Plan 9 userland (rc, sam, mk, awk, troff, etc.)
+  - original-awk   # Kernighan's One True Awk
+  - dc             # RPN desk calculator
+  - sc             # original terminal spreadsheet
+  - rlwrap         # add readline to any command
+  - expect         # automate interactive programs
+  - colordiff      # colorized diff wrapper
+  - wdiff          # word-level diff
+  - par            # smart paragraph reformatter
+  - enscript       # text to PostScript
+  - a2ps           # anything to PostScript
+  - indent         # GNU C code formatter
+  - sharutils      # shar/unshar shell archives
+  - netpipes       # pipe data over TCP (faucet/hose)
+  - bsdmainutils   # cal, column, hexdump, look, ul, ncal
+  - toot           # Mastodon CLI client
+  - morse          # text to/from Morse code
 
 # ──────────────────────────────────────────────
 # Fun / community
