@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 
-import { shouldShowQuestion } from "@/components/multi-step-form/StepperForm";
+import { shouldShowQuestion } from "@/components/apply/StepperForm";
 import type { FormQuestion } from "@/types";
 
 import DigitsOnlyField from "./DigitsOnlyField";
