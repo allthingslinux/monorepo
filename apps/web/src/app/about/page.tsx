@@ -53,12 +53,6 @@ const PILLARS = [
 const VALUES = [
   {
     description:
-      "Connecting 20,000+ Linux enthusiasts through collaboration, knowledge sharing, and friendly competition.",
-    icon: Users,
-    title: "Community",
-  },
-  {
-    description:
       "Treating everyone with kindness and consideration, free from discrimination — as outlined in our Code of Conduct.",
     icon: Heart,
     title: "Mutual respect",
@@ -74,18 +68,6 @@ const VALUES = [
       "Fostering creative teamwork and open-source contributions — from our wiki and bot to self-hosted services.",
     icon: GitFork,
     title: "Collaboration",
-  },
-  {
-    description:
-      "A dedicated space where members seek help and guidance, with experienced users actively responding.",
-    icon: LifeBuoy,
-    title: "Support",
-  },
-  {
-    description:
-      "Encouraging knowledge sharing and learning resources. We believe knowledge should be free and accessible.",
-    icon: BookOpen,
-    title: "Education",
   },
   {
     description:
@@ -247,37 +229,45 @@ export default function About() {
 
       {/* ── Values ── */}
       <Section size="default" variant="muted">
-        <SectionHeader
-          description="The principles that guide every decision, interaction, and line of code."
-          eyebrow="How we operate"
-          title="Our values"
-        />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {VALUES.map((v) => (
-            <Card
-              className="border-border/50 bg-card/60 p-5 backdrop-blur-sm sm:p-6"
-              key={v.title}
-            >
-              <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary/80 ring-1 ring-primary/15">
-                <v.icon aria-hidden className="size-4.5" strokeWidth={2} />
-              </div>
-              <h3 className="mb-1.5 font-semibold text-[15px] tracking-tight">
-                {v.title}
-              </h3>
-              <p className="text-pretty text-[13px] text-muted-foreground leading-relaxed sm:text-sm">
-                {v.description}
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-10 flex items-end justify-between md:mb-14">
+            <div>
+              <p className="mb-2 font-medium text-primary text-xs uppercase tracking-[0.2em]">
+                How we operate
               </p>
-            </Card>
-          ))}
-        </div>
-        <div className="mt-6 text-center">
-          <Link
-            className="inline-flex items-center gap-1 font-medium text-primary text-sm underline underline-offset-4 transition-colors hover:text-primary/80"
-            href="/code-of-conduct"
-          >
-            <FileText aria-hidden className="size-3.5" strokeWidth={2} />
-            Read our Code of Conduct
-          </Link>
+              <h2 className="font-bold font-display text-2xl tracking-tight sm:text-3xl md:text-4xl">
+                Our values
+              </h2>
+            </div>
+            <Link
+              className="inline-flex items-center gap-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-2.5 text-[13px] font-medium text-foreground/80 transition-colors hover:bg-muted/50 hover:text-foreground"
+              href="/code-of-conduct"
+            >
+              <FileText aria-hidden className="size-4 text-primary" strokeWidth={2} />
+              Code of Conduct
+            </Link>
+          </div>
+
+          <div className="divide-y divide-border/40">
+            {VALUES.map((v, i) => (
+              <div
+                className="grid grid-cols-[2rem_1fr] gap-4 py-5 sm:grid-cols-[2rem_1fr_2fr] sm:gap-8 sm:py-6"
+                key={v.title}
+              >
+                <span className="font-mono text-xs text-primary/40 pt-0.5">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="font-semibold text-[15px] tracking-tight sm:text-base">
+                  {v.title}
+                </p>
+                <p className="col-start-2 text-pretty text-[13px] text-muted-foreground leading-relaxed sm:col-start-3 sm:text-sm">
+                  {v.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+
         </div>
       </Section>
 
@@ -288,23 +278,29 @@ export default function About() {
           eyebrow="Milestones"
           title="How we got here"
         />
-        <div className="mx-auto max-w-2xl">
-          <ol className="relative border-border/50 border-l-2 pl-6">
-            {MILESTONES.map((m, i) => (
-              <li
-                className={i < MILESTONES.length - 1 ? "pb-8" : ""}
-                key={m.event}
-              >
-                <div className="absolute -left-[7px] mt-1.5 size-3 rounded-full border-2 border-primary bg-background" />
-                <p className="mb-0.5 font-medium text-primary text-xs uppercase tracking-wider">
-                  {m.year}
-                </p>
-                <p className="text-[15px] text-foreground/90 leading-relaxed sm:text-base">
-                  {m.event}
-                </p>
-              </li>
-            ))}
-          </ol>
+        <div className="mx-auto max-w-4xl">
+          <div className="grid grid-cols-2 gap-x-8 md:grid-cols-4">
+            {MILESTONES.map((m, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <div
+                  className={`relative flex flex-col ${isEven ? "mt-0" : "mt-16"} pb-8`}
+                  key={m.event}
+                >
+                  {/* Node */}
+                  <div className="mb-3 flex size-6 items-center justify-center rounded-full border-2 border-primary bg-background">
+                    <div className="size-2 rounded-full bg-primary" />
+                  </div>
+                  <p className="mb-1 font-mono text-[10px] font-medium text-primary uppercase tracking-widest">
+                    {m.year}
+                  </p>
+                  <p className="text-pretty text-[13px] text-foreground/80 leading-snug sm:text-sm">
+                    {m.event}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </Section>
 
