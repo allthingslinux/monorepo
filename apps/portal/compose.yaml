@@ -41,6 +41,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-portal}
+    # Host port → container 5432. Set POSTGRES_PORT in apps/portal/.env when 5432 is
+    # taken (e.g. by another app). Use the same port in DATABASE_URL (localhost:PORT).
     ports:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:

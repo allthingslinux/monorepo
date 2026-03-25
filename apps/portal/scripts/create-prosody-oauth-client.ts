@@ -1,6 +1,8 @@
-import "dotenv/config";
 import { randomBytes, randomUUID } from "node:crypto";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 
+import "dotenv/config";
 import { db } from "@portal/db/client";
 import { oauthClient } from "@portal/db/schema/oauth";
 import { eq } from "drizzle-orm";
@@ -101,8 +103,11 @@ async function createProsodyOAuthClient() {
   }
 }
 
-// Run if called directly
-if (require.main === module) {
+const isMainScript =
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+
+if (isMainScript) {
   (async () => {
     try {
       await createProsodyOAuthClient();

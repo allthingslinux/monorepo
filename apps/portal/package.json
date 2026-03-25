@@ -35,7 +35,8 @@
     "compose:adminer": "docker compose --profile adminer up -d",
     "compose:adminer:down": "docker compose --profile adminer down",
     "release": "semantic-release",
-    "clean": "find . -type d \\( -name .turbo -o -name .next \\) -prune -exec rm -rf {} + && find . -path '*/node_modules/.cache' -type d -prune -exec rm -rf {} +"
+    "clean": "find . -type d \\( -name .turbo -o -name .next \\) -prune -exec rm -rf {} + && find . -path '*/node_modules/.cache' -type d -prune -exec rm -rf {} +",
+    "shadcn:add": "shadcn add"
   },
   "dependencies": {
     "@atl/ui": "workspace:*",

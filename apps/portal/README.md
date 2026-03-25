@@ -193,17 +193,28 @@ pnpm compose:db
 
 # The database will be available at:
 # - Host: localhost
-# - Port: 5432
+# - Port: see POSTGRES_PORT below (default 5432)
 # - User: postgres
 # - Password: postgres
 # - Database: portal
 ```
 
-Update your `apps/portal/.env` file with the database connection string:
+Update your `apps/portal/.env` file with the database connection string. Docker Compose reads `apps/portal/.env` when you run `pnpm compose:db` or `docker compose` from `apps/portal`.
+
+**Default (port 5432):**
 
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/portal
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/portal
 ```
+
+**Another Postgres already using 5432** (other app, second compose stack, etc.): pick a free host port and set **both** so they match:
+
+```env
+POSTGRES_PORT=5433
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5433/portal
+```
+
+Then (re)start the DB from `apps/portal`: `pnpm compose:db` or `docker compose up -d portal-db`. If you changed `POSTGRES_PORT` after the container existed, run `docker compose up -d portal-db` again so the new port mapping applies.
 
 ### Bridge ↔ atl.chat token
 

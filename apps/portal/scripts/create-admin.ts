@@ -1,3 +1,6 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
 import "dotenv/config";
 import { user } from "@portal/db/schema/auth";
 import { eq } from "drizzle-orm";
@@ -92,8 +95,12 @@ async function createAdminUser() {
   }
 }
 
-// Run if called directly
-if (require.main === module) {
+// Run if executed directly (ESM has no require.main)
+const isMainScript =
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+
+if (isMainScript) {
   (async () => {
     try {
       await createAdminUser();
