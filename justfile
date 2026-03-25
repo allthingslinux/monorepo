@@ -64,6 +64,14 @@ web-destroy:
 web-cf-typegen:
     pnpm --filter @atl/web run cf:typegen
 
+# Shadcn CLI must run with apps/web as cwd so components.json applies (components → @/components, ui → @atl/ui/components; @shadcnblocks needs SHADCNBLOCKS_API_KEY). Uses npx shadcn@latest because the workspace shadcn pin can break against current zod (e.g. deepPartial). Passes --overwrite so adds are non-interactive. Example: `just web-shadcn-add @shadcnblocks/hero125 -y`
+web-shadcn-add *ARGS:
+    cd apps/web && npx shadcn@latest add --overwrite {{ ARGS }}
+
+# Same pattern as web: run from apps/portal so portal/components.json (aliases, @shadcnblocks) applies.
+portal-shadcn-add *ARGS:
+    cd apps/portal && npx shadcn@latest add --overwrite {{ ARGS }}
+
 # --- apps/docs (Mintlify) — package: @atl/docs ---
 
 docs-dev:

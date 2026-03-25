@@ -15,9 +15,15 @@
         "stdio"
       ]
     },
-    "shadcn": {
+    "shadcn-web": {
       "command": "npx",
-      "args": ["shadcn@latest", "mcp"]
+      "args": ["shadcn@latest", "mcp"],
+      "cwd": "apps/web"
+    },
+    "shadcn-portal": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"],
+      "cwd": "apps/portal"
     },
     "betterauth": {
       "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp",
