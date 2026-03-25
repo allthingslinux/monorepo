@@ -25,7 +25,7 @@ import {
   SiStripe,
 } from "react-icons/si";
 
-import { FinancialSupportDialog } from "@/components/pages/contribute/financial-support-dialog";
+import { FinancialSupportDialog } from "@/components/marketing/contribute/financial-support-dialog";
 
 import { getPageMetadata } from "../metadata";
 

@@ -56,6 +56,11 @@ export const env = createEnv({
     NEXT_PUBLIC_GITHUB_REPO_OWNER: z.string().default("allthingslinux"),
     // Application URLs and public configuration
     NEXT_PUBLIC_URL: z.string().url().default("https://allthingslinux.org"),
+    /** Portal app origin (sign-up / sign-in links from the marketing site). */
+    NEXT_PUBLIC_PORTAL_URL: z
+      .string()
+      .url()
+      .default("https://portal.allthingslinux.org"),
   },
 
   emptyStringAsUndefined: true,
@@ -78,6 +83,7 @@ export const env = createEnv({
     NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
     // Client variables
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    NEXT_PUBLIC_PORTAL_URL: process.env.NEXT_PUBLIC_PORTAL_URL,
     // Server variables
     NODE_ENV: process.env.NODE_ENV,
     QUICKBOOKS_ADMIN_KEY: process.env.QUICKBOOKS_ADMIN_KEY,
@@ -139,6 +145,7 @@ export const cloudflareEnv = {
   NEXT_PUBLIC_GITHUB_REPO_OWNER: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER,
   // Client variables (not prefixed - these are public anyway)
   NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+  NEXT_PUBLIC_PORTAL_URL: process.env.NEXT_PUBLIC_PORTAL_URL,
   // Server variables (secrets are set directly in each environment worker)
   NODE_ENV: process.env.NODE_ENV,
   QUICKBOOKS_ADMIN_KEY: getEnvVar("QUICKBOOKS_ADMIN_KEY"),

@@ -9,7 +9,7 @@ import { notFound, useParams } from "next/navigation";
 import { useState } from "react";
 import type { z } from "zod";
 
-import StepperForm from "@/components/multi-step-form/StepperForm";
+import StepperForm from "@/components/apply/StepperForm";
 import { generalQuestions } from "@/data/forms/questions/general";
 import { roles } from "@/data/forms/roles";
 import { generateFormSchema } from "@/lib/utils";
