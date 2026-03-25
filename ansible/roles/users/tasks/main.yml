@@ -17,19 +17,6 @@
     dest: /etc/security/limits.d/pubnix.conf
     mode: "0644"
 
-- name: Create systemd user slice directory
-  ansible.builtin.file:
-    path: /etc/systemd/system/user-.slice.d
-    state: directory
-    mode: "0755"
-
-- name: Deploy systemd resource limits
-  ansible.builtin.template:
-    src: user-slice-limits.conf.j2
-    dest: /etc/systemd/system/user-.slice.d/limits.conf
-    mode: "0644"
-  notify: Reload systemd
-
 - name: Remove default MOTD
   ansible.builtin.file:
     path: /etc/motd
