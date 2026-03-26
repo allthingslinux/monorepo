@@ -284,6 +284,7 @@ cli_tools:
 # ──────────────────────────────────────────────
 fun_packages:
   - fortune-mod                         # random quotes and jokes
+  - fortunes                            # standard fortune cookie database
   - cowsay                              # ASCII cow with speech bubble
   - figlet                              # large ASCII text banners
   - toilet                              # figlet with color and extra fonts
@@ -298,6 +299,7 @@ fun_packages:
   - cbonsai                             # terminal bonsai tree generator
   - boxes                               # draw ASCII art boxes around text
   - asciinema                           # record and share terminal sessions
+  - oneko                               # cat that chases your cursor
 
 # ──────────────────────────────────────────────
 # System tools (admin)

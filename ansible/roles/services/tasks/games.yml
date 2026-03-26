@@ -61,7 +61,6 @@
       - ninvaders       # Space Invaders clone
       - moon-buggy      # Side-scrolling moon rover
       - nsnake          # Classic snake
-      - bastet          # "Bastard Tetris" — deliberately gives worst pieces
       - vitetris        # Feature-rich Tetris with 2-player split-screen
     state: present
 
@@ -86,24 +85,6 @@
 - name: Install bsd-games collection
   ansible.builtin.apt:
     name: bsdgames
-    state: present
-
-# ──────────────────────────────────────────────
-# Novelty / Ambiance
-# ──────────────────────────────────────────────
-
-- name: Install novelty and ambiance programs
-  ansible.builtin.apt:
-    name:
-      - sl              # Steam locomotive on 'ls' typo — pubnix rite of passage
-      - cmatrix         # Matrix digital rain
-      - cowsay          # ASCII animal message printer
-      - fortune-mod     # Random quotes and jokes
-      - fortunes        # Standard fortune cookie database
-      - lolcat          # Rainbow pipe colorizer
-      - figlet          # Large ASCII text banners
-      - toilet          # figlet with color and extra font options
-      - oneko           # Cat that chases your cursor (X11, fun on graphical sessions)
     state: present
 
 # ──────────────────────────────────────────────
