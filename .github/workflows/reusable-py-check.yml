@@ -17,15 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: astral-sh/setup-uv@6b9c6063abd6010835c3544eaaeab6a6af3f3f0d # v5
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@6b9c6063abd6010835c3544eaaeab6a6af3f3f0d # v5
         with:
           enable-cache: true
-      - run: uv python install ${{ inputs.python-version }}
-      - run: uv sync --frozen --all-extras
+      - name: Install Python
+        run: uv python install ${{ inputs.python-version }}
+      - name: Install dependencies
+        run: uv sync --frozen --all-extras
       - name: Ruff check
         run: uv run ruff check ${{ inputs.working-directory }}/src ${{ inputs.working-directory }}/tests
       - name: Ruff format check
         run: uv run ruff format --check ${{ inputs.working-directory }}/src ${{ inputs.working-directory }}/tests
       - name: Type check
         run: uv run basedpyright
+      - name: Prune uv cache for CI
+        if: always()
+        run: uv cache prune --ci
