@@ -15,14 +15,13 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "tailwind-merge": "catalog:",
-    "tailwindcss-animate": "catalog:"
+    "tailwind-merge": "catalog:"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "postcss": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   }
