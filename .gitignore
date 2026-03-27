@@ -44,6 +44,8 @@ yarn-error.log*
 .env.secrets
 .env.secrets.dev
 .env.secrets.prod
+.env.dev
+.env.prod
 
 # Vercel
 .vercel
@@ -75,3 +77,25 @@ examples/
 form-backups/
 # next-agents-md
 .next-docs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.uv_cache/
+.hypothesis/
+.pytest_cache/
+.ruff_cache/
+uv.lock
+
+# Docker runtime data
+data/
+
+# Generated configs (Model A: envsubst writes inside container, not on host)
+services/chat/irc/config/unrealircd.conf
+services/chat/irc-services/config/atheme.conf
+apps/bridge/config.yaml
+
+# Fumadocs build artifacts (atl-chat docs — framework not used, content merged)
+.source/
