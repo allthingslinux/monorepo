@@ -738,10 +738,15 @@
       // - Patch: automerge (safe, low risk)
       // - Minor: require review (behavioral changes in bridge deps matter)
       // - Major: dashboard approval (explicit upgrade work needed)
+      //
+      // rangeStrategy: 'update-lockfile' preserves version ranges in pyproject.toml
+      // and lets uv.lock pin exact versions (same approach as pnpm for npm packages).
+      // Without this, Renovate defaults to 'pin' which rewrites ranges to exact versions.
       matchManagers: ["pep621"],
       groupName: "python",
       addLabels: ["deps: python"],
       minimumReleaseAge: "7 days",
+      rangeStrategy: "update-lockfile",
     },
     {
       // Python patch updates can automerge
