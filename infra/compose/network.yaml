@@ -3,9 +3,9 @@ services:
   # Turn/Stun Server
   # NOTE: Coturn often requires host networking to handle NAT/IP detection correctly without complex config.
   # We use host networking here for simplicity and performance.
-  coturn:
+  atl-turn:
     image: coturn/coturn
-    container_name: coturn
+    container_name: atl-turn
     restart: unless-stopped
     network_mode: host
     volumes:
@@ -19,9 +19,9 @@ services:
     # 3478 TCP/UDP, 5349 TCP/UDP, 49152-65535 UDP
 
     # Reverse Proxy
-  npm:
+  atl-proxy:
     image: jc21/nginx-proxy-manager:latest
-    container_name: npm
+    container_name: atl-proxy
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "/usr/bin/check-health" ]
@@ -36,9 +36,9 @@ services:
       - ../../data/npm-letsencrypt:/etc/letsencrypt
 
   # DNS & Ad Blocking
-  blocky:
+  atl-dns:
     image: spx01/blocky
-    container_name: blocky
+    container_name: atl-dns
     restart: unless-stopped
     ports:
       - "53:53/tcp"
@@ -48,9 +48,9 @@ services:
       - ../../services/network/dns/config.yml:/app/config.yml
 
   # Monitoring (Gatus)
-  gatus:
+  atl-uptime:
     image: twinproduction/gatus
-    container_name: gatus
+    container_name: atl-uptime
     restart: unless-stopped
     ports:
       - "8081:8080" # Mapped to 8081 to avoid conflict with SFTPGo/NPM if web is needed direct
@@ -60,9 +60,9 @@ services:
       - GATUS_CONFIG_PATH=/config/config.yaml
 
   # File Transfer (SFTPGo)
-  sftpgo:
+  atl-sftp:
     image: drakkan/sftpgo
-    container_name: sftpgo
+    container_name: atl-sftp
     restart: unless-stopped
     ports:
       - "8080:8080" # Web Admin
@@ -74,9 +74,9 @@ services:
     #   - SFTPGO_HTTPD__BINDINGS__0__PORT=8080
 
     # Network Speed Test
-  librespeed:
+  atl-speedtest:
     image: lscr.io/linuxserver/librespeed
-    container_name: librespeed
+    container_name: atl-speedtest
     restart: unless-stopped
     ports:
       - "8082:80"
@@ -88,9 +88,9 @@ services:
       - CUSTOM_RESULTS=false
 
   # Raw Bandwidth Test
-  iperf3:
+  atl-iperf:
     image: networkstatic/iperf3
-    container_name: iperf3
+    container_name: atl-iperf
     restart: unless-stopped
     command: -s
     ports:

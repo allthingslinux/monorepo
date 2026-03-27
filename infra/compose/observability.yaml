@@ -1,7 +1,6 @@
-version: '3.8'
 
 networks:
-  metrics:
+  atl-metrics:
     driver: bridge
   atl-chat:
     external: true
@@ -20,21 +19,21 @@ networks:
     name: npm
 
 volumes:
-  loki_data:
-  grafana_data:
-  mimir_data:
-  influxdb_data:
-  influxdb_plugins:
+  atl-loki-data:
+  atl-grafana-data:
+  atl-mimir-data:
+  atl-influxdb-data:
+  atl-influxdb-plugins:
 
 
 services:
   # Grafana Alloy - OpenTelemetry Collector + Prometheus Agent
-  alloy:
+  atl-alloy:
     image: grafana/alloy:latest
-    container_name: alloy
+    container_name: atl-alloy
     restart: unless-stopped
     networks:
-      - metrics
+      - atl-metrics
       - atl-chat # Access to atl-xmpp-db
       - tux # Access to tux-postgres, tux-valkey
       - iso-network # Access to iso_postgres
@@ -70,20 +69,20 @@ services:
       - --storage.path=/var/lib/alloy/data
       - /et../../services/observability/alloy/config.alloy
     depends_on:
-      - loki
+      - atl-loki
 
   # Grafana Loki - Log Aggregation
-  loki:
+  atl-loki:
     image: grafana/loki:3.6.0
-    container_name: loki
+    container_name: atl-loki
     restart: unless-stopped
     networks:
-      - metrics
+      - atl-metrics
     ports:
       - "3100:3100"
     volumes:
       - ../../services/observability/loki/config.yml:/mnt/config/loki-config.yml:ro
-      - loki_data:/loki
+      - atl-loki-data:/loki
     command:
       - -config.file=/mnt/config/loki-config.yml
     user: "10001:10001" # Run as loki user (UID 10001)
@@ -94,19 +93,19 @@ services:
       retries: 5
 
   # Grafana Mimir - Long-term Metrics Storage
-  mimir:
+  atl-mimir:
     image: grafana/mimir:latest
-    container_name: mimir
+    container_name: atl-mimir
     restart: unless-stopped
     networks:
-      - metrics
+      - atl-metrics
     ports:
       - "8080:8080" # HTTP API
       - "9095:9095" # gRPC
     volumes:
       - ../../services/observability/mimir/mimir.yaml:/etc/mimir/mimir.yaml:ro
       - ../../services/observability/mimir/rules:/data/rules:ro
-      - mimir_data:/data
+      - atl-mimir-data:/data
     environment:
       - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
@@ -115,18 +114,18 @@ services:
       - -target=all # Monolithic mode
 
   # Grafana - Visualization
-  grafana:
+  atl-grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: atl-grafana
     restart: unless-stopped
     networks:
-      - metrics
+      - atl-metrics
       - npm
     ports:
       - "3000:3000"
     volumes:
       - ../../services/observability/grafana/provisioning:/etc/grafana/provisioning:ro
-      - grafana_data:/var/lib/grafana
+      - atl-grafana-data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
@@ -152,23 +151,23 @@ services:
       # Alert State History (Loki Backend)
       - GF_UNIFIED_ALERTING_STATE_HISTORY_ENABLED=true
       - GF_UNIFIED_ALERTING_STATE_HISTORY_BACKEND=loki
-      - GF_UNIFIED_ALERTING_STATE_HISTORY_LOKI_REMOTE_URL=http://loki:3100
+      - GF_UNIFIED_ALERTING_STATE_HISTORY_LOKI_REMOTE_URL=http://atl-loki:3100
       - GF_FEATURE_TOGGLES_ENABLE=alertingCentralAlertHistory
       # Internal Monitoring
       - GF_METRICS_ENABLED=true
       # Datasources Secrets
       - INFLUXDB_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
     depends_on:
-      - loki
-      - mimir
+      - atl-loki
+      - atl-mimir
 
   # InfluxDB 3 Core - Time-series Database
-  influxdb3-core:
+  atl-influxdb:
     image: influxdb:3-core
-    container_name: influxdb3-core
+    container_name: atl-influxdb
     restart: unless-stopped
     networks:
-      - metrics
+      - atl-metrics
     ports:
       - "8181:8181"
     command:
@@ -179,8 +178,8 @@ services:
       - --data-dir=/var/lib/influxdb3/data
       - --plugin-dir=/var/lib/influxdb3/plugins
     volumes:
-      - influxdb_data:/var/lib/influxdb3/data
-      - influxdb_plugins:/var/lib/influxdb3/plugins
+      - atl-influxdb-data:/var/lib/influxdb3/data
+      - atl-influxdb-plugins:/var/lib/influxdb3/plugins
     environment:
       - INFLUXDB_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
     healthcheck:
@@ -190,14 +189,14 @@ services:
       retries: 3
 
   # Blackbox Exporter - Uptime Monitoring (HTTP/DNS/TCP)
-  blackbox:
+  atl-blackbox:
     image: prom/blackbox-exporter:latest
-    container_name: blackbox
+    container_name: atl-blackbox
     restart: unless-stopped
     ports:
       - "9115:9115"
     networks:
-      - metrics
+      - atl-metrics
     command: --config.file=/config/blackbox.yml
     volumes:
       - ../../services/observability/blackbox/blackbox.yml:/config/blackbox.yml:ro
