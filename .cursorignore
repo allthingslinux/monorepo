@@ -1,6 +1,5 @@
 # =============================================================================
 # Cursor indexing — monorepo-wide
-# (Merged apps/portal/.cursorignore + apps/web/.cursorignore; per-app copies removed.)
 # =============================================================================
 
 # Dependencies & build artifacts
@@ -16,15 +15,34 @@ coverage/
 .turbo/
 build/
 
+# Python
+__pycache__/
+.venv/
+.uv_cache/
+.hypothesis/
+.pytest_cache/
+.ruff_cache/
+
+# Docker runtime data
+data/
+
 # Env: hide secrets; keep committed examples discoverable
 .env
 .env.*
 !.env.example
 !.env*.example
-!.env.shared.example
 !.env.dev.example
 !.env.prod.example
-!.dev.vars.example
 
-# Gitignored trees we still want indexed (portal reference checkouts)
-!apps/portal/references/
+# Upstream vendored code (ObsidianIRC fork)
+services/chat/irc-client-obsidian/upstream/
+
+# Large static assets
+services/chat/irc/config/includes/tls/curl-ca-bundle.crt
+
+# IDE
+.cursor/plans/
+.cursor/hooks/logs/
+
+# next-agents-md cache
+.next-docs/
