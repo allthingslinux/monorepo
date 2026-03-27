@@ -31,15 +31,12 @@ export type { Session } from "./config";
 // Constants
 // ============================================================================
 
-// Base URL for the Better Auth server
-// If auth server is on the same domain, this can be omitted
+// Base URL for the Better Auth server. Omit in dev so requests stay same-origin
+// (relative `/api/auth/...`) — important when `@atl/web` binds :3000 and portal is :3001+.
+// Set `NEXT_PUBLIC_BETTER_AUTH_URL` if the auth API is on another origin.
 // If using a custom base path other than /api/auth, include the full path
 // (e.g., "http://localhost:3000/custom-path/auth")
-const baseURL =
-  process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
-  (process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : undefined);
+const baseURL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL || undefined;
 
 // ============================================================================
 // Fetch Options Configuration
