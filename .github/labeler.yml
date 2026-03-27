@@ -40,6 +40,7 @@ service: irc:
           - infra/compose/chat-irc.yaml
           - infra/compose/chat-lounge.yaml
           - infra/compose/chat-obsidian.yaml
+          - infra/compose/chat-gamja.yaml
 
 service: xmpp:
   - changed-files:
@@ -74,6 +75,7 @@ infra:
           - compose.*.yaml
           - infra/compose/networks.yaml
           - infra/compose/cert-manager.yaml
+          - .github/workflows/lint-infra.yml
 
 ci:
   - changed-files:
@@ -95,6 +97,11 @@ config:
       - any-glob-to-any-file:
           - turbo.json
           - pnpm-workspace.yaml
+          - package.json
+          - pyproject.toml
+          - justfile
+          - mise.toml
+          - lint-staged.config.mjs
           - .oxlintrc.json
           - .oxfmtrc.jsonc
           - .editorconfig
@@ -109,4 +116,4 @@ docs:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.md"
-          - apps/docs/**
+          - "**/*.mdx"
