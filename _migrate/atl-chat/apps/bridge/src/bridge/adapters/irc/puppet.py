@@ -1,0 +1,335 @@
+"""IRC puppet manager: per-Discord-user IRC connections with idle timeout."""
+
+from __future__ import annotations
+
+import asyncio
+import contextlib
+import hashlib
+import random
+import time
+from typing import TYPE_CHECKING
+
+import pydle
+from cachetools import TTLCache
+from loguru import logger
+
+from bridge.formatting.splitter import split_irc_message
+
+if TYPE_CHECKING:
+    from bridge.gateway import Bus, ChannelRouter
+    from bridge.identity import IdentityResolver
+
+
+class IRCPuppet(pydle.Client):
+    """Single IRC puppet connection for a bridged user. Uses METADATA for avatar sync."""
+
+    def __init__(
+        self,
+        nick: str,
+        discord_id: str,
+        ping_interval: int = 120,
+        prejoin_commands: list[str] | None = None,
+        **kwargs,
+    ):
+        super().__init__(nick, **kwargs)
+        self.discord_id = discord_id
+        self.last_activity = time.time()
+        self._ping_interval = ping_interval
+        self._prejoin_commands: list[str] = prejoin_commands or []
+        self._pinger_task: asyncio.Task | None = None
+        self._initial_nick = nick
+        self._last_avatar_hash: str | None = None
+
+    async def on_capability_draft_metadata_available(self, value):
+        """Request draft/metadata (METADATA command)."""
+        return True
+
+    async def on_capability_draft_metadata_notify_2_available(self, value):
+        """Request draft/metadata-notify-2 (receive METADATA notifications)."""
+        return True
+
+    def touch(self):
+        """Update last activity timestamp."""
+        self.last_activity = time.time()
+
+    async def on_nick(self, old: str, new: str) -> None:
+        """Revert any nick change forced onto this puppet (e.g. NickServ enforcement).
+
+        On revert failure, logs an error. The manager evicts the puppet so the
+        next message recreates it fresh rather than leaving it with a wrong nick.
+        """
+        await super().on_nick(old, new)
+        if old.lower() == self._initial_nick.lower():
+            logger.warning("puppet nick changed {} -> {}; reverting", old, new)
+            try:
+                await self.set_nick(self._initial_nick)
+            except Exception as exc:
+                logger.error(
+                    "puppet {} failed to revert nick change ({} -> {}): {}; puppet will be evicted",
+                    self._initial_nick,
+                    old,
+                    new,
+                    exc,
+                )
+                # Signal eviction needed; manager checks this flag in get_or_create_puppet
+                self._evict_on_next_use = True
+
+    async def on_connect(self):
+        """Handle connection: send pre-join commands and start pinger."""
+        await super().on_connect()
+        logger.debug("puppet {} connected", self.nickname)
+
+        for cmd in self._prejoin_commands:
+            raw = cmd.replace("{nick}", self._initial_nick)
+            await self.rawmsg(*raw.split(" ", 1) if " " in raw else [raw])
+
+        if self._pinger_task:
+            self._pinger_task.cancel()
+        self._pinger_task = asyncio.create_task(self._pinger())
+
+    async def _pinger(self) -> None:
+        """Send PING every ping_interval seconds to keep connection alive."""
+        while True:
+            await asyncio.sleep(self._ping_interval)
+            try:
+                await self.rawmsg("PING", "keep-alive")
+            except Exception:
+                break
+
+
+class IRCPuppetManager:
+    """Manages multiple IRC puppet connections per Discord user."""
+
+    def __init__(
+        self,
+        bus: Bus,
+        router: ChannelRouter,
+        identity: IdentityResolver,
+        server: str,
+        port: int,
+        tls: bool,
+        tls_verify: bool = True,
+        idle_timeout_hours: int = 24,
+        ping_interval: int = 120,
+        prejoin_commands: list[str] | None = None,
+    ):
+        self._bus = bus
+        self._router = router
+        self._identity = identity
+        self._server = server
+        self._port = port
+        self._tls = tls
+        self._tls_verify = tls_verify
+        self._idle_timeout = idle_timeout_hours * 3600
+        self._ping_interval = ping_interval
+        self._prejoin_commands: list[str] = prejoin_commands or []
+        self._puppets: dict[str, IRCPuppet] = {}
+        # TTLCache prevents unbounded growth; TTL matches puppet idle timeout so locks
+        # for long-absent users are automatically evicted.
+        self._puppet_locks: TTLCache[str, asyncio.Lock] = TTLCache(maxsize=1024, ttl=self._idle_timeout)
+        self._cleanup_task: asyncio.Task | None = None
+
+    async def get_or_create_puppet(self, discord_id: str) -> IRCPuppet | None:
+        """Get existing puppet or create new one for Discord user.
+
+        Uses a per-user lock to prevent concurrent creation races where two
+        messages from the same user could both create puppet connections.
+        """
+        if discord_id in self._puppets:
+            puppet = self._puppets[discord_id]
+            # Evict puppets that failed to revert their nick — recreate fresh
+            if getattr(puppet, "_evict_on_next_use", False):
+                logger.warning(
+                    "evicting puppet {} (discord_id={}) due to unresolved nick change",
+                    puppet.nickname,
+                    discord_id,
+                )
+                self._puppets.pop(discord_id, None)
+                self._puppet_locks.pop(discord_id, None)
+            else:
+                puppet.touch()
+                return puppet
+
+        # Per-user lock: only one coroutine creates the puppet at a time
+        if discord_id not in self._puppet_locks:
+            self._puppet_locks[discord_id] = asyncio.Lock()
+        async with self._puppet_locks[discord_id]:
+            # Re-check after acquiring lock (another coroutine may have created it)
+            if discord_id in self._puppets:
+                puppet = self._puppets[discord_id]
+                puppet.touch()
+                return puppet
+
+            # Resolve IRC nick from Portal
+            nick = await self._identity.discord_to_irc(discord_id)
+            if not nick:
+                logger.debug("no nick for Discord user {}", discord_id)
+                return None
+
+            # Create and connect puppet with backoff retry
+            puppet = IRCPuppet(
+                nick,
+                discord_id,
+                ping_interval=self._ping_interval,
+                prejoin_commands=self._prejoin_commands,
+            )
+
+            if await self._connect_puppet_with_backoff(puppet):
+                self._puppets[discord_id] = puppet
+                puppet.touch()
+                logger.info("created puppet {} for Discord user {}", nick, discord_id)
+                return puppet
+
+            return None
+
+    async def _connect_puppet_with_backoff(
+        self,
+        puppet: IRCPuppet,
+        *,
+        max_attempts: int = 3,
+        backoff_min: float = 2.0,
+        backoff_max: float = 30.0,
+    ) -> bool:
+        """Connect puppet with exponential backoff. Returns True on success."""
+        for attempt in range(max_attempts):
+            try:
+                await puppet.connect(
+                    hostname=self._server,
+                    port=self._port,
+                    tls=self._tls,
+                    tls_verify=self._tls_verify,
+                )
+                return True
+            except Exception as exc:
+                if attempt == max_attempts - 1:
+                    logger.exception(
+                        "Puppet {} connect failed after {} attempts: {}",
+                        puppet.nickname,
+                        max_attempts,
+                        exc,
+                    )
+                    return False
+                delay = min(backoff_max, backoff_min * (2**attempt))
+                jitter = random.uniform(0.5, 1.5)
+                wait = delay * jitter
+                logger.warning(
+                    "Puppet {} connect attempt {} failed: {}, retrying in {:.1f}s",
+                    puppet.nickname,
+                    attempt + 1,
+                    exc,
+                    wait,
+                )
+                await asyncio.sleep(wait)
+        return False
+
+    def get_puppet_nicks(self) -> set[str]:
+        """Return set of current puppet nicks (for echo detection on main connection)."""
+        return {p.nickname for p in self._puppets.values()}
+
+    async def send_message(
+        self,
+        discord_id: str,
+        channel: str,
+        content: str,
+        avatar_url: str | None = None,
+    ):
+        """Send message via puppet. Joins channel if needed. Sets METADATA avatar if supported."""
+        puppet = await self.get_or_create_puppet(discord_id)
+        if not puppet:
+            logger.debug("puppet: no puppet for discord_id={}; message not sent", discord_id)
+            return
+
+        # Ensure puppet has joined the target channel before sending
+        if channel not in puppet.channels:
+            try:
+                await puppet.join(channel)
+                logger.debug("puppet {} joined {}", puppet.nickname, channel)
+            except Exception as exc:
+                logger.warning("puppet {} failed to join {}: {}", puppet.nickname, channel, exc)
+                return
+
+        # Set avatar via METADATA before first message (when URL changed)
+        if avatar_url and hasattr(puppet, "set_metadata"):
+            await self._set_puppet_avatar(puppet, discord_id, avatar_url)
+
+        try:
+            for chunk in split_irc_message(content, max_bytes=450):
+                await puppet.message(channel, chunk)
+            puppet.touch()
+            logger.info("puppet sent to {} as {}", channel, puppet.nickname)
+        except (OSError, ConnectionError) as exc:
+            logger.warning(
+                "Puppet send failed for {} (connection error); evicting dead puppet: {}",
+                discord_id,
+                exc,
+            )
+            self._puppets.pop(discord_id, None)
+            self._puppet_locks.pop(discord_id, None)
+        except Exception as exc:
+            logger.exception("Puppet send failed for {}: {}", discord_id, exc)
+
+    async def _set_puppet_avatar(
+        self,
+        puppet: IRCPuppet,
+        discord_id: str,
+        avatar_url: str,
+    ) -> None:
+        """Set puppet avatar via METADATA if URL changed (cached by hash)."""
+        avatar_hash = hashlib.sha1(avatar_url.encode()).hexdigest()
+        if puppet._last_avatar_hash == avatar_hash:
+            return
+
+        if "draft/metadata" not in getattr(puppet, "_capabilities", {}):
+            return
+
+        try:
+            await puppet.set_metadata("*", "avatar", avatar_url)
+            puppet._last_avatar_hash = avatar_hash
+            logger.debug("Set METADATA avatar for puppet {} ({})", puppet.nickname, discord_id)
+        except Exception as exc:
+            logger.debug("METADATA avatar set failed for {}: {}", puppet.nickname, exc)
+
+    async def join_channel(self, discord_id: str, channel: str):
+        """Join channel with puppet."""
+        puppet = await self.get_or_create_puppet(discord_id)
+        if puppet and channel not in puppet.channels:
+            await puppet.join(channel)
+            puppet.touch()
+
+    async def _cleanup_idle_puppets(self):
+        """Periodically disconnect idle puppets."""
+        while True:
+            try:
+                await asyncio.sleep(3600)  # Check every hour
+                now = time.time()
+                to_remove = []
+
+                for discord_id, puppet in self._puppets.items():
+                    if now - puppet.last_activity > self._idle_timeout:
+                        to_remove.append(discord_id)
+
+                for discord_id in to_remove:
+                    puppet = self._puppets.pop(discord_id)
+                    self._puppet_locks.pop(discord_id, None)
+                    await puppet.disconnect()
+                    logger.info("disconnected idle puppet for {}", discord_id)
+
+            except asyncio.CancelledError:
+                break
+            except Exception as exc:
+                logger.exception("Puppet cleanup error: {}", exc)
+
+    async def start(self):
+        """Start cleanup task."""
+        self._cleanup_task = asyncio.create_task(self._cleanup_idle_puppets())
+
+    async def stop(self):
+        """Stop all puppets."""
+        if self._cleanup_task:
+            self._cleanup_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await self._cleanup_task
+
+        for puppet in list(self._puppets.values()):
+            await puppet.disconnect()
+        self._puppets.clear()

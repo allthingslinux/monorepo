@@ -1,0 +1,44 @@
+FROM composer:2 AS builder
+
+WORKDIR /app
+
+# Clone the webpanel source and install dependencies
+RUN git clone --depth 1 --branch 0.9.1 https://github.com/unrealircd/unrealircd-webpanel.git . && \
+    composer install --no-dev --optimize-autoloader
+
+FROM trafex/php-nginx:3.10.0
+
+LABEL org.opencontainers.image.source="https://github.com/allthingslinux/atl.chat" \
+    org.opencontainers.image.description="UnrealIRCd web administration panel for atl.chat" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.vendor="All Things Linux" \
+    org.opencontainers.image.title="atl-webpanel"
+
+USER root
+
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
+    php84-curl \
+    php84-mbstring \
+    php84-sodium \
+    php84-zip
+
+USER nobody
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files from the builder stage
+COPY --from=builder /app /var/www/html
+
+# Fix permissions for webpanel to write config files
+USER root
+RUN chown -R nobody:nobody /var/www/html && \
+    chmod -R 755 /var/www/html/data /var/www/html/config /var/www/html/logs
+
+USER nobody
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/ || exit 1

@@ -1,0 +1,437 @@
+"""Event types and dispatcher (AUDIT §1: typed events, central dispatcher)."""
+
+from __future__ import annotations
+
+import functools
+from dataclasses import dataclass, field
+from typing import Any, Protocol
+
+
+@dataclass
+class MessageIn:
+    """Inbound message event — protocol-agnostic."""
+
+    origin: str  # "discord" | "irc" | "xmpp"
+    channel_id: str
+    author_id: str
+    author_display: str
+    content: str
+    message_id: str
+    reply_to_id: str | None = None
+    is_edit: bool = False
+    is_action: bool = False
+    avatar_url: str | None = None  # For avatar sync
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class MessageOut:
+    """Outbound message event — to be sent to target protocol(s)."""
+
+    target_origin: str  # "discord" | "irc" | "xmpp"
+    channel_id: str
+    author_id: str
+    author_display: str
+    content: str
+    message_id: str
+    reply_to_id: str | None = None
+    is_action: bool = False  # True for CTCP ACTION (/me) messages
+    avatar_url: str | None = None  # For avatar sync
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Join:
+    """User joined a channel."""
+
+    origin: str
+    channel_id: str
+    user_id: str
+    display: str
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Part:
+    """User left a channel."""
+
+    origin: str
+    channel_id: str
+    user_id: str
+    display: str
+    reason: str | None = None
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Quit:
+    """User disconnected (IRC/XMPP)."""
+
+    origin: str
+    user_id: str
+    display: str
+    reason: str | None = None
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ConfigReload:
+    """Config was reloaded (e.g. SIGHUP)."""
+
+    pass
+
+
+@dataclass
+class MessageDelete:
+    """Message was deleted — relay to other protocols for REDACT/retraction."""
+
+    origin: str
+    channel_id: str
+    message_id: str
+    author_id: str = ""  # For XMPP retraction (send as user)
+    author_display: str = ""  # Display name for XMPP retraction JID (must match sender)
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class MessageDeleteOut:
+    """Outbound delete — to be sent to target protocol (REDACT, retraction)."""
+
+    target_origin: str
+    channel_id: str
+    message_id: str
+    author_id: str = ""  # For XMPP retraction (send as user)
+    author_display: str = ""  # Display name for XMPP retraction JID (must match sender)
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+class EventTarget(Protocol):
+    """Minimal interface for bus dispatch: accept_event + push_event (AUDIT §1)."""
+
+    def accept_event(self, source: str, evt: object) -> bool:
+        """Return True if this target wants the event."""
+        ...
+
+    def push_event(self, source: str, evt: object) -> None:
+        """Handle the event (may be async via queue)."""
+        ...
+
+
+class BridgeAdapter(Protocol):
+    """Unified adapter interface: name, accept_event, push_event, start, stop (AUDIT §3.2)."""
+
+    @property
+    def name(self) -> str:
+        """Adapter identifier (e.g. 'discord', 'irc', 'xmpp')."""
+        ...
+
+    def accept_event(self, source: str, evt: object) -> bool:
+        """Return True if this adapter wants the event."""
+        ...
+
+    def push_event(self, source: str, evt: object) -> None:
+        """Handle the event (may be async via queue)."""
+        ...
+
+    async def start(self) -> None:
+        """Start the adapter (connect, register handlers)."""
+        ...
+
+    async def stop(self) -> None:
+        """Stop the adapter (disconnect, cleanup)."""
+        ...
+
+
+def event(type_name: str):
+    """Decorator to mark a factory as producing an event with a given type."""
+
+    def decorator(f: Any) -> Any:
+        @functools.wraps(f)
+        def wrapper(*args: Any, **kwargs: Any) -> tuple[str, object]:
+            evt = f(*args, **kwargs)
+            return (type_name, evt)
+
+        wrapper.TYPE = type_name  # type: ignore[attr-defined]
+        return wrapper
+
+    return decorator
+
+
+@event("message_in")
+def message_in(
+    origin: str,
+    channel_id: str,
+    author_id: str,
+    author_display: str,
+    content: str,
+    message_id: str,
+    *,
+    reply_to_id: str | None = None,
+    is_edit: bool = False,
+    is_action: bool = False,
+    avatar_url: str | None = None,
+    raw: dict[str, Any] | None = None,
+) -> MessageIn:
+    return MessageIn(
+        origin=origin,
+        channel_id=channel_id,
+        author_id=author_id,
+        author_display=author_display,
+        content=content,
+        message_id=message_id,
+        reply_to_id=reply_to_id,
+        is_edit=is_edit,
+        is_action=is_action,
+        avatar_url=avatar_url,
+        raw=raw or {},
+    )
+
+
+@event("message_out")
+def message_out(
+    target_origin: str,
+    channel_id: str,
+    author_id: str,
+    author_display: str,
+    content: str,
+    message_id: str,
+    *,
+    reply_to_id: str | None = None,
+    is_action: bool = False,
+    avatar_url: str | None = None,
+    raw: dict[str, Any] | None = None,
+) -> MessageOut:
+    return MessageOut(
+        target_origin=target_origin,
+        channel_id=channel_id,
+        author_id=author_id,
+        author_display=author_display,
+        content=content,
+        message_id=message_id,
+        reply_to_id=reply_to_id,
+        is_action=is_action,
+        avatar_url=avatar_url,
+        raw=raw or {},
+    )
+
+
+@event("join")
+def join(origin: str, channel_id: str, user_id: str, display: str) -> Join:
+    return Join(origin=origin, channel_id=channel_id, user_id=user_id, display=display)
+
+
+@event("part")
+def part(
+    origin: str,
+    channel_id: str,
+    user_id: str,
+    display: str,
+    *,
+    reason: str | None = None,
+) -> Part:
+    return Part(
+        origin=origin,
+        channel_id=channel_id,
+        user_id=user_id,
+        display=display,
+        reason=reason,
+    )
+
+
+@event("quit")
+def quit(origin: str, user_id: str, display: str, *, reason: str | None = None) -> Quit:
+    return Quit(origin=origin, user_id=user_id, display=display, reason=reason)
+
+
+@event("config_reload")
+def config_reload() -> ConfigReload:
+    return ConfigReload()
+
+
+@event("message_delete")
+def message_delete(
+    origin: str,
+    channel_id: str,
+    message_id: str,
+    *,
+    author_id: str = "",
+    author_display: str = "",
+    raw: dict[str, Any] | None = None,
+) -> MessageDelete:
+    return MessageDelete(
+        origin=origin,
+        channel_id=channel_id,
+        message_id=message_id,
+        author_id=author_id,
+        author_display=author_display,
+        raw=raw or {},
+    )
+
+
+@dataclass
+class ReactionIn:
+    """Reaction was added — relay to other protocols."""
+
+    origin: str
+    channel_id: str
+    message_id: str
+    emoji: str
+    author_id: str
+    author_display: str
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ReactionOut:
+    """Outbound reaction — to be sent to target protocol."""
+
+    target_origin: str
+    channel_id: str
+    message_id: str
+    emoji: str
+    author_id: str
+    author_display: str
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class TypingIn:
+    """User started or stopped typing — relay to other protocols."""
+
+    origin: str
+    channel_id: str
+    user_id: str
+    state: str = "active"  # "active" | "done"
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class TypingOut:
+    """Outbound typing indicator."""
+
+    target_origin: str
+    channel_id: str
+    state: str = "active"  # "active" | "done"
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+@event("message_delete_out")
+def message_delete_out(
+    target_origin: str,
+    channel_id: str,
+    message_id: str,
+    *,
+    author_id: str = "",
+    author_display: str = "",
+) -> MessageDeleteOut:
+    return MessageDeleteOut(
+        target_origin=target_origin,
+        channel_id=channel_id,
+        message_id=message_id,
+        author_id=author_id,
+        author_display=author_display,
+    )
+
+
+@event("reaction_in")
+def reaction_in(
+    origin: str,
+    channel_id: str,
+    message_id: str,
+    emoji: str,
+    author_id: str,
+    author_display: str,
+    *,
+    raw: dict[str, Any] | None = None,
+) -> ReactionIn:
+    return ReactionIn(
+        origin=origin,
+        channel_id=channel_id,
+        message_id=message_id,
+        emoji=emoji,
+        author_id=author_id,
+        author_display=author_display,
+        raw=raw or {},
+    )
+
+
+@event("reaction_out")
+def reaction_out(
+    target_origin: str,
+    channel_id: str,
+    message_id: str,
+    emoji: str,
+    author_id: str,
+    author_display: str,
+    *,
+    raw: dict[str, Any] | None = None,
+) -> ReactionOut:
+    return ReactionOut(
+        target_origin=target_origin,
+        channel_id=channel_id,
+        message_id=message_id,
+        emoji=emoji,
+        author_id=author_id,
+        author_display=author_display,
+        raw=raw or {},
+    )
+
+
+@event("typing_in")
+def typing_in(origin: str, channel_id: str, user_id: str, state: str = "active") -> TypingIn:
+    return TypingIn(origin=origin, channel_id=channel_id, user_id=user_id, state=state)
+
+
+@event("typing_out")
+def typing_out(target_origin: str, channel_id: str, state: str = "active") -> TypingOut:
+    return TypingOut(target_origin=target_origin, channel_id=channel_id, state=state)
+
+
+class Dispatcher:
+    """Central event dispatcher; targets filter by type and receive events (AUDIT §1)."""
+
+    def __init__(self) -> None:
+        self._targets: list[EventTarget] = []
+
+    def register(self, target: EventTarget) -> None:
+        """Register an event target (adapter)."""
+        from loguru import logger
+
+        self._targets.append(target)
+        name = getattr(target, "name", type(target).__name__)
+        logger.debug("registered adapter: {}", name)
+
+    def unregister(self, target: EventTarget) -> None:
+        """Unregister an event target."""
+        from loguru import logger
+
+        if target in self._targets:
+            self._targets.remove(target)
+            name = getattr(target, "name", type(target).__name__)
+            logger.debug("unregistered adapter: {}", name)
+
+    def dispatch(self, source: str, evt: object) -> None:
+        """Dispatch event to all targets that accept it."""
+        import time
+
+        from loguru import logger
+
+        evt_type = type(evt).__name__
+        for target in self._targets:
+            try:
+                if target.accept_event(source, evt):
+                    t0 = time.perf_counter()
+                    target.push_event(source, evt)
+                    elapsed = time.perf_counter() - t0
+                    logger.debug(
+                        "dispatched {} from {} -> {} in {:.4f}s",
+                        evt_type,
+                        source,
+                        getattr(target, "name", type(target).__name__),
+                        elapsed,
+                    )
+            except Exception as exc:
+                logger.exception("failed to dispatch {} from {} to {}: {}", evt_type, source, target, exc)
+
+
+dispatcher = Dispatcher()

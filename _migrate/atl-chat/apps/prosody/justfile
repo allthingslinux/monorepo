@@ -1,0 +1,183 @@
+# Prosody (XMPP) Service Justfile
+# Loaded via root: mod xmpp './apps/prosody'
+
+set export := true
+
+[group('Management')]
+shell:
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec -it $CONTAINER /bin/bash; \
+    else \
+        echo "XMPP server not running (or project name mismatch)"; \
+    fi
+
+[group('Management')]
+check:
+    @echo "Running Prosody sanity checks (config, certs, dns, etc.)..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-dns:
+    @echo "Checking XMPP DNS records..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check dns; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+reload:
+    @echo "Reloading Prosody configuration..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl reload; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('User Management')]
+adduser user password="":
+    @echo "Adding user: $user"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        if [ -n "$password" ]; then \
+            docker exec $CONTAINER bash -c "echo -e '$password\n$password' | prosodyctl adduser $user"; \
+        else \
+            docker exec -it $CONTAINER prosodyctl adduser $user; \
+        fi; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('User Management')]
+deluser user:
+    @echo "Deleting user: $user"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl deluser $user; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Audit')]
+audit host:
+    @echo "Viewing audit log for: {{host}}"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl mod_audit {{host}}; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Audit')]
+audit-user jid:
+    @echo "Viewing audit log for user: {{jid}}"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl mod_audit {{jid}}; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Audit')]
+audit-global host:
+    @echo "Viewing host-wide audit events for: {{host}}"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl mod_audit --global {{host}}; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Database')]
+db-backup:
+    @echo "Backing up database..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-db 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        BACKUP_FILE="backup_$(date +%Y%m%d_%H%M%S).sql"; \
+        docker exec $CONTAINER pg_dumpall -U prosody > $BACKUP_FILE; \
+        echo "Database backup saved to: $BACKUP_FILE"; \
+    else \
+        echo "Database not running"; \
+    fi
+
+[group('Certificates')]
+check-certs:
+    @echo "Checking Prosody certificate configuration..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check certs; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-config:
+    @echo "Checking Prosody configuration..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check config; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-features:
+    @echo "Checking for missing/unconfigured features..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check features; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-disabled:
+    @echo "Reporting disabled VirtualHosts and Components..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check disabled; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-turn stun_server="":
+    @echo "Checking TURN/mod_turn_external configuration..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        if [ -n "$stun_server" ]; then \
+            docker exec $CONTAINER prosodyctl check turn --ping="$stun_server"; \
+        else \
+            docker exec $CONTAINER prosodyctl check turn; \
+        fi; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Management')]
+check-connectivity:
+    @echo "Checking external connectivity (observe.jabber.network)..."
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER prosodyctl check connectivity; \
+    else \
+        echo "XMPP server not running"; \
+    fi
+
+[group('Certificates')]
+check-cert domain:
+    @echo "Checking certificate for: $domain"
+    @CONTAINER=$(docker compose -f ../../compose.yaml -p atl-chat ps -q atl-xmpp-server 2>/dev/null); \
+    if [ -n "$CONTAINER" ]; then \
+        docker exec $CONTAINER /usr/local/bin/certificate-monitor.sh check "$domain"; \
+    else \
+        echo "XMPP server not running"; \
+    fi

@@ -1,0 +1,53 @@
+# Third-party modules for UnrealIRCd
+# Installed during Docker image build. To add/remove modules, edit this file and rebuild.
+#
+# Format:
+#   - One module name per line (e.g. third/module-name)
+#   - Lines starting with # are comments
+#   - Empty lines ignored
+#
+# Find available modules:
+#   https://modules.unrealircd.org/
+#   docker compose exec atl-irc-server unrealircd module list
+#
+# Add module: add line, rebuild image
+# Remove module: delete or comment out line, rebuild image
+#
+# Manual install (after container is running):
+#   docker compose exec atl-irc-server sh
+#   cd /home/unrealircd/unrealircd && ./unrealircd module install third/module-name
+#   ./unrealircd rehash
+#
+# Module info: docker compose exec atl-irc-server unrealircd module info third/module-name
+# Upgrade modules: docker compose exec atl-irc-server unrealircd module upgrade
+#
+# Security: Third-party modules are community-maintained. Review source before installing.
+
+# WebIRC/WebSocket information in WHOIS
+third/showwebirc
+
+# METADATA: avatars, message coloring, status texts (draft/metadata, draft/metadata-notify-2)
+third/metadata
+
+# draft/react (IRCv3): message reactions - Valware
+third/react
+
+# third/redact-atl: built from contrib/redact/redact-atl.c (fixed parc/parv validation)
+
+# IRCCloud MessageTags support
+third/irccloud-tags
+
+# KiwiIRC MessageTags support
+third/kiwiirc-tags
+
+# draft/display-name (IRCv3): display names in message tags - Valware
+third/display-name
+
+# third/relaymsg-atl: built from contrib/relaymsg/relaymsg-atl.c (clean nicks, no / separator)
+
+# Block mass highlights network-wide (anti-spam) - Gottem / k4be
+third/block_masshighlight
+# Add more modules as needed:
+# third/commandsno
+# third/clones
+# third/repeatprot

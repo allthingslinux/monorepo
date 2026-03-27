@@ -1,0 +1,187 @@
+"""Unit tests for identity/sanitize.py — webhook username and nick sanitization."""
+
+from __future__ import annotations
+
+from bridge.identity.sanitize import (
+    ensure_valid_username,
+    puppet_muc_nick_from_base,
+    puppet_muc_xep0172_display_nick,
+    sanitize_nick,
+    xmpp_jid_or_plain_to_muc_nick,
+)
+
+# ---------------------------------------------------------------------------
+# ensure_valid_username
+# ---------------------------------------------------------------------------
+
+
+class TestEnsureValidUsername:
+    def test_normal_name(self):
+        assert ensure_valid_username("Alice") == "Alice"
+
+    def test_strips_whitespace(self):
+        assert ensure_valid_username("  Bob  ") == "Bob"
+
+    def test_empty_string_returns_fallback(self):
+        result = ensure_valid_username("")
+        assert 2 <= len(result) <= 32
+
+    def test_single_char_returns_fallback(self):
+        result = ensure_valid_username("A")
+        assert len(result) >= 2
+
+    def test_whitespace_only_returns_fallback(self):
+        result = ensure_valid_username("   ")
+        assert len(result) >= 2
+
+    def test_truncates_long_name(self):
+        result = ensure_valid_username("x" * 100)
+        assert len(result) == 32
+
+    def test_exactly_32_chars(self):
+        result = ensure_valid_username("a" * 32)
+        assert len(result) == 32
+        assert result == "a" * 32
+
+    def test_exactly_2_chars(self):
+        result = ensure_valid_username("ab")
+        assert result == "ab"
+
+
+# ---------------------------------------------------------------------------
+# sanitize_nick
+# ---------------------------------------------------------------------------
+
+
+class TestSanitizeNick:
+    def test_normal_nick(self):
+        assert sanitize_nick("alice") == "alice"
+
+    def test_removes_spaces(self):
+        assert sanitize_nick("a l i c e") == "alice"
+
+    def test_removes_forbidden_chars(self):
+        # space, comma, asterisk, question mark, exclamation, @, #, :, /, \, ., NUL, CR, LF
+        assert sanitize_nick("a,b*c?d!e@f#g:h/i\\j.k") == "abcdefghijk"
+
+    def test_removes_nul_cr_lf(self):
+        assert sanitize_nick("a\x00b\rc\nd") == "abcd"
+
+    def test_strips_forbidden_start_digit(self):
+        assert sanitize_nick("123abc") == "abc"
+
+    def test_strips_forbidden_start_dash(self):
+        assert sanitize_nick("-abc") == "abc"
+
+    def test_strips_forbidden_start_single_quote(self):
+        assert sanitize_nick("'abc") == "abc"
+
+    def test_strips_forbidden_start_tilde(self):
+        assert sanitize_nick("~abc") == "abc"
+
+    def test_strips_forbidden_start_dollar(self):
+        assert sanitize_nick("$abc") == "abc"
+
+    def test_strips_forbidden_start_plus(self):
+        assert sanitize_nick("+abc") == "abc"
+
+    def test_strips_forbidden_start_percent(self):
+        assert sanitize_nick("%abc") == "abc"
+
+    def test_truncates_to_23(self):
+        result = sanitize_nick("a" * 50)
+        assert len(result) == 23
+
+    def test_custom_max_len(self):
+        result = sanitize_nick("a" * 50, max_len=10)
+        assert len(result) == 10
+
+    def test_empty_returns_fallback(self):
+        result = sanitize_nick("")
+        assert result == "user"
+
+    def test_all_forbidden_returns_fallback(self):
+        result = sanitize_nick("@#:!*?")
+        assert result == "user"
+
+    def test_all_forbidden_start_chars_stripped(self):
+        # After removing forbidden chars, only start-forbidden remain
+        result = sanitize_nick("123")
+        # digits are start-forbidden but not body-forbidden, so they get stripped from start
+        assert result == "user"
+
+    def test_preserves_unicode(self):
+        result = sanitize_nick("Ünïcödé")
+        assert result == "Ünïcödé"
+
+    def test_result_never_empty(self):
+        result = sanitize_nick("\x00\r\n")
+        assert len(result) > 0
+
+
+# ---------------------------------------------------------------------------
+# xmpp_jid_or_plain_to_muc_nick
+# ---------------------------------------------------------------------------
+
+
+class TestXmppJidOrPlainToMucNick:
+    def test_bare_jid_uses_localpart(self):
+        assert xmpp_jid_or_plain_to_muc_nick("alice@xmpp.example") == "alice"
+
+    def test_plain_string_unchanged_when_safe(self):
+        assert xmpp_jid_or_plain_to_muc_nick("kaizen") == "kaizen"
+
+    def test_plain_applies_sanitize(self):
+        assert xmpp_jid_or_plain_to_muc_nick("a b") == "ab"
+
+    def test_empty_returns_user(self):
+        assert xmpp_jid_or_plain_to_muc_nick("") == "user"
+
+    def test_strips_whitespace(self):
+        assert xmpp_jid_or_plain_to_muc_nick("  bob@host  ") == "bob"
+
+
+# ---------------------------------------------------------------------------
+# puppet_muc_nick_from_base
+# ---------------------------------------------------------------------------
+
+
+class TestPuppetMucNickFromBase:
+    def test_default_no_suffix(self):
+        assert puppet_muc_nick_from_base("kaizen") == "kaizen"
+
+    def test_suffix_from_env(self, monkeypatch):
+        monkeypatch.setenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", "_b")
+        assert puppet_muc_nick_from_base("kaizen") == "kaizen_b"
+
+    def test_suffix_truncates_to_max_len(self, monkeypatch):
+        monkeypatch.setenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", "_bridge")
+        long_base = "a" * 23
+        out = puppet_muc_nick_from_base(long_base)
+        assert len(out) == 23
+        assert out.endswith("_bridge")
+
+
+# ---------------------------------------------------------------------------
+# puppet_muc_xep0172_display_nick
+# ---------------------------------------------------------------------------
+
+
+class TestPuppetMucXep0172DisplayNick:
+    def test_no_suffix_env_returns_none(self, monkeypatch):
+        monkeypatch.delenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", raising=False)
+        assert puppet_muc_xep0172_display_nick("kaizen_d") is None
+
+    def test_suffix_strips_for_display(self, monkeypatch):
+        monkeypatch.setenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", "_d")
+        assert puppet_muc_xep0172_display_nick("kaizen_d") == "kaizen"
+
+    def test_no_match_without_suffix_on_occupant(self, monkeypatch):
+        monkeypatch.setenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", "_d")
+        assert puppet_muc_xep0172_display_nick("kaizen") is None
+
+    def test_truncated_base_still_strips_suffix(self, monkeypatch):
+        monkeypatch.setenv("BRIDGE_XMPP_PUPPET_NICK_SUFFIX", "_bridge")
+        occupant = "a" * 16 + "_bridge"  # 23 chars total per puppet_muc_nick_from_base
+        assert len(occupant) == 23
+        assert puppet_muc_xep0172_display_nick(occupant) == "a" * 16

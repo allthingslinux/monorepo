@@ -1,0 +1,11 @@
+# XMPP Server Robots.txt
+# Controls search engine crawling and indexing
+
+# Default policy: Allow all crawling
+User-agent: *
+Disallow:
+
+# Allow access to security.txt
+Allow: /.well-known/security.txt
+
+# Sitemap: add if you deploy one (e.g. Sitemap: https://xmpp.atl.chat/sitemap.xml)

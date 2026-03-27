@@ -1,0 +1,24 @@
+# ObsidianIRC - Modern IRC web client (loaded via root: mod obsidianirc './apps/obsidianirc')
+# Uses same env loading as "just dev" — .env then .env.dev (dev overrides).
+# For prod rebuild, run from root: docker compose --env-file .env build atl-obsidianirc
+
+compose := "docker compose --env-file ../../.env --env-file ../../.env.dev -f ../../compose.yaml -p atl-chat"
+
+default:
+    @just --list
+
+# Open a shell in the ObsidianIRC container
+shell:
+    {{ compose }} exec atl-obsidianirc sh
+
+# Follow ObsidianIRC container logs
+logs:
+    {{ compose }} logs -f atl-obsidianirc
+
+# Rebuild ObsidianIRC image (does not start containers)
+rebuild:
+    {{ compose }} build atl-obsidianirc
+
+# Rebuild from scratch (no Docker cache — use when build args change; does not start containers)
+rebuild-clean:
+    {{ compose }} build --no-cache atl-obsidianirc

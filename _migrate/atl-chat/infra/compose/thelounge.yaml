@@ -1,0 +1,62 @@
+# =============================================================================
+# The Lounge - Web IRC Client
+# =============================================================================
+# Private mode (user accounts required). Defaults to ATL IRC server with WebIRC.
+# Plugins: janitor (upload cleanup), giphy (/giphy search|random)
+# =============================================================================
+
+name: atl-thelounge
+
+include:
+  - networks.yaml
+
+services:
+  atl-thelounge:
+    image: ghcr.io/thelounge/thelounge:4.4.3
+    container_name: atl-thelounge
+    hostname: atl-thelounge
+    restart: unless-stopped
+    user: "${PUID:-1000}:${PGID:-1000}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    depends_on:
+      atl-irc-server:
+        condition: service_healthy
+
+    ports:
+      - "${THELOUNGE_PORT:-9000}:9000"
+
+    volumes:
+      - ../../data/thelounge:/var/opt/thelounge
+
+    environment:
+      - THELOUNGE_HOME=/var/opt/thelounge
+
+    env_file:
+      - path: ../../.env
+        required: false
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+
+    command: >
+      sh -c "thelounge install thelounge-plugin-janitor 2>/dev/null || true &&
+             thelounge install thelounge-plugin-giphy 2>/dev/null || true &&
+             exec thelounge start"
+
+    networks:
+      - atl-chat

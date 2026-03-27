@@ -1,0 +1,83 @@
+# Fluux Messenger — HTTPS with TLS termination (production)
+server {
+    listen 80;
+    server_name _;
+
+    location = /health {
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    # Allow ws://<host>:8091/ws without forcing redirect to https (dev).
+    location = /ws {
+        proxy_pass http://atl-xmpp-server:5280/xmpp-websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host ${XMPP_DOMAIN};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 900s;
+        proxy_send_timeout 900s;
+        proxy_buffering off;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${FLUUX_DOMAIN};
+
+    ssl_certificate ${CERT_DIR}/live/${FLUUX_CERT_DOMAIN}/fullchain.pem;
+    ssl_certificate_key ${CERT_DIR}/live/${FLUUX_CERT_DOMAIN}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20:!aNULL:!MD5:!DSS;
+    ssl_prefer_server_ciphers off;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # SPA fallback
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location = /health {
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    # XMPP WebSocket (RFC 7395): Fluux defaults to wss://<jid-domain>/ws (port 443).
+    # Our Prosody edge is on 5281; proxy here so "Server (optional)" can be
+    # wss://<this-host>:<https-port>/ws (e.g. wss://localhost:8443/ws).
+    location = /ws {
+        proxy_pass http://atl-xmpp-server:5280/xmpp-websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host ${XMPP_DOMAIN};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 900s;
+        proxy_send_timeout 900s;
+        proxy_buffering off;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
+    gzip_min_length 256;
+}

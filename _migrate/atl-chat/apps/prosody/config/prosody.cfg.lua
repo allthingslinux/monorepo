@@ -1,0 +1,830 @@
+-- Plugin paths: custom_plugins first so patched mod_http_admin_api (password create/update) overrides community
+plugin_paths = {
+    "/var/lib/prosody/custom_plugins",
+    "/usr/local/lib/prosody/prosody-modules-enabled",
+}
+
+plugin_server = "https://modules.prosody.im/rocks/"
+
+-- Ensure installer writes to image-owned path (not the /var/lib volume)
+installer_plugin_path = "/usr/local/lib/prosody/prosody-modules-enabled"
+
+modules_enabled = {
+    -- ===============================================
+    -- CORE PROTOCOL MODULES (Required)
+    -- ===============================================
+    "roster",     -- Allow users to have a roster/contact list (RFC 6121)
+    -- "legacyauth", -- Legacy authentication. Disabled: use SASL (SCRAM-SHA-256) instead.
+    "saslauth",   -- SASL authentication for clients and servers (RFC 4422)
+    "sasl2",      -- Extensible SASL Profile for modern clients (XEP-0388; modules.prosody.im/mod_sasl2)
+    "sasl2_fast",  -- Fast Authentication Streamlining Tokens; password→token exchange (XEP-0484; requires mod_sasl2)
+    "sasl2_bind2", -- Bind 2 resource binding via SASL2 (XEP-0386; requires mod_sasl2)
+    "sasl2_sm",    -- Inline Stream Management negotiation in SASL2 (requires mod_sasl2 + mod_sasl2_bind2)
+    "tls",        -- TLS encryption support for c2s/s2s connections (RFC 6120)
+    "dialback",   -- Server-to-server authentication via dialback (XEP-0220)
+    "disco",      -- Service discovery for features and items (XEP-0030)
+    "presence",   -- Presence information and subscriptions (RFC 6121)
+    "message",    -- Message routing and delivery (RFC 6120)
+    "iq",         -- Info/Query request-response semantics (RFC 6120)
+    "s2s_status",     -- S2S connection status tracking (modules.prosody.im/mod_s2s_status)
+    "s2s_bidi",       -- XEP-0288: Bidirectional Server-to-Server Connections
+    "s2s_keepalive",  -- XEP-0199 pings to keep s2s connections alive (modules.prosody.im/mod_s2s_keepalive)
+    "limits",         -- Rate limiting for c2s, s2s, and component connections (prosody.im/doc/modules/mod_limits)
+    -- ===============================================
+    -- DISCOVERY & CAPABILITIES
+    -- ===============================================
+    "version",      -- Server version information (XEP-0092)
+    "uptime",       -- Server uptime reporting (XEP-0012)
+    "time",         -- Entity time reporting (XEP-0202)
+    "ping",         -- XMPP ping for connectivity testing (XEP-0199)
+    "lastactivity", -- Last activity timestamps (XEP-0012)
+    "idlecompat",   -- Add XEP-0319 idle tags to presence for libpurple clients (Pidgin, Finch)
+    -- ===============================================
+    -- MESSAGING & ARCHIVING
+    -- ===============================================
+    "mam",     -- Message Archive Management for message history (XEP-0313)
+    "carbons", -- Message carbons for multi-device sync (XEP-0280)
+    "offline", -- Store messages for offline users (XEP-0160)
+    "smacks",  -- Stream Management for connection resumption (XEP-0198)
+    -- ===============================================
+    -- CLIENT STATE & OPTIMIZATION
+    -- ===============================================
+    "csi",
+    -- "csi_simple", -- Client State Indication for mobile optimization (XEP-0352)
+    "csi_battery_saver", -- Enhanced CSI with battery saving features
+    -- ===============================================
+    -- USER PROFILES & PERSONAL DATA
+    -- ===============================================
+    "vcard4",
+    "vcard_legacy", -- Legacy vCard support for older clients (XEP-0054)
+    "pep",          -- Personal Eventing Protocol for presence extensions (XEP-0163)
+    "private",      -- Private XML storage for client data (XEP-0049)
+    "bookmarks",    -- Bookmark storage and synchronization (XEP-0402, XEP-0411)
+    -- ===============================================
+    -- PUSH NOTIFICATIONS
+    -- ===============================================
+    "cloud_notify",            -- Push notifications for mobile devices (XEP-0357)
+    "cloud_notify_extensions", -- Enhanced push notification features for iOS clients (Siskin, Monal)
+    -- ===============================================
+    -- SECURITY & PRIVACY
+    -- ===============================================
+    "tokenauth",       -- Token management for OAuth2 and other modules (prosody.im/doc/modules/mod_tokenauth)
+    "http_oauth2",     -- OAuth2/OIDC Authorization Server (generates Bearer tokens for mod_http_admin_api)
+    "blocklist",       -- User blocking functionality (XEP-0191)
+    "anti_spam",       -- Spam prevention and detection
+    "spam_reporting",  -- Spam reporting mechanisms (XEP-0377)
+    "report_forward",  -- Forward spam/abuse reports (XEP-0377) to JIDs (modules.prosody.im/mod_report_forward)
+    "admin_blocklist", -- Administrative blocking controls
+    -- ===============================================
+    -- REGISTRATION & USER MANAGEMENT
+    -- ===============================================
+    -- "register",           -- Password changes (XEP-0077); registration disabled (Portal provisions)
+    "invites", -- User invitation system (required by mod_http_admin_api and mod_http_oauth2)
+    "welcome",            -- Welcome messages for new users
+    "support_contact",    -- Add support JID to roster of newly registered users (in-band reg only; modules.prosody.im/mod_support_contact)
+    -- "watchregistrations", -- Disabled: no in-band registration (Portal provisions via mod_http_admin_api)
+    "mimicking",          -- Prevent address spoofing
+    "tombstones",         -- Prevent re-registration of deleted usernames (protects MUC access)
+    "flags",              -- View and manage flags on user accounts via shell/API
+    -- ===============================================
+    -- ADMINISTRATIVE INTERFACES
+    -- ===============================================
+    "admin_adhoc",       -- Administrative commands via XMPP (XEP-0050)
+    "admin_shell",       -- Administrative shell interface
+    "announce",          -- Server-wide announcements
+    "motd",              -- Message of the day for connecting users
+    "compliance_latest", -- XMPP Compliance Suite compliance checker
+    -- ===============================================
+    -- WEB SERVICES & HTTP
+    -- ===============================================
+    "http",          -- HTTP server functionality
+    "http_avatar",   -- Serve vCard avatars at /avatar/<username>
+    "http_pep_avatar", -- Serve PEP avatars at /pep_avatar/<username> (bridge; works with mod_pep)
+    "pep_open_avatars", -- Auto-set PEP avatar nodes to open access (required by mod_http_pep_avatar)
+    "bosh",          -- BOSH (HTTP binding) for web clients (XEP-0124, XEP-0206)
+    "websocket",     -- WebSocket connections for web clients (RFC 7395)
+    "http_files",    -- Static file serving over HTTP
+    "http_status",   -- HTTP status API for monitoring
+    "http_logging",  -- Apache-style HTTP access logs for Prosody's built-in HTTP server (modules.prosody.im/mod_http_logging)
+    -- "proxy65", -- Disabled here; provided via dedicated Component `proxy.atl.chat`
+    "turn_external", -- External TURN server support (XEP-0215)
+    -- ===============================================
+    -- SYSTEM & PLATFORM
+    -- ===============================================
+    "groups", -- Shared roster groups support
+    -- ===============================================
+    -- COMPLIANCE & CONTACT INFORMATION
+    -- ===============================================
+    "server_contact_info", -- Contact information advertisement (XEP-0157)
+    "server_info",         -- Server information advertisement (XEP-0157)
+    -- ===============================================
+    -- AUDIT LOGGING
+    -- ===============================================
+    "audit",               -- Audit logging infrastructure for security-sensitive events (modules.prosody.im/mod_audit)
+    "audit_auth",          -- Log auth successes/failures and new client connections to audit log (requires mod_audit)
+    "audit_tokens",        -- Log token grant creation/revocation to audit log (requires mod_audit + mod_tokenauth)
+    "audit_user_accounts", -- Log account registration, deletion, enable/disable to audit log (requires mod_audit)
+    "audit_status",        -- Log server start/stop/crash events to audit log with heartbeat detection (requires mod_audit)
+    "client_management",   -- Track and manage clients with account access; enriches audit_auth with new-client detection (modules.prosody.im/mod_client_management)
+    -- ===============================================
+    -- MONITORING & METRICS
+    -- ===============================================
+    "http_openmetrics", -- Prometheus-compatible metrics endpoint
+    "measure_modules",  -- Module status as OpenMetrics (gauge 0=ok, 1=info, 2=warn, 3=error)
+    "account_activity",       -- Record last login/logout timestamps (built-in Prosody 13+; required by mod_measure_active_users)
+    "measure_active_users",   -- DAU/WAU/MAU as OpenMetrics gauges (community; reads mod_account_activity data)
+    "http_user_count"         -- Live online user/session count at /user_count/users (community; plain text HTTP)
+
+    -- Note: MUC (multi-user chat) is loaded as a component in 30-vhosts-components.cfg.lua
+    -- Note: HTTP file sharing is handled by dedicated upload component
+}
+
+-- Modules that are auto-loaded but can be explicitly disabled
+modules_disabled = {
+    -- "offline",  -- Uncomment to disable offline message storage
+    -- "c2s",      -- Uncomment to disable client-to-server connections
+    -- "s2s",      -- Uncomment to disable server-to-server connections
+}
+
+-- ===============================================
+-- CORE SERVER SETTINGS
+-- ===============================================
+
+-- Process management
+pidfile = "/var/run/prosody/prosody.pid"
+user = "prosody"
+group = "prosody"
+
+-- Global admins (server-wide privileges). Bridge listener JID must match BRIDGE_XMPP_COMPONENT_JID / Component("bridge."..domain).
+local _xmpp_domain_admins = Lua.os.getenv("PROSODY_DOMAIN") or Lua.os.getenv("XMPP_DOMAIN") or "xmpp.localhost"
+local _bridge_component_host = Lua.os.getenv("BRIDGE_XMPP_COMPONENT_JID") or ("bridge." .. _xmpp_domain_admins)
+admins = {
+    Lua.os.getenv("PROSODY_ADMIN_JID") or ("admin@" .. _xmpp_domain_admins),
+    Lua.os.getenv("PROSODY_BRIDGE_ADMIN_JID") or ("bridge@" .. _bridge_component_host),
+}
+
+-- ===============================================
+-- DATA STORAGE
+-- ===============================================
+
+default_storage = "sql"
+
+-- SQLite configuration
+sql = {
+	driver = "SQLite3",
+	database = "data/prosody.sqlite",
+}
+
+-- Storage backend assignments
+storage = {
+	-- User data
+	accounts = "sql",
+	roster = "sql",
+	vcard = "sql",
+	private = "sql",
+	blocklist = "sql",
+
+	-- Message archives
+	archive = "sql",
+	muc_log = "sql",
+	offline = "sql",
+
+	-- PubSub and PEP
+	pubsub_nodes = "sql",
+	pubsub_data = "sql",
+	pep = "sql",
+
+	-- File sharing
+	http_file_share = "sql",
+
+	-- Activity tracking
+	account_activity = "sql",
+
+	-- Memory-only (ephemeral)
+	caps = "memory", -- Entity capabilities cache
+	carbons = "memory", -- Message carbons state
+}
+
+-- ===============================================
+-- MESSAGE ARCHIVING (MAM)
+-- ===============================================
+
+-- Archive retention and policy
+archive_expires_after = Lua.os.getenv("PROSODY_ARCHIVE_EXPIRES_AFTER") or "1y" -- Keep messages for 1 year
+default_archive_policy = Lua.os.getenv("PROSODY_ARCHIVE_POLICY") ~= "false"    -- Archive all conversations by default
+archive_compression = Lua.os.getenv("PROSODY_ARCHIVE_COMPRESSION") ~= "false"  -- Compress archived messages
+archive_store = Lua.os.getenv("PROSODY_ARCHIVE_STORE") or "archive"            -- Storage backend for archives
+
+-- Query limits
+max_archive_query_results = Lua.tonumber(Lua.os.getenv("PROSODY_ARCHIVE_MAX_QUERY_RESULTS")) or 250
+-- When true, archives only for contacts the user has enabled archiving for;
+-- when false (default), archives all conversations automatically.
+mam_smart_enable = Lua.os.getenv("PROSODY_MAM_SMART_ENABLE") == "true"
+
+-- Namespaces to exclude from archiving (typing indicators, call signaling)
+dont_archive_namespaces = {
+	"http://jabber.org/protocol/chatstates",
+	"urn:xmpp:jingle-message:0",
+}
+
+-- ===============================================
+-- LUA GARBAGE COLLECTION
+-- ===============================================
+
+-- Classic incremental GC step parameters (Lua 5.1/5.2 semantics)
+lua_gc_step_size = Lua.tonumber(Lua.os.getenv("LUA_GC_STEP_SIZE")) or 13
+lua_gc_pause = Lua.tonumber(Lua.os.getenv("LUA_GC_PAUSE")) or 110
+
+-- Enhanced GC table (Prosody 0.12+ / Lua 5.4 generational GC)
+gc = {
+	speed = Lua.tonumber(Lua.os.getenv("LUA_GC_SPEED")) or 200,
+	threshold = Lua.tonumber(Lua.os.getenv("LUA_GC_THRESHOLD")) or 120,
+}
+
+-- ===============================================
+-- NETWORKING CONFIGURATION
+-- ===============================================
+-- This file centralizes all network- and port-related settings.
+--
+-- References:
+--   https://prosody.im/doc/ports
+--   https://prosody.im/doc/http
+--   https://prosody.im/doc/configure
+--
+-- IMPORTANT:
+-- - Network options must be set in the GLOBAL section (i.e., not under
+--   a VirtualHost/Component) per Prosody's design.
+-- - Services can be individually overridden via <service>_ports and
+--   <service>_interfaces (e.g., c2s_ports, s2s_interfaces, etc.).
+-- - Private services (e.g., components, console) default to loopback.
+-- ===============================================
+
+-- Client-to-server (XMPP over TCP, STARTTLS-capable)
+c2s_ports = { 5222 }
+
+-- Client-to-server over direct TLS (available since Prosody 0.12+)
+c2s_direct_tls_ports = { 5223 }
+
+-- Server-to-server (federation)
+s2s_ports = { 5269 }
+
+-- Server-to-server over direct TLS (available since Prosody 0.12+)
+s2s_direct_tls_ports = { 5270 }
+
+-- External components (XEP-0114); listen on all interfaces so bridge container can connect
+component_ports = { 5347 }
+component_interfaces = { "*" }
+
+-- HTTP/HTTPS listener (mod_http)
+-- Note: 5280 is private by default in Prosody 0.12+
+-- When PROSODY_HTTPS_VIA_PROXY=true, nginx handles HTTPS (fixes TLSV1_UNRECOGNIZED_NAME)
+http_ports = { 5280 }
+https_ports = (Lua.os.getenv("PROSODY_HTTPS_VIA_PROXY") == "true") and {} or { 5281 }
+
+-- ===============================================
+-- INTERFACES
+-- ===============================================
+-- By default Prosody listens on all interfaces. To restrict:
+--   interfaces = { "127.0.0.1", "::1" }
+-- The special "*" means all IPv4; "::" means all IPv6.
+
+interfaces = { "127.0.0.1" } -- Restrict to loopback by default
+-- Expose XMPP services publicly; override per-service so HTTP can remain loopback
+c2s_interfaces = { "*" }
+c2s_direct_tls_interfaces = { "*" }
+s2s_interfaces = { "*" }
+s2s_direct_tls_interfaces = { "*" }
+local_interfaces = { "127.0.0.1" } -- Private services (components, console) bind here
+
+-- If you need to hint external/public addresses (behind NAT)
+external_addresses = {}
+
+-- ===============================================
+-- IPv6
+-- ===============================================
+-- Enable IPv6 if your deployment supports it.
+use_ipv6 = false
+
+-- ===============================================
+-- BACKEND & PERFORMANCE TUNING
+-- ===============================================
+-- Available backends: "epoll" (recommended on Linux), "event" (libevent), "select" (legacy)
+network_backend = "event"
+
+-- Common advanced network settings. See docs for full list:
+-- https://prosody.im/doc/ports#advanced
+network_settings = {
+    read_timeout = 840 -- seconds; align with reverse proxy timeouts (~900s)
+    -- send_timeout = 300,
+    -- max_send_buffer_size = 1048576,
+    -- tcp_backlog = 32,
+}
+
+-- ===============================================
+-- PROXY65 (XEP-0065) PORT/INTERFACE OVERRIDES
+-- ===============================================
+-- Global port/interface options must be set here (not under Component)
+-- Docs: https://prosody.im/doc/modules/mod_proxy65
+proxy65_ports = { 5000 }
+proxy65_interfaces = { "*" }
+
+-- ===============================================
+-- HTTP SERVICES
+-- ===============================================
+-- HTTP server-level options and module configuration
+-- Docs: https://prosody.im/doc/http
+
+-- External URL advertised to clients and components (BOSH/WebSocket, etc.)
+-- When behind reverse proxy, omit port. For direct dev access on :5280, set PROSODY_HTTP_EXTERNAL_URL.
+local __http_host = Lua.os.getenv("PROSODY_HTTP_HOST") or
+    Lua.os.getenv("PROSODY_DOMAIN") or Lua.os.getenv("XMPP_DOMAIN") or "localhost"
+local __http_scheme = Lua.os.getenv("PROSODY_HTTP_SCHEME") or "http"
+local __domain = Lua.os.getenv("PROSODY_DOMAIN") or Lua.os.getenv("XMPP_DOMAIN") or "xmpp.localhost"
+
+-- Route requests for unknown hosts to main VirtualHost. Must match http_host when set (Prosody docs).
+http_default_host = __http_host
+http_external_url = Lua.os.getenv("PROSODY_HTTP_EXTERNAL_URL") or
+    (__http_scheme .. "://" .. __http_host .. "/")
+
+http_interfaces = { "*" }
+https_interfaces = { "*" }
+
+-- Static file serving root (Prosody's web root; reverse proxy in front)
+http_files_dir = "/usr/share/prosody/www"
+
+-- Trusted reverse proxies for X-Forwarded-* handling
+-- Includes Docker (172.16/12), private (10/8), and Tailscale (100.64/10) ranges
+trusted_proxies = { "127.0.0.1", "172.16.0.0/12", "10.0.0.0/8", "100.64.0.0/10" }
+
+-- Enable CORS for BOSH and WebSocket endpoints
+http_cors_override = {
+    bosh = { enabled = true },
+    websocket = { enabled = true },
+    file_share = { enabled = true }
+}
+
+-- Additional security headers for HTTP responses
+http_headers = {
+    ["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload",
+    ["X-Frame-Options"] = "DENY",
+    ["X-Content-Type-Options"] = "nosniff",
+    ["Referrer-Policy"] = "strict-origin-when-cross-origin",
+    ["Content-Security-Policy"] =
+        "default-src 'self'; connect-src 'self' https: wss:; frame-ancestors 'none'"
+}
+
+-- HTTP File Upload (XEP-0363)
+http_file_share_size_limit = 100 * 1024 * 1024         -- 100MB per file
+http_file_share_daily_quota = 1024 * 1024 * 1024       -- 1GB daily quota per user
+http_file_share_expire_after = 30 * 24 * 3600          -- 30 days expiration
+-- http_file_share_path: not set; storage.http_file_share = "sql" stores files in DB
+http_file_share_global_quota = 10 * 1024 * 1024 * 1024 -- 10GB global quota
+
+-- BOSH/WebSocket tuning (XEP-0124, RFC 7395)
+bosh_max_inactivity = 60
+bosh_max_polling = 5
+bosh_max_requests = 2
+bosh_max_wait = 120
+bosh_session_timeout = 300
+bosh_hold_timeout = 60
+bosh_window = 5
+websocket_frame_buffer_limit = 2 * 1024 * 1024
+websocket_frame_fragment_limit = 8
+websocket_max_frame_size = 1024 * 1024
+
+-- Path mappings served by mod_http
+http_paths = {
+    file_share = "/upload",
+    files = "/",
+    pastebin = "/paste",
+    bosh = "/http-bind",
+    websocket = "/xmpp-websocket",
+    status = "/status"
+}
+
+-- Restrict status endpoint to Docker network and localhost
+http_status_allow_cidr = "172.16.0.0/12"
+http_status_allow_ips = { "127.0.0.1", "::1" }
+
+-- ===============================================
+-- TURN/STUN EXTERNAL SERVICES (XEP-0215)
+-- ===============================================
+-- External TURN/STUN server configuration for audio/video calls.
+-- These services are provided by the COTURN container.
+-- Credentials are generated dynamically using the shared secret (RFC 8489).
+
+-- Shared secret with the TURN server for dynamic credential generation
+turn_external_secret = Lua.os.getenv("TURN_SECRET") or "devsecret"
+
+-- DNS hostname of the TURN (and STUN) server
+turn_external_host = Lua.os.getenv("TURN_EXTERNAL_HOST") or "turn.atl.network"
+
+-- Port number used by TURN (and STUN) server
+turn_external_port = Lua.tonumber(Lua.os.getenv("TURN_PORT")) or 3478
+
+-- How long the generated credentials are valid (default: 1 day)
+turn_external_ttl = 86400
+
+-- Whether to announce TURN over TCP in addition to UDP
+-- Note: Most clients prefer UDP; TCP helps with restrictive firewalls
+turn_external_tcp = true
+
+-- Port for TURN over TLS (TURNS)
+turn_external_tls_port = Lua.tonumber(Lua.os.getenv("TURNS_PORT")) or 5349
+
+-- ===============================================
+-- LOGGING
+-- ===============================================
+
+log = {
+	{ levels = { min = Lua.os.getenv("PROSODY_LOG_LEVEL") or "info" }, to = "console" },
+}
+
+statistics = Lua.os.getenv("PROSODY_STATISTICS") or "internal"
+statistics_interval = Lua.os.getenv("PROSODY_STATISTICS_INTERVAL") or "manual"
+
+-- Restrict to loopback by default; allow-list is expanded via CIDR below
+-- Support multiple IPs via comma-separated PROSODY_OPENMETRICS_IP (e.g. "127.0.0.1,172.22.0.1")
+local __openmetrics_ips = {}
+local __raw_ips = Lua.os.getenv("PROSODY_OPENMETRICS_IP") or "127.0.0.1"
+for ip in __raw_ips:gmatch("[^,]+") do
+	__openmetrics_ips[#__openmetrics_ips + 1] = ip:match("^%s*(.-)%s*$")
+end
+openmetrics_allow_ips = __openmetrics_ips
+
+-- Fixed CIDR allow-list for internal scraping (Docker network range)
+openmetrics_allow_cidr = Lua.os.getenv("PROSODY_OPENMETRICS_CIDR") or "172.16.0.0/12"
+
+-- ===============================================
+-- SECURITY (limits, registration, firewall)
+-- ===============================================
+
+limits = {
+	c2s = {
+		rate = Lua.os.getenv("PROSODY_C2S_RATE") or "10kb/s",
+		burst = Lua.os.getenv("PROSODY_C2S_BURST") or "25kb",
+		stanza_size = Lua.tonumber(Lua.os.getenv("PROSODY_C2S_STANZA_SIZE")) or (1024 * 256)
+	},
+	s2s = {
+		rate = Lua.os.getenv("PROSODY_S2S_RATE") or "30kb/s",
+		burst = Lua.os.getenv("PROSODY_S2S_BURST") or "100kb",
+		stanza_size = Lua.tonumber(Lua.os.getenv("PROSODY_S2S_STANZA_SIZE")) or (1024 * 512)
+	},
+	http_upload = {
+		rate = Lua.os.getenv("PROSODY_HTTP_UPLOAD_RATE") or "2mb/s",
+		burst = Lua.os.getenv("PROSODY_HTTP_UPLOAD_BURST") or "10mb"
+	},
+}
+
+max_connections_per_ip = Lua.tonumber(Lua.os.getenv("PROSODY_MAX_CONNECTIONS_PER_IP")) or 5
+registration_throttle_max = Lua.tonumber(Lua.os.getenv("PROSODY_REGISTRATION_THROTTLE_MAX")) or 3
+registration_throttle_period = Lua.tonumber(Lua.os.getenv("PROSODY_REGISTRATION_THROTTLE_PERIOD")) or 3600
+
+-- mod_anti_spam: Real-Time Block Lists (RTBLs) to block spam from known bad servers
+-- xmppbl.org publishes block lists; see https://xmppbl.org/reports#server-operators
+anti_spam_services = { "xmppbl.org" }
+
+-- ===============================================
+-- TLS/SSL SECURITY
+-- ===============================================
+-- Global TLS configuration. See:
+--   https://prosody.im/doc/certificates
+--   https://prosody.im/doc/security
+ssl = {
+	protocol = "tlsv1_2+",
+	ciphers = "ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20:!aNULL:!MD5:!DSS",
+	curve = "secp384r1",
+	options = { "cipher_server_preference", "single_dh_use", "single_ecdh_use" },
+}
+
+-- Let's Encrypt certificate location (mounted into the container)
+certificates = "certs"
+
+-- HTTPS service: entrypoint creates certs/https -> certs/live/<domain> for automatic discovery.
+-- Explicit https_ssl disables SNI and uses single cert (fixes TLSV1_UNRECOGNIZED_NAME).
+-- Use absolute paths so Prosody reliably finds certs regardless of config dir.
+local __https_cert_dir = "/etc/prosody/certs/live/" .. __domain
+https_ssl = {
+	key = Lua.os.getenv("PROSODY_SSL_KEY") or (__https_cert_dir .. "/privkey.pem"),
+	certificate = Lua.os.getenv("PROSODY_SSL_CERT") or (__https_cert_dir .. "/fullchain.pem"),
+}
+
+-- Require encryption and secure s2s auth
+c2s_require_encryption = Lua.os.getenv("PROSODY_C2S_REQUIRE_ENCRYPTION") ~= "false"
+s2s_require_encryption = Lua.os.getenv("PROSODY_S2S_REQUIRE_ENCRYPTION") ~= "false"
+s2s_secure_auth = Lua.os.getenv("PROSODY_S2S_SECURE_AUTH") ~= "false"
+allow_unencrypted_plain_auth = Lua.os.getenv("PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH") == "true"
+
+-- Channel binding strengthens SASL against MITM attacks
+tls_channel_binding = Lua.os.getenv("PROSODY_TLS_CHANNEL_BINDING") ~= "false"
+
+-- Privacy defaults for push notifications: don't send message body/sender to push gateway
+-- See https://modules.prosody.im/mod_cloud_notify.html
+push_notification_with_body = Lua.os.getenv("PROSODY_PUSH_NOTIFICATION_WITH_BODY") == "true"
+push_notification_with_sender = Lua.os.getenv("PROSODY_PUSH_NOTIFICATION_WITH_SENDER") == "true"
+
+-- ===============================================
+-- OAUTH2 CONFIGURATION (mod_http_oauth2)
+-- ===============================================
+-- Enables Bearer token generation for Portal's mod_http_admin_api integration.
+-- Tokens are also usable for OAUTHBEARER SASL auth.
+allowed_oauth2_grant_types = {
+    "authorization_code",
+    "device_code",
+    -- "password",  -- Removed: Resource Owner Password Grant is insecure
+}
+allowed_oauth2_response_types = {
+    "code",
+}
+oauth2_access_token_ttl = 86400      -- 24 hours
+oauth2_refresh_token_ttl = 2592000   -- 30 days
+oauth2_require_code_challenge = true -- Enforce PKCE for security
+
+-- Dynamic client registration key (required; fail loudly if unset or still placeholder in prod)
+local __oauth2_key = Lua.os.getenv("PROSODY_OAUTH2_REGISTRATION_KEY")
+local __is_dev_domain = (Lua.os.getenv("XMPP_DOMAIN") == "xmpp.localhost")
+local __allow_placeholder_key = Lua.os.getenv("PROSODY_ALLOW_PLACEHOLDER_KEY") == "true"
+if not __oauth2_key or __oauth2_key == "" or (not __is_dev_domain and not __allow_placeholder_key and __oauth2_key:match("^change_me_")) then
+    error("PROSODY_OAUTH2_REGISTRATION_KEY must be set to a secure value in .env")
+end
+oauth2_registration_key = __oauth2_key
+
+-- ===============================================
+-- AUTHENTICATION & ACCOUNT POLICY
+-- ===============================================
+-- Hashed password storage and preferred SASL mechanisms
+authentication = "internal_hashed"
+sasl_mechanisms = {
+	"SCRAM-SHA-256",
+	"SCRAM-SHA-1",
+}
+
+-- Disallow common/abusive usernames during registration
+block_registrations_users = {
+	"administrator",
+	"admin",
+	"root",
+	"postmaster",
+	"xmpp",
+	"jabber",
+	"contact",
+	"mail",
+	"abuse",
+	"support",
+	"security",
+}
+block_registrations_require = Lua.os.getenv("PROSODY_BLOCK_REGISTRATIONS_REQUIRE") or "^[a-zA-Z0-9_.-]+$"
+
+-- ===============================================
+-- PUSH NOTIFICATIONS (XEP-0357)
+-- ===============================================
+-- Configuration for mod_cloud_notify and mod_cloud_notify_extensions.
+-- Privacy settings (push_notification_with_body/sender) are in the TLS/Security section above.
+-- See https://modules.prosody.im/mod_cloud_notify.html
+
+-- Body text shown for important messages when the real body cannot be sent (e.g. encrypted)
+push_notification_important_body = Lua.os.getenv("PROSODY_PUSH_IMPORTANT_BODY") or "New Message!"
+
+-- Maximum persistent push errors before disabling notifications for a device
+push_max_errors = Lua.tonumber(Lua.os.getenv("PROSODY_PUSH_MAX_ERRORS")) or 16
+
+-- Maximum number of registered push devices per user
+push_max_devices = Lua.tonumber(Lua.os.getenv("PROSODY_PUSH_MAX_DEVICES")) or 5
+
+-- Extend smacks hibernation timeout if no push was triggered yet (seconds; default 72h)
+push_max_hibernation_timeout = Lua.tonumber(Lua.os.getenv("PROSODY_PUSH_MAX_HIBERNATION_TIMEOUT")) or 259200
+
+-- ===============================================
+-- VIRTUAL HOSTS + COMPONENTS
+-- ===============================================
+-- Users are provisioned via Portal (mod_http_admin_api); disable self-registration.
+local domain = Lua.os.getenv("PROSODY_DOMAIN") or Lua.os.getenv("XMPP_DOMAIN") or "atl.chat"
+allow_registration = Lua.os.getenv("PROSODY_ALLOW_REGISTRATION") == "true"
+
+-- Single VirtualHost
+-- http_host: map HTTP Host header (e.g. xmpp.atl.chat) to this VirtualHost;
+-- set PROSODY_HTTP_HOST when different from domain
+VirtualHost(domain)
+http_host = __http_host
+
+ssl = {
+    key = Lua.os.getenv("PROSODY_SSL_KEY") or
+        ("certs/live/" .. domain .. "/privkey.pem"),
+    certificate = Lua.os.getenv("PROSODY_SSL_CERT") or
+        ("certs/live/" .. domain .. "/fullchain.pem")
+}
+
+-- VirtualHost-scoped modules (not loaded globally)
+modules_enabled = {
+    "http_admin_api",      -- REST API for user account management (mod_http_admin_api)
+    "default_bookmarks",  -- Default bookmarks when user has none; adds our MUC room (modules.prosody.im/mod_default_bookmarks)
+}
+
+-- mod_default_bookmarks: return these when user has no bookmarks (users can add/change/remove)
+default_bookmarks = {
+    { jid = "general@muc." .. domain, name = "General", autojoin = true },
+}
+
+-- mod_support_contact: add support JID to roster of newly in-band-registered users
+support_contact = Lua.os.getenv("PROSODY_SUPPORT_CONTACT") or ("support@" .. domain)
+support_contact_nick = Lua.os.getenv("PROSODY_SUPPORT_CONTACT_NICK") or "Support"
+
+Component("muc." .. domain) "muc"
+
+ssl = {
+    key = Lua.os.getenv("PROSODY_SSL_KEY") or
+        ("certs/live/" .. domain .. "/privkey.pem"),
+    certificate = Lua.os.getenv("PROSODY_SSL_CERT") or
+        ("certs/live/" .. domain .. "/fullchain.pem")
+}
+name = "muc." .. domain
+
+-- MUC-specific modules
+-- Note: mod_muc_mam is auto-loaded when mod_mam is enabled globally (Prosody 13.0.4+)
+modules_enabled = {
+    -- "muc", -- Not needed here; this is a dedicated MUC component
+    -- "vcard_muc", -- Conflicts with built-in muc_vcard on Prosody 13
+    "muc_notifications", -- Push notifications for MUC events
+    "muc_offline_delivery", -- Offline delivery for MUC events
+    "muc_thread_polyfill", -- Infer thread from XEP-0461 reply when client lacks thread UI
+    -- "muc_local_only",
+    "pastebin", -- Intercept large MUC messages, replace with paste URL (modules.prosody.im/mod_pastebin)
+    "muc_limits",      -- Rate-limit room events (joins, nicks, messages) to prevent floods (modules.prosody.im/mod_muc_limits)
+    "muc_moderation",  -- XEP-0425: Message moderation (delete/hide messages; requires moderator role; Gajim, Cheogram, etc.)
+    "muc_mam_hints",   -- XEP-0334: Respect store/no-permanent-store hints for MAM archiving (modules.prosody.im/mod_muc_mam_hints)
+    "muc_mam_markers", -- XEP-0333: Archive chat markers (displayed/received) in MUC MAM per spec (modules.prosody.im/mod_muc_mam_markers)
+    "muc_markers",     -- Rewrites message id to stanza-id for XEP-0333; helps XEP-0444 reactions match (modules.prosody.im/mod_muc_markers)
+    "muc_defaults",     -- Create MUCs with default config on startup (modules.prosody.im/mod_muc_defaults)
+    "muc_slow_mode",    -- Per-user rate limit: room owners set seconds between messages (draft XEP; rooms config form)
+    "muc_webchat_url",  -- Advertise web chat URL in room disco#info (modules.prosody.im/mod_muc_webchat_url)
+    "muc_inject_mentions", -- Inject XEP-0372 mention references for clients that don't send them (modules.prosody.im/mod_muc_inject_mentions)
+    "muc_mention_notifications", -- Notify users mentioned via XEP-0372 even if not present in the room (modules.prosody.im/mod_muc_mention_notifications)
+    "muc_local_only",  -- Restrict MUC rooms to local users only; deny federated access (modules.prosody.im/mod_muc_local_only)
+}
+
+-- mod_muc_webchat_url: advertise web chat deep-link in room disco#info; {jid} is substituted with room JID
+muc_webchat_baseurl = Lua.os.getenv("XMPP_WEBCHAT_URL")
+
+-- mod_muc_local_only: restrict listed rooms to local users only (deny federated access)
+muc_local_only = { "general@muc." .. domain }
+
+-- mod_muc_inject_mentions: inject XEP-0372 mention references server-side for clients
+-- (and bridge messages) that send plain @nick text without proper reference stanzas.
+muc_inject_mentions_prefixes = { "@" }
+muc_inject_mentions_suffixes = { ":", ",", "!", ".", "?" }
+muc_inject_mentions_reserved_nicks = true  -- also match nicks of offline/registered users
+
+-- mod_muc_defaults: rooms created at Prosody startup
+local admin_jid_muc = Lua.os.getenv("PROSODY_ADMIN_JID") or ("admin@" .. domain)
+-- Bridge component JID: admin affiliation so it can send XEP-0425 moderation (Dino/Fluux retraction hack)
+local bridge_jid_muc = Lua.os.getenv("PROSODY_BRIDGE_MUC_JID") or ("bridge@bridge." .. domain)
+default_mucs = {
+    {
+        jid_node = "general",
+        affiliations = {
+            owner = { admin_jid_muc, bridge_jid_muc },
+        },
+        config = {
+            name = "General",
+            description = "General chat room",
+            allow_member_invites = false,
+            change_subject = true,
+            history_length = 50,
+            lang = "en",
+            logging = true,
+            members_only = false,
+            moderated = false,
+            persistent = false,
+            public = true,
+            public_jids = true,
+            slow_mode_duration = 3,
+        },
+    },
+}
+
+-- MUC push notification configuration
+muc_notifications = Lua.os.getenv("PROSODY_MUC_NOTIFICATIONS") ~= "false"
+muc_offline_delivery = Lua.os.getenv("PROSODY_MUC_OFFLINE_DELIVERY") ~= "false"
+
+restrict_room_creation = Lua.os.getenv("PROSODY_RESTRICT_ROOM_CREATION") == "true"
+muc_room_default_public = Lua.os.getenv("PROSODY_MUC_DEFAULT_PUBLIC") ~= "false"
+muc_room_default_persistent = Lua.os.getenv("PROSODY_MUC_DEFAULT_PERSISTENT") ~= "false"
+muc_room_locking = Lua.os.getenv("PROSODY_MUC_LOCKING") == "true"
+muc_room_default_public_jids = Lua.os.getenv("PROSODY_MUC_DEFAULT_PUBLIC_JIDS") ~= "false"
+
+-- MUC Message Archive Management (MAM)
+muc_log_by_default = Lua.os.getenv("PROSODY_MUC_LOG_BY_DEFAULT") ~= "false"
+muc_log_presences = Lua.os.getenv("PROSODY_MUC_LOG_PRESENCES") == "true"
+log_all_rooms = Lua.os.getenv("PROSODY_MUC_LOG_ALL_ROOMS") == "true"
+muc_log_expires_after = Lua.os.getenv("PROSODY_MUC_LOG_EXPIRES_AFTER") or "1y"
+muc_log_cleanup_interval = Lua.tonumber(Lua.os.getenv("PROSODY_MUC_LOG_CLEANUP_INTERVAL")) or 86400
+muc_max_archive_query_results = Lua.tonumber(Lua.os.getenv("PROSODY_MUC_MAX_ARCHIVE_QUERY_RESULTS")) or 100
+muc_log_store = Lua.os.getenv("PROSODY_MUC_LOG_STORE") or "muc_log"
+muc_log_compression = Lua.os.getenv("PROSODY_MUC_LOG_COMPRESSION") ~= "false"
+muc_mam_smart_enable = Lua.os.getenv("PROSODY_MUC_MAM_SMART_ENABLE") == "true"
+enforce_registered_nickname = true
+
+-- Pastebin settings (mod_pastebin; pastes at /paste)
+pastebin_threshold = 800
+pastebin_line_threshold = 6
+
+-- mod_muc_limits: rate-limit room events (joins, nick changes, status, messages) to prevent floods.
+-- Limit applies per room; users with affiliation (member, admin, owner) are exempt.
+-- When exceeded, users get an error asking them to retry.
+muc_event_rate = 0.5           -- Max events per second. 0.5 = one every 2s; 1 = one/s; 3 = three/s.
+muc_burst_factor = 6           -- Allow N× events for N seconds before throttling. 6 = 6× burst for 6s.
+muc_max_nick_length = 23       -- Max allowed length of user nicknames.
+muc_max_char_count = 5664      -- Max bytes per message.
+muc_max_line_count = 23        -- Max lines per message.
+muc_limit_base_cost = 1        -- Base cost of sending a stanza.
+muc_line_count_multiplier = 0.1 -- Additional cost per newline in message body.
+
+-- HTTP File Upload component
+-- http_host: serve upload HTTP on main domain so xmpp.localhost:5280/upload/ works (avoids upload.xmpp.localhost DNS/cert)
+Component("upload." .. domain) "http_file_share"
+ssl = {
+    key = Lua.os.getenv("PROSODY_SSL_KEY") or
+        ("certs/live/" .. domain .. "/privkey.pem"),
+    certificate = Lua.os.getenv("PROSODY_SSL_CERT") or
+        ("certs/live/" .. domain .. "/fullchain.pem")
+}
+name = "upload." .. domain
+http_host = __http_host
+http_external_url = Lua.os.getenv("PROSODY_UPLOAD_EXTERNAL_URL") or
+                        ("https://upload." .. domain .. "/")
+
+-- SOCKS5 Proxy component (XEP-0065)
+Component("proxy." .. domain) "proxy65"
+ssl = {
+    key = Lua.os.getenv("PROSODY_SSL_KEY") or
+        ("certs/live/" .. domain .. "/privkey.pem"),
+    certificate = Lua.os.getenv("PROSODY_SSL_CERT") or
+        ("certs/live/" .. domain .. "/fullchain.pem")
+}
+name = "proxy." .. domain
+proxy65_address = Lua.os.getenv("PROSODY_PROXY_ADDRESS") or ("proxy." .. domain)
+
+-- PubSub component with RSS/Atom feed support (XEP-0060, mod_pubsub_feeds)
+Component("pubsub." .. domain) "pubsub"
+ssl = {
+    key = Lua.os.getenv("PROSODY_SSL_KEY") or
+        ("certs/live/" .. domain .. "/privkey.pem"),
+    certificate = Lua.os.getenv("PROSODY_SSL_CERT") or
+        ("certs/live/" .. domain .. "/fullchain.pem")
+}
+name = "pubsub." .. domain
+modules_enabled = { "pubsub_feeds" }
+-- Node "feed" pulls from allthingslinux.org; subscribe to feed@pubsub.domain
+feeds = {
+    feed = Lua.os.getenv("PROSODY_FEED_URL") or "https://allthingslinux.org/feed",
+}
+add_permissions = {
+    ["prosody:registered"] = { "pubsub:create-node" },
+}
+
+-- Bridge XMPP component (XEP-0114)
+-- Allows the bridge service to connect as an external component
+Component("bridge." .. domain) "component"
+component_secret = Lua.os.getenv("BRIDGE_XMPP_COMPONENT_SECRET") or Lua.os.getenv("XMPP_COMPONENT_SECRET") or "change_me_xmpp_component_secret"
+
+-- ===============================================
+-- CONTACT INFO, ROLES, ACCOUNT CLEANUP
+-- ===============================================
+
+local admin_email = Lua.os.getenv("PROSODY_ADMIN_EMAIL") or ("admin@" .. domain)
+local admin_jid = Lua.os.getenv("PROSODY_ADMIN_JID") or ("admin@" .. domain)
+
+-- mod_report_forward: send spam/abuse reports (XEP-0377) to these JIDs
+report_forward_to = { admin_jid }
+-- report_forward_to_origin = true   -- Also send to the spammer's server (default)
+-- report_forward_to_origin_fallback = true  -- If no XEP-0157 abuse addr, send to domain (default)
+
+contact_info = {
+	admin = {
+		"xmpp:admin@" .. domain,
+		"mailto:" .. admin_email,
+	},
+	abuse = {
+		"xmpp:admin@" .. domain,
+		"mailto:" .. admin_email,
+	},
+	support = {
+		"xmpp:admin@" .. domain,
+		"mailto:" .. admin_email,
+	},
+	security = {
+		"xmpp:admin@" .. domain,
+		"mailto:" .. admin_email,
+	},
+}
+
+server_info = {
+	name = Lua.os.getenv("PROSODY_SERVER_NAME") or domain,
+	website = Lua.os.getenv("PROSODY_SERVER_WEBSITE") or ("https://" .. domain),
+	description = Lua.os.getenv("PROSODY_SERVER_DESCRIPTION") or (domain .. " XMPP service"),
+}
+
+account_cleanup = {
+	inactive_period = Lua.tonumber(Lua.os.getenv("PROSODY_ACCOUNT_INACTIVE_PERIOD")) or (365 * 24 * 3600),
+	grace_period = Lua.tonumber(Lua.os.getenv("PROSODY_ACCOUNT_GRACE_PERIOD")) or (30 * 24 * 3600),
+}

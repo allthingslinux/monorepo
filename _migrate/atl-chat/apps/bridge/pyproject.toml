@@ -1,0 +1,132 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bridge"
+version = "1.13.0"
+description = "Custom Discord–IRC–XMPP bridge (multi-presence, Portal identity)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "All Things Linux", email = "admin@allthingslinux.org" }]
+
+dependencies = [
+  "discord.py",
+  "slixmpp",
+  "httpx[http2]",
+  "pyyaml",
+  "python-dotenv",
+  "cachetools",
+  "loguru",
+  "tenacity",
+  "pydle>=1.1.0",
+  "uvloop>=0.22.1; sys_platform != 'win32'",
+  "privatebin",
+]
+
+[project.urls]
+repository = "https://github.com/allthingslinux/atl.chat"
+homepage = "https://atl.chat"
+
+[project.scripts]
+bridge = "bridge.__main__:main"
+
+[dependency-groups]
+test = [
+  "pytest",
+  "pytest-asyncio",
+  "pytest-mock",
+  "pytest-cov",
+  "pytest-timeout",
+  "pytest-httpx",
+  "pytest-socket",
+  "pytest-loguru",
+  "pytest-randomly",
+  "pytest-xdist",
+  "pytest-html",
+  "hypothesis",
+]
+lint = ["ruff"]
+types = ["types-pyyaml", "types-mock", "annotated-types"]
+
+[tool.uv]
+default-groups = ["test", "lint", "types"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bridge"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/bridge", "config.example.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+  "--strict-markers",
+  "--tb=short",
+  "-v",
+  "--durations=10",
+  "--asyncio-mode=auto",
+]
+asyncio_mode = "auto"
+timeout = 60
+minversion = "8.0"
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore:coroutine '.*AsyncMockMixin.*' was never awaited:RuntimeWarning",
+  "ignore:coroutine '.*wrapper' was never awaited:RuntimeWarning",
+]
+pythonpath = ["src"]
+norecursedirs = [
+  ".git",
+  ".venv",
+  "venv",
+  "__pypackages__",
+  "build",
+  "dist",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".hypothesis",
+]
+markers = [
+  "unit: Unit tests with isolated components",
+  "integration: Integration tests combining multiple components",
+  "async: Async tests using asyncio",
+]
+
+[tool.coverage.run]
+source = ["src/bridge"]
+branch = true
+parallel = true
+omit = ["*/tests/*", "*/test_*.py", "*/conftest.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+  "if TYPE_CHECKING:",
+]
+
+[tool.basedpyright]
+# Inherit root config; bridge-specific suppressions for adapter cycles and typing.
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
+reportImportCycles = "none"
+reportMissingTypeArgument = false
+reportAny = "none"
+reportUnannotatedClassAttribute = false
+reportUnusedParameter = "none"
+reportUnusedCallResult = "none"
+reportPrivateUsage = "none"
+reportImplicitStringConcatenation = "none"
+reportArgumentType = "none"
+reportUnknownParameterType = "none"
+reportMissingParameterType = "none"
+reportUnknownMemberType = "none"
+reportUnknownArgumentType = "none"

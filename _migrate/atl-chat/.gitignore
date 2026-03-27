@@ -1,0 +1,148 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ------------------------------------------------------------------------------
+# Global / OS / Editor
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# ------------------------------------------------------------------------------
+# Secrets & Environment
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.shared.example
+!.env.dev.example
+*.pem
+cloudflare-credentials.ini
+
+# ------------------------------------------------------------------------------
+# Dependencies & Build
+# ------------------------------------------------------------------------------
+node_modules
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+/build
+/dist
+
+# ------------------------------------------------------------------------------
+# JavaScript / TypeScript / Next.js
+# ------------------------------------------------------------------------------
+.next/
+/out/
+/coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+.venv
+venv
+env/
+.pytest_cache/
+.coverage
+coverage.xml
+coverage.json
+htmlcov/
+lcov.info
+.tox/
+.nox/
+.ruff_cache/
+.mypy_cache/
+.pyrightcache/
+.uv_cache/
+
+# ------------------------------------------------------------------------------
+# Lua / Prosody (XMPP)
+# ------------------------------------------------------------------------------
+.luarc.json
+prosody-hg
+.prosody-modules
+prosody-modules/
+prosody-modules-enabled/
+research/
+.kiro/
+
+# ------------------------------------------------------------------------------
+# Temporary / Scratch
+# ------------------------------------------------------------------------------
+tmp/
+
+# ------------------------------------------------------------------------------
+# Runtime Data & Logs
+# ------------------------------------------------------------------------------
+logs/
+!logs/**/.gitkeep
+data/
+!data/**/.gitkeep
+certs/
+.runtime/
+!runtime/
+runtime/*/
+!runtime/.gitkeep
+
+# ------------------------------------------------------------------------------
+# App-Specific: Bridge (Discord↔IRC↔XMPP)
+# ------------------------------------------------------------------------------
+apps/bridge/config.yaml
+apps/bridge/references
+apps/bridge/audit/
+
+# ------------------------------------------------------------------------------
+# App-Specific: IRC (UnrealIRCd / Atheme)
+# ------------------------------------------------------------------------------
+# Generated configuration files
+src/backend/unrealircd/conf/unrealircd.conf
+src/backend/atheme/conf/atheme.conf
+
+# SSL certificates and keys
+src/backend/unrealircd/conf/tls/*
+docs/examples/unrealircd/tls/curl-ca-bundle.crt
+
+# Docker volumes / Legacy data dirs
+ircd_data/
+ircd_logs/
+ircd_modules/
+ircd_contrib/
+atheme_data/
+atheme_logs/
+webpanel_data/
+webpanel_config/
+.turbo
+wrangler.jsonc
+apps/atheme/config/atheme.conf
+apps/unrealircd/config/unrealircd.conf
+.hypothesis
+references
+apps/docs/.open-next
+apps/docs/.alchemy
+apps/docs/.source/
+docs-old
+apps/bridge/AUDIT.md

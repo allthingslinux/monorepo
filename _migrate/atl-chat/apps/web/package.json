@@ -1,0 +1,35 @@
+{
+  "name": "atl.chat",
+  "version": "1.13.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "ultracite check",
+    "fix": "ultracite fix",
+    "check": "ultracite check"
+  },
+  "dependencies": {
+    "@cloudflare/next-on-pages": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss-animate": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.13",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "ultracite": "7.1.3"
+  }
+}

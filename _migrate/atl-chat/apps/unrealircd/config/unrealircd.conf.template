@@ -1,0 +1,1004 @@
+/* ============================================================================
+ * UNREALIRCD CONFIGURATION - Consolidated (UnrealIRCd 6.2.0.1)
+ * ============================================================================
+ * All modules and RPC config inlined here. On upgrade: diff against the new
+ * release's modules.default.conf and modules.optional.conf to pick up changes.
+ * Docs: https://www.unrealircd.org/docs/Configuration
+ * ============================================================================ */
+
+/* ---------- Disabled modules (portal/SSO model) ---------- */
+/* halfop: not needed for our channel hierarchy */
+blacklist-module "chanmodes/halfop";
+/* chanadmin: +a mode not needed, simplifies channel hierarchy */
+blacklist-module "chanmodes/chanadmin";
+/* link: channel linking not needed on single server */
+blacklist-module "chanmodes/link";
+/* bot usermode: +B not needed, bridge uses oper instead */
+blacklist-module "usermodes/bot";
+
+/* ---------- Core user commands ---------- */
+loadmodule "admin";
+loadmodule "away";
+loadmodule "invite";
+loadmodule "ison";
+loadmodule "join";
+loadmodule "kick";
+loadmodule "links";
+loadmodule "list";
+loadmodule "lusers";
+loadmodule "map";
+loadmodule "message";
+loadmodule "mode";
+loadmodule "motd";
+loadmodule "names";
+loadmodule "nick";
+loadmodule "part";
+loadmodule "pass";
+loadmodule "pingpong";
+loadmodule "protoctl";
+loadmodule "quit";
+loadmodule "rules";
+loadmodule "topic";
+loadmodule "user";
+loadmodule "userhost";
+loadmodule "watch";
+loadmodule "whox";
+loadmodule "whois";
+loadmodule "whowas";
+
+/* ---------- Additional client features ---------- */
+loadmodule "botmotd";
+loadmodule "cap";
+loadmodule "cycle";
+loadmodule "dccallow";
+loadmodule "help";
+loadmodule "knock";
+loadmodule "lag";
+loadmodule "sasl";
+loadmodule "setname";
+loadmodule "silence";
+loadmodule "starttls";
+loadmodule "time";
+loadmodule "userip";
+loadmodule "vhost";
+loadmodule "history";
+
+/* ---------- IRCOp commands ---------- */
+loadmodule "addmotd";
+loadmodule "addomotd";
+loadmodule "chghost";
+loadmodule "chgident";
+loadmodule "chgname";
+loadmodule "close";
+loadmodule "connect";
+loadmodule "squit";
+loadmodule "dccdeny";
+loadmodule "globops";
+loadmodule "kill";
+loadmodule "locops";
+loadmodule "mkpasswd";
+loadmodule "oper";
+loadmodule "operinfo";
+loadmodule "opermotd";
+loadmodule "sajoin";
+loadmodule "samode";
+loadmodule "sapart";
+loadmodule "sdesc";
+loadmodule "sethost";
+loadmodule "setident";
+loadmodule "stats";
+loadmodule "tkl";
+loadmodule "tline";
+loadmodule "trace";
+loadmodule "tsctl";
+loadmodule "unsqline";
+loadmodule "jumpserver";
+
+/* ---------- Server-to-server protocol ---------- */
+loadmodule "eos";
+loadmodule "md";
+loadmodule "netinfo";
+loadmodule "server";
+loadmodule "sjoin";
+loadmodule "sqline";
+loadmodule "swhois";
+loadmodule "umode2";
+loadmodule "sinfo";
+loadmodule "require-module";
+loadmodule "slog";
+loadmodule "creationtime";
+loadmodule "sreply";
+loadmodule "unreal_server_compat";
+loadmodule "sendsno";
+loadmodule "sendumode";
+
+/* ---------- Services protocol (SVS* commands) ---------- */
+loadmodule "svsjoin";
+loadmodule "svskill";
+loadmodule "svslusers";
+loadmodule "svsmode";
+loadmodule "svsmotd";
+loadmodule "svsnick";
+loadmodule "svsnline";
+loadmodule "svsnolag";
+loadmodule "svsnoop";
+loadmodule "svspart";
+loadmodule "svssilence";
+loadmodule "svssno";
+loadmodule "svswatch";
+loadmodule "svso";
+loadmodule "svslogin";
+
+/* ---------- Channel modes ---------- */
+loadmodule "chanmodes/chanowner";
+/* chanmodes/chanadmin — blacklisted above */
+loadmodule "chanmodes/chanop";
+/* chanmodes/halfop — blacklisted above */
+loadmodule "chanmodes/voice";
+loadmodule "chanmodes/key";
+loadmodule "chanmodes/limit";
+loadmodule "chanmodes/inviteonly";
+loadmodule "chanmodes/secret";
+loadmodule "chanmodes/private";
+loadmodule "chanmodes/moderated";
+loadmodule "chanmodes/noexternalmsgs";
+loadmodule "chanmodes/topiclimit";
+loadmodule "chanmodes/floodprot";
+loadmodule "chanmodes/nocolor";
+loadmodule "chanmodes/noctcp";
+loadmodule "chanmodes/stripcolor";
+loadmodule "chanmodes/isregistered";
+loadmodule "chanmodes/issecure";
+loadmodule "chanmodes/permanent";
+/* chanmodes/link — blacklisted above */
+loadmodule "chanmodes/censor";
+loadmodule "chanmodes/delayjoin";
+loadmodule "chanmodes/noknock";
+loadmodule "chanmodes/noinvite";
+loadmodule "chanmodes/operonly";
+loadmodule "chanmodes/nonotice";
+loadmodule "chanmodes/regonly";
+loadmodule "chanmodes/nonickchange";
+loadmodule "chanmodes/nokick";
+loadmodule "chanmodes/regonlyspeak";
+loadmodule "chanmodes/secureonly";
+loadmodule "chanmodes/history";
+
+/* ---------- User modes ---------- */
+loadmodule "usermodes/wallops";
+/* usermodes/bot — blacklisted above */
+loadmodule "usermodes/servicebot";
+loadmodule "usermodes/noctcp";
+loadmodule "usermodes/censor";
+loadmodule "usermodes/showwhois";
+loadmodule "usermodes/privacy";
+loadmodule "usermodes/nokick";
+loadmodule "usermodes/regonlymsg";
+loadmodule "usermodes/secureonlymsg";
+loadmodule "usermodes/privdeaf";
+
+/* ---------- Extended bans ---------- */
+loadmodule "extbans/join";
+loadmodule "extbans/quiet";
+loadmodule "extbans/nickchange";
+loadmodule "extbans/realname";
+loadmodule "extbans/account";
+loadmodule "extbans/inchannel";
+loadmodule "extbans/operclass";
+loadmodule "extbans/certfp";
+loadmodule "extbans/textban";
+loadmodule "extbans/timedban";
+loadmodule "extbans/partmsg";
+loadmodule "extbans/securitygroup";
+loadmodule "extbans/country";
+loadmodule "extbans/msgbypass";
+loadmodule "extbans/flood";
+loadmodule "extbans/asn";
+loadmodule "extbans/inherit";
+
+/* ---------- IRCv3 capabilities & message tags ---------- */
+loadmodule "account-notify";
+loadmodule "message-tags";
+loadmodule "batch";
+loadmodule "server-time";
+loadmodule "message-ids";
+loadmodule "account-tag";
+loadmodule "echo-message";
+loadmodule "labeled-response";
+loadmodule "bot-tag";
+loadmodule "typing-indicator";
+loadmodule "channel-context";
+loadmodule "reply-tag";
+loadmodule "clienttagdeny";
+
+/* ---------- Security & TLS policy ---------- */
+loadmodule "sts";
+loadmodule "link-security";
+loadmodule "plaintext-policy";
+loadmodule "chathistory";
+loadmodule "monitor";
+loadmodule "extended-monitor";
+loadmodule "standard-replies";
+loadmodule "no-implicit-names";
+
+/* ---------- JSON-RPC (remote management) ---------- */
+loadmodule "rpc/rpc";
+loadmodule "rpc/stats";
+loadmodule "rpc/user";
+loadmodule "rpc/server";
+loadmodule "rpc/channel";
+loadmodule "rpc/server_ban";
+loadmodule "rpc/server_ban_exception";
+loadmodule "rpc/name_ban";
+loadmodule "rpc/spamfilter";
+loadmodule "rpc/log";
+loadmodule "rpc/whowas";
+
+/* ---------- Security & anti-abuse ---------- */
+loadmodule "ident_lookup";
+loadmodule "certfp";
+loadmodule "tls_cipher";
+loadmodule "tls_antidos";
+loadmodule "connect-flood";
+loadmodule "max-unknown-connections-per-ip";
+loadmodule "webirc";
+loadmodule "blacklist";
+loadmodule "jointhrottle";
+loadmodule "charsys";
+loadmodule "authprompt";
+loadmodule "history_backend_mem";
+loadmodule "tkldb";
+loadmodule "channeldb";
+loadmodule "rmtkl";
+loadmodule "restrict-commands";
+loadmodule "reputation";
+loadmodule "connthrottle";
+loadmodule "userip-tag";
+loadmodule "userhost-tag";
+loadmodule "geoip-tag";
+loadmodule "json-log-tag";
+loadmodule "issued-by-tag";
+loadmodule "real-quit-reason";
+loadmodule "targetfloodprot";
+loadmodule "watch-backend";
+loadmodule "geoip_base";
+loadmodule "websocket_common";
+loadmodule "spamreport";
+loadmodule "crule";
+loadmodule "maxperip";
+loadmodule "utf8functions";
+
+/* ---------- GeoIP (classic MaxMind database, auto-refreshed) ---------- */
+${IRC_GEOIP_CLASSIC_MODULE_LINE}
+${IRC_GEOIP_CLASSIC_BLOCK}
+
+/* ---------- Optional modules ---------- */
+loadmodule "ircops";
+loadmodule "staff";
+@if module-loaded("staff")
+set { staff-file "network.staff"; }
+@endif
+loadmodule "nocodes";
+
+/* antirandom: blocks connections with random-looking nick/ident/realname (bot detection).
+ * Thresholds are tuned conservatively; trusted IPs (Docker network) are exempt. */
+loadmodule "antirandom";
+@if module-loaded("antirandom")
+set {
+	antirandom {
+		threshold 6;
+		ban-action kill;
+		ban-time 4h;
+		ban-reason "You look like a bot. Be sure to fill in your nick/ident/realname properly.";
+		convert-to-lowercase yes;
+		show-failedconnects yes;
+		except {
+			webirc yes;
+			ip { 192.168.*; 127.*; 172.16.0.0/12; }
+		}
+	}
+}
+@endif
+
+loadmodule "webserver";
+loadmodule "websocket";
+
+/* antimixedutf8: blocks messages mixing scripts (e.g. Latin+Cyrillic) used for spam/homoglyph attacks */
+loadmodule "antimixedutf8";
+@if module-loaded("antimixedutf8")
+set {
+	antimixedutf8 {
+		score 8;
+		ban-action block;
+		ban-reason "Mixed character spam";
+		ban-time 4h;
+	}
+}
+@endif
+
+/* ---------- RPC Unix socket (for local management tools) ---------- */
+listen {
+	file "/home/unrealircd/unrealircd/data/rpc.socket";
+	mode 0770;
+	options { rpc; }
+}
+
+/* In-memory log buffer (accessible via JSON-RPC; excludes verbose join/part/kick events) */
+log {
+	source {
+		all;
+		!debug;
+		!join.LOCAL_CLIENT_JOIN;
+		!join.REMOTE_CLIENT_JOIN;
+		!part.LOCAL_CLIENT_PART;
+		!part.REMOTE_CLIENT_PART;
+		!kick.LOCAL_CLIENT_KICK;
+		!kick.REMOTE_CLIENT_KICK;
+	}
+	destination {
+		memory {
+			max-lines 1000;
+			max-time 7d;
+		}
+	}
+}
+
+/* ---------- RPC permission classes ---------- */
+rpc-class full {
+	permissions { all; }
+}
+
+rpc-class read-only {
+	permissions {
+		rpc;
+		stats;
+		log;
+		user { list; get; }
+		whowas { get; }
+		server { list; get; }
+		channel { list; get; }
+		server_ban { list; get; }
+		server_ban_exception { list; get; }
+		spamfilter { list; get; }
+		name_ban { list; get; }
+	}
+}
+
+include "help/help.conf";
+include "badwords.conf";
+include "spamfilter.conf";
+include "dccallow.conf";
+include "operclass.default.conf";
+include "snomasks.default.conf";
+
+/* ---------- Third-party / custom modules ---------- */
+loadmodule "cloak_sha256";
+loadmodule "third/showwebirc";
+loadmodule "third/metadata";
+loadmodule "third/react";         /* IRCv3 draft/react: message reactions */
+loadmodule "third/redact-atl";    /* IRCv3 draft/message-redaction: REDACT (atl.chat: fixed) */
+set {
+	redacters { sender; }  /* Allow message authors to redact their own messages (requires +H chathistory) */
+}
+loadmodule "third/relaymsg-atl";   /* atl.chat: RELAYMSG for stateless bridging (clean nicks) */
+loadmodule "third/irccloud-tags"; /* IRCCloud MessageTags support */
+loadmodule "third/kiwiirc-tags";  /* KiwiIRC MessageTags support */
+loadmodule "third/display-name";  /* IRCv3 draft/display-name: display names in message tags */
+loadmodule "third/block_masshighlight"; /* Block mass highlight spam network-wide */
+
+/* METADATA: avatars, message coloring, status texts (draft/metadata, draft/metadata-notify-2)
+ * Usage: /metadata * set avatar :https://example.com/avatar.png
+ * Optional config - defaults used if omitted. */
+metadata {
+	max-user-metadata 10;
+	max-channel-metadata 10;
+	max-subscriptions 10;
+}
+
+/* RELAYMSG (relaymsg-atl): stateless bridging with clean nicks (no / separator).
+ * Bridge uses irc_relaymsg_clean_nicks: true. */
+relaymsg {
+	hostmask "bridge@${IRC_DOMAIN}";
+}
+
+/* BLOCK_MASSHIGHLIGHT: prevent highlight spam network-wide.
+ * Channel mode +B exempts a channel from checks. Opers and +a/+q are exempt.
+ * Action: drop the message silently; notify opers via log event. */
+block_masshighlight {
+	maxnicks 5;
+	action drop;
+	snotice 1;
+	allow_authed 0;
+	show_opers_origmsg 1;
+};
+
+me {
+	name "${IRC_DOMAIN}";
+	info "${IRC_NETWORK_NAME}";
+	sid "001";
+}
+
+/* Proxy blocks - pass real client IPs to UnrealIRCd from web gateways and reverse proxies.
+ * Docs: https://www.unrealircd.org/docs/Proxy_block */
+
+/* NPM/gateway WEBIRC: passes real client IP via WEBIRC protocol.
+ * Used by web gateways (KiwiIRC, The Lounge, etc.) connecting through NPM. */
+proxy npm-webirc {
+	type webirc;
+	match { ip ${ATL_GATEWAY_IP}/32; }
+	password "${ATL_WEBIRC_PASSWORD}";
+}
+
+/* NPM WebSocket reverse proxy: trust X-Forwarded-For headers from NPM/Tailscale.
+ * When NPM proxies WebSocket connections (port 8000), it sends X-Forwarded-For
+ * with the real client IP. Hosts matching this are auto-exempted from connect
+ * floods and blacklist checks (UnrealIRCd 6.1.8+).
+ *
+ * NOTE: This does NOT help with raw TCP streams (port 6697). Direct IRC TLS
+ * clients through NPM TCP streams will appear as the proxy IP — UnrealIRCd
+ * does not support the HAProxy PROXY protocol. */
+proxy npm-x-forwarded {
+	type x-forwarded;
+	match { ip ${ATL_GATEWAY_IP}/32; ip 100.64.0.0/10; }
+}
+
+/* The Lounge web IRC client: passes real user IP via WEBIRC.
+ * Connects from the Docker network. */
+proxy thelounge {
+	type webirc;
+	match { ip 172.16.0.0/12; }
+	password "${THELOUNGE_WEBIRC_PASSWORD}";
+}
+
+admin {
+	"${IRC_ADMIN_NAME}";
+	"admin";
+	"${IRC_ADMIN_EMAIL}";
+}
+
+class clients {
+	pingfreq 90;
+	maxclients 1000;
+	sendq 200k;
+	recvq 8000;
+}
+
+class opers {
+	pingfreq 90;
+	maxclients 50;
+	sendq 1M;
+	recvq 8000;
+}
+
+class servers {
+	pingfreq 90;
+	maxclients 10;
+	sendq 5M;
+	recvq 8000;
+}
+
+/* Unix socket for Atheme services — shares network namespace with IRC server
+ * (atl-irc-services uses network_mode: service:atl-irc-server).
+ * Atheme connects here via 127.0.0.1 port 6901 as configured in atheme.conf. */
+listen {
+	file "/home/unrealircd/unrealircd/data/services.sock";
+	mode 0770;
+}
+
+/* Standard IRC over TLS — primary client connection port */
+listen {
+	ip *;
+	port 6697;
+	options { tls; }
+}
+
+/* Server-to-server over TLS — used for linking remote IRC servers */
+listen {
+	ip *;
+	port 6900;
+	options { tls; serversonly; }
+}
+
+/* Server-to-server plaintext — used by Atheme services (localhost only via shared network namespace) */
+listen {
+	ip *;
+	port 6901;
+	options { serversonly; }
+}
+
+/* JSON-RPC over TLS — for webpanel and management tools */
+listen {
+	ip *;
+	port 8600;
+	options { rpc; tls; }
+	tls-options {
+		certificate "/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/fullchain.pem";
+		key "/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/privkey.pem";
+	}
+}
+
+/* WebSocket port — dev: TLS direct (wss://); prod: TLS terminated at NPM, plain */
+listen {
+	ip *;
+	port 8000;
+	options {
+		${IRC_WEBSOCKET_OPTIONS_LINE}
+		websocket { type text; }
+	}
+	${IRC_WEBSOCKET_TLS_OPTIONS}
+}
+
+set {
+	tls {
+		/* Certificate configuration - data/certs mounted at certs/, live/<domain>/ layout */
+		certificate "/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/fullchain.pem";
+		key "/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/privkey.pem";
+		/* CA certificate bundle for certificate validation */
+		trusted-ca-file "/home/unrealircd/unrealircd/config/tls/curl-ca-bundle.crt";
+
+		/* TLS 1.2 and 1.3 only — matches UnrealIRCd 6.1.9+ defaults */
+		protocols "TLSv1.2,+TLSv1.3";
+
+		/* TLS 1.2 cipher suites — ECDHE only (forward secrecy; matches UnrealIRCd 6.1.9+ defaults) */
+		ciphers "ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256";
+
+		/* TLS 1.3 cipher suites (matches UnrealIRCd 6.1.9+ defaults) */
+		ciphersuites "TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256:TLS_AES_128_CCM_8_SHA256:TLS_AES_128_CCM_SHA256";
+
+		/* Key exchange groups — includes post-quantum hybrid X25519MLKEM768 (UnrealIRCd 6.2.0+).
+		 * X25519MLKEM768 requires OpenSSL 3.5.0+; falls back gracefully on older builds.
+		 * Docs: https://www.unrealircd.org/docs/TLS_Ciphers_and_protocols */
+		groups "X25519MLKEM768:X25519:secp521r1:secp384r1:prime256v1";
+		/* Legacy fallback for OpenSSL builds that don't support the 'groups' directive */
+		ecdh-curves "X25519:secp521r1:secp384r1:prime256v1";
+
+		options {
+			no-client-certificate;
+		}
+
+		/* Strict Transport Security (STS) — redirects clients to TLS automatically.
+		 * Clients cache this for 'duration' time; start low and increase gradually:
+		 *   1m -> 1d -> 30d -> 180d
+		 * WARNING: Cached by clients for the full duration period. */
+		sts-policy {
+			port 6697;
+			duration ${IRC_STS_DURATION};
+			preload ${IRC_STS_PRELOAD};
+		}
+
+		certificate-expiry-notification yes;
+	}
+
+	/* Plaintext policy — control who can use non-TLS connections.
+	 * Docs: https://www.unrealircd.org/docs/Set_block#set::plaintext-policy */
+	plaintext-policy {
+		/* Allow localhost server connections (Atheme) — localhost is exempt from link security */
+		server allow;
+		/* Allow users for now; STS will redirect TLS-capable clients automatically */
+		user allow;
+		/* IRCOps must always use TLS */
+		oper deny;
+		user-message "For security, please connect using TLS on port 6697. Your client will be automatically redirected if it supports STS.";
+		oper-message "IRCOps must use TLS connections. Please connect to port 6697 with SSL/TLS enabled.";
+	}
+
+	/* Outdated TLS policy — warn or block connections using old TLS protocols/ciphers */
+	outdated-tls-policy {
+		user warn;
+		oper deny;
+		server deny;
+		user-message "Your IRC client is using an outdated TLS protocol or cipher. Please update your IRC client for better security.";
+		oper-message "IRCOps must use modern TLS. Please update your IRC client.";
+	}
+}
+
+/* Link block for Atheme services — restricted to Docker network and localhost */
+link ${IRC_SERVICES_SERVER} {
+	incoming {
+		mask 172.16.0.0/12;
+		mask 127.0.0.0/8;
+		password "${IRC_SERVICES_PASSWORD}";
+	}
+	password "${IRC_SERVICES_PASSWORD}";
+	class servers;
+}
+
+/* U-lines give services special privileges (mode enforcement, nick protection, etc.) */
+ulines {
+	${IRC_SERVICES_SERVER};
+}
+
+/* Allow configuration — who can connect */
+allow {
+	mask *@*;
+	class clients;
+	maxperip 5;
+}
+
+/* Authentication Requirements — uncomment and customize as needed.
+ * Docs: https://www.unrealircd.org/docs/Require_authentication_block */
+
+/* Require SASL authentication for all users — portal/SSO model.
+ * Users must register via the ATL Portal and authenticate via SASL.
+ * Exemptions use mask exclude-* items (UnrealIRCd 6.0.7+).
+ * Docs: https://www.unrealircd.org/docs/Require_authentication_block
+ *       https://www.unrealircd.org/docs/Mask_item */
+require authentication {
+	mask {
+		mask *;
+		/* Docker internal network — Atheme, bridge, webpanel, The Lounge */
+		exclude-ip { 172.16.0.0/12; }
+		/* Localhost — Atheme services (shared network namespace) */
+		exclude-ip { 127.0.0.0/8; }
+		/* WebIRC clients (The Lounge, KiwiIRC — they handle auth upstream) */
+		exclude-webirc yes;
+	}
+	reason "This server requires authentication. Please register an account at the ATL Portal first.";
+}
+
+/* Ban nicknames reserved for services or system use */
+ban nick {
+	mask "*ChanServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*NickServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*MemoServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*BotServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*OperServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*HostServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*HelpServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*StatServ*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*Global*";
+	reason "Reserved for Services";
+}
+
+ban nick {
+	mask "*root*";
+	reason "Reserved system name";
+}
+
+/* Removed overly broad ban nicks: *admin*, *server*, *IRC*, *operator*, *unknown*
+ * These blocked legitimate nicks like "sysadmin", "serverless", "IRCFan", etc. */
+
+/* DNSBL blacklists — block known proxies, drones, and TOR exit nodes.
+ * Docs: https://www.unrealircd.org/docs/Blacklist_block */
+blacklist dronebl {
+	dns {
+		name dnsbl.dronebl.org;
+		type record;
+		reply { 3; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; }
+	}
+	action gline;
+	ban-time 24h;
+	reason "Proxy/Drone detected. Check https://dronebl.org/lookup?ip=$ip for details.";
+}
+
+blacklist efnetrbl {
+	dns {
+		name rbl.efnetrbl.org;
+		type record;
+		reply { 1; 4; 5; }
+	}
+	action gline;
+	ban-time 24h;
+	reason "Proxy/Drone/TOR detected. Check https://rbl.efnetrbl.org/?i=$ip for details.";
+}
+
+blacklist tornevall {
+	dns {
+		name dnsbl.tornevall.org;
+		type record;
+		reply { 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; }
+	}
+	action gline;
+	ban-time 24h;
+	reason "Open proxy/relay detected. Check https://dnsbl.tornevall.org/ for details.";
+}
+
+/* Exempt internal Docker network from bans/blacklists.
+ * Covers bridge, services, and other containers on the atl-chat network.
+ * 172.16.0.0/12 spans all default Docker bridge subnets (172.16–31.*). */
+except ban {
+	mask *@172.16.0.0/12;
+	type { blacklist; connect-flood; maxperip; handshake-data-flood; }
+}
+
+/* Network configuration */
+set {
+	network-name 		"${IRC_NETWORK_NAME}";
+	default-server 	"${IRC_DOMAIN}";
+	services-server "${IRC_SERVICES_SERVER}";
+	stats-server 		"${IRC_DOMAIN}";
+	sasl-server 		"${IRC_SERVICES_SERVER}";
+
+	help-channel 		"#support";
+	prefix-quit 		"quit";
+
+	/* Cloak keys — from .env; generate new keys with: just irc gencloak */
+	cloak-keys {
+		"${IRC_CLOAK_KEY_1}";
+		"${IRC_CLOAK_KEY_2}";
+		"${IRC_CLOAK_KEY_3}";
+	}
+
+	/* Hidden host prefix — must match cloak-prefix on all servers in the network */
+	hiddenhost-prefix "${IRC_CLOAK_PREFIX}";
+
+	/* Cloak method: "ip" hashes the full IP address for better privacy */
+	cloak-method ip;
+}
+
+/* Die/Restart password: protects /DIE and /RESTART from accidental or unauthorized use */
+drpass {
+	restart "${IRC_DRPASS}";
+	die "${IRC_DRPASS}";
+}
+
+/* Staff oper block — network staff with full privileges and vhost */
+oper staff {
+	class opers;
+	mask *;
+	password "${IRC_OPER_PASSWORD}";
+	operclass netadmin-with-override;
+	swhois "is a member of the Network Staff";
+	vhost ${DOLLAR}account@${IRC_STAFF_VHOST};
+	require-modes "z";
+}
+
+/* Bridge operclass — minimal privileges needed for the bridge bot:
+ * - channel override: allows setting +P (permanent) without being chanop
+ * - relaymsg: allows RELAYMSG for stateless bridging (third/relaymsg-atl)
+ * - chat:redact: allows REDACT for message deletion (third/redact-atl) */
+operclass bridge-oper {
+	parent locop;
+	permissions {
+		channel { operonly; override; }
+		relaymsg;
+		chat { redact; }
+	}
+}
+
+oper bridge {
+	class opers;
+	/* Hostname *@*bridge* (atl-bridge) OR Docker IPs — ensures OPER works from bridge container */
+	mask { *@*bridge*; ip 172.16.0.0/12; ip 127.0.0.0/8; };
+	password "${BRIDGE_IRC_OPER_PASSWORD}";
+	operclass bridge-oper;
+	vhost "bridge@bridge.atl.chat";
+}
+
+/* RPC user for webpanel — restricted to Docker network and localhost */
+rpc-user "${WEBPANEL_RPC_USER}" {
+	match { ip 172.16.0.0/12; ip 127.0.0.0/8; }
+	rpc-class full;
+	password "${WEBPANEL_RPC_PASSWORD}";
+}
+
+/* Automatic vhost for registered users — applied on-connect for SASL users.
+ * Only fires during the connection handshake (SASL); NS IDENTIFY after connect
+ * does NOT trigger this block. For post-connect identify, Atheme HostServ
+ * applies the vhost (set during account provisioning via Portal).
+ * Both mechanisms coexist: SASL users get instant vhost here, NS IDENTIFY
+ * users get it from HostServ — both resolve to $account@atl.chat. */
+vhost {
+	auto-login yes;
+	mask {
+		identified yes;
+	}
+	vhost ${DOLLAR}account@${IRC_ROOT_DOMAIN};
+}
+
+/* Log to stdout (JSON) — captured by Docker json-file driver with rotation.
+ * No file-based logging; use `docker compose logs atl-irc-server` to read.
+ * Verbose join/part/kick events excluded to reduce noise. */
+log {
+	source {
+		all;
+		!debug;
+		!join.LOCAL_CLIENT_JOIN;
+		!join.REMOTE_CLIENT_JOIN;
+		!part.LOCAL_CLIENT_PART;
+		!part.REMOTE_CLIENT_PART;
+		!kick.LOCAL_CLIENT_KICK;
+		!kick.REMOTE_CLIENT_KICK;
+	}
+	destination {
+		file "/dev/stdout" { type json; }
+	}
+}
+
+set {
+	kline-address '${IRC_ADMIN_EMAIL}'; /* e-mail or URL shown when a user is banned */
+	gline-address '${IRC_ADMIN_EMAIL}'; /* e-mail shown on G-lines */
+
+	modes-on-connect "+ixw"; /* user modes set automatically on connect */
+	modes-on-oper "+xwsH"; /* additional modes set when someone becomes IRCOp */
+	snomask-on-oper "+bBcdfkqsSo"; /* server notice mask for opers */
+	modes-on-join "+nt"; /* default channel modes for newly created channels */
+
+	/* Prevent users from disabling their cloak (+x) for privacy */
+	restrict-usermodes "x";
+
+	/* Control WHOIS visibility of webirc/websocket metadata */
+	whois-details {
+		webirc { everyone none; self full; oper full; };
+		websocket { everyone none; self full; oper full; };
+	}
+	oper-auto-join "#mod-chat"; /* IRCOps are auto-joined to this channel on oper-up */
+	options {
+		hide-ulines; /* hide U-lines in /MAP and /LINKS */
+		show-connect-info; /* show "looking up your hostname" messages on connect */
+	}
+
+	/* Authentication prompt enabled by default via the authprompt module */
+
+	maxchannelsperuser 10; /* maximum number of channels a user may /JOIN */
+
+	/* Restrict /STATS to safe statistics for regular users; everything else is oper-only */
+	allow-user-stats "kMp";
+
+	/* Spamfilter global defaults */
+	spamfilter {
+		ban-time 1d;
+		ban-reason "Spam/Advertising";
+		virus-help-channel "#support";
+	}
+
+	/* Connection throttling: limits new connections during attacks.
+	 * Exempts identified users and those with established reputation.
+	 * Docs: https://www.unrealircd.org/docs/Connthrottle */
+	connthrottle {
+		except { reputation-score 24; identified yes; }
+		new-users {
+			local-throttle 20:60;
+			global-throttle 30:60;
+		}
+		disabled-when {
+			reputation-gathering 1w;
+			start-delay 3m;
+		}
+	}
+
+	anti-spam-quit-message-time 10s;
+
+	/* Channel history: required for REDACT (third/redact-atl). Bridge sets +H 50:1d on
+	 * bridged channels when BRIDGE_IRC_OPER_PASSWORD is set. Modules: history, chanmodes/history,
+	 * chathistory, history_backend_mem. */
+	history {
+		channel {
+			/* Use defaults — 200 lines max, 31 days retention */
+		}
+	};
+
+	/* restrict-commands: delay certain commands for new/untrusted users.
+	 * Identified users and those with reputation score ≥24 are exempt.
+	 * Docs: https://www.unrealircd.org/docs/Set_block#set::restrict-commands */
+	restrict-commands {
+		/* Disable NICK changes for all regular users.
+		 * Nicks are managed exclusively via the Portal — users register once and
+		 * their nick is fixed. IRCOps and the bridge oper are exempt so services
+		 * and admin tooling (SVSNICK, forced renames) still work. */
+		nick {
+		}
+		list {
+			except { identified yes; reputation-score 24; }
+			connect-delay 60s;
+		}
+		invite {
+			except { identified yes; reputation-score 24; }
+			connect-delay 120s;
+		}
+		private-message {
+			except { identified yes; webirc yes; reputation-score 24; }
+			connect-delay 120s;
+		}
+		private-notice {
+			except { identified yes; webirc yes; reputation-score 24; }
+			connect-delay 120s;
+		}
+	}
+
+	/* Anti-flood settings — controls flood protection for channels and users.
+	 * 'known-users' = identified to services OR IP connected for >2h in past X days.
+	 * 'unknown-users' = everyone else (stricter limits).
+	 * Docs: https://www.unrealircd.org/docs/Anti-flood_settings */
+	anti-flood {
+		/* Channel flood profiles — used with channel mode +F.
+		 * Format: [c#C<cooldown>,j#R<rejoin>,k#K<kick>,m#M<msg>,n#N<nick>]:<seconds> */
+		channel {
+			default-profile normal;
+
+			profile very-strict { flood-mode "[7c#C15,10j#R10,10k#K15,30m#M10,10n#N15]:15"; }
+			profile strict      { flood-mode "[7c#C15,15j#R10,10k#K15,40m#M10,10n#N15]:15"; }
+			profile normal      { flood-mode "[7c#C15,30j#R10,10k#K15,40m#M10,10n#N15]:15"; }
+			profile relaxed     { flood-mode "[7c#C15,45j#R10,10k#K15,60m#M10,10n#N15]:15"; }
+			profile very-relaxed { flood-mode "[7c#C15,60j#R10,10k#K15,90m#M10,10n#N15]:15"; }
+		}
+
+		/* Settings that apply to all users regardless of group */
+		everyone {
+			connect-flood 5:60; /* max 5 connection attempts per IP per 60 seconds */
+
+			/* Handshake data flood — blocks clients sending >4k during IRC handshake */
+			handshake-data-flood {
+				amount 4k;
+				ban-action zline;
+				ban-time 10m;
+			}
+
+			/* Target flood — limits total message rate to a channel/user.
+			 * This is NOT per-sender; it limits the aggregate rate to the target.
+			 * Drop (not kill) is used because innocent users may send the Nth message. */
+			target-flood {
+				channel-privmsg 45:5;
+				channel-notice 15:5;
+				channel-tagmsg 15:5;
+				private-privmsg 30:5;
+				private-notice 10:5;
+				private-tagmsg 10:5;
+			}
+		}
+
+		/* Known users (identified/trusted) — higher limits and lower lag penalties */
+		known-users {
+			nick-flood 4:60;
+			join-flood 4:90;
+			away-flood 4:120;
+			invite-flood 5:60;
+			knock-flood 4:120;
+			vhost-flood 3:90;
+			max-concurrent-conversations {
+				users 12;           /* can message 12 different users before rate limiting */
+				new-user-every 10s; /* then 1 new conversation target every 10 seconds */
+			}
+			lag-penalty 3000;       /* 1 message per 3 seconds sustained rate */
+			lag-penalty-bytes 512;  /* bytes before extra lag penalty kicks in */
+		}
+
+		/* Unknown users (new/untrusted) — stricter limits */
+		unknown-users {
+			nick-flood 2:60;
+			join-flood 2:90;
+			away-flood 3:120;
+			invite-flood 2:60;
+			knock-flood 2:120;
+			vhost-flood 2:90;
+			max-concurrent-conversations {
+				users 4;            /* can message 4 different users before rate limiting */
+				new-user-every 20s; /* then 1 new conversation target every 20 seconds */
+			}
+			lag-penalty 1200;       /* higher fake lag penalty for unknown users */
+			lag-penalty-bytes 80;   /* stricter byte threshold before extra lag penalty */
+		}
+	}
+}

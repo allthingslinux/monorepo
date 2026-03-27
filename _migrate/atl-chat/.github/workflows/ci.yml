@@ -1,0 +1,179 @@
+---
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      irc: ${{ steps.filter.outputs.irc }}
+      xmpp: ${{ steps.filter.outputs.xmpp }}
+      web: ${{ steps.filter.outputs.web }}
+      bridge: ${{ steps.filter.outputs.bridge }}
+      infra: ${{ steps.filter.outputs.infra }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36  # v3
+        id: filter
+        with:
+          filters: |
+            irc:
+              - 'apps/unrealircd/**'
+              - 'apps/atheme/**'
+              - 'apps/webpanel/**'
+              - 'apps/gamja/**'
+              - 'tests/**'
+              - 'scripts/**'
+            xmpp:
+              - 'apps/prosody/**'
+            web:
+              - 'apps/web/**'
+            bridge:
+              - 'apps/bridge/**'
+            infra:
+              - 'compose.yaml'
+              - '.github/workflows/**'
+              - 'docs/**'
+  lint-irc:
+    needs: changes
+    if: needs.changes.outputs.irc == 'true'
+    uses: ./.github/workflows/lint.yml
+    with:
+      working-directory: .
+      language: shell
+  lint-xmpp:
+    needs: changes
+    if: needs.changes.outputs.xmpp == 'true'
+    uses: ./.github/workflows/lint.yml
+    with:
+      working-directory: apps/prosody
+      language: lua
+  security-global:
+    needs: changes
+    if: needs.changes.outputs.irc == 'true' || needs.changes.outputs.xmpp == 'true'
+    uses: ./.github/workflows/security.yml
+    secrets: inherit
+    with:
+      working-directory: .
+      scan-image: false
+  docker-irc:
+    needs: changes
+    if: needs.changes.outputs.irc == 'true'
+    uses: ./.github/workflows/docker.yml
+    with:
+      working-directory: apps/unrealircd
+      image-name: atl-irc
+  docker-xmpp:
+    needs: changes
+    if: needs.changes.outputs.xmpp == 'true'
+    uses: ./.github/workflows/docker.yml
+    with:
+      working-directory: apps/prosody
+      image-name: atl-xmpp
+  lint-bridge:
+    needs: changes
+    if: needs.changes.outputs.bridge == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/bridge
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --frozen --all-extras
+      - run: uv run ruff check src tests
+      - run: uv run ruff format --check src tests
+      - name: Prune uv cache
+        if: always()
+        run: uv cache prune --ci
+  test-bridge:
+    needs: changes
+    if: needs.changes.outputs.bridge == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/bridge
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --frozen --all-extras
+      - run: uv run pytest tests -v --tb=short
+      - name: Prune uv cache
+        if: always()
+        run: uv cache prune --ci
+  lint-web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d  # v3
+        with:
+          version: 9
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter atl.chat run check
+  build-web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d  # v3
+        with:
+          version: 9
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter atl.chat run build
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message,
+      'skip ci')
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d  # v3
+        with:
+          version: 10
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6
+        with:
+          enable-cache: true
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,65 @@
+# =============================================================================
+# Bridge Stack - Discord↔IRC↔XMPP (apps/bridge in-repo)
+# =============================================================================
+
+name: atl-bridge
+
+include:
+  - networks.yaml
+
+services:
+  atl-bridge:
+    build:
+      context: ../..
+      dockerfile: apps/bridge/Containerfile
+    image: ghcr.io/allthingslinux/bridge:latest
+    container_name: atl-bridge
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Wait until IRC + Prosody report healthy (Prosody: HTTP /status + component :5347 for XEP-0114).
+    depends_on:
+      atl-irc-server:
+        condition: service_healthy
+      atl-xmpp-server:
+        condition: service_healthy
+    env_file:
+      - path: ../../.env
+        required: false
+    environment:
+      - LOG_LEVEL
+      - BRIDGE_DISCORD_TOKEN
+      - BRIDGE_PORTAL_BASE_URL
+      - BRIDGE_PORTAL_TOKEN
+      - BRIDGE_XMPP_COMPONENT_JID
+      - BRIDGE_XMPP_COMPONENT_SECRET
+      - BRIDGE_XMPP_COMPONENT_SERVER
+      - BRIDGE_XMPP_COMPONENT_PORT
+      - BRIDGE_IRC_NICK
+      - BRIDGE_IRC_OPER_PASSWORD
+      - BRIDGE_IRC_REDACT_ENABLED
+      - BRIDGE_IRC_TLS_VERIFY
+      - BRIDGE_RELAYMSG_CLEAN_NICKS
+      - XMPP_AVATAR_BASE_URL
+      - XMPP_AVATAR_PUBLIC_URL
+      - XMPP_UPLOAD_FETCH_URL
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    volumes:
+      - ../../apps/bridge/config.yaml:/app/config.yaml:ro
+    networks:
+      - atl-chat
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "bridge --config"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
