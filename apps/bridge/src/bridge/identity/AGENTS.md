@@ -6,12 +6,12 @@ Portal API integration and identity resolution across protocols. Maps Discord us
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `base.py` | `IdentityResolver` ABC; `DevIdentityResolver` (returns `None` for all lookups -- used when Portal is unavailable) |
-| `portal.py` | `PortalClient` (httpx + tenacity retries), `PortalIdentityResolver` (wraps client with TTLCache) |
-| `dev.py` | `DevIdentityResolver` legacy alias (imports from `base.py`) |
-| `sanitize.py` | `ensure_valid_username(name)` -- cleans webhook display names; `sanitize_nick(nick)` -- strips invalid IRC nick characters |
+| File          | Purpose                                                                                                                                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base.py`     | `IdentityResolver` ABC; `DevIdentityResolver` (returns `None` for all lookups -- used when Portal is unavailable)                                                                                                                                                            |
+| `portal.py`   | `PortalClient` (httpx + tenacity retries), `PortalIdentityResolver` (wraps client with TTLCache)                                                                                                                                                                             |
+| `dev.py`      | `DevIdentityResolver` legacy alias (imports from `base.py`)                                                                                                                                                                                                                  |
+| `sanitize.py` | `ensure_valid_username(name)` -- cleans webhook display names; `sanitize_nick(nick)` -- strips invalid IRC nick characters; `xmpp_jid_or_plain_to_muc_nick` -- extracts MUC nick from JID or plain string; `puppet_muc_nick_from_base` -- appends puppet suffix to base nick |
 
 ## PortalClient (`portal.py`)
 

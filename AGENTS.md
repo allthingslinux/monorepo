@@ -11,9 +11,10 @@
 - `services/` — External software we extend, configure, and operate
   - `chat/` — IRC (UnrealIRCd + Atheme), XMPP (Prosody), web clients
   - `network/` — DNS (Blocky), TURN (coturn), uptime (Gatus), SFTP
-  - `observability/` — Grafana, Loki, Mimir, Alloy, Blackbox
+  - `observability/` — Grafana, Loki, Mimir, Alloy, Alloy Agent, Blackbox
 - `packages/ui` — @atl/ui shared design system
-- `infra/compose/` — Docker Compose fragments (chat-*.yaml, network.yaml, observability.yaml)
+- `infra/compose/` — Docker Compose fragments (chat-\*.yaml, network.yaml, observability.yaml, cert-manager.yaml, networks.yaml)
+- `infra/nginx/` — Nginx reverse proxy config (Prosody HTTPS)
 - `scripts/` — init.sh (data dirs + dev certs)
 
 # Key Commands
@@ -44,13 +45,16 @@ Workflows live in `.github/workflows/`. Naming convention: `{app}-{action}.yml` 
 - `pr-label.yml` — auto-label PRs by changed paths
 
 Reusable workflows:
+
 - `reusable-py-check.yml` — ruff + basedpyright for Python
 - `reusable-docker-build.yml` — Docker build with SBOM, provenance, attestation
 
 Composite actions:
+
 - `.github/actions/setup-node-pnpm/` — corepack + pnpm + Node + frozen install
 
 Pre-commit (Husky + lint-staged):
+
 - `*.{ts,tsx,js,jsx}` → oxlint + oxfmt
 - `*.py` → ruff check --fix + ruff format
 - `*.sh` → shellcheck + shfmt

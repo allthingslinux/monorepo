@@ -17,7 +17,8 @@ adapters/
 │   ├── outbound.py     # Outbound event handlers (handle_delete_out, handle_reaction_out, handle_typing_out)
 │   ├── webhook.py      # get_or_create_webhook, webhook_send, webhook_edit, _reply_button_view
 │   ├── avatar.py       # Avatar URL resolution and caching
-│   └── media.py        # Media/attachment handling
+│   ├── media.py        # Media/attachment handling
+│   └── reply_emoji.py  # Reply emoji reaction handling
 ├── irc/
 │   ├── __init__.py
 │   ├── adapter.py      # IRCAdapter

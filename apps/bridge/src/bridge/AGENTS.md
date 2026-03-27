@@ -6,16 +6,17 @@ The `bridge` Python package. Entry point, config, events, and identity live here
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `__main__.py` | Arg parsing, logging setup, SIGHUP reload, uvloop/asyncio run, adapter wiring |
-| `avatar.py` | Avatar URL caching and resolution |
-| `events.py` | Re-export from `core.events` — event dataclasses, factories, `Dispatcher`, `EventTarget` protocol |
-| `errors.py` | Re-export from `core.errors` |
-| `config/` | `loader.py` (load_config, load_config_with_env), `schema.py` (Config, cfg singleton) |
-| `core/` | `constants.py` (ProtocolOrigin, ORIGINS), `events.py` (event dataclasses, Dispatcher), `errors.py` (BridgeError) |
-| `identity/` | `base.py` (IdentityResolver ABC), `portal.py` (PortalClient, PortalIdentityResolver), `dev.py` (DevIdentityResolver), `sanitize.py` (ensure_valid_username, sanitize_nick) |
-| `tracking/` | `base.py` (BidirectionalTTLMap), `message_ids.py` (MessageIDResolver) |
+| File          | Purpose                                                                                                                                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `__main__.py` | Arg parsing, logging setup, SIGHUP reload, uvloop/asyncio run, adapter wiring                                                                                                                                                        |
+| `avatar.py`   | Avatar URL caching and resolution                                                                                                                                                                                                    |
+| `events.py`   | Re-export from `core.events` — event dataclasses, factories, `Dispatcher`, `EventTarget` protocol                                                                                                                                    |
+| `errors.py`   | Re-export from `core.errors`                                                                                                                                                                                                         |
+| `assets/`     | Static assets (L1.png, L2.png)                                                                                                                                                                                                       |
+| `config/`     | `loader.py` (load_config, load_config_with_env), `schema.py` (Config, cfg singleton)                                                                                                                                                 |
+| `core/`       | `constants.py` (ProtocolOrigin, ORIGINS), `events.py` (event dataclasses, Dispatcher), `errors.py` (BridgeError)                                                                                                                     |
+| `identity/`   | `base.py` (IdentityResolver ABC), `portal.py` (PortalClient, PortalIdentityResolver), `dev.py` (DevIdentityResolver), `sanitize.py` (ensure_valid_username, sanitize_nick, xmpp_jid_or_plain_to_muc_nick, puppet_muc_nick_from_base) |
+| `tracking/`   | `base.py` (BidirectionalTTLMap), `message_ids.py` (MessageIDResolver)                                                                                                                                                                |
 
 ## Startup Sequence
 
@@ -33,20 +34,20 @@ The `bridge` Python package. Entry point, config, events, and identity live here
 
 All events are dataclasses. Factory functions (decorated with `@event`) return `(type_name, instance)` tuples.
 
-| Dataclass | Factory | Direction |
-|-----------|---------|-----------|
-| `MessageIn` | `message_in()` | Inbound from any protocol |
-| `MessageOut` | `message_out()` | Outbound to a specific protocol |
-| `MessageDelete` | `message_delete()` | Inbound delete |
+| Dataclass          | Factory                | Direction                             |
+| ------------------ | ---------------------- | ------------------------------------- |
+| `MessageIn`        | `message_in()`         | Inbound from any protocol             |
+| `MessageOut`       | `message_out()`        | Outbound to a specific protocol       |
+| `MessageDelete`    | `message_delete()`     | Inbound delete                        |
 | `MessageDeleteOut` | `message_delete_out()` | Outbound delete (REDACT / retraction) |
-| `ReactionIn` | `reaction_in()` | Inbound reaction |
-| `ReactionOut` | `reaction_out()` | Outbound reaction |
-| `TypingIn` | `typing_in()` | Inbound typing indicator |
-| `TypingOut` | `typing_out()` | Outbound typing indicator |
-| `Join` | `join()` | User joined channel |
-| `Part` | `part()` | User left channel |
-| `Quit` | `quit()` | User disconnected |
-| `ConfigReload` | `config_reload()` | SIGHUP config reload signal |
+| `ReactionIn`       | `reaction_in()`        | Inbound reaction                      |
+| `ReactionOut`      | `reaction_out()`       | Outbound reaction                     |
+| `TypingIn`         | `typing_in()`          | Inbound typing indicator              |
+| `TypingOut`        | `typing_out()`         | Outbound typing indicator             |
+| `Join`             | `join()`               | User joined channel                   |
+| `Part`             | `part()`               | User left channel                     |
+| `Quit`             | `quit()`               | User disconnected                     |
+| `ConfigReload`     | `config_reload()`      | SIGHUP config reload signal           |
 
 `Dispatcher` (and the `dispatcher` singleton) calls `accept_event` then `push_event` on each registered `EventTarget`. Exceptions per-target are caught and logged — one bad adapter can't block others.
 
@@ -59,18 +60,18 @@ All events are dataclasses. Factory functions (decorated with `@event`) return `
 
 Full property reference (see root AGENTS.md for the table). Additional properties not in root table:
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `announce_extras` | `false` | Relay topic/mode changes |
-| `identity_cache_ttl_seconds` | 3600 | TTL for identity cache |
-| `avatar_cache_ttl_seconds` | 86400 | TTL for avatar URL cache |
-| `irc_throttle_limit` | 10 | IRC messages per second (token bucket) |
-| `irc_message_queue` | 30 | Max IRC outbound queue size |
-| `irc_rejoin_delay` | 5 | Seconds before rejoin after KICK/disconnect |
-| `irc_auto_rejoin` | `true` | Auto-rejoin channels after KICK/disconnect |
-| `irc_use_sasl` | `false` | Use SASL PLAIN for IRC auth |
-| `irc_sasl_user` | `""` | SASL username |
-| `irc_sasl_password` | `""` | SASL password |
+| Property                     | Default | Description                                 |
+| ---------------------------- | ------- | ------------------------------------------- |
+| `announce_extras`            | `false` | Relay topic/mode changes                    |
+| `identity_cache_ttl_seconds` | 3600    | TTL for identity cache                      |
+| `avatar_cache_ttl_seconds`   | 86400   | TTL for avatar URL cache                    |
+| `irc_throttle_limit`         | 10      | IRC messages per second (token bucket)      |
+| `irc_message_queue`          | 30      | Max IRC outbound queue size                 |
+| `irc_rejoin_delay`           | 5       | Seconds before rejoin after KICK/disconnect |
+| `irc_auto_rejoin`            | `true`  | Auto-rejoin channels after KICK/disconnect  |
+| `irc_use_sasl`               | `false` | Use SASL PLAIN for IRC auth                 |
+| `irc_sasl_user`              | `""`    | SASL username                               |
+| `irc_sasl_password`          | `""`    | SASL password                               |
 
 ## Identity (`identity/`)
 
@@ -86,16 +87,16 @@ Full property reference (see root AGENTS.md for the table). Additional propertie
 
 ## Environment Variables
 
-| Variable | Purpose |
-|----------|---------|
-| `BRIDGE_PORTAL_BASE_URL` | Portal API base URL (identity resolution) |
-| `BRIDGE_PORTAL_TOKEN` | Bearer token for Portal API |
-| `BRIDGE_DISCORD_TOKEN` | Discord bot token |
-| `BRIDGE_IRC_NICK` | Main IRC connection nick (default: `bridge`) |
-| `BRIDGE_XMPP_COMPONENT_JID` | XMPP component JID |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component secret |
-| `BRIDGE_XMPP_COMPONENT_SERVER` | XMPP server hostname |
-| `BRIDGE_XMPP_COMPONENT_PORT` | XMPP component port (default: `5347`) |
+| Variable                       | Purpose                                      |
+| ------------------------------ | -------------------------------------------- |
+| `BRIDGE_PORTAL_BASE_URL`       | Portal API base URL (identity resolution)    |
+| `BRIDGE_PORTAL_TOKEN`          | Bearer token for Portal API                  |
+| `BRIDGE_DISCORD_TOKEN`         | Discord bot token                            |
+| `BRIDGE_IRC_NICK`              | Main IRC connection nick (default: `bridge`) |
+| `BRIDGE_XMPP_COMPONENT_JID`    | XMPP component JID                           |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component secret                        |
+| `BRIDGE_XMPP_COMPONENT_SERVER` | XMPP server hostname                         |
+| `BRIDGE_XMPP_COMPONENT_PORT`   | XMPP component port (default: `5347`)        |
 
 ## Related
 

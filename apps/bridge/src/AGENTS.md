@@ -12,6 +12,7 @@ src/bridge/          # The bridge package (entry point: __main__.py)
 ├── avatar.py        # Avatar URL caching and resolution
 ├── events.py        # Re-export from core.events
 ├── errors.py        # Re-export from core.errors
+├── assets/          # Static assets (L1.png, L2.png)
 ├── config/          # YAML config + env overlay (loader, schema)
 ├── core/            # Constants, events, errors
 ├── identity/        # Portal API + dev resolver + sanitization

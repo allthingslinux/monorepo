@@ -35,7 +35,6 @@ apps/
     │   │   ├── auth/       # Auth UI, session context → see AGENTS.md
     │   │   ├── blog/       # Blog feed UI
     │   │   ├── changelog/  # Changelog viewer
-    │   │   ├── feed/       # Linux news RSS feed reader
     │   │   ├── integrations/ # IRC, XMPP, Discord → see AGENTS.md
     │   │   ├── routing/    # Route config, middleware → see AGENTS.md
     │   │   ├── user/       # User profile & settings → see AGENTS.md
