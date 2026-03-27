@@ -29,8 +29,8 @@ export const CHANGELOG_REPOS: RepoConfig[] = [
   },
   { displayName: "atl.network", owner: "allthingslinux", repo: "atl.network" },
   { displayName: "atl.chat", owner: "allthingslinux", repo: "atl.chat" },
-  { displayName: "website", owner: "allthingslinux", repo: "allthingslinux" },
-  { displayName: "pubnix", owner: "allthingslinux", repo: "pubnix" },
+  { displayName: "monorepo", owner: "allthingslinux", repo: "monorepo" },
+  { displayName: "atl.sh", owner: "allthingslinux", repo: "atl.sh" },
   { displayName: "atl.wiki", owner: "allthingslinux", repo: "atl-wiki" },
   {
     displayName: "code-of-conduct",
