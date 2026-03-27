@@ -3,15 +3,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "app/**",
-        "tsconfig.json",
-        "package.json",
-        ".env",
-        ".env.*"
-      ],
-      "outputs": [".next/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "DATABASE_URL",
         "BETTER_AUTH_SECRET",
@@ -22,77 +15,68 @@
         "GIT_COMMIT_SHA"
       ]
     },
-    "//#check": {},
-    "//#fix": {
-      "cache": false
-    },
-    "transit": {
-      "dependsOn": ["^transit"]
-    },
-    "clean": {
-      "cache": false
-    },
-    "typegen": {
-      "inputs": ["src/app/**"],
-      "outputs": [".next/types/**"],
-      "cache": false
-    },
-    "type-check": {
-      "dependsOn": [],
-      "inputs": ["**/*.ts", "**/*.tsx", "tsconfig.json"],
-      "outputs": []
-    },
-    "test": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "app/**",
-        "tests/**",
-        "vitest.config.ts",
-        ".env",
-        ".env.*"
-      ],
-      "outputs": [],
-      "env": ["DATABASE_URL"]
-    },
-    "test:coverage": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "app/**",
-        "tests/**",
-        "vitest.config.ts",
-        ".env",
-        ".env.*"
-      ],
-      "outputs": ["coverage/**"],
-      "env": ["DATABASE_URL"]
-    },
+
     "dev": {
       "dependsOn": ["^build"],
       "persistent": true,
       "cache": false
     },
+
+    "type-check": {
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": []
+    },
+
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "outputs": [],
+      "env": ["DATABASE_URL"]
+    },
+
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "outputs": ["coverage/**"],
+      "env": ["DATABASE_URL"]
+    },
+
+    "transit": { "dependsOn": ["^transit"] },
+    "clean": { "cache": false },
+    "typegen": { "inputs": ["src/app/**"], "outputs": [".next/types/**"], "cache": false },
+
+    "//#check": {},
+    "//#fix": { "cache": false },
+
     "db:generate": {
       "inputs": ["src/schema/**"],
       "outputs": ["drizzle/**"],
       "cache": false
     },
-    "db:migrate": {
+    "db:migrate": { "cache": false },
+    "db:push": { "cache": false },
+
+    "deploy": { "dependsOn": ["^deploy"], "cache": false },
+    "destroy": { "dependsOn": ["^destroy"], "cache": false },
+
+    "docker:build": {
+      "dependsOn": ["^build"],
+      "inputs": ["Containerfile", "src/**", ".containerignore"],
+      "outputs": [],
       "cache": false
     },
-    "db:push": {
+
+    "docker:push": {
+      "dependsOn": ["docker:build"],
       "cache": false
     },
-    "deploy": {
-      "dependsOn": ["^deploy"],
-      "cache": false
-    },
-    "destroy": {
-      "dependsOn": ["^destroy"],
-      "cache": false
-    }
+
+    "//#py:check": { "cache": false },
+    "//#py:test": { "cache": false },
+    "//#py:test:bridge": { "cache": false }
   },
+
   "globalDependencies": ["pnpm-lock.yaml"],
-  "globalEnv": ["NODE_ENV"]
+  "globalEnv": ["NODE_ENV", "CI"]
 }
