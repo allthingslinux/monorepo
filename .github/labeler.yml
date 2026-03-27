@@ -1,0 +1,112 @@
+app: portal:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/portal/**
+          - .github/workflows/portal-*
+          - .github/scripts/portal/**
+
+app: web:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/web/**
+          - .github/workflows/web-*
+          - .github/scripts/web/**
+
+app: docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/docs/**
+          - .github/workflows/docs-*
+
+app: chat-web:
+  - changed-files:
+      - any-glob-to-any-file: apps/chat-web/**
+
+app: bridge:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/bridge/**
+          - .github/workflows/chat-ci.yml
+          - .github/workflows/dependency-submission.yml
+          - .github/workflows/reusable-py-check.yml
+          - infra/compose/chat-bridge.yaml
+
+service: irc:
+  - changed-files:
+      - any-glob-to-any-file:
+          - services/chat/irc-**/**
+          - .github/workflows/chat-ci.yml
+          - .github/workflows/reusable-docker-build.yml
+          - infra/compose/chat-irc.yaml
+          - infra/compose/chat-lounge.yaml
+          - infra/compose/chat-obsidian.yaml
+
+service: xmpp:
+  - changed-files:
+      - any-glob-to-any-file:
+          - services/chat/xmpp-**/**
+          - .github/workflows/chat-ci.yml
+          - .github/workflows/reusable-docker-build.yml
+          - infra/compose/chat-xmpp.yaml
+          - infra/compose/chat-fluux.yaml
+
+service: network:
+  - changed-files:
+      - any-glob-to-any-file:
+          - services/network/**
+          - infra/compose/network.yaml
+
+service: observability:
+  - changed-files:
+      - any-glob-to-any-file:
+          - services/observability/**
+          - infra/compose/observability.yaml
+
+packages:
+  - changed-files:
+      - any-glob-to-any-file: packages/**
+
+infra:
+  - changed-files:
+      - any-glob-to-any-file:
+          - infra/**
+          - compose.yaml
+          - compose.*.yaml
+          - infra/compose/networks.yaml
+          - infra/compose/cert-manager.yaml
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/**
+
+scripts:
+  - changed-files:
+      - any-glob-to-any-file: scripts/**
+
+deps:
+  - changed-files:
+      - any-glob-to-any-file:
+          - pnpm-lock.yaml
+          - uv.lock
+          - .github/renovate.json5
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - turbo.json
+          - pnpm-workspace.yaml
+          - .oxlintrc.json
+          - .oxfmtrc.jsonc
+          - .editorconfig
+          - .nvmrc
+          - .dockerignore
+          - .gitignore
+          - .gitattributes
+          - .gitleaks.toml
+          - commitlint.config.cjs
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - apps/docs/**
