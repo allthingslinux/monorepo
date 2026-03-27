@@ -12,7 +12,7 @@ include:
 
 services:
   atl-fluux-messenger:
-    image: ghcr.io/allthingslinux/atl-xmpp-client-fluux:latest
+    image: ghcr.io/allthingslinux/xmpp-client-fluux:latest
     build:
       context: ../../services/chat/xmpp-client-fluux
       dockerfile: Containerfile

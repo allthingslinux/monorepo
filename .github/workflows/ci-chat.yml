@@ -73,7 +73,7 @@ jobs:
     secrets: inherit
     with:
       context: services/chat/irc
-      image-name: ghcr.io/allthingslinux/atl-irc
+      image-name: ghcr.io/allthingslinux/irc
       push: ${{ github.ref == 'refs/heads/main' }}
 
   docker-irc-services:
@@ -83,7 +83,7 @@ jobs:
     secrets: inherit
     with:
       context: services/chat/irc-services
-      image-name: ghcr.io/allthingslinux/atl-irc-services
+      image-name: ghcr.io/allthingslinux/irc-services
       push: ${{ github.ref == 'refs/heads/main' }}
 
   docker-xmpp:
@@ -93,7 +93,7 @@ jobs:
     secrets: inherit
     with:
       context: services/chat/xmpp
-      image-name: ghcr.io/allthingslinux/atl-xmpp
+      image-name: ghcr.io/allthingslinux/xmpp
       push: ${{ github.ref == 'refs/heads/main' }}
 
   docker-bridge:
@@ -103,5 +103,5 @@ jobs:
     secrets: inherit
     with:
       context: apps/bridge
-      image-name: ghcr.io/allthingslinux/atl-bridge
+      image-name: ghcr.io/allthingslinux/bridge
       push: ${{ github.ref == 'refs/heads/main' }}
