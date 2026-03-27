@@ -1,0 +1,161 @@
+name: Chat CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  merge_group:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    name: File Detection
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      irc: ${{ steps.irc_changes.outputs.any_changed }}
+      xmpp: ${{ steps.xmpp_changes.outputs.any_changed }}
+      bridge: ${{ steps.bridge_changes.outputs.any_changed }}
+      clients: ${{ steps.client_changes.outputs.any_changed }}
+      infra: ${{ steps.infra_changes.outputs.any_changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+      - name: Check IRC
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        id: irc_changes
+        with:
+          files: |
+            services/chat/irc-server/**
+            services/chat/irc-services/**
+            services/chat/irc-webpanel/**
+      - name: Check XMPP
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        id: xmpp_changes
+        with:
+          files: services/chat/xmpp-server/**
+      - name: Check Bridge
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        id: bridge_changes
+        with:
+          files: apps/bridge/**
+      - name: Check Clients
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        id: client_changes
+        with:
+          files: |
+            services/chat/irc-client-lounge/**
+            services/chat/irc-client-obsidian/**
+            services/chat/xmpp-client-fluux/**
+      - name: Check Infra
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
+        id: infra_changes
+        with:
+          files: |
+            infra/**
+            compose.yaml
+            .github/workflows/chat-ci.yml
+
+  check-bridge:
+    needs: changes
+    if: needs.changes.outputs.bridge == 'true'
+    uses: ./.github/workflows/reusable-py-check.yml
+    with:
+      python-version: "3.12"
+      working-directory: apps/bridge
+
+  test-bridge:
+    needs: [changes, check-bridge]
+    if: needs.changes.outputs.bridge == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@6b9c6063abd6010835c3544eaaeab6a6af3f3f0d # v5
+        with:
+          enable-cache: true
+      - name: Install Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --frozen --all-extras
+      - name: Run tests with coverage
+        run: |
+          uv run pytest apps/bridge/tests \
+            -n auto \
+            -v --tb=short \
+            --cov=src/bridge --cov-report=xml:coverage.xml \
+            --junitxml=junit.xml -o junit_family=legacy
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: bridge
+          fail_ci_if_error: false
+          verbose: true
+      - name: Upload test results to Codecov
+        if: always()
+        uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: junit.xml
+      - name: Prune uv cache for CI
+        if: always()
+        run: uv cache prune --ci
+
+  docker-irc:
+    needs: changes
+    if: needs.changes.outputs.irc == 'true'
+    uses: ./.github/workflows/reusable-docker-build.yml
+    secrets: inherit
+    with:
+      context: services/chat/irc-server
+      image-name: ghcr.io/allthingslinux/irc-server
+      push: ${{ github.ref == 'refs/heads/main' }}
+
+  docker-irc-services:
+    needs: changes
+    if: needs.changes.outputs.irc == 'true'
+    uses: ./.github/workflows/reusable-docker-build.yml
+    secrets: inherit
+    with:
+      context: services/chat/irc-services
+      image-name: ghcr.io/allthingslinux/irc-services
+      push: ${{ github.ref == 'refs/heads/main' }}
+
+  docker-xmpp:
+    needs: changes
+    if: needs.changes.outputs.xmpp == 'true'
+    uses: ./.github/workflows/reusable-docker-build.yml
+    secrets: inherit
+    with:
+      context: services/chat/xmpp-server
+      image-name: ghcr.io/allthingslinux/xmpp-server
+      push: ${{ github.ref == 'refs/heads/main' }}
+
+  docker-bridge:
+    needs: [changes, test-bridge]
+    if: needs.changes.outputs.bridge == 'true'
+    uses: ./.github/workflows/reusable-docker-build.yml
+    secrets: inherit
+    with:
+      context: apps/bridge
+      image-name: ghcr.io/allthingslinux/bridge
+      push: ${{ github.ref == 'refs/heads/main' }}
