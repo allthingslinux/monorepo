@@ -1,3 +1,0 @@
-[submodule "apps/obsidianirc/upstream"]
-	path = apps/obsidianirc/upstream
-	url = https://github.com/ObsidianIRC/ObsidianIRC.git
