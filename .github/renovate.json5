@@ -201,10 +201,11 @@
     "docker-compose", // Docker Compose files (compose.*.yaml) - stable, no preview preset needed
     "dockerfile", // Dockerfiles (Containerfile, Dockerfile, *.dockerfile) - stable, no preview preset needed
     "mise", // mise-en-place tool versions (mise.toml, .mise.toml, .rtx.toml)
+    "pep621", // Python dependencies in pyproject.toml (bridge + root workspace) and uv.lock
   ],
   // Paths to exclude from Renovate scanning (no PRs/alerts for these)
   // .cursor/skills contains template package.json files; we don't want dependency PRs for them
-  ignorePaths: ["**/.cursor/skills/**", "apps/bridge/**"],
+  ignorePaths: ["**/.cursor/skills/**"],
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
   platformAutomerge: true,
   // Branch rebasing configuration
@@ -337,7 +338,7 @@
   // - https://docs.renovatebot.com/faq/#wait-until-tests-have-passed-before-creating-the-pr
   // - https://docs.renovatebot.com/faq/#wait-until-tests-have-passed-before-creating-a-pr-but-create-the-pr-even-if-they-fail
   // prCreation: 'not-pending' set via :prNotPending preset
-  prNotPendingHours: 24, // Timeout for waiting on status checks (custom, not in preset)
+  prNotPendingHours: 2, // Timeout for waiting on status checks - 2h is enough alongside 7+ day minimumReleaseAge
   // Vulnerability alert configuration
   //
   // GitHub Dependabot vulnerability alerts integration
@@ -398,9 +399,9 @@
       ],
       groupName: "critical",
       addLabels: ["deps: critical"],
-      // Wait 7 days after release before suggesting updates (reduces supply chain risk)
+      // 14 days per Renovate's recommendation for automerging third-party production deps
       // Security updates bypass this check automatically
-      minimumReleaseAge: "7 days",
+      minimumReleaseAge: "14 days",
       prPriority: 10,
     },
     {
@@ -415,12 +416,10 @@
       //   Note: Best practices recommend 14 days for automerging third-party dependencies
       //   We use 7 days as a balance. You can request updates immediately via Dashboard.
       matchUpdateTypes: ["patch"],
+      matchCurrentVersion: "!/^0/", // Exclude 0.x - patches can be breaking on pre-1.0 packages
       groupName: "patch",
       automerge: true,
       automergeType: "branch", // Silent automerge - no PR notifications for passing tests
-      // Wait 7 days after release before suggesting updates (reduces supply chain risk)
-      // Security updates bypass this check automatically
-      // Best practices recommend 14 days for automerging - we use 7 as a balance
       minimumReleaseAge: "7 days",
       addLabels: ["deps: patch"],
     },
@@ -447,8 +446,10 @@
       addLabels: ["deps: minor"],
     },
     {
-      // Critical packages keep their own group for minor/patch (override from above)
-      // Placed after patch/minor rules so this groupName wins for critical packages
+      // Critical packages minor updates - override the general minor automerge
+      // Minor versions of core framework packages (next, react, drizzle, better-auth, etc.)
+      // can have subtle behavioral changes that warrant manual review.
+      // Patches still inherit automerge: true from the patch rule above.
       // ⚠️ KEEP IN SYNC with the critical packages list above
       matchPackageNames: [
         "next",
@@ -474,9 +475,9 @@
         "pg-native",
         "postgres",
       ],
-      matchUpdateTypes: ["minor", "patch"],
-      groupName: "critical",
-      addLabels: ["deps: critical"],
+      matchUpdateTypes: ["minor"],
+      automerge: false, // Require review for critical package minor updates
+      addLabels: ["deps: needs-review"],
     },
     {
       // Major updates require dashboard approval
@@ -728,6 +729,37 @@
       addLabels: ["deps: mise"],
     },
     {
+      // Python packages (bridge + root pyproject.toml via pep621 manager)
+      //
+      // Covers apps/bridge/pyproject.toml and root pyproject.toml (uv workspace).
+      // Bridge is a production application (Discord↔IRC↔XMPP), so treat with care.
+      //
+      // Strategy:
+      // - Patch: automerge (safe, low risk)
+      // - Minor: require review (behavioral changes in bridge deps matter)
+      // - Major: dashboard approval (explicit upgrade work needed)
+      matchManagers: ["pep621"],
+      groupName: "python",
+      addLabels: ["deps: python"],
+      minimumReleaseAge: "7 days",
+    },
+    {
+      // Python patch updates can automerge
+      matchManagers: ["pep621"],
+      matchUpdateTypes: ["patch"],
+      matchCurrentVersion: "!/^0/",
+      automerge: true,
+      automergeType: "branch",
+    },
+    {
+      // Python major updates require dashboard approval
+      matchManagers: ["pep621"],
+      matchUpdateTypes: ["major"],
+      automerge: false,
+      dependencyDashboardApproval: true,
+      addLabels: ["deps: needs-review"],
+    },
+    {
       // Node.js runtime - groups package.json engines and Dockerfile
       //
       // Node.js versioning behavior:
@@ -903,7 +935,6 @@
   // recreateWhen: 'auto' means Renovate will recreate "immortal PRs" (grouped updates with different versions)
   // If you want to prevent immortal PRs from being recreated, set to 'never'
   // However, 'auto' is recommended as it handles lock file maintenance and pinning correctly
-  recreateWhen: "auto", // Auto-detect when to recreate PRs (handles immortal PRs correctly)
   // Separate patch from minor releases
   //
   // Default behavior: Renovate groups patch and minor releases together
