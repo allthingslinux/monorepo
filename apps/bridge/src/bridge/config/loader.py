@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -131,7 +132,9 @@ def load_config(path: str | Path) -> dict[str, Any]:
 
     try:
         with open(path) as f:
-            data = yaml.safe_load(f)
+            raw = f.read()
+        raw = os.path.expandvars(raw)  # resolve ${VAR} from process environment
+        data = yaml.safe_load(raw)
         if not isinstance(data, dict):
             logger.warning("Config file {} has invalid structure (expected dict)", path)
             return {}
