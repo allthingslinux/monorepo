@@ -13,7 +13,7 @@ services:
     build:
       context: ../../services/chat/xmpp
       dockerfile: Containerfile
-    image: allthingslinux/prosody:latest
+    image: ghcr.io/allthingslinux/atl-xmpp:latest
     container_name: atl-xmpp-server
     hostname: atl-xmpp-server
     restart: unless-stopped
@@ -90,7 +90,7 @@ services:
     build:
       context: ../nginx
       dockerfile: Dockerfile
-    image: allthingslinux/prosody-nginx:latest
+    image: ghcr.io/allthingslinux/atl-xmpp-nginx:latest
     container_name: atl-xmpp-nginx
     hostname: atl-xmpp-nginx
     restart: unless-stopped

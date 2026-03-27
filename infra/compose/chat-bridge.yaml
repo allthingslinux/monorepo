@@ -11,7 +11,7 @@ services:
     build:
       context: ../..
       dockerfile: apps/bridge/Containerfile
-    image: ghcr.io/allthingslinux/bridge:latest
+    image: ghcr.io/allthingslinux/atl-bridge:latest
     container_name: atl-bridge
     restart: unless-stopped
     security_opt:
