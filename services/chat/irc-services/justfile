@@ -1,0 +1,15 @@
+# Atheme IRC Services — service-scoped commands
+
+set positional-arguments := true
+
+default:
+    @just --list
+
+build:
+    docker compose -f ../../../compose.yaml build atl-irc-services
+
+logs:
+    docker compose -f ../../../compose.yaml logs -f atl-irc-services
+
+restart:
+    docker compose -f ../../../compose.yaml restart atl-irc-services

@@ -26,7 +26,7 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/allthingslinux/atl.chat"
+repository = "https://github.com/allthingslinux/monorepo"
 homepage = "https://atl.chat"
 
 [project.scripts]

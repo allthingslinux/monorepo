@@ -1,0 +1,15 @@
+# UnrealIRCd WebPanel — service-scoped commands
+
+set positional-arguments := true
+
+default:
+    @just --list
+
+build:
+    docker compose -f ../../../compose.yaml build atl-irc-webpanel
+
+logs:
+    docker compose -f ../../../compose.yaml logs -f atl-irc-webpanel
+
+restart:
+    docker compose -f ../../../compose.yaml restart atl-irc-webpanel

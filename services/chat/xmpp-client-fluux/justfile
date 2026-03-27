@@ -1,0 +1,15 @@
+# Fluux Web XMPP Client — service-scoped commands
+
+set positional-arguments := true
+
+default:
+    @just --list
+
+build:
+    docker compose -f ../../../compose.yaml build atl-xmpp-client-fluux
+
+logs:
+    docker compose -f ../../../compose.yaml logs -f atl-xmpp-client-fluux
+
+restart:
+    docker compose -f ../../../compose.yaml restart atl-xmpp-client-fluux

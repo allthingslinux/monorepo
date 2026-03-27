@@ -20,6 +20,8 @@ include:
   - infra/compose/chat-lounge.yaml
   - infra/compose/chat-obsidian.yaml
   - infra/compose/chat-fluux.yaml
+  - infra/compose/network.yaml
+  - infra/compose/observability.yaml
 
 services:
   dozzle:
