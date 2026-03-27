@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ./services/coturn/turnserver.conf:/etc/coturn/turnserver.conf
+      - ../../services/network/turn/turnserver.conf:/etc/coturn/turnserver.conf
     command:
       - -c /etc/coturn/turnserver.conf
       - --external-ip=${EXTERNAL_IP}
@@ -33,8 +33,8 @@ services:
       - "81:81" # Admin Port
       - "443:443"
     volumes:
-      - ./services/npm/data:/data
-      - ./services/npm/letsencrypt:/etc/letsencrypt
+      - ../../data/npm:/data
+      - ../../data/npm-letsencrypt:/etc/letsencrypt
 
   # DNS & Ad Blocking
   blocky:
@@ -46,7 +46,7 @@ services:
       - "53:53/udp"
       - "4000:4000" # Web UI / Metrics
     volumes:
-      - ./services/blocky/config.yml:/app/config.yml
+      - ../../services/network/dns/config.yml:/app/config.yml
 
   # Monitoring (Gatus)
   gatus:
@@ -56,7 +56,7 @@ services:
     ports:
       - "8081:8080" # Mapped to 8081 to avoid conflict with SFTPGo/NPM if web is needed direct
     volumes:
-      - ./services/gatus/config.yaml:/config/config.yaml
+      - ../../services/network/uptime/config.yaml:/config/config.yaml
     environment:
       - GATUS_CONFIG_PATH=/config/config.yaml
 
@@ -69,8 +69,8 @@ services:
       - "8080:8080" # Web Admin
       - "2022:2022" # SFTP
     volumes:
-      - ./services/sftpgo/data:/srv/sftpgo
-      - ./services/sftpgo/config:/var/lib/sftpgo
+      - ../../data/sftpgo:/srv/sftpgo
+      - ../../services/network/sftp:/var/lib/sftpgo
     # environment:
     #   - SFTPGO_HTTPD__BINDINGS__0__PORT=8080
 
