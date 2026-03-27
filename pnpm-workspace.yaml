@@ -1,9 +1,30 @@
 packages:
   - "apps/web"
+  - "apps/chat-web"
   - "apps/docs"
   - "apps/portal"
   - "apps/portal/packages/*"
   - "packages/*"
+
+catalog:
+  next: "16.2.1"
+  react: "^19.2.4"
+  react-dom: "^19.2.4"
+  typescript: "^5.9.3"
+  tailwindcss: "^4.2.2"
+  postcss: "^8.5.6"
+  "@types/node": "^25.0.0"
+  "@types/react": "^19.2.14"
+  "@types/react-dom": "^19.2.3"
+  "lucide-react": "^0.564.0"
+  "class-variance-authority": "^0.7.1"
+  "clsx": "^2.1.1"
+  "tailwind-merge": "^3.4.1"
+  "tailwindcss-animate": "^1.0.7"
+  "@radix-ui/react-slot": "^1.1.0"
+  "@cloudflare/next-on-pages": "^1.13.5"
+  "@opennextjs/cloudflare": "latest"
+  "wrangler": "^4.69.0"
 
 onlyBuiltDependencies:
   - "@depot/cli"
