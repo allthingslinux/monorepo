@@ -1,50 +1,53 @@
 #!/bin/sh
 set -e
 
-# Atheme entrypoint with proper error handling and security
+# Atheme entrypoint — runtime config substitution + DB bootstrap + start
+# Model A: envsubst at container startup, no host-side pre-step
 
 echo "=== Atheme Services Starting ==="
 
-# Ensure we have proper permissions
 if [ "$(id -u)" = "0" ]; then
-    echo "ERROR: Atheme should not run as root for security reasons"
-    echo "Please run with a non-root user (UID 1000 recommended)"
-    exit 1
+  echo "ERROR: Atheme should not run as root"
+  exit 1
 fi
 
-# Create directories with proper ownership
-mkdir -p /usr/local/atheme/data /usr/local/atheme/var
+# ── Derived environment variables ─────────────────────────────────────────────
 
-# Validate configuration exists
-if [ ! -f "/usr/local/atheme/etc/atheme.conf" ]; then
-    echo "ERROR: Configuration file not found at /usr/local/atheme/etc/atheme.conf"
-    echo "Please ensure the configuration is properly mounted"
-    exit 1
+export DOLLAR='$'
+export ATHEME_HTTPD_PORT="${ATHEME_HTTPD_PORT:-8081}"
+
+# ── Runtime config generation ─────────────────────────────────────────────────
+
+TEMPLATE_DIR="/etc/atheme-templates"
+CONFIG_FILE="/usr/local/atheme/etc/atheme.conf"
+
+mkdir -p /usr/local/atheme/data /usr/local/atheme/var /usr/local/atheme/etc
+
+if [ -f "$TEMPLATE_DIR/atheme.conf.template" ]; then
+  echo "Generating atheme.conf from template..."
+  envsubst < "$TEMPLATE_DIR/atheme.conf.template" > "$CONFIG_FILE"
+else
+  echo "ERROR: Template not found at $TEMPLATE_DIR/atheme.conf.template"
+  exit 1
 fi
 
-# Clean up stale PID file
+# ── Pre-flight checks ────────────────────────────────────────────────────────
+
 rm -f /usr/local/atheme/var/atheme.pid
 
-# Validate database directory is writable
 if [ ! -w "/usr/local/atheme/data" ]; then
-    echo "ERROR: Data directory is not writable"
-    echo "Please check volume mount permissions"
-    exit 1
+  echo "ERROR: Data directory is not writable"
+  exit 1
 fi
 
-# Check if this is first run (no database exists)
+# DB bootstrap on first run
 if [ ! -f "/usr/local/atheme/data/services.db" ]; then
-    echo "First run detected - creating initial database..."
-    /usr/local/atheme/bin/atheme-services -b -c /usr/local/atheme/etc/atheme.conf -D /usr/local/atheme/data
-    echo "Database created successfully"
-else
-    echo "Existing database found - starting with existing data"
+  echo "First run — creating initial database..."
+  /usr/local/atheme/bin/atheme-services -b -c "$CONFIG_FILE" -D /usr/local/atheme/data
+  echo "Database created"
 fi
 
-# Start Atheme services
-echo "Starting Atheme services as user $(id -un) (UID: $(id -u))..."
-echo "Configuration: /usr/local/atheme/etc/atheme.conf"
-echo "Data directory: /usr/local/atheme/data"
-echo "Logging: stdout (Docker)"
+# ── Start ─────────────────────────────────────────────────────────────────────
 
-exec /usr/local/atheme/bin/atheme-services -n -c /usr/local/atheme/etc/atheme.conf -D /usr/local/atheme/data "$@"
+echo "Starting Atheme as $(id -un) (UID: $(id -u))..."
+exec /usr/local/atheme/bin/atheme-services -n -c "$CONFIG_FILE" -D /usr/local/atheme/data "$@"
