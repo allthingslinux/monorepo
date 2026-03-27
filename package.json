@@ -13,9 +13,11 @@
     "test:coverage": "turbo run test:coverage",
     "clean": "turbo run clean --continue || true",
     "py:check": "uv run ruff check apps/bridge/src apps/bridge/tests && uv run ruff format --check apps/bridge/src apps/bridge/tests",
-    "py:test": "uv run pytest apps/bridge/tests -v --tb=short"
+    "py:test": "uv run pytest apps/bridge/tests -v --tb=short",
+    "knip": "knip"
   },
   "devDependencies": {
+    "knip": "^6.0.6",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "husky": "^9.1.7",
@@ -32,6 +34,11 @@
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.28.2",
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": ["oxlint", "oxfmt"],
+    "*.py": ["uv run ruff check --fix", "uv run ruff format"],
+    "*.sh": ["shellcheck", "shfmt -ln bash -i 2 -ci -bn -sr -s -w"]
+  },
   "pnpm": {
     "overrides": {
       "zod": "4.3.6"
