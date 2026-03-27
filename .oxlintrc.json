@@ -19,6 +19,8 @@
     "apps/portal/drizzle/**",
     "apps/portal/.cursor/skills/**",
     "packages/ui/**",
+    "apps/web/**",
+    "apps/chat-web/**"
   ],
   "extends": [
     "./node_modules/ultracite/config/oxlint/core/.oxlintrc.json",
