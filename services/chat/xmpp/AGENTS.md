@@ -40,25 +40,25 @@ modules.list
 
 ## Key Commands
 
-| Command | Purpose |
-|---------|---------|
-| `just xmpp shell` | Bash into Prosody container |
-| `just xmpp reload` | Reload Prosody config |
-| `just xmpp adduser [user]` | Add XMPP user |
-| `just xmpp deluser [user]` | Delete XMPP user |
-| `just xmpp db-backup` | Backup database |
-| `just xmpp check` | Run all Prosody sanity checks (prosodyctl check) |
-| `just xmpp audit <host>` | View full audit log for a host |
-| `just xmpp audit-user <jid>` | View audit log for a specific user |
-| `just xmpp audit-global <host>` | View host-wide audit events (not user-specific) |
-| `just xmpp check-config` | Sanity checks on config file |
-| `just xmpp check-certs` | Verify certificate config (prosodyctl check certs) |
-| `just xmpp check-cert [domain]` | Check certificate for domain |
-| `just xmpp check-connectivity` | Test external connectivity (observe.jabber.network) |
-| `just xmpp check-disabled` | Report disabled VirtualHosts/Components |
-| `just xmpp check-dns` | Verify DNS records (SRV, etc.) |
-| `just xmpp check-features` | Check for missing/unconfigured features |
-| `just xmpp check-turn [stun_server]` | Test TURN/mod_turn_external config |
+| Command                              | Purpose                                             |
+| ------------------------------------ | --------------------------------------------------- |
+| `just xmpp shell`                    | Bash into Prosody container                         |
+| `just xmpp reload`                   | Reload Prosody config                               |
+| `just xmpp adduser [user]`           | Add XMPP user                                       |
+| `just xmpp deluser [user]`           | Delete XMPP user                                    |
+| `just xmpp db-backup`                | Backup database                                     |
+| `just xmpp check`                    | Run all Prosody sanity checks (prosodyctl check)    |
+| `just xmpp audit <host>`             | View full audit log for a host                      |
+| `just xmpp audit-user <jid>`         | View audit log for a specific user                  |
+| `just xmpp audit-global <host>`      | View host-wide audit events (not user-specific)     |
+| `just xmpp check-config`             | Sanity checks on config file                        |
+| `just xmpp check-certs`              | Verify certificate config (prosodyctl check certs)  |
+| `just xmpp check-cert [domain]`      | Check certificate for domain                        |
+| `just xmpp check-connectivity`       | Test external connectivity (observe.jabber.network) |
+| `just xmpp check-disabled`           | Report disabled VirtualHosts/Components             |
+| `just xmpp check-dns`                | Verify DNS records (SRV, etc.)                      |
+| `just xmpp check-features`           | Check for missing/unconfigured features             |
+| `just xmpp check-turn [stun_server]` | Test TURN/mod_turn_external config                  |
 
 ## Related
 
@@ -95,8 +95,8 @@ The `>` prefix escapes the prosodyctl shell sandbox to access the running server
 
 ### Portal env vars
 
-| Variable | Example | Purpose |
-|----------|---------|---------|
-| `PROSODY_REST_URL` | `http://localhost:5280` | Prosody HTTP endpoint (host network) |
-| `PROSODY_REST_TOKEN` | `secret-token:...` | Bearer token from `just prosody-token` |
-| `XMPP_DOMAIN` | `xmpp.localhost` | XMPP domain for JID construction |
+| Variable             | Example                 | Purpose                                |
+| -------------------- | ----------------------- | -------------------------------------- |
+| `PROSODY_REST_URL`   | `http://localhost:5280` | Prosody HTTP endpoint (host network)   |
+| `PROSODY_REST_TOKEN` | `secret-token:...`      | Bearer token from `just prosody-token` |
+| `XMPP_DOMAIN`        | `xmpp.localhost`        | XMPP domain for JID construction       |

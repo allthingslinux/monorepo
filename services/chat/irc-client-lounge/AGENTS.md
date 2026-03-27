@@ -13,11 +13,11 @@ justfile             # Loaded via: mod lounge './apps/thelounge'
 
 ## Key Commands
 
-| Command | Purpose |
-|---------|---------|
-| `just lounge add <name>` | Create user (prompts for password) |
-| `just lounge list` | List users |
-| `just lounge reset <name>` | Reset user password |
+| Command                    | Purpose                            |
+| -------------------------- | ---------------------------------- |
+| `just lounge add <name>`   | Create user (prompts for password) |
+| `just lounge list`         | List users                         |
+| `just lounge reset <name>` | Reset user password                |
 
 ## Related
 

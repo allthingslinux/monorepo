@@ -22,12 +22,12 @@ apps/obsidianirc/
 
 ## Key Commands
 
-| Command | Purpose |
-|---------|---------|
-| `just obsidianirc shell` | Open shell in container |
-| `just obsidianirc logs` | Follow container logs |
-| `just obsidianirc rebuild` | Rebuild image |
-| `just obsidianirc rebuild-clean` | Rebuild without cache |
+| Command                          | Purpose                 |
+| -------------------------------- | ----------------------- |
+| `just obsidianirc shell`         | Open shell in container |
+| `just obsidianirc logs`          | Follow container logs   |
+| `just obsidianirc rebuild`       | Rebuild image           |
+| `just obsidianirc rebuild-clean` | Rebuild without cache   |
 
 ## Environment Variables
 

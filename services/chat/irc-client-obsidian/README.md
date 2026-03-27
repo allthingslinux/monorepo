@@ -25,12 +25,12 @@ just dev
 
 **Dev defaults** (from `.env.dev`):
 
-| Variable | Dev value | Purpose |
-|----------|-----------|---------|
-| `OBSIDIANIRC_PORT` | `8090` | Host port for the web UI |
-| `OBSIDIANIRC_IRC_WS_URL` | `wss://127.0.0.1:8000` | WebSocket over TLS (UnrealIRCd serves TLS in dev) |
-| `OBSIDIANIRC_AUTOJOIN` | `#general` | Channels to auto-join |
-| `OBSIDIANIRC_SERVER_NAME` | `irc.localhost` | Display name in the UI |
+| Variable                  | Dev value              | Purpose                                           |
+| ------------------------- | ---------------------- | ------------------------------------------------- |
+| `OBSIDIANIRC_PORT`        | `8090`                 | Host port for the web UI                          |
+| `OBSIDIANIRC_IRC_WS_URL`  | `wss://127.0.0.1:8000` | WebSocket over TLS (UnrealIRCd serves TLS in dev) |
+| `OBSIDIANIRC_AUTOJOIN`    | `#general`             | Channels to auto-join                             |
+| `OBSIDIANIRC_SERVER_NAME` | `irc.localhost`        | Display name in the UI                            |
 
 The browser connects to `wss://127.0.0.1:8000` (IRC WebSocket over TLS) and `http://localhost:8090` (ObsidianIRC).
 
@@ -54,12 +54,12 @@ just prod
 
 **Prod defaults** (from `.env`):
 
-| Variable | Prod value | Purpose |
-|----------|------------|---------|
-| `OBSIDIANIRC_PORT` | `8090` | Host port (or omit if behind reverse proxy) |
-| `OBSIDIANIRC_IRC_WS_URL` | `wss://irc.atl.chat/ws` | WebSocket via NPM (TLS) |
-| `OBSIDIANIRC_AUTOJOIN` | `#general` | Channels to auto-join |
-| `OBSIDIANIRC_SERVER_NAME` | `ATL IRC` | Display name in the UI |
+| Variable                  | Prod value              | Purpose                                     |
+| ------------------------- | ----------------------- | ------------------------------------------- |
+| `OBSIDIANIRC_PORT`        | `8090`                  | Host port (or omit if behind reverse proxy) |
+| `OBSIDIANIRC_IRC_WS_URL`  | `wss://irc.atl.chat/ws` | WebSocket via NPM (TLS)                     |
+| `OBSIDIANIRC_AUTOJOIN`    | `#general`              | Channels to auto-join                       |
+| `OBSIDIANIRC_SERVER_NAME` | `ATL IRC`               | Display name in the UI                      |
 
 ## Rebuilding
 
@@ -77,12 +77,12 @@ just obsidianirc rebuild-clean
 
 Set in `.env` (production) or `.env.dev` (development overlay):
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `OBSIDIANIRC_PORT` | `8090` | Host port for the web UI |
-| `OBSIDIANIRC_IRC_WS_URL` | `wss://irc.atl.chat/ws` | WebSocket URL (baked into build) |
-| `OBSIDIANIRC_SERVER_NAME` | `ATL IRC` | Server name shown in the UI |
-| `OBSIDIANIRC_AUTOJOIN` | `#general` | Comma-separated channels to auto-join |
+| Variable                  | Default                 | Description                           |
+| ------------------------- | ----------------------- | ------------------------------------- |
+| `OBSIDIANIRC_PORT`        | `8090`                  | Host port for the web UI              |
+| `OBSIDIANIRC_IRC_WS_URL`  | `wss://irc.atl.chat/ws` | WebSocket URL (baked into build)      |
+| `OBSIDIANIRC_SERVER_NAME` | `ATL IRC`               | Server name shown in the UI           |
+| `OBSIDIANIRC_AUTOJOIN`    | `#general`              | Comma-separated channels to auto-join |
 
 ## Upstream
 

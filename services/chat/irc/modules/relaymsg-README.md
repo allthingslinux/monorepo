@@ -8,8 +8,8 @@ UnrealIRCd's build runs `unrealircd -m upgrade` which **overwrites** any `third/
 
 ## Files
 
-| File | Purpose |
-|------|---------|
+| File             | Purpose                                  |
+| ---------------- | ---------------------------------------- |
 | `relaymsg-atl.c` | Built into image as `third/relaymsg-atl` |
 
 ## Config

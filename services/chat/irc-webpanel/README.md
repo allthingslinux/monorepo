@@ -37,7 +37,7 @@ The webpanel automatically configures itself during the first run. You can custo
 
 ## Security
 
-- **IP Restrictions**: By default, only accessible from localhost (127.*)
+- **IP Restrictions**: By default, only accessible from localhost (127.\*)
 - **Authentication**: File-based or SQL backend authentication
 - **RPC Access**: Secure JSON-RPC communication with UnrealIRCd
 
