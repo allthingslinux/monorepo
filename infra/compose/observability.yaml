@@ -44,7 +44,7 @@ services:
       - "4317:4317" # OTLP gRPC
       - "4318:4318" # OTLP HTTP
     volumes:
-      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - ../../services/observability/alloy/config.alloy:/etc/alloy/config.alloy:ro
       - /var/lib/alloy:/var/lib/alloy
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -68,7 +68,7 @@ services:
       - run
       - --server.http.listen-addr=0.0.0.0:12345
       - --storage.path=/var/lib/alloy/data
-      - /etc/alloy/config.alloy
+      - /et../../services/observability/alloy/config.alloy
     depends_on:
       - loki
 
@@ -82,7 +82,7 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./loki/config.yml:/mnt/config/loki-config.yml:ro
+      - ../../services/observability/loki/config.yml:/mnt/config/loki-config.yml:ro
       - loki_data:/loki
     command:
       - -config.file=/mnt/config/loki-config.yml
@@ -104,14 +104,14 @@ services:
       - "8080:8080" # HTTP API
       - "9095:9095" # gRPC
     volumes:
-      - ./mimir/mimir.yaml:/etc/mimir/mimir.yaml:ro
-      - ./mimir/rules:/data/rules:ro
+      - ../../services/observability/mimir/mimir.yaml:/etc/mimir/mimir.yaml:ro
+      - ../../services/observability/mimir/rules:/data/rules:ro
       - mimir_data:/data
     environment:
       - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
     command:
-      - -config.file=/etc/mimir/mimir.yaml
+      - -config.file=/et../../services/observability/mimir/mimir.yaml
       - -target=all # Monolithic mode
 
   # Grafana - Visualization
@@ -125,7 +125,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../../services/observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
@@ -200,7 +200,7 @@ services:
       - metrics
     command: --config.file=/config/blackbox.yml
     volumes:
-      - ./blackbox/blackbox.yml:/config/blackbox.yml:ro
+      - ../../services/observability/blackbox/blackbox.yml:/config/blackbox.yml:ro
     # Health check to ensure prober is running
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://localhost:9115/-/healthy" ]
