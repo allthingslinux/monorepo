@@ -14,12 +14,12 @@ name: atl-chat
 include:
   - infra/compose/networks.yaml
   - infra/compose/cert-manager.yaml
-  - infra/compose/irc.yaml
-  - infra/compose/xmpp.yaml
-  - infra/compose/bridge.yaml
-  - infra/compose/thelounge.yaml
-  - infra/compose/obsidianirc.yaml
-  - infra/compose/fluux-messenger.yaml
+  - infra/compose/chat-irc.yaml
+  - infra/compose/chat-xmpp.yaml
+  - infra/compose/chat-bridge.yaml
+  - infra/compose/chat-lounge.yaml
+  - infra/compose/chat-obsidian.yaml
+  - infra/compose/chat-fluux.yaml
 
 services:
   dozzle:

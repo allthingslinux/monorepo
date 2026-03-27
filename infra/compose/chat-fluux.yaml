@@ -14,7 +14,7 @@ include:
 services:
   atl-fluux-messenger:
     build:
-      context: ../../apps/fluux-messenger
+      context: ../../services/chat/xmpp-client-fluux
       dockerfile: Containerfile
       args:
         FLUUX_VERSION: ${FLUUX_VERSION:-v0.13.3}

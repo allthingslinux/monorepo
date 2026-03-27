@@ -15,7 +15,7 @@ services:
   # ============================================================================
   atl-irc-server:
     build:
-      context: ../../apps/unrealircd
+      context: ../../services/chat/irc
       dockerfile: Containerfile
       args:
         UNREALIRCD_VERSION: ${UNREALIRCD_VERSION:-6.2.0.1}
@@ -36,7 +36,8 @@ services:
       - ALL
 
     volumes:
-      - ../../apps/unrealircd/config:/home/unrealircd/unrealircd/config
+      - ../../services/chat/irc/config/templates:/etc/unrealircd-templates:ro
+      - ../../services/chat/irc/config/includes:/home/unrealircd/unrealircd/config/includes:ro
       - ../../data/irc/data:/home/unrealircd/unrealircd/data
       - ../../data/certs:/home/unrealircd/unrealircd/certs:ro
 
@@ -82,7 +83,7 @@ services:
   # ============================================================================
   atl-irc-services:
     build:
-      context: ../../apps/atheme
+      context: ../../services/chat/irc-services
       dockerfile: Containerfile
       args:
         ATHEME_VERSION: ${ATHEME_VERSION:-master}
@@ -103,7 +104,7 @@ services:
     network_mode: service:atl-irc-server
 
     volumes:
-      - ../../apps/atheme/config:/usr/local/atheme/etc
+      - ../../services/chat/irc-services/config/templates:/etc/atheme-templates:ro
       - ../../data/atheme/data:/usr/local/atheme/data
 
     environment:
@@ -130,7 +131,7 @@ services:
   # ============================================================================
   atl-irc-webpanel:
     build:
-      context: ../../apps/webpanel
+      context: ../../services/chat/irc-webpanel
       dockerfile: Containerfile
 
     container_name: atl-irc-webpanel

@@ -13,7 +13,7 @@ include:
 services:
   atl-obsidianirc:
     build:
-      context: ../../apps/obsidianirc
+      context: ../../services/chat/irc-client-obsidian
       dockerfile: Containerfile
       args:
         VITE_DEFAULT_IRC_SERVER: ${OBSIDIANIRC_IRC_WS_URL:-wss://irc.atl.chat/ws}

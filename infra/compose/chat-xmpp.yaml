@@ -12,7 +12,7 @@ include:
 services:
   atl-xmpp-server:
     build:
-      context: ../../apps/prosody
+      context: ../../services/chat/xmpp
       dockerfile: Containerfile
     image: allthingslinux/prosody:latest
     container_name: atl-xmpp-server
@@ -62,10 +62,10 @@ services:
       - "${PROSODY_PROXY65_PORT:-5000}:5000"
 
     volumes:
-      - ../../apps/prosody/config:/etc/prosody/config:ro
-      - ../../apps/prosody/scripts:/opt/prosody/scripts:ro
-      - ../../apps/prosody/www:/usr/share/prosody/www:ro
-      - ../../apps/prosody/custom_plugins:/var/lib/prosody/custom_plugins:ro
+      - ../../services/chat/xmpp/config:/etc/prosody/config:ro
+      - ../../services/chat/xmpp/scripts:/opt/prosody/scripts:ro
+      - ../../services/chat/xmpp/www:/usr/share/prosody/www:ro
+      - ../../services/chat/xmpp/modules:/var/lib/prosody/modules:ro
       - ../../data/xmpp/data:/var/lib/prosody/data
       - ../../data/xmpp/uploads:/var/lib/prosody/uploads
       - ../../data/certs:/etc/prosody/certs
