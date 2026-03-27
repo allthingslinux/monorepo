@@ -1,0 +1,32 @@
+upstreams:
+  groups:
+    default:
+      # Set upstream DoH (e.g. Tailscale DNS or your preferred resolver)
+      - https://<UPSTREAM_DNS_IP>/dns-query
+
+blocking:
+  blackLists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  clientGroupsBlock:
+    default:
+      - ads
+
+ports:
+  dns: 53
+  http: 4000
+
+# Prometheus metrics
+prometheus:
+  enable: true
+  path: /metrics
+
+# Query Log
+queryLog:
+  type: console
+
+# Cache
+caching:
+  minTime: 5m
+  maxTime: 30m
+  prefetching: true

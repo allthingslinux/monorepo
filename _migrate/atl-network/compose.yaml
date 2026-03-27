@@ -1,0 +1,98 @@
+name: atl-network
+
+services:
+  # Turn/Stun Server
+  # NOTE: Coturn often requires host networking to handle NAT/IP detection correctly without complex config.
+  # We use host networking here for simplicity and performance.
+  coturn:
+    image: coturn/coturn
+    container_name: coturn
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./services/coturn/turnserver.conf:/etc/coturn/turnserver.conf
+    command:
+      - -c /etc/coturn/turnserver.conf
+      - --external-ip=${EXTERNAL_IP}
+      - --static-auth-secret=${TURN_SECRET}
+      - --realm=${TURN_REALM}
+    # Ports are implicitly exposed via host mode:
+    # 3478 TCP/UDP, 5349 TCP/UDP, 49152-65535 UDP
+
+    # Reverse Proxy
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: npm
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "/usr/bin/check-health" ]
+      interval: 10s
+      timeout: 3s
+    ports:
+      - "80:80"
+      - "81:81" # Admin Port
+      - "443:443"
+    volumes:
+      - ./services/npm/data:/data
+      - ./services/npm/letsencrypt:/etc/letsencrypt
+
+  # DNS & Ad Blocking
+  blocky:
+    image: spx01/blocky
+    container_name: blocky
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "4000:4000" # Web UI / Metrics
+    volumes:
+      - ./services/blocky/config.yml:/app/config.yml
+
+  # Monitoring (Gatus)
+  gatus:
+    image: twinproduction/gatus
+    container_name: gatus
+    restart: unless-stopped
+    ports:
+      - "8081:8080" # Mapped to 8081 to avoid conflict with SFTPGo/NPM if web is needed direct
+    volumes:
+      - ./services/gatus/config.yaml:/config/config.yaml
+    environment:
+      - GATUS_CONFIG_PATH=/config/config.yaml
+
+  # File Transfer (SFTPGo)
+  sftpgo:
+    image: drakkan/sftpgo
+    container_name: sftpgo
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # Web Admin
+      - "2022:2022" # SFTP
+    volumes:
+      - ./services/sftpgo/data:/srv/sftpgo
+      - ./services/sftpgo/config:/var/lib/sftpgo
+    # environment:
+    #   - SFTPGO_HTTPD__BINDINGS__0__PORT=8080
+
+    # Network Speed Test
+  librespeed:
+    image: lscr.io/linuxserver/librespeed
+    container_name: librespeed
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - PASSWORD=password # Optional: Secure access
+      - CUSTOM_RESULTS=false
+
+  # Raw Bandwidth Test
+  iperf3:
+    image: networkstatic/iperf3
+    container_name: iperf3
+    restart: unless-stopped
+    command: -s
+    ports:
+      - "5201:5201"

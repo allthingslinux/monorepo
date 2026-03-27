@@ -1,0 +1,22 @@
+endpoints:
+  - name: "atl.network site"
+    group: "External"
+    url: "https://atl.network"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+
+  - name: "DNS reachability"
+    group: "External"
+    url: "<DNS_CHECK_URL>"  # e.g. Tailscale DNS or your preferred check target
+    interval: 30s
+    conditions:
+      - "[CONNECTED] == true"
+
+  # Domain Expiration Monitoring
+  - name: "atl.network expiration"
+    group: "Domains"
+    url: "atl.network"
+    interval: 1h
+    conditions:
+      - "[DOMAIN_EXPIRATION] > 720h" # Alert if less than 30 days
