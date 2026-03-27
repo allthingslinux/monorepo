@@ -1,11 +1,13 @@
 ---
-name: Deploy Web to Cloudflare Workers
+name: Web Deploy
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
     types: [opened, reopened, synchronize, closed]
+  merge_group:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -98,6 +100,10 @@ jobs:
       PULL_REQUEST: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
       GITHUB_PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
@@ -162,6 +168,10 @@ jobs:
       run:
         working-directory: apps/web
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
