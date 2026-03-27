@@ -6,13 +6,13 @@
 # Served at webxmpp.atl.chat with TLS via shared wildcard certs.
 # =============================================================================
 
-name: atl-fluux-messenger
 
 include:
   - networks.yaml
 
 services:
   atl-fluux-messenger:
+    image: ghcr.io/allthingslinux/atl-xmpp-client-fluux:latest
     build:
       context: ../../services/chat/xmpp-client-fluux
       dockerfile: Containerfile

@@ -5,7 +5,6 @@
 # Plugins: janitor (upload cleanup), giphy (/giphy search|random)
 # =============================================================================
 
-name: atl-thelounge
 
 include:
   - networks.yaml

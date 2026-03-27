@@ -4,7 +4,6 @@
 # Paths are relative to this file's directory (infra/compose/)
 # =============================================================================
 
-name: atl-xmpp
 
 include:
   - networks.yaml

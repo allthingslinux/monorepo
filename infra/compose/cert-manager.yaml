@@ -5,7 +5,6 @@
 # Scripts in scripts/cert-manager/
 # =============================================================================
 
-name: atl-cert-manager
 
 include:
   - networks.yaml

@@ -2,7 +2,6 @@
 # Bridge Stack - Discord↔IRC↔XMPP (apps/bridge in-repo)
 # =============================================================================
 
-name: atl-bridge
 
 include:
   - networks.yaml

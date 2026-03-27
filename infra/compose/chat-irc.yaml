@@ -4,7 +4,6 @@
 # Paths are relative to this file's directory (infra/compose/)
 # =============================================================================
 
-name: atl-irc
 
 include:
   - networks.yaml
@@ -22,6 +21,7 @@ services:
         UID: ${PUID:-1000}
         GID: ${PGID:-1000}
 
+    image: ghcr.io/allthingslinux/atl-irc:latest
     container_name: atl-irc-server
     hostname: atl-irc-server
     init: true
@@ -90,6 +90,7 @@ services:
         UID: ${PUID:-1000}
         GID: ${PGID:-1000}
 
+    image: ghcr.io/allthingslinux/atl-irc-services:latest
     container_name: atl-irc-services
     restart: unless-stopped
     security_opt:
@@ -134,6 +135,7 @@ services:
       context: ../../services/chat/irc-webpanel
       dockerfile: Containerfile
 
+    image: ghcr.io/allthingslinux/atl-irc-webpanel:latest
     container_name: atl-irc-webpanel
     hostname: atl-irc-webpanel
     restart: unless-stopped

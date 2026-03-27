@@ -5,13 +5,13 @@
 # VITE_HIDE_SERVER_LIST=true hides the Discover page / multi-server UI.
 # =============================================================================
 
-name: atl-obsidianirc
 
 include:
   - networks.yaml
 
 services:
   atl-obsidianirc:
+    image: ghcr.io/allthingslinux/atl-irc-client-obsidian:latest
     build:
       context: ../../services/chat/irc-client-obsidian
       dockerfile: Containerfile

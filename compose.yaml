@@ -9,7 +9,7 @@
 #   docker compose --profile dev up  # Start with dev services (Dozzle, etc.)
 # =============================================================================
 
-name: atl-chat
+name: atl
 
 include:
   - infra/compose/networks.yaml

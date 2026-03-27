@@ -1,4 +1,3 @@
-name: atl-network
 
 services:
   # Turn/Stun Server
