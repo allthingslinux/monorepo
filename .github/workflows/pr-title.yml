@@ -8,13 +8,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  pull-requests: write
-
 jobs:
   validate-pr-title:
     name: Validate PR Title
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       pull-requests: read
