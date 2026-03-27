@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Grafana Alloy - Telemetry Collector
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    restart: unless-stopped
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy:ro
+      - /var/lib/alloy:/var/lib/alloy
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    environment:
+      - REMOTE_WRITE_URL=https://metrics.atl.services/api/v1/push
+      - LOKI_URL=https://metrics.atl.services/loki/api/v1/push
+      - BASIC_AUTH_USER=${BASIC_AUTH_USER}
+      - BASIC_AUTH_PASS=${BASIC_AUTH_PASS}
+      - HOSTNAME=${HOSTNAME}
+    ports:
+      - "12345:12345" # Alloy UI

@@ -1,0 +1,84 @@
+# Enable multi-tenancy (set to false for single-tenant deployments)
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  # Log only error messages by default
+  log_level: info
+  # Graceful shutdown timeout
+  http_server_read_timeout: 600s
+  http_server_write_timeout: 600s
+
+common:
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+
+# Use TSDB with schema v13 for better performance and OTLP support
+schema_config:
+  configs:
+    - from: 2024-01-01
+      store: tsdb          # NOT boltdb-shipper (deprecated)
+      object_store: filesystem
+      schema: v13          # Latest schema version
+      index:
+        prefix: loki_index_
+        period: 24h
+
+storage_config:
+  tsdb_shipper:
+    active_index_directory: /loki/tsdb-index
+    cache_location: /loki/tsdb-cache
+    # Build index once per 15 minutes
+    index_gateway_client:
+      server_address: ""  # Empty for monolithic mode
+  filesystem:
+    directory: /loki/chunks
+
+# Chunk configuration for optimal performance
+ingester:
+  # Lifecycle settings
+  lifecycler:
+    ring:
+      replication_factor: 1
+  
+  # Chunk settings
+  chunk_encoding: snappy        # NOT gzip (too slow)
+  chunk_target_size: 1572864    # ~1.5MB compressed
+  chunk_block_size: 262144      # 256KB uncompressed
+  max_chunk_age: 2h             # Limits memory usage
+  chunk_idle_period: 30m        # Flush inactive streams
+  chunk_retain_period: 15s      # Keep chunks in memory after flushing
+  
+  # WAL (Write-Ahead Log) settings
+  wal:
+    enabled: true
+    dir: /loki/wal
+    checkpoint_duration: 5m
+    flush_on_shutdown: true
+    replay_memory_ceiling: 4GB
+
+# Query limits and performance tuning
+limits_config:
+  # Retention
+  retention_period: 744h  # 31 days (recommended for logs)
+  
+  # Ingestion limits
+  ingestion_rate_mb: 16
+  ingestion_burst_size_mb: 32
+  max_line_size: 256KB
+  max_line_size_truncate: true  # Truncate instead of rejecting
+  
+  # Query limits
+  max_query_length: 721h  # 30 days max query range
+  max_query_lookback: 0   # No limit (use retention_period)
+  max_query_parallelism: 32
+  max_query_series: 500

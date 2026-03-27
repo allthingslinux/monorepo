@@ -1,0 +1,118 @@
+{
+  "dashboard": {
+    "title": "Application Template",
+    "uid": "app-template",
+    "tags": [
+      "template",
+      "application"
+    ],
+    "timezone": "browser",
+    "editable": true,
+    "graphTooltip": 1,
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s",
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "description": "Select Mimir/Prometheus data source"
+        },
+        {
+          "name": "namespace",
+          "type": "query",
+          "datasource": "${datasource}",
+          "query": "label_values(up, namespace)",
+          "multi": true,
+          "includeAll": true,
+          "description": "Filter by namespace/environment"
+        },
+        {
+          "name": "job",
+          "type": "query",
+          "datasource": "${datasource}",
+          "query": "label_values(up{namespace=~\"$namespace\"}, job)",
+          "multi": true,
+          "includeAll": true,
+          "description": "Filter by service/job"
+        }
+      ]
+    },
+    "annotations": {
+      "list": [
+        {
+          "name": "Deployments",
+          "datasource": "${datasource}",
+          "expr": "changes(kube_deployment_spec_replicas{namespace=~\"$namespace\"}[5m])",
+          "iconColor": "blue",
+          "enable": true
+        },
+        {
+          "name": "Errors",
+          "datasource": "Loki",
+          "expr": "{namespace=~\"$namespace\"} | json | level=\"error\"",
+          "iconColor": "red",
+          "enable": false
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Rate",
+        "type": "graph",
+        "datasource": "${datasource}",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{namespace=~\"$namespace\", job=~\"$job\"}[$__rate_interval])) by (job)",
+            "legendFormat": "{{job}}"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Requests/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Error Rate",
+        "type": "graph",
+        "datasource": "${datasource}",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\", namespace=~\"$namespace\", job=~\"$job\"}[$__rate_interval])) / sum(rate(http_requests_total{namespace=~\"$namespace\", job=~\"$job\"}[$__rate_interval]))",
+            "legendFormat": "{{job}} Errors"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "max": 1,
+            "min": 0,
+            "label": "Error %"
+          }
+        ]
+      }
+    ],
+    "links": []
+  }
+}

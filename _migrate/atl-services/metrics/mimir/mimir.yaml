@@ -1,0 +1,111 @@
+# Monolithic mode configuration
+target: all
+
+# Multi-tenancy (can be disabled for single-tenant)
+multitenancy_enabled: false
+# If multitenancy disabled, all metrics go to this tenant
+# no_auth_tenant: anonymous
+
+# Server configuration
+server:
+  http_listen_port: 8080
+  grpc_listen_port: 9095
+  log_level: info
+
+ruler:
+  rule_path: /data/rules
+  alertmanager_url: http://alertmanager:9093
+  ring:
+    kvstore:
+      store: memberlist
+
+# Storage configuration
+common:
+  storage:
+    backend: s3
+    s3:
+      endpoint: https://<CLOUDFLARE_ACCOUNT_ID>.r2.cloudflarestorage.com
+      region: auto
+      bucket_name: atl-metrics-mimir
+      access_key_id: ${S3_ACCESS_KEY_ID}
+      secret_access_key: ${S3_SECRET_ACCESS_KEY}
+      insecure: false
+
+# Blocks storage (TSDB blocks)
+blocks_storage:
+  backend: s3
+  s3:
+    bucket_name: atl-metrics-mimir-blocks
+  tsdb:
+    dir: /data/tsdb
+    retention_period: 30d  # Local retention before upload
+  bucket_store:
+    sync_dir: /data/tsdb-sync
+
+# Compactor
+compactor:
+  data_dir: /data/compactor
+  compaction_interval: 30m
+  deletion_delay: 2h
+  cleanup_interval: 15m
+  # Retention in object storage
+  retention_enabled: true
+  retention_period: 365d  # 1 year
+
+# Ingester
+ingester:
+  ring:
+    replication_factor: 1  # Single instance, no replication
+    kvstore:
+      store: memberlist
+
+# Memberlist (for hash ring coordination)
+memberlist:
+  bind_port: 7946
+  join_members:
+    - mimir:7946  # Self-join for single instance
+
+# Limits (adjust based on your scale)
+limits:
+  # Ingestion limits
+  ingestion_rate: 25000                    # Samples/sec per tenant
+  ingestion_burst_size: 50000              # Burst size
+  max_series_per_metric: 10000
+  max_series_per_user: 1000000             # Total series per tenant
+  max_global_series_per_user: 1000000
+  max_label_names_per_series: 30
+  max_label_name_length: 1024
+  max_label_value_length: 2048
+
+  # Query limits
+  max_fetched_series_per_query: 100000
+  max_fetched_chunks_per_query: 2000000
+  max_query_lookback: 0                    # No limit
+  max_query_parallelism: 32
+
+  # Retention
+  compactor_blocks_retention_period: 365d  # 1 year
+
+  # Out-of-order samples (allows late-arriving metrics)
+  out_of_order_time_window: 5m
+
+# Query frontend (caching)
+query_frontend:
+  results_cache:
+    backend: memcached
+    memcached:
+      addresses: dns+memcached:11211
+
+# Store gateway (for querying historical data)
+store_gateway:
+  sharding_ring:
+    replication_factor: 1
+
+# Native histograms (for OpenTelemetry exponential histograms)
+ingester_client:
+  grpc_client_config:
+    max_recv_msg_size: 104857600  # 100MB for large histogram payloads
+
+# Enable native histogram ingestion
+limits:
+  native_histograms_ingestion_enabled: true

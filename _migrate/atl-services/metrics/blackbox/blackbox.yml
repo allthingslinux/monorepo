@@ -1,0 +1,93 @@
+modules:
+  # Standard HTTP 200 check with error detection
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: []  # Defaults to 2xx
+      method: GET
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"  # Override default ip6 for ATL infrastructure
+      ip_protocol_fallback: true
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+      enable_http2: true
+      body_size_limit: 10485760  # 10MB limit to prevent memory exhaustion
+      fail_if_body_matches_regexp:
+        - "Could not connect to database"
+        - "Internal Server Error"
+        - "503 Service Unavailable"
+
+  # HTTPS with certificate validation
+  http_2xx_ssl_required:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      method: GET
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      fail_if_not_ssl: true  # Ensure HTTPS is enforced
+      tls_config:
+        insecure_skip_verify: false  # Validate certificates
+      body_size_limit: 10485760
+
+  # HTTP POST with JSON body
+  http_post_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      method: POST
+      headers:
+        Content-Type: application/json
+      body: '{}'
+      valid_status_codes: [200, 201, 202]
+      preferred_ip_protocol: "ip4"
+      body_size_limit: 10485760
+
+  # TCP connection check
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # PostgreSQL SSL detection
+  postgresql_ssl:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+      query_response:
+        - send: !!binary AAAACATSFi8=  # PostgreSQL SSLRequest
+        - expect_bytes: S  # 'S' if SSL enabled, 'N' if not
+
+  # SMTP STARTTLS check
+  smtp_starttls:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+      query_response:
+        - expect: "^220 ([^ ]+) ESMTP (.+)$"
+        - send: "EHLO blackbox.atl.services\r"
+        - expect: "^250-STARTTLS"
+        - send: "STARTTLS\r"
+        - expect: "^220"
+        - starttls: true
+        - send: "EHLO blackbox.atl.services\r"
+        - expect: "^250-AUTH"
+        - send: "QUIT\r"
+
+  # DNS query validation
+  dns_query:
+    prober: dns
+    timeout: 5s
+    dns:
+      query_name: "example.com"
+      query_type: "A"
+      valid_rcodes:
+        - NOERROR
+      preferred_ip_protocol: "ip4"
+      transport_protocol: "udp"

@@ -1,0 +1,107 @@
+groups:
+  - name: system_alerts
+    interval: 30s
+    rules:
+      # Instance down for >5 minutes
+      - alert: InstanceDown
+        expr: up == 0
+        for: 5m
+        keep_firing_for: 5m  # Prevent flapping
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+          runbook_url: "https://docs.atl.services/runbooks/instance-down"
+
+      # High CPU usage (>80% for 10min)
+      - alert: HighCPUUsage
+        expr: instance:node_cpu:utilization > 80
+        for: 10m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "High CPU on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      # High memory usage (>90% for 5min)
+      - alert: HighMemoryUsage
+        expr: instance:node_memory:utilization > 90
+        for: 5m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "High memory on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      # Disk space critical (<10% free)
+      - alert: DiskSpaceCritical
+        expr: instance:node_disk:utilization > 90
+        for: 5m
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Disk space critical on {{ $labels.instance }}"
+          description: "Disk usage is {{ $value | humanize }}% on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+      
+      # Watchdog (ensure monitoring is working)
+      - alert: Watchdog
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: "Monitoring is operational"
+
+  - name: database_alerts
+    interval: 30s
+    rules:
+      # PostgreSQL cache hit ratio <90%
+      - alert: PostgreSQLLowCacheHitRatio
+        expr: instance:postgres:cache_hit_ratio < 0.90
+        for: 10m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "Low cache hit ratio on {{ $labels.instance }}"
+          description: "PostgreSQL cache hit ratio is {{ $value | humanizePercentage }} on {{ $labels.instance }}"
+
+      # PostgreSQL connection usage >80%
+      - alert: PostgreSQLHighConnectionUsage
+        expr: instance:postgres:connection_usage > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "High connection usage on {{ $labels.instance }}"
+          description: "PostgreSQL connection usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+  - name: api_alerts
+    interval: 30s
+    rules:
+      # High error rate (>5% for 5min)
+      - alert: HighErrorRate
+        expr: job:http_requests:error_percentage > 5
+        for: 5m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "High error rate on {{ $labels.job }}"
+          description: "Error rate is {{ $value | humanize }}% on {{ $labels.job }}"
+
+      # High API latency (p95 >1s for 10min)
+      - alert: HighAPILatency
+        expr: job:http_request_duration:p95 > 1
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "High API latency on {{ $labels.job }}"
+          description: "P95 latency is {{ $value | humanizeDuration }} on {{ $labels.job }}"

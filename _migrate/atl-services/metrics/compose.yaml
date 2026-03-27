@@ -1,0 +1,208 @@
+version: '3.8'
+
+networks:
+  metrics:
+    driver: bridge
+  atl-chat:
+    external: true
+    name: atl-chat
+  tux:
+    external: true
+    name: tux
+  wiki-network:
+    external: true
+    name: local-wiki_wiki-network
+  iso-network:
+    external: true
+    name: iso_default
+  npm:
+    external: true
+    name: npm
+
+volumes:
+  loki_data:
+  grafana_data:
+  mimir_data:
+  influxdb_data:
+  influxdb_plugins:
+
+
+services:
+  # Grafana Alloy - OpenTelemetry Collector + Prometheus Agent
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    restart: unless-stopped
+    networks:
+      - metrics
+      - atl-chat # Access to atl-xmpp-db
+      - tux # Access to tux-postgres, tux-valkey
+      - iso-network # Access to iso_postgres
+      - wiki-network # Access to local-wiki-valkey
+    ports:
+      - "12345:12345" # Alloy UI
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/lib/alloy:/var/lib/alloy
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    environment:
+      # Cloudflare Worker Logs
+      - CF_ZONE_ID=${CF_ZONE_ID}
+      - CF_API_TOKEN=${CF_API_TOKEN}
+      # Postgres Exporter Credentials
+      - XMPP_DB_PASSWORD=${XMPP_DB_PASSWORD}
+      - TUX_DB_USER=${TUX_DB_USER}
+      - TUX_DB_PASSWORD=${TUX_DB_PASSWORD}
+      - TUX_DB_NAME=${TUX_DB_NAME}
+      - ISO_DB_PASSWORD=${ISO_DB_PASSWORD}
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    depends_on:
+      - loki
+
+  # Grafana Loki - Log Aggregation
+  loki:
+    image: grafana/loki:3.6.0
+    container_name: loki
+    restart: unless-stopped
+    networks:
+      - metrics
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/config.yml:/mnt/config/loki-config.yml:ro
+      - loki_data:/loki
+    command:
+      - -config.file=/mnt/config/loki-config.yml
+    user: "10001:10001" # Run as loki user (UID 10001)
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Grafana Mimir - Long-term Metrics Storage
+  mimir:
+    image: grafana/mimir:latest
+    container_name: mimir
+    restart: unless-stopped
+    networks:
+      - metrics
+    ports:
+      - "8080:8080" # HTTP API
+      - "9095:9095" # gRPC
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir/mimir.yaml:ro
+      - ./mimir/rules:/data/rules:ro
+      - mimir_data:/data
+    environment:
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+    command:
+      - -config.file=/etc/mimir/mimir.yaml
+      - -target=all # Monolithic mode
+
+  # Grafana - Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      - metrics
+      - npm
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SERVER_ROOT_URL=https://metrics.atl.services
+      - GF_SERVER_DOMAIN=metrics.atl.services
+      # SSO Configuration
+      # SSO Configuration
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=false
+      - GF_AUTH_OKTA_ENABLED=true
+      - GF_AUTH_OKTA_NAME=Okta
+      - GF_AUTH_OKTA_CLIENT_ID=${OKTA_CLIENT_ID}
+      - GF_AUTH_OKTA_CLIENT_SECRET=${OKTA_CLIENT_SECRET}
+      - GF_AUTH_OKTA_SCOPES=openid profile email groups offline_access
+      - GF_AUTH_OKTA_AUTH_URL=${OKTA_AUTH_URL}
+      - GF_AUTH_OKTA_TOKEN_URL=${OKTA_TOKEN_URL}
+      - GF_AUTH_OKTA_API_URL=${OKTA_API_URL}
+      - GF_AUTH_OKTA_USE_REFRESH_TOKEN=true
+      # RBAC & Group Sync
+      - GF_AUTH_OKTA_ROLE_ATTRIBUTE_PATH=contains(groups[*], 'Admins') && 'Admin' || contains(groups[*], 'Editors') && 'Editor' || 'Viewer'
+      - GF_AUTH_OKTA_ALLOWED_GROUPS=Admins,Editors,Viewers
+      # Alert State History (Loki Backend)
+      - GF_UNIFIED_ALERTING_STATE_HISTORY_ENABLED=true
+      - GF_UNIFIED_ALERTING_STATE_HISTORY_BACKEND=loki
+      - GF_UNIFIED_ALERTING_STATE_HISTORY_LOKI_REMOTE_URL=http://loki:3100
+      - GF_FEATURE_TOGGLES_ENABLE=alertingCentralAlertHistory
+      # Internal Monitoring
+      - GF_METRICS_ENABLED=true
+      # Datasources Secrets
+      - INFLUXDB_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
+    depends_on:
+      - loki
+      - mimir
+
+  # InfluxDB 3 Core - Time-series Database
+  influxdb3-core:
+    image: influxdb:3-core
+    container_name: influxdb3-core
+    restart: unless-stopped
+    networks:
+      - metrics
+    ports:
+      - "8181:8181"
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3/data
+      - --plugin-dir=/var/lib/influxdb3/plugins
+    volumes:
+      - influxdb_data:/var/lib/influxdb3/data
+      - influxdb_plugins:/var/lib/influxdb3/plugins
+    environment:
+      - INFLUXDB_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8181/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Blackbox Exporter - Uptime Monitoring (HTTP/DNS/TCP)
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    networks:
+      - metrics
+    command: --config.file=/config/blackbox.yml
+    volumes:
+      - ./blackbox/blackbox.yml:/config/blackbox.yml:ro
+    # Health check to ensure prober is running
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://localhost:9115/-/healthy" ]
+      interval: 30s
+      timeout: 3s

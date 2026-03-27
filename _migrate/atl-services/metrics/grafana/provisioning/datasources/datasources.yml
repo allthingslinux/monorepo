@@ -1,0 +1,31 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://mimir:8080/prometheus
+    uid: mimir
+    isDefault: true
+    editable: false
+  
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      manageAlerts: true
+      maxLines: 1000
+    editable: false
+  
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb3-core:8181
+    jsonData:
+      version: Flux # InfluxDB 3 supports Flux via compatibility API
+      organization: docs
+      defaultBucket: home
+    secureJsonData:
+      token: ${INFLUXDB_ADMIN_TOKEN}
+    editable: false

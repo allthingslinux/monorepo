@@ -1,0 +1,63 @@
+groups:
+  - name: system_alerts
+    interval: 30s
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% (current: {{ $value }}%)"
+      
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 90% (current: {{ $value }}%)"
+      
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space is below 10% (current: {{ $value }}%)"
+      
+      - alert: ContainerDown
+        expr: up{job=~"cadvisor|postgres.*|valkey.*|nginx.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.job }} is down"
+          description: "Container has been down for more than 2 minutes"
+          
+      - alert: ContainerOomKill
+        expr: changes(container_oom_events_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.name }} killed due to OOM"
+          
+      - alert: ContainerHighThrottling
+        expr: rate(container_cpu_cfs_throttled_seconds_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.name }} is being CPU throttled"
+          
+      - alert: ContainerMemorySaturation
+        expr: container_memory_working_set_bytes / container_spec_memory_limit_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.name }} mem usage > 90%"

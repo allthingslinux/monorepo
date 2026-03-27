@@ -1,0 +1,1286 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: System Alerts
+    folder: Infrastructure
+    interval: 1m
+    rules:
+      - uid: instance_down
+        title: InstanceDown
+        condition: C
+        for: 5m
+        labels:
+          severity: critical
+          team: infrastructure
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+          runbook_url: "https://docs.atl.services/runbooks/instance-down"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: up
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: high_cpu_usage
+        title: HighCPUUsage
+        condition: C
+        for: 10m
+        labels:
+          severity: '{{ if gt $values.B.Value 90.0 }}critical{{ else }}warning{{ end }}'
+          team: infrastructure
+        annotations:
+          summary: "High CPU on {{ $labels.instance }}"
+          description: "CPU usage is {{ $values.B.Value | humanize }}% on {{ $labels.instance }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: instance:node_cpu:utilization
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 80
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 80
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: high_memory_usage
+        title: HighMemoryUsage
+        condition: C
+        for: 5m
+        labels:
+          severity: '{{ if gt $values.B.Value 95.0 }}critical{{ else }}warning{{ end }}'
+          team: infrastructure
+        annotations:
+          summary: "High memory on {{ $labels.instance }}"
+          description: "Memory usage is {{ $values.B.Value | humanize }}% on {{ $labels.instance }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: instance:node_memory:utilization
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 90
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: disk_space_critical
+        title: DiskSpaceCritical
+        condition: C
+        for: 5m
+        labels:
+          severity: '{{ if gt $values.B.Value 95.0 }}critical{{ else }}warning{{ end }}'
+          team: infrastructure
+        annotations:
+          summary: "Disk space critical on {{ $labels.instance }}"
+          description: "Disk usage is {{ $values.B.Value | humanize }}% on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: instance:node_disk:utilization
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 90
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 85
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+      
+      - uid: watchdog
+        title: Watchdog
+        condition: A
+        for: 0s
+        labels:
+          severity: none
+        annotations:
+          summary: "Monitoring is operational"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: vector(1)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              refId: A
+              type: prometheus
+        noDataState: OK
+        execErrState: Error
+
+  - orgId: 1
+    name: Database Alerts
+    folder: Database
+    interval: 1m
+    rules:
+      - uid: postgres_low_cache_hit_ratio
+        title: PostgreSQLLowCacheHitRatio
+        condition: C
+        for: 10m
+        labels:
+          severity: '{{ if lt $values.B.Value 0.80 }}critical{{ else }}warning{{ end }}'
+          team: database
+        annotations:
+          summary: "Low cache hit ratio on {{ $labels.instance }}"
+          description: "PostgreSQL cache hit ratio is {{ $values.B.Value | humanizePercentage }} on {{ $labels.instance }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: instance:postgres:cache_hit_ratio
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.9
+                    type: lt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B < 0.90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: postgres_high_connection_usage
+        title: PostgreSQLHighConnectionUsage
+        condition: C
+        for: 5m
+        labels:
+          severity: '{{ if gt $values.B.Value 90.0 }}critical{{ else }}warning{{ end }}'
+          team: database
+        annotations:
+          summary: "High connection usage on {{ $labels.instance }}"
+          description: "PostgreSQL connection usage is {{ $values.B.Value | humanize }}% on {{ $labels.instance }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: instance:postgres:connection_usage
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 80
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 80
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: postgres_table_bloat
+        title: PostgreSQLTableBloat
+        condition: C
+        for: 30m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "Table bloat detected on {{ $labels.instance }}"
+          description: "Table {{ $labels.relname }} has {{ $values.B.Value | humanizePercentage }} dead tuples"
+          runbook_url: "https://docs.atl.services/runbooks/postgres-vacuum"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: pg_stat_user_tables_n_dead_tup / (pg_stat_user_tables_n_live_tup + pg_stat_user_tables_n_dead_tup)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.2
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.20
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+  - orgId: 1
+    name: API Alerts
+    folder: Backend
+    interval: 1m
+    rules:
+      - uid: high_error_rate
+        title: HighErrorRate
+        condition: C
+        for: 5m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "High error rate on {{ $labels.job }}"
+          description: "Error rate is {{ $values.B.Value | humanizePercentage }} on {{ $labels.job }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: sum(rate(http_requests_total{status=~"5.."}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.05
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.05
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: high_api_latency
+        title: HighAPILatency
+        condition: C
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "High API latency on {{ $labels.job }}"
+          description: "P95 latency is {{ $values.B.Value | humanizeDuration }} on {{ $labels.job }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+  - orgId: 1
+    name: SLO Alerts
+    folder: SLOs
+    interval: 1m
+    rules:
+      - uid: error_budget_fast_burn
+        title: ErrorBudgetFastBurn
+        condition: C
+        for: 2m
+        labels:
+          severity: critical
+          team: sre
+          page: "true"
+        annotations:
+          summary: "Error budget burning fast for {{ $labels.job }}"
+          description: "Error rate is {{ $values.B.Value | humanizePercentage }} (Burning ~14.4x faster than allowed)"
+          runbook_url: "https://docs.atl.services/runbooks/slo-breach"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: sum(rate(http_requests_total{status=~"5.."}[1h])) by (job) / sum(rate(http_requests_total[1h])) by (job)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.0144
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.0144
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: error_budget_slow_burn
+        title: ErrorBudgetSlowBurn
+        condition: C
+        for: 30m
+        labels:
+          severity: warning
+          team: sre
+        annotations:
+          summary: "Error budget burning steadily for {{ $labels.job }}"
+          description: "Error rate is {{ $values.B.Value | humanizePercentage }} (Burning ~6x faster than allowed)"
+          runbook_url: "https://docs.atl.services/runbooks/slo-warning"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: sum(rate(http_requests_total{status=~"5.."}[6h])) by (job) / sum(rate(http_requests_total[6h])) by (job)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.006
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.006
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+  - orgId: 1
+    name: Container Alerts
+    folder: Infrastructure
+    interval: 1m
+    rules:
+      - uid: container_high_restart
+        title: ContainerHighRestart
+        condition: C
+        for: 5m
+        labels:
+          severity: warning
+          team: infrastructure
+        annotations:
+          summary: "Container restarting frequently: {{ $labels.name }}"
+          description: "Container {{ $labels.name }} has restarted {{ $values.B.Value }} times in the last 15 minutes."
+          runbook_url: "https://docs.atl.services/runbooks/container-restart"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: changes(container_start_time_seconds{image!=""}[15m])
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 3
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 3
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+  - orgId: 1
+    name: Redis Alerts
+    folder: Database
+    interval: 1m
+    rules:
+      - uid: redis_down
+        title: RedisDown
+        condition: C
+        for: 5m
+        labels:
+          severity: critical
+          team: database
+        annotations:
+          summary: "Redis instance down: {{ $labels.instance }}"
+          description: "Redis instance {{ $labels.instance }} has been down for more than 5 minutes."
+          runbook_url: "https://docs.atl.services/runbooks/redis-down"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: up{job=~"redis.*|.*valkey.*"}
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: redis_memory_high
+        title: RedisMemoryHigh
+        condition: C
+        for: 5m
+        labels:
+          severity: warning
+          team: database
+        annotations:
+          summary: "High memory usage on Redis {{ $labels.instance }}"
+          description: "Redis memory usage is {{ $values.B.Value | humanizePercentage }} of max memory."
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: redis_memory_used_bytes / redis_memory_max_bytes
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.9
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.9
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Error
+
+      - uid: redis_rejected_connections
+        title: RedisRejectedConnections
+        condition: C
+        for: 5m
+        labels:
+          severity: critical
+          team: database
+        annotations:
+          summary: "Redis rejected connections on {{ $labels.instance }}"
+          description: "Redis is rejecting connections. Rate: {{ $values.B.Value | humanize }}"
+        data:
+          - refId: A
+            datasourceUid: mimir
+            model:
+              expr: rate(redis_rejected_connections_total[5m])
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0
+              maxDataPoints: 43200
+              refId: A
+              type: prometheus
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B > 0.5
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        execErrState: Error
+
+  - name: "critical-errors"
+    interval: 1m
+    rules:
+      - uid: "error-rate-high"
+        title: "High Error Rate"
+        condition: "B"
+        data:
+          - refId: "A"
+            queryType: ""
+            datasourceUid: "loki_uid"
+            model:
+              expr: 'sum by (service) (rate({environment="prod"} |= "ERROR" [5m]))'
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: "B"
+            queryType: ""
+            datasourceUid: "__expr__"
+            model:
+              expression: "A > 5"
+              type: "threshold"
+        intervalSeconds: 60
+        for: "2m"
+        annotations:
+          description: "Service {{$labels.service}} error rate: {{$value}}/sec"
+          runbook_url: "https://runbooks.company.com/high-error-rate"
+          summary: "Error rate above threshold"
+        labels:
+          severity: "critical"
+          team: "platform"
+
+      - uid: "app-crash"
+        title: "Application Crash Detected"
+        condition: "B"
+        data:
+          - refId: "A"
+            datasourceUid: "loki_uid"
+            model:
+              expr: 'sum by (service, pod) (count_over_time({environment="prod"} |~ "crashed|panic|fatal|segmentation fault" [5m]))'
+              intervalMs: 1000
+          - refId: "B"
+            datasourceUid: "__expr__"
+            model:
+              expression: "A > 0"
+              type: "threshold"
+        intervalSeconds: 60
+        for: "0m"
+        annotations:
+          description: "Application crash detected in {{$labels.service}} pod {{$labels.pod}}"
+          runbook_url: "https://runbooks.company.com/app-crash"
+          summary: "Application crash event"
+        labels:
+          severity: "critical"
+          team: "platform"
+
+  - name: "performance-degradation"
+    interval: 2m
+    rules:
+      - uid: "db-connection-issues"
+        title: "Database Connection Problems"
+        condition: "B"
+        data:
+          - refId: "A" 
+            datasourceUid: "loki_uid"
+            model:
+              expr: 'sum by (service) (rate({environment="prod"} |~ "connection timeout|connection refused|connection pool exhausted|database.*error" [5m]))'
+              intervalMs: 1000
+          - refId: "B"
+            datasourceUid: "__expr__"
+            model:
+              expression: "A > 1"
+              type: "threshold"
+        intervalSeconds: 60
+        for: "2m"
+        annotations:
+          description: "Database connection issues detected for service {{$labels.service}} - {{$value}} errors/sec"
+          runbook_url: "https://runbooks.company.com/database-issues"
+          summary: "Database connectivity problems"
+        labels:
+          severity: "warning"
+          team: "platform"
+

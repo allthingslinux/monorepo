@@ -1,0 +1,65 @@
+groups:
+  - name: api_performance
+    interval: 30s
+    rules:
+      # Pre-compute request rate per service
+      - record: job:http_requests:rate5m
+        expr: sum(rate(http_requests_total[5m])) by (job, endpoint)
+
+      # Pre-compute error rate
+      - record: job:http_requests:error_rate5m
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) by (job) /
+          sum(rate(http_requests_total[5m])) by (job)
+
+      # Pre-compute error rate percentage
+      - record: job:http_requests:error_percentage
+        expr: job:http_requests:error_rate5m * 100
+
+      # Pre-compute p95 latency
+      - record: job:http_request_duration:p95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)
+          )
+
+      # Pre-compute p99 latency
+      - record: job:http_request_duration:p99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)
+          )
+
+  - name: resource_metrics
+    interval: 30s
+    rules:
+      # CPU utilization percentage
+      - record: instance:node_cpu:utilization
+        expr: |
+          100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+      # Memory utilization percentage
+      - record: instance:node_memory:utilization
+        expr: |
+          100 - ((node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100)
+
+      # Disk usage percentage
+      - record: instance:node_disk:utilization
+        expr: |
+          100 - ((node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} / 
+                  node_filesystem_size_bytes) * 100)
+
+  - name: database_metrics
+    interval: 30s
+    rules:
+      # PostgreSQL cache hit ratio
+      - record: instance:postgres:cache_hit_ratio
+        expr: |
+          sum(pg_stat_database_blks_hit) by (instance) /
+          (sum(pg_stat_database_blks_hit) by (instance) + sum(pg_stat_database_blks_read) by (instance))
+
+      # PostgreSQL connection usage percentage
+      - record: instance:postgres:connection_usage
+        expr: |
+          sum(pg_stat_database_numbackends) by (instance) /
+          pg_settings_max_connections * 100

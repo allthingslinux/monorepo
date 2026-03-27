@@ -1,0 +1,317 @@
+// ============================================
+// GRAFANA ALLOY - CENTRAL METRICS STACK
+// ============================================
+// This configuration collects telemetry from the central atl.services stack
+// and forwards it to Mimir (metrics) and Loki (logs).
+//
+// Pipeline Architecture:
+//   Logs:    loki.source.docker → loki.process → loki.write → Loki
+//            loki.source.cloudflare → loki.process → loki.write → Loki
+//   Metrics: prometheus.scrape → prometheus.remote_write → Mimir
+//
+// Reference: https://grafana.com/docs/alloy/latest/collect/
+// ============================================
+
+// ============================================
+// LIVE DEBUGGING
+// ============================================
+// Enable live debugging to stream real-time component data to the Alloy UI
+// Access the UI at http://localhost:12345 to monitor pipeline health
+// Reference: https://grafana.com/docs/alloy/latest/troubleshoot/debug/#live-debugging-page
+livedebugging {
+  enabled = true
+}
+
+// ============================================
+// LOGGING PIPELINE
+// ============================================
+
+// Collect Docker container logs from all running containers
+// Component: loki.source.docker
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.docker/
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = []
+  forward_to = [loki.process.scrub_logs.receiver]
+  
+  relabel_rules {
+    source_labels = ["__meta_docker_container_name"]
+    target_label  = "container"
+  }
+}
+
+// Collect logs from Cloudflare Workers
+// Component: loki.source.cloudflare
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/loki/loki.source.cloudflare/
+// Environment Variables:
+//   CF_ZONE_ID   - Cloudflare Zone ID
+//   CF_API_TOKEN - Cloudflare API token with Logs Read permission
+loki.source.cloudflare "workers" {
+  zone_id   = sys.env("CF_ZONE_ID")
+  api_token = sys.env("CF_API_TOKEN")
+  
+  // Use 'minimal' field set for good coverage without excessive data
+  // Options: default, minimal, extended, all, custom
+  fields_type = "minimal"
+  
+  // Fetch logs every minute
+  pull_range = "1m"
+  
+  // Use 3 workers for parallel processing
+  workers = 3
+  
+  // Add labels to identify Cloudflare logs
+  labels = {
+    job    = "cloudflare-workers"
+    source = "cloudflare-api"
+  }
+  
+  forward_to = [loki.process.scrub_logs.receiver]
+}
+
+// Process logs to scrub sensitive data (PII, credentials, etc.)
+// This is a production-readiness step to prevent leaking sensitive information
+// Component: loki.process
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/loki/loki.process/
+loki.process "scrub_logs" {
+  forward_to = [loki.write.default.receiver]
+  
+  stage.replace {
+    expression = "(\\d{1,3}\\.){3}\\d{1,3}"
+    replace = "***IP***"
+  }
+  stage.replace {
+    expression = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    replace = "***EMAIL***"
+  }
+}
+
+// Forward processed logs to Loki
+// Component: loki.write
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/loki/loki.write/
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+// ============================================
+// METRICS PIPELINE
+// ============================================
+
+// Forward metrics to Grafana Mimir (Prometheus-compatible remote write)
+// Component: prometheus.remote_write
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.remote_write/
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://mimir:8080/api/v1/push"
+  }
+}
+
+// ============================================
+// METRICS SCRAPE JOBS
+// ============================================
+// These jobs collect metrics from various exporters and services.
+// Pattern: prometheus.scrape → prometheus.remote_write → Mimir
+// Reference: https://grafana.com/docs/alloy/latest/collect/prometheus-metrics/
+
+// ============================================
+// Host & Container Metrics
+// ============================================
+
+// Built-in Node Exporter (Unix)
+// Component: prometheus.exporter.unix
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.unix/
+prometheus.exporter.unix "host" {
+  rootfs_path = "/rootfs"
+  sysfs_path  = "/sys"
+  procfs_path = "/rootfs/proc" // Access procfs through rootfs mount
+}
+
+prometheus.scrape "node_exporter" {
+  targets    = prometheus.exporter.unix.host.targets
+  job_name   = "node-exporter"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// Built-in cAdvisor Exporter
+// Component: prometheus.exporter.cadvisor
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.cadvisor/
+prometheus.exporter.cadvisor "containers" {
+  docker_host = "unix:///var/run/docker.sock"
+  docker_only = true
+  storage_duration = "5m"
+}
+
+prometheus.scrape "cadvisor" {
+  targets    = prometheus.exporter.cadvisor.containers.targets
+  job_name   = "cadvisor"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// ============================================
+// Built-in Postgres Exporter
+// ============================================
+// Replaces 3 external postgres-exporter containers with a single built-in component
+// Component: prometheus.exporter.postgres
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.postgres/
+prometheus.exporter.postgres "databases" {
+  data_source_names = [
+    // XMPP Database (Prosody)
+    "postgresql://prosody:" + sys.env("XMPP_DB_PASSWORD") + "@atl-xmpp-db:5432/prosody?sslmode=disable",
+    
+    // Tux Database
+    "postgresql://" + sys.env("TUX_DB_USER") + ":" + sys.env("TUX_DB_PASSWORD") + "@tux-postgres:5432/" + sys.env("TUX_DB_NAME") + "?sslmode=disable",
+    
+    // ISO Database (Keycloak)
+    "postgresql://admin:" + sys.env("ISO_DB_PASSWORD") + "@iso_postgres:5432/iso_archive?sslmode=disable",
+  ]
+}
+
+// Scrape the built-in postgres exporter
+prometheus.scrape "postgres" {
+  targets    = prometheus.exporter.postgres.databases.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// ============================================
+// Built-in Redis Exporters
+// ============================================
+// Replaces 2 external redis-exporter containers with built-in components
+// Component: prometheus.exporter.redis
+// Reference: https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.exporter.redis/
+
+// Tux Valkey (Redis)
+prometheus.exporter.redis "tux" {
+  redis_addr = "tux-valkey:6379"
+}
+
+prometheus.scrape "redis_tux" {
+  targets    = prometheus.exporter.redis.tux.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// Wiki Valkey (Redis)
+prometheus.exporter.redis "wiki" {
+  redis_addr = "local-wiki-valkey:6379"
+}
+
+prometheus.scrape "redis_wiki" {
+  targets    = prometheus.exporter.redis.wiki.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// ============================================
+// Database & Service Exporters
+// ============================================
+// Collect metrics from database and service-specific exporters
+// Each exporter provides deep insights into service health
+prometheus.scrape "service_exporters" {
+  targets = [
+    {"__address__" = "mysql-exporter-wiki:9104", "job" = "mariadb-wiki"},
+    {"__address__" = "nginx-exporter-wiki:9113", "job" = "nginx-wiki"},
+    {"__address__" = "cloudflare-exporter:9199", "job" = "cloudflare-exporter"},
+  ]
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// ============================================
+// Application Services
+// ============================================
+// Services that expose Prometheus metrics directly
+prometheus.scrape "local_services" {
+  targets = [
+    {"__address__" = "gatus:8080", "job" = "gatus"},
+    {"__address__" = "blocky:4000", "job" = "blocky"},
+    {"__address__" = "sftpgo:10000", "job" = "sftpgo"},
+    {"__address__" = "influxdb3-core:8181", "job" = "influxdb3"},
+  ]
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// Scrape Grafana for meta-monitoring (Alerting state, performance)
+prometheus.scrape "grafana" {
+  targets = [{"__address__" = "grafana:3000"}]
+  job_name = "grafana"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+
+// ============================================
+// Cross-Stack Service Metrics
+// ============================================
+// These services run in other stacks but are accessible via shared Docker networks
+// (atl-chat, tux, wiki-network are attached to this stack)
+
+prometheus.scrape "prosody" {
+  targets = [{"__address__" = "atl-xmpp-server:5280"}]
+  metrics_path = "/metrics"
+  job_name = "prosody"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "unrealircd" {
+  targets = [{"__address__" = "atl-irc-server:8600"}]
+  job_name = "unrealircd"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "keycloak" {
+  targets = [{"__address__" = "iso_keycloak:8080"}]
+  metrics_path = "/metrics"
+  job_name = "keycloak"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "minio_wiki" {
+  targets = [{"__address__" = "local-wiki-minio:9000"}]
+  metrics_path = "/minio/v2/metrics/cluster"
+  job_name = "minio-wiki"
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// ============================================
+// Black-Box Monitoring (Synthetic Checks)
+// ============================================
+// Probes external endpoints to verify availability and response times
+// This implements "symptom-based monitoring" - what users actually experience
+// Reference: https://grafana.com/docs/alloy/latest/collect/prometheus-metrics/#collect-metrics-from-custom-targets
+
+prometheus.scrape "blackbox" {
+  targets = [
+    {"__address__" = "https://metrics.atl.services", "module" = "http_2xx"},
+    {"__address__" = "https://chat.atl.services",    "module" = "http_2xx"},
+    {"__address__" = "https://wiki.atl.services",    "module" = "http_2xx"},
+    {"__address__" = "https://iso.atl.dev",          "module" = "http_2xx"},
+  ]
+  metrics_path = "/probe"
+  job_name = "blackbox"
+  
+  // Relabeling: Transform targets for blackbox exporter
+  // Pattern: __address__ → __param_target, then replace __address__ with exporter location
+  relabel_rules {
+    source_labels = ["__address__"]
+    target_label  = "__param_target"
+  }
+  relabel_rules {
+    source_labels = ["__param_target"]
+    target_label  = "instance"
+  }
+  relabel_rules {
+    source_labels = ["module"]
+    target_label  = "__param_module"
+  }
+  relabel_rules {
+    target_label = "__address__"
+    replacement  = "blackbox:9115"
+  }
+  
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+// Scrape the blackbox exporter's own metrics (meta-monitoring)
+prometheus.scrape "blackbox_exporter" {
+  targets = [{"__address__" = "blackbox:9115"}]
+  job_name = "blackbox-exporter"
+  forward_to = [prometheus.remote_write.default.receiver]
+}

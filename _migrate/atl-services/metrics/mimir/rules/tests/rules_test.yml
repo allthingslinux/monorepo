@@ -1,0 +1,77 @@
+rule_files:
+  - ../recording_rules.yml
+  - ../alert_rules.yml
+
+evaluation_interval: 30s
+
+tests:
+  # Test recording rules
+  - interval: 30s
+    input_series:
+      - series: 'http_requests_total{job="api",endpoint="/users",status="200"}'
+        values: '0+10x10'  # 0 10 20 30 ... 100
+      - series: 'http_requests_total{job="api",endpoint="/users",status="500"}'
+        values: '0+1x10'   # 0 1 2 3 ... 10
+
+    promql_expr_test:
+      # Test request rate calculation
+      - expr: job:http_requests:rate5m
+        eval_time: 5m
+        exp_samples:
+          - labels: 'job:http_requests:rate5m{job="api",endpoint="/users"}'
+            value: 0.36666666666666664  # (10+1)/30s rate
+
+      # Test error rate calculation
+      - expr: job:http_requests:error_rate5m
+        eval_time: 5m
+        exp_samples:
+          - labels: 'job:http_requests:error_rate5m{job="api"}'
+            value: 0.09090909090909091  # 1/(10+1) = ~9%
+
+  # Test alerting rules
+  - interval: 1m
+    input_series:
+      - series: 'up{job="prometheus",instance="localhost:9090"}'
+        values: '1 1 1 1 1 0 0 0 0 0 0 0'  # Goes down at 5min
+      - series: 'up{job="node_exporter",instance="localhost:9100"}'
+        values: '1+0x12'  # Always up
+
+    alert_rule_test:
+      # Alert should be pending at 5min (just went down)
+      - eval_time: 5m
+        alertname: InstanceDown
+        exp_alerts: []  # Not firing yet (within 'for' duration)
+
+      # Alert should be firing at 10min (down for >5min)
+      - eval_time: 10m
+        alertname: InstanceDown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              team: infrastructure
+              instance: localhost:9090
+              job: prometheus
+            exp_annotations:
+              summary: "Instance localhost:9090 down"
+              description: "localhost:9090 of job prometheus has been down for more than 5 minutes."
+              runbook_url: "https://docs.atl.services/runbooks/instance-down"
+
+  # Test CPU alert with custom start_timestamp
+  - start_timestamp: 1609459200  # 2021-01-01T00:00:00Z
+    interval: 1m
+    input_series:
+      - series: 'instance:node_cpu:utilization{instance="server1"}'
+        values: '50 60 70 85 85 85 85 85 85 85 85 85'  # Spikes to 85% at 3min
+
+    alert_rule_test:
+      # Alert should fire at 13min (>80% for >10min)
+      - eval_time: 13m
+        alertname: HighCPUUsage
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              team: infrastructure
+              instance: server1
+            exp_annotations:
+              summary: "High CPU on server1"
+              description: "CPU usage is 85% on server1"
