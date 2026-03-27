@@ -11,7 +11,9 @@
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
-    "clean": "turbo run clean --continue || true"
+    "clean": "turbo run clean --continue || true",
+    "py:check": "uv run ruff check apps/bridge/src apps/bridge/tests && uv run ruff format --check apps/bridge/src apps/bridge/tests",
+    "py:test": "uv run pytest apps/bridge/tests -v --tb=short"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",

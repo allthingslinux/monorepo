@@ -204,7 +204,7 @@
   ],
   // Paths to exclude from Renovate scanning (no PRs/alerts for these)
   // .cursor/skills contains template package.json files; we don't want dependency PRs for them
-  ignorePaths: ["**/.cursor/skills/**"],
+  ignorePaths: ["**/.cursor/skills/**", "services/**", "apps/bridge/**"],
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
   platformAutomerge: true,
   // Branch rebasing configuration
