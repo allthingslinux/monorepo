@@ -1,12 +1,12 @@
-# Web (Next.js)
+# Chat Web
 
-> Scope: Next.js web app. Inherits monorepo [AGENTS.md](../../AGENTS.md).
+> Scope: atl.chat landing page. Inherits monorepo [AGENTS.md](../../AGENTS.md).
 
-Next.js web application for atl.chat. Loaded via root: `just web`.
+Next.js web application for [atl.chat](https://atl.chat).
 
 ## Tech Stack
 
-Next.js 14 · React 18 · TypeScript · Tailwind CSS · shadcn/ui · Cloudflare Pages (next-on-pages)
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · @atl/ui (shadcn + @base-ui/react)
 
 ## Repository Structure
 
@@ -18,26 +18,22 @@ app/
 └── fonts/
 
 components/
-└── ui/               # button, card, badge (shadcn)
+└── ui/               # shadcn components
+
 lib/
 └── utils.ts
-
-biome.jsonc            # Biome linter/formatter config
-wrangler.toml          # Cloudflare Pages deployment config
 ```
 
 ## Key Commands
 
+All commands from monorepo root:
+
 | Command | Purpose |
 |---------|---------|
-| `just web dev` | Start Next.js dev server (port 3000) |
-| `just web build` | Build for production |
-| `just web start` | Start production server |
-| `just web lint` | Ultracite check |
-| `just web fix` | Ultracite fix |
-| `just web type-check` | TypeScript check |
-
-Env vars for dev: `NEXT_PUBLIC_IRC_WS_URL`, `NEXT_PUBLIC_XMPP_BOSH_URL` (set in justfile).
+| `pnpm dev` | Start all apps via Turbo (includes chat-web) |
+| `pnpm build` | Build all apps |
+| `pnpm check` | Ultracite lint check (Oxlint + Oxfmt) |
+| `pnpm fix` | Ultracite lint fix |
 
 ## Related
 
