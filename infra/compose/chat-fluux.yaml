@@ -11,15 +11,15 @@ include:
   - networks.yaml
 
 services:
-  atl-fluux-messenger:
+  atl-xmpp-client-fluux:
     image: ghcr.io/allthingslinux/xmpp-client-fluux:latest
     build:
       context: ../../services/chat/xmpp-client-fluux
       dockerfile: Containerfile
       args:
         FLUUX_VERSION: ${FLUUX_VERSION:-v0.13.3}
-    container_name: atl-fluux-messenger
-    hostname: atl-fluux-messenger
+    container_name: atl-xmpp-client-fluux
+    hostname: atl-xmpp-client-fluux
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

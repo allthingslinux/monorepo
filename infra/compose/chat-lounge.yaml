@@ -10,10 +10,10 @@ include:
   - networks.yaml
 
 services:
-  atl-thelounge:
+  atl-irc-client-lounge:
     image: ghcr.io/thelounge/thelounge:4.4.3
-    container_name: atl-thelounge
-    hostname: atl-thelounge
+    container_name: atl-irc-client-lounge
+    hostname: atl-irc-client-lounge
     restart: unless-stopped
     user: "${PUID:-1000}:${PGID:-1000}"
     security_opt:

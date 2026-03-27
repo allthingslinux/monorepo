@@ -38,7 +38,7 @@ data/
 services/chat/irc-client-obsidian/upstream/
 
 # Large static assets
-services/chat/irc/config/includes/tls/curl-ca-bundle.crt
+services/chat/irc-server/config/includes/tls/curl-ca-bundle.crt
 
 # IDE
 .cursor/plans/

@@ -10,7 +10,7 @@ include:
   - networks.yaml
 
 services:
-  atl-obsidianirc:
+  atl-irc-client-obsidian:
     image: ghcr.io/allthingslinux/irc-client-obsidian:latest
     build:
       context: ../../services/chat/irc-client-obsidian
@@ -20,8 +20,8 @@ services:
         VITE_DEFAULT_IRC_SERVER_NAME: ${OBSIDIANIRC_SERVER_NAME:-ATL IRC}
         VITE_DEFAULT_IRC_CHANNELS: ${OBSIDIANIRC_AUTOJOIN:-#general}
         VITE_HIDE_SERVER_LIST: "true"
-    container_name: atl-obsidianirc
-    hostname: atl-obsidianirc
+    container_name: atl-irc-client-obsidian
+    hostname: atl-irc-client-obsidian
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

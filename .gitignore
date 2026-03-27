@@ -92,7 +92,7 @@ __pycache__/
 data/
 
 # Generated configs (Model A: envsubst writes inside container, not on host)
-services/chat/irc/config/unrealircd.conf
+services/chat/irc-server/config/unrealircd.conf
 services/chat/irc-services/config/atheme.conf
 apps/bridge/config.yaml
 

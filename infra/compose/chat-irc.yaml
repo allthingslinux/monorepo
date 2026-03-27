@@ -14,14 +14,14 @@ services:
   # ============================================================================
   atl-irc-server:
     build:
-      context: ../../services/chat/irc
+      context: ../../services/chat/irc-server
       dockerfile: Containerfile
       args:
         UNREALIRCD_VERSION: ${UNREALIRCD_VERSION:-6.2.0.1}
         UID: ${PUID:-1000}
         GID: ${PGID:-1000}
 
-    image: ghcr.io/allthingslinux/irc:latest
+    image: ghcr.io/allthingslinux/irc-server:latest
     container_name: atl-irc-server
     hostname: atl-irc-server
     init: true
@@ -36,8 +36,8 @@ services:
       - ALL
 
     volumes:
-      - ../../services/chat/irc/config/templates:/etc/unrealircd-templates:ro
-      - ../../services/chat/irc/config/includes:/home/unrealircd/unrealircd/config/includes:ro
+      - ../../services/chat/irc-server/config/templates:/etc/unrealircd-templates:ro
+      - ../../services/chat/irc-server/config/includes:/home/unrealircd/unrealircd/config/includes:ro
       - ../../data/irc/data:/home/unrealircd/unrealircd/data
       - ../../data/certs:/home/unrealircd/unrealircd/certs:ro
 

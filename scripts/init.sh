@@ -78,7 +78,7 @@ set_permissions() {
 }
 
 setup_ca_bundle() {
-  local ca_dir="$PROJECT_ROOT/services/chat/irc/config/includes/tls"
+  local ca_dir="$PROJECT_ROOT/services/chat/irc-server/config/includes/tls"
   local ca_file="curl-ca-bundle.crt"
 
   mkdir -p "$ca_dir"

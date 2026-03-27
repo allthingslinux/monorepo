@@ -16,11 +16,11 @@ services:
     env_file:
       - path: ./.env.dev
         required: false
-  atl-thelounge:
+  atl-irc-client-lounge:
     env_file:
       - path: ./.env.dev
         required: false
-  atl-fluux-messenger:
+  atl-xmpp-client-fluux:
     env_file:
       - path: ./.env.dev
         required: false

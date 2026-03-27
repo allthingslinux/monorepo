@@ -28,11 +28,11 @@ jobs:
         with:
           filters: |
             irc:
-              - 'services/chat/irc/**'
+              - 'services/chat/irc-server/**'
               - 'services/chat/irc-services/**'
               - 'services/chat/irc-webpanel/**'
             xmpp:
-              - 'services/chat/xmpp/**'
+              - 'services/chat/xmpp-server/**'
             bridge:
               - 'apps/bridge/**'
             clients:
@@ -73,7 +73,7 @@ jobs:
     secrets: inherit
     with:
       context: services/chat/irc
-      image-name: ghcr.io/allthingslinux/irc
+      image-name: ghcr.io/allthingslinux/irc-server
       push: ${{ github.ref == 'refs/heads/main' }}
 
   docker-irc-services:
@@ -93,7 +93,7 @@ jobs:
     secrets: inherit
     with:
       context: services/chat/xmpp
-      image-name: ghcr.io/allthingslinux/xmpp
+      image-name: ghcr.io/allthingslinux/xmpp-server
       push: ${{ github.ref == 'refs/heads/main' }}
 
   docker-bridge:
