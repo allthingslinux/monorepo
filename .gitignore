@@ -87,7 +87,6 @@ __pycache__/
 .hypothesis/
 .pytest_cache/
 .ruff_cache/
-uv.lock
 
 # Docker runtime data
 data/

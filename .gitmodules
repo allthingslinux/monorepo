@@ -1,0 +1,3 @@
+[submodule "services/chat/irc-client-obsidian/upstream"]
+	path = services/chat/irc-client-obsidian/upstream
+	url = https://github.com/ObsidianIRC/ObsidianIRC.git
