@@ -24,7 +24,7 @@
     "prompt": "Enter a search term…"
   },
   "api": {
-    "openapi": "api-reference/openapi.json",
+    "openapi": "developers/api-reference/openapi.json",
     "playground": {
       "display": "interactive"
     },
@@ -39,44 +39,34 @@
         "icon": "layout-grid",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "about",
-              "quickstart",
-              "development",
-              "contributing"
+              "platform/index",
+              "platform/about",
+              "platform/quickstart",
+              "platform/development",
+              "platform/contributing"
             ]
           }
         ]
       },
       {
-        "dropdown": "portal",
-        "icon": "user",
+        "dropdown": "Products",
+        "icon": "box",
         "groups": [
           {
-            "group": "Documentation",
-            "pages": ["portal/index"]
-          }
-        ]
-      },
-      {
-        "dropdown": "atl.chat",
-        "icon": "messages-square",
-        "groups": [
-          {
-            "group": "Overview",
+            "group": "atl.chat",
             "pages": ["chat/index"]
           },
           {
-            "group": "Getting Started",
+            "group": "atl.chat — Getting Started",
             "pages": [
               "chat/getting-started/index",
               "chat/getting-started/local-development"
             ]
           },
           {
-            "group": "Architecture",
+            "group": "atl.chat — Architecture",
             "pages": [
               "chat/architecture/index",
               "chat/architecture/networking",
@@ -84,7 +74,7 @@
             ]
           },
           {
-            "group": "Services",
+            "group": "atl.chat — Services",
             "pages": [
               "chat/services/irc/index",
               "chat/services/irc/configuration",
@@ -95,14 +85,12 @@
               "chat/services/xmpp/index",
               "chat/services/xmpp/configuration",
               "chat/services/xmpp/modules",
-              "chat/services/bridge/index",
-              "chat/services/bridge/configuration",
               "chat/services/thelounge/index",
               "chat/services/web/index"
             ]
           },
           {
-            "group": "Operations",
+            "group": "atl.chat — Operations",
             "pages": [
               "chat/operations/deployment",
               "chat/operations/ssl-tls",
@@ -113,7 +101,7 @@
             ]
           },
           {
-            "group": "Reference",
+            "group": "atl.chat — Reference",
             "pages": [
               "chat/reference/environment-variables",
               "chat/reference/ports",
@@ -123,62 +111,137 @@
             ]
           },
           {
-            "group": "Development",
+            "group": "atl.chat — Development",
             "pages": [
               "chat/development/contributing",
               "chat/development/testing",
               "chat/development/adding-a-service"
             ]
-          }
-        ]
-      },
-      {
-        "dropdown": "atl.sh",
-        "icon": "terminal",
-        "groups": [
+          },
           {
-            "group": "Documentation",
+            "group": "Bridge",
+            "pages": [
+              "chat/services/bridge/index",
+              "chat/services/bridge/configuration",
+              "chat/services/bridge/operations"
+            ]
+          },
+          {
+            "group": "Portal",
+            "pages": ["portal/index"]
+          },
+          {
+            "group": "atl.sh",
             "pages": ["sh/index"]
-          }
-        ]
-      },
-      {
-        "dropdown": "atl.dev",
-        "icon": "cloud",
-        "groups": [
+          },
           {
-            "group": "Documentation",
+            "group": "atl.tools",
+            "pages": ["tools/index"]
+          },
+          {
+            "group": "atl.dev",
             "pages": ["dev/index"]
+          },
+          {
+            "group": "atl.wiki",
+            "pages": ["wiki/index"]
+          },
+          {
+            "group": "Tux",
+            "pages": ["tux/index"]
           }
         ]
       },
       {
-        "dropdown": "atl.tools",
+        "dropdown": "Infrastructure",
         "icon": "server",
         "groups": [
           {
-            "group": "Documentation",
-            "pages": ["tools/index"]
+            "group": "Network",
+            "pages": [
+              "network/bastion-setup",
+              "network/services/coturn",
+              "network/services/nginx-proxy-manager",
+              "network/services/npm-irc-integration",
+              "network/services/sftpgo"
+            ]
+          },
+          {
+            "group": "Observability",
+            "pages": ["observability/metrics-stack"]
           }
         ]
       },
       {
-        "dropdown": "atl.wiki",
-        "icon": "book-marked",
+        "dropdown": "Organization",
+        "icon": "building-2",
         "groups": [
           {
-            "group": "Documentation",
-            "pages": ["wiki/index"]
+            "group": "About",
+            "pages": ["organization/index"]
+          },
+          {
+            "group": "Governance",
+            "pages": ["governance/index"]
+          },
+          {
+            "group": "Policies",
+            "pages": ["policies/index"]
           }
         ]
       },
       {
-        "dropdown": "tux",
-        "icon": "bot",
+        "dropdown": "Community",
+        "icon": "users",
         "groups": [
           {
-            "group": "Documentation",
-            "pages": ["tux/index"]
+            "group": "Community",
+            "pages": ["community/index"]
+          },
+          {
+            "group": "Operations",
+            "pages": ["operations/index"]
+          },
+          {
+            "group": "Brand",
+            "pages": ["brand/index"]
+          }
+        ]
+      },
+      {
+        "dropdown": "Developers",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "API Documentation",
+            "pages": ["developers/api-reference/introduction"]
+          },
+          {
+            "group": "Endpoint Examples",
+            "pages": [
+              "developers/api-reference/endpoint/get",
+              "developers/api-reference/endpoint/create",
+              "developers/api-reference/endpoint/delete",
+              "developers/api-reference/endpoint/webhook"
+            ]
+          },
+          {
+            "group": "AI Tools",
+            "pages": [
+              "developers/ai-tools/cursor",
+              "developers/ai-tools/claude-code",
+              "developers/ai-tools/windsurf"
+            ]
+          }
+        ]
+      },
+      {
+        "dropdown": "Security",
+        "icon": "shield",
+        "groups": [
+          {
+            "group": "Security",
+            "pages": ["security/index"]
           }
         ]
       },
@@ -187,43 +250,16 @@
         "icon": "pen-line",
         "groups": [
           {
-            "group": "Site configuration",
-            "pages": ["essentials/settings", "essentials/navigation"]
+            "group": "Site Configuration",
+            "pages": ["authoring/settings", "authoring/navigation"]
           },
           {
-            "group": "Writing content",
+            "group": "Writing Content",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "dropdown": "API reference",
-        "icon": "braces",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": ["api-reference/introduction"]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "authoring/markdown",
+              "authoring/code",
+              "authoring/images",
+              "authoring/reusable-snippets"
             ]
           }
         ]
