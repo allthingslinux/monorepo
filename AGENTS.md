@@ -24,6 +24,37 @@
 - `just bridge-test` — Python bridge tests
 - `pnpm check` / `pnpm fix` — Oxlint + Oxfmt
 
+# CI / GitHub Actions
+
+Workflows live in `.github/workflows/`. Naming convention: `{app}-{action}.yml` or `{domain}-ci.yml`.
+
+- `portal-ci.yml` — lint, type-check, build, test, knip, release for @atl/portal
+- `portal-deploy.yml` — Docker build + SSH deploy to VPS (staging/production)
+- `portal-rollback.yml` — manual rollback via workflow_dispatch
+- `portal-migrate.yml` — manual database migration via workflow_dispatch
+- `portal-maintenance.yml` — TODO-to-issue conversion on push to main
+- `web-deploy.yml` — Alchemy/OpenNext deploy to Cloudflare Workers (PR previews + prod)
+- `chat-ci.yml` — bridge lint/test/coverage, Docker builds for IRC/XMPP/bridge images
+- `docs-ci.yml` — Mintlify validate + broken link check
+- `codeql.yml` — CodeQL SAST for JS/TS, Python, and Actions workflows
+- `dependency-review.yml` — PR dependency vulnerability check
+- `dependency-submission.yml` — submits bridge uv.lock to GitHub dependency graph
+- `lint-infra.yml` — actionlint, hadolint, shellcheck, shfmt for workflows/Containerfiles/scripts
+- `pr-title.yml` — conventional commit PR title validation
+- `pr-label.yml` — auto-label PRs by changed paths
+
+Reusable workflows:
+- `reusable-py-check.yml` — ruff + basedpyright for Python
+- `reusable-docker-build.yml` — Docker build with SBOM, provenance, attestation
+
+Composite actions:
+- `.github/actions/setup-node-pnpm/` — corepack + pnpm + Node + frozen install
+
+Pre-commit (Husky + lint-staged):
+- `*.{ts,tsx,js,jsx}` → oxlint + oxfmt
+- `*.py` → ruff check --fix + ruff format
+- `*.sh` → shellcheck + shfmt
+
 # Auth Architecture
 
 Portal is the OIDC provider: `apps/portal/src/features/auth/lib/config.ts`
