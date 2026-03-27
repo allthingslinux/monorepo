@@ -204,7 +204,7 @@
   ],
   // Paths to exclude from Renovate scanning (no PRs/alerts for these)
   // .cursor/skills contains template package.json files; we don't want dependency PRs for them
-  ignorePaths: ["**/.cursor/skills/**", "services/**", "apps/bridge/**"],
+  ignorePaths: ["**/.cursor/skills/**", "apps/bridge/**"],
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
   platformAutomerge: true,
   // Branch rebasing configuration
@@ -449,6 +449,7 @@
     {
       // Critical packages keep their own group for minor/patch (override from above)
       // Placed after patch/minor rules so this groupName wins for critical packages
+      // ⚠️ KEEP IN SYNC with the critical packages list above
       matchPackageNames: [
         "next",
         "react",
@@ -530,6 +531,11 @@
         "@testing-library/react",
         "ultracite",
         "tsx",
+        "turbo",
+        "knip",
+        "oxlint-tsgolint",
+        "fast-check",
+        "discord-api-types",
         "husky",
         "lint-staged",
         "@commitlint/cli",
@@ -571,6 +577,21 @@
       groupName: "dev-deps",
       addLabels: ["deps: dev"],
       prPriority: -1,
+    },
+    {
+      // UI primitives - design system dependencies
+      matchPackageNames: [
+        "/^@radix-ui\\//",
+        "/^@base-ui\\//",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+      ],
+      groupName: "ui",
+      automerge: true,
+      automergeType: "branch",
+      addLabels: ["deps: ui"],
     },
     {
       // Type definitions
@@ -635,7 +656,7 @@
       // - appleboy/ssh-action@v1
       // - pnpm/action-setup@v4
       // - actions/setup-node@v6
-      // - actions/cache@v4
+      // - actions/cache@v5
       // - codecov/codecov-action@v5
       //
       // All of these will be automatically pinned to commit SHAs by Renovate
