@@ -27,7 +27,7 @@ WORKDIR /usr/src
 RUN git clone https://github.com/atheme/atheme -b "${ATHEME_VERSION}" --depth=1 atheme-src --recurse-submodules
 
 # Apply no_irc_register patch (Portal-only registration; block /msg NickServ REGISTER)
-COPY no-irc-register.patch /usr/src/no-irc-register.patch
+COPY patches/no-irc-register.patch /usr/src/no-irc-register.patch
 WORKDIR /usr/src/atheme-src
 RUN patch -p1 < /usr/src/no-irc-register.patch
 

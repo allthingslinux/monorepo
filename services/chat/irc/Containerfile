@@ -54,8 +54,8 @@ USER builduser
 COPY config.settings .
 
 # Build relaymsg-atl and redact-atl from contrib
-COPY contrib/relaymsg/relaymsg-atl.c src/modules/third/
-COPY contrib/redact/redact-atl.c src/modules/third/
+COPY modules/relaymsg-atl.c src/modules/third/
+COPY modules/redact-atl.c src/modules/third/
 
 # Configure UnrealIRCd build
 RUN ./Config -quick
@@ -67,7 +67,7 @@ RUN make -j"$(nproc)"
 RUN make install
 
 # Install third-party modules specified in the manifest
-COPY third-party-modules.list /home/unrealircd/third-party-modules.list
+COPY modules.list /home/unrealircd/modules.list
 RUN while IFS= read -r module || [ -n "$module" ]; do \
     case "$module" in \
     \#*) continue ;; \
@@ -75,7 +75,7 @@ RUN while IFS= read -r module || [ -n "$module" ]; do \
     esac; \
     echo "Installing module: $module"; \
     /home/unrealircd/unrealircd/unrealircd module install "$module" || exit 1; \
-    done < /home/unrealircd/third-party-modules.list
+    done < /home/unrealircd/modules.list
 
 # ============================================================================
 # RUNTIME STAGE - Minimal production container (no build tools)

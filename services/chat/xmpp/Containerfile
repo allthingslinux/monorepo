@@ -179,7 +179,7 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Copy custom plugins (e.g. mod_pep_open_avatars)
-COPY custom_plugins/ /var/lib/prosody/custom_plugins/
+COPY modules/ /var/lib/prosody/modules/
 
 # prosody-modules and prosody-modules-enabled are already included via
 # COPY --from=builder /usr/local /usr/local above — no separate copy needed
@@ -192,7 +192,7 @@ EXPOSE 5222 5223 5269 5270 5280 5281 5347 5000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 CMD sh -c 'curl -sf http://localhost:5280/status >/dev/null && nc -z 127.0.0.1 5347' || exit 1
 
 # Set Lua paths for modules and C libraries
-ENV LUA_PATH="/usr/local/lib/prosody/?.lua;/usr/local/lib/prosody/?/init.lua;/usr/local/lib/prosody/prosody-modules-enabled/?.lua;/usr/local/lib/prosody/prosody-modules-enabled/?/init.lua;/var/lib/prosody/custom_plugins/?.lua;/var/lib/prosody/custom_plugins/?/init.lua;;" \
+ENV LUA_PATH="/usr/local/lib/prosody/?.lua;/usr/local/lib/prosody/?/init.lua;/usr/local/lib/prosody/prosody-modules-enabled/?.lua;/usr/local/lib/prosody/prosody-modules-enabled/?/init.lua;/var/lib/prosody/modules/?.lua;/var/lib/prosody/custom_plugins/?/init.lua;;" \
     LUA_CPATH="/usr/local/lib/prosody/?.so;;"
 
 WORKDIR /var/lib/prosody
