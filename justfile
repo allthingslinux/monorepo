@@ -252,6 +252,11 @@ docs-build:
 docs-check-links:
     pnpm --filter @atl/docs run lint:links
 
+# ── CI & Config Validation ────────────────────────────────────────────────────
+[group('ci')]
+renovate-validate:
+    pnpm dlx --package=renovate renovate-config-validator .github/renovate.json5
+
 # ── Infra & Maintenance ───────────────────────────────────────────────────────
 [group('infra')]
 docker-clean:
