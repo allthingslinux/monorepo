@@ -24,7 +24,7 @@ config.settings    # UnrealIRCd build settings
 third-party-modules.list   # third/showwebirc, third/relaymsg-atl, etc.
 Containerfile      # Docker image
 docker-entrypoint.sh
-justfile           # Loaded via: mod irc './apps/unrealircd'
+justfile           # Loaded via: services/chat/irc-server
 ```
 
 ## Key Commands

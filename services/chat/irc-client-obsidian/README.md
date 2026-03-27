@@ -91,10 +91,10 @@ The `upstream/` directory is a git submodule pointing to the official ObsidianIR
 To update the submodule:
 
 ```bash
-cd apps/obsidianirc/upstream
+cd services/chat/irc-client-obsidian/upstream
 git pull origin main
 cd ../../..
-git add apps/obsidianirc/upstream
+git add services/chat/irc-client-obsidian/upstream
 git commit -m "chore(obsidianirc): update upstream submodule"
 ```
 

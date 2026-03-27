@@ -34,7 +34,7 @@ www/                       # Static assets
 
 Containerfile
 docker-entrypoint.sh
-justfile                   # Loaded via: mod xmpp './apps/prosody'
+justfile                   # Loaded via: services/chat/xmpp-server
 modules.list
 ```
 

@@ -1,8 +1,8 @@
 # Fluux Messenger (Docker image)
 
-> Scope: `apps/fluux-messenger/` — inherits monorepo [AGENTS.md](../../AGENTS.md).
+> Scope: `services/chat/xmpp-client-fluux/` — inherits monorepo [AGENTS.md](../../AGENTS.md).
 
-Build context for the **Fluux** XMPP web client (upstream [processone/fluux-messenger](https://github.com/processone/fluux-messenger)): multi-stage image clones a pinned tag, builds the Vite app, and serves static assets with **nginx**. Wired into the stack via [infra/compose/fluux-messenger.yaml](../../infra/compose/fluux-messenger.yaml) (`atl-fluux-messenger` service).
+Build context for the **Fluux** XMPP web client (upstream [processone/fluux-messenger](https://github.com/processone/fluux-messenger)): multi-stage image clones a pinned tag, builds the Vite app, and serves static assets with **nginx**. Wired into the stack via [infra/compose/chat-fluux.yaml](../../infra/compose/fluux-messenger.yaml) (`atl-xmpp-client-fluux` service).
 
 ## Files
 
@@ -30,7 +30,7 @@ Fluux derives **`https://<JID-domain>/.well-known/…`** and **`wss://<JID-domai
 
 **Default stack behavior:** `atl-xmpp-nginx` listens on **5281** and **443** (TLS) and publishes **`127.0.0.1:443` → :443** so `https://xmpp.localhost/…` and `wss://xmpp.localhost/ws` work without a port. Ensure **`xmpp.localhost`** resolves (e.g. `/etc/hosts`) and accept the dev cert in the browser.
 
-**If 127.0.0.1:443 is already in use**, remove the `443` mapping in `infra/compose/xmpp.yaml` and either set **Server (optional)** to `wss://xmpp.localhost:5281/ws` or use the Fluux container proxy: `wss://localhost:8443/ws` / `ws://localhost:8091/ws` (rebuild `atl-fluux-messenger` after nginx template changes).
+**If 127.0.0.1:443 is already in use**, remove the `443` mapping in `infra/compose/chat-xmpp.yaml` and either set **Server (optional)** to `wss://xmpp.localhost:5281/ws` or use the Fluux container proxy: `wss://localhost:8443/ws` / `ws://localhost:8091/ws` (rebuild `atl-xmpp-client-fluux` after nginx template changes).
 
 Rebuild **`atl-xmpp-nginx`** after changing `infra/nginx/prosody-https.conf.template`: `docker compose … build atl-xmpp-nginx` (or `just build`).
 

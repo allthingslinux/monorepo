@@ -23,4 +23,4 @@ Containerfile          # Multi-stage: node:22-alpine3.21, npm ci (non-root gamja
 ## Related
 
 - [Monorepo AGENTS.md](../../AGENTS.md)
-- [apps/thelounge/AGENTS.md](../thelounge/AGENTS.md)
+- [../irc-client-lounge/AGENTS.md)

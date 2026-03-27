@@ -72,7 +72,7 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build.yml
     secrets: inherit
     with:
-      context: services/chat/irc
+      context: services/chat/irc-server
       image-name: ghcr.io/allthingslinux/irc-server
       push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -92,7 +92,7 @@ jobs:
     uses: ./.github/workflows/reusable-docker-build.yml
     secrets: inherit
     with:
-      context: services/chat/xmpp
+      context: services/chat/xmpp-server
       image-name: ghcr.io/allthingslinux/xmpp-server
       push: ${{ github.ref == 'refs/heads/main' }}
 

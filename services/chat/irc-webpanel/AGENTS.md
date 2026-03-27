@@ -26,4 +26,4 @@ README.md        # User docs, access, troubleshooting
 ## Related
 
 - [Monorepo AGENTS.md](../../AGENTS.md)
-- [apps/unrealircd/AGENTS.md](../unrealircd/AGENTS.md)
+- [../irc-server/AGENTS.md)

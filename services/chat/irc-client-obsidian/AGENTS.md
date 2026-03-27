@@ -1,4 +1,4 @@
-# apps/obsidianirc
+# irc-client-obsidian
 
 > Scope: ObsidianIRC web client (custom build from upstream submodule).
 
@@ -14,7 +14,7 @@ Modern IRC web client with ATL-specific configuration baked in.
 ## Structure
 
 ```
-apps/obsidianirc/
+services/chat/irc-client-obsidian/
 ├── Containerfile       # Custom build with ATL defaults
 ├── justfile            # shell, logs, rebuild, rebuild-clean
 └── upstream/           # Git submodule (ObsidianIRC source)

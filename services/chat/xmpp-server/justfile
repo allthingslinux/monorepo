@@ -1,5 +1,5 @@
 # Prosody (XMPP) Service Justfile
-# Loaded via root: mod xmpp './apps/prosody'
+# Loaded via root: services/chat/xmpp-server
 
 set export := true
 

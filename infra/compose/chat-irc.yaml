@@ -174,5 +174,5 @@ services:
     networks:
       - atl-chat
 
-  # TODO: Gamja (IRC web client) - see apps/gamja/
+  # TODO: Gamja (IRC web client) - see services/chat/irc-client-gamja/
   # Containerfile exists but needs final stage + config. Wire when ready.

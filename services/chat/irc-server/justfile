@@ -1,5 +1,5 @@
 # IRC Stack Justfile (UnrealIRCd, Atheme, WebPanel)
-# Loaded via root: mod irc './apps/unrealircd'
+# Loaded via root: services/chat/irc-server
 # Use root 'just' for lifecycle: init, dev, down, logs
 
 [group('Development')]
@@ -168,7 +168,7 @@ lint:
     fi
     @if command -v hadolint >/dev/null 2>&1; then \
         echo "Running hadolint..."; \
-        hadolint Containerfile ../../apps/atheme/Containerfile ../../apps/webpanel/Containerfile ../../apps/gamja/Containerfile; \
+        hadolint Containerfile ../../../irc-services/Containerfile ../../../irc-webpanel/Containerfile ../../../irc-client-gamja/Containerfile; \
         echo "Hadolint completed!"; \
     else \
         echo "hadolint not found. Install it for Containerfile validation."; \

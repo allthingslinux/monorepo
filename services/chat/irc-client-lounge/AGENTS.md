@@ -8,7 +8,7 @@ The Lounge web-based IRC client. Private mode (user accounts required). Defaults
 
 ```
 config.js.template   # Config template (env vars substituted at init)
-justfile             # Loaded via: mod lounge './apps/thelounge'
+justfile             # Loaded via: services/chat/irc-client-lounge
 ```
 
 ## Key Commands

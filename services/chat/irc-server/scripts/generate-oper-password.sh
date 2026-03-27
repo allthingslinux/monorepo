@@ -10,7 +10,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Repo root: apps/unrealircd/scripts -> apps/unrealircd -> apps -> repo root
+# Repo root: services/chat/irc-server/scripts
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # Colors for output
