@@ -881,8 +881,11 @@ const telemetry = {
 
 const trustedOrigins = [
   "http://localhost:3000",
-  // Add production origins from environment variable
-  ...(env.BETTER_AUTH_URL?.startsWith("https://") ? [env.BETTER_AUTH_URL] : []),
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  // Canonical app URL (http or https) — must match the origin users hit or Better Auth returns "Invalid origin"
+  ...(env.BETTER_AUTH_URL ? [env.BETTER_AUTH_URL] : []),
   // Add additional production origins as needed
   // "https://portal.example.com",
   // Wildcard support for subdomains
