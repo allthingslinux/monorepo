@@ -65,8 +65,70 @@
         "icon": "messages-square",
         "groups": [
           {
-            "group": "Documentation",
+            "group": "Overview",
             "pages": ["chat/index"]
+          },
+          {
+            "group": "Getting Started",
+            "pages": [
+              "chat/getting-started/index",
+              "chat/getting-started/local-development"
+            ]
+          },
+          {
+            "group": "Architecture",
+            "pages": [
+              "chat/architecture/index",
+              "chat/architecture/networking",
+              "chat/architecture/data-model"
+            ]
+          },
+          {
+            "group": "Services",
+            "pages": [
+              "chat/services/irc/index",
+              "chat/services/irc/configuration",
+              "chat/services/irc/modules",
+              "chat/services/irc/operations",
+              "chat/services/atheme/index",
+              "chat/services/atheme/configuration",
+              "chat/services/xmpp/index",
+              "chat/services/xmpp/configuration",
+              "chat/services/xmpp/modules",
+              "chat/services/bridge/index",
+              "chat/services/bridge/configuration",
+              "chat/services/thelounge/index",
+              "chat/services/web/index"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "chat/operations/deployment",
+              "chat/operations/ssl-tls",
+              "chat/operations/backups",
+              "chat/operations/monitoring",
+              "chat/operations/security",
+              "chat/operations/troubleshooting"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "chat/reference/environment-variables",
+              "chat/reference/ports",
+              "chat/reference/api",
+              "chat/reference/glossary",
+              "chat/reference/faq"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": [
+              "chat/development/contributing",
+              "chat/development/testing",
+              "chat/development/adding-a-service"
+            ]
           }
         ]
       },
