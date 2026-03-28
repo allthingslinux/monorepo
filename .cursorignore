@@ -26,6 +26,11 @@ __pycache__/
 # Docker runtime data
 data/
 
+# Pubnix installed deps & VM state (large, not useful for indexing)
+infra/sh/.ansible/
+infra/sh/.vagrant/
+infra/sh/terraform/.terraform/
+
 # Env: hide secrets; keep committed examples discoverable
 .env
 .env.*
