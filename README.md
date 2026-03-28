@@ -21,8 +21,11 @@ services/
 └── observability/ Grafana, Loki, Mimir, Alloy, Alloy Agent, Blackbox
 
 infra/
-├── compose/       Docker Compose fragments (chat-*.yaml, network, observability, cert-manager, networks)
-└── nginx/         Nginx reverse proxy config (Prosody HTTPS)
+├── chat/          Docker Compose fragments (chat-*.yaml)
+├── network/       Docker Compose fragments (network.yaml)
+├── observability/ Docker Compose fragments (observability.yaml)
+├── nginx/         Nginx reverse proxy config (Prosody HTTPS)
+└── sh/            atl.sh pubnix provisioning (Ansible, Terraform, skel, Vagrant)
 
 scripts/           Shell scripts (init.sh — data dirs + dev certs)
 ```
@@ -100,6 +103,20 @@ Run `just` to see all available recipes grouped by domain.
 | `just bridge-fix`       | Ruff lint fix + format   |
 | `just bridge-typecheck` | basedpyright type check  |
 | `just bridge-test`      | pytest suite             |
+
+### Pubnix (atl.sh)
+
+| Command                                 | Purpose                             |
+| --------------------------------------- | ----------------------------------- |
+| `just pubnix-setup`                     | Install Ansible deps + galaxy roles |
+| `just pubnix-deploy <target>`           | Ansible deploy (dev/staging/prod)   |
+| `just pubnix-deploy-tag <target> <tag>` | Deploy specific roles by tag        |
+| `just pubnix-deploy-check <target>`     | Dry run (check mode)                |
+| `just pubnix-molecule-test <role>`      | Molecule test for an Ansible role   |
+| `just pubnix-smoke-test <target>`       | End-to-end smoke test               |
+| `just pubnix-tf-plan`                   | Terraform plan                      |
+| `just pubnix-dev-up`                    | Start Vagrant dev VM                |
+| `just pubnix-lint`                      | ansible-lint + pre-commit           |
 
 ## Environment variables
 

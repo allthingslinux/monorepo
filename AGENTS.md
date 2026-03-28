@@ -17,6 +17,7 @@
 - `infra/network/` — Docker Compose fragments for network services (network.yaml)
 - `infra/observability/` — Docker Compose fragments for observability services (observability.yaml)
 - `infra/nginx/` — Nginx reverse proxy config (Prosody HTTPS)
+- `infra/sh/` — atl.sh pubnix server provisioning (Ansible, Terraform, skel, Vagrant)
 - `scripts/` — init.sh (data dirs + dev certs)
 
 # Key Commands
@@ -25,6 +26,8 @@
 - `just dev` — JS apps via Turbo
 - `just chat-dev` — Docker chat services
 - `just bridge-test` — Python bridge tests
+- `just pubnix-deploy <target>` — Ansible deploy to dev/staging/prod
+- `just pubnix-molecule-test <role>` — Molecule test for an Ansible role
 - `pnpm check` / `pnpm fix` — Oxlint + Oxfmt
 
 # CI / GitHub Actions
