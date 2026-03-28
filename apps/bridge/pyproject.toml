@@ -12,17 +12,17 @@ license = { text = "MIT" }
 authors = [{ name = "All Things Linux", email = "admin@allthingslinux.org" }]
 
 dependencies = [
-  "discord.py",
-  "slixmpp",
-  "httpx[http2]",
-  "pyyaml",
-  "python-dotenv",
-  "cachetools",
-  "loguru",
-  "tenacity",
+  "discord.py>=2.7.1",
+  "slixmpp>=1.14.1",
+  "httpx[http2]>=0.28.1",
+  "pyyaml>=6.0.3",
+  "python-dotenv>=1.2.2",
+  "cachetools>=7.0.5",
+  "loguru>=0.7.3",
+  "tenacity>=9.1.4",
   "pydle>=1.1.0",
   "uvloop>=0.22.1; sys_platform != 'win32'",
-  "privatebin",
+  "privatebin>=0.3.0",
 ]
 
 [project.urls]
