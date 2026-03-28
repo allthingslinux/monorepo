@@ -4,8 +4,8 @@ You have a shell account on the All Things Linux community pubnix server.
 
 ## Your Web Presence
 
-| Protocol | Directory         | URL                              |
-|----------|-------------------|----------------------------------|
+| Protocol | Directory          | URL                              |
+| -------- | ------------------ | -------------------------------- |
 | Web      | `~/public_html/`   | `https://atl.sh/~YOUR_USERNAME`  |
 | Gemini   | `~/public_gemini/` | `gemini://atl.sh/~YOUR_USERNAME` |
 | Gopher   | `~/public_gopher/` | `gopher://atl.sh/~YOUR_USERNAME` |

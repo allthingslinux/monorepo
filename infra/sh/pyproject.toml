@@ -1,0 +1,11 @@
+[project]
+name = "atl-sh"
+version = "0.1.0"
+description = "atl.sh pubnix — Ansible testing and linting tooling"
+requires-python = ">=3.11"
+dependencies = [
+    "ansible-lint>=25.0.0",
+    "molecule>=24.0.0",
+    "molecule-plugins[vagrant]>=23.0.0",
+    "pytest-testinfra>=10.0.0",
+]

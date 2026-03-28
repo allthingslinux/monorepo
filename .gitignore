@@ -98,3 +98,14 @@ apps/bridge/config.yaml
 
 # Fumadocs build artifacts (atl-chat docs — framework not used, content merged)
 .source/
+
+# Pubnix infrastructure (infra/sh/)
+infra/sh/.ansible/
+infra/sh/.vagrant/
+infra/sh/.venv/
+infra/sh/.ssh/
+infra/sh/terraform/.terraform/
+infra/sh/terraform/terraform.tfstate
+infra/sh/terraform/terraform.tfstate.backup
+infra/sh/terraform/terraform.tfvars
+infra/sh/terraform/.terraform.lock.hcl
