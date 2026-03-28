@@ -117,17 +117,17 @@ Portal has its own `.env` at `apps/portal/.env` — see `apps/portal/README.md` 
 
 ## Shared config
 
-| Concern             | Location                                                        |
-| ------------------- | --------------------------------------------------------------- |
-| Git                 | Root `.gitignore`                                               |
-| Commits             | `commitlint.config.cjs` + `.husky/commit-msg`                   |
-| Lint / format       | `.oxlintrc.json` + `.oxfmtrc.jsonc` (Ultracite: Oxlint + Oxfmt) |
-| Pre-commit          | Husky + lint-staged (see below)                                 |
-| Turborepo           | Root `turbo.json`; app overrides in `apps/*/turbo.json`         |
-| Dependency versions | `pnpm-workspace.yaml` `catalog:` section                        |
-| CI                  | `.github/workflows/` + `.github/actions/setup-node-pnpm/`       |
-| Renovate            | `.github/renovate.json5`                                        |
-| Docker              | `infra/compose/*.yaml` included by root `compose.yaml`          |
+| Concern             | Location                                                                    |
+| ------------------- | --------------------------------------------------------------------------- |
+| Git                 | Root `.gitignore`                                                           |
+| Commits             | `commitlint.config.cjs` + `.husky/commit-msg`                               |
+| Lint / format       | `.oxlintrc.json` + `.oxfmtrc.jsonc` (Ultracite: Oxlint + Oxfmt)             |
+| Pre-commit          | Husky + lint-staged (see below)                                             |
+| Turborepo           | Root `turbo.json`; app overrides in `apps/*/turbo.json`                     |
+| Dependency versions | `pnpm-workspace.yaml` `catalog:` section                                    |
+| CI                  | `.github/workflows/` + `.github/actions/setup-node-pnpm/`                   |
+| Renovate            | `.github/renovate.json5`                                                    |
+| Docker              | `infra/{chat,network,observability}/*.yaml` included by root `compose.yaml` |
 
 ### Pre-commit hooks (Husky + lint-staged)
 

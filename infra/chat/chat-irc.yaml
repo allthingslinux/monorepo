@@ -1,12 +1,12 @@
 # =============================================================================
 # IRC Stack - UnrealIRCd, Atheme, WebPanel
 # =============================================================================
-# Paths are relative to this file's directory (infra/compose/)
+# Paths are relative to this file's directory (infra/chat/)
 # =============================================================================
 
 
 include:
-  - networks.yaml
+  - ../networks.yaml
 
 services:
   # ============================================================================

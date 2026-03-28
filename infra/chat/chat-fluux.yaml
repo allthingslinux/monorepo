@@ -8,7 +8,7 @@
 
 
 include:
-  - networks.yaml
+  - ../networks.yaml
 
 services:
   atl-xmpp-client-fluux:

@@ -1,8 +1,8 @@
 # =============================================================================
-# ATL Chat - Root Docker Compose
+# ATL — Root Docker Compose
 # =============================================================================
 # Orchestrates all services across the entire stack.
-# All compose fragments live under infra/compose/
+# Compose fragments are product-scoped under infra/{product}/
 #
 # Usage:
 #   docker compose up -d              # Start all services
@@ -12,16 +12,16 @@
 name: atl
 
 include:
-  - infra/compose/networks.yaml
-  - infra/compose/cert-manager.yaml
-  - infra/compose/chat-irc.yaml
-  - infra/compose/chat-xmpp.yaml
-  - infra/compose/chat-bridge.yaml
-  - infra/compose/chat-lounge.yaml
-  - infra/compose/chat-obsidian.yaml
-  - infra/compose/chat-fluux.yaml
-  - infra/compose/network.yaml
-  - infra/compose/observability.yaml
+  - infra/networks.yaml
+  - infra/cert-manager.yaml
+  - infra/chat/chat-irc.yaml
+  - infra/chat/chat-xmpp.yaml
+  - infra/chat/chat-bridge.yaml
+  - infra/chat/chat-lounge.yaml
+  - infra/chat/chat-obsidian.yaml
+  - infra/chat/chat-fluux.yaml
+  - infra/network/network.yaml
+  - infra/observability/observability.yaml
 
 services:
   dozzle:

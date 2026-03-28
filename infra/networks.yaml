@@ -2,7 +2,7 @@
 # Shared Docker Network
 # =============================================================================
 # Single network for all ATL Chat services.
-# Included by root compose.yaml and infra/compose/*.yaml
+# Included by root compose.yaml and infra/*.yaml
 # =============================================================================
 
 networks:

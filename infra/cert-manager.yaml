@@ -1,7 +1,7 @@
 # =============================================================================
 # Cert Manager - Lego for Let's Encrypt
 # =============================================================================
-# Paths relative to this file's directory (infra/compose/)
+# Paths relative to this file's directory (infra/)
 # Scripts in scripts/cert-manager/
 # =============================================================================
 

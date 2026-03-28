@@ -29,7 +29,7 @@ app: bridge:
           - .github/workflows/chat-ci.yml
           - .github/workflows/dependency-submission.yml
           - .github/workflows/reusable-py-check.yml
-          - infra/compose/chat-bridge.yaml
+          - infra/chat/chat-bridge.yaml
 
 service: irc:
   - changed-files:
@@ -37,10 +37,10 @@ service: irc:
           - services/chat/irc-**/**
           - .github/workflows/chat-ci.yml
           - .github/workflows/reusable-docker-build.yml
-          - infra/compose/chat-irc.yaml
-          - infra/compose/chat-lounge.yaml
-          - infra/compose/chat-obsidian.yaml
-          - infra/compose/chat-gamja.yaml
+          - infra/chat/chat-irc.yaml
+          - infra/chat/chat-lounge.yaml
+          - infra/chat/chat-obsidian.yaml
+          - infra/chat/chat-gamja.yaml
 
 service: xmpp:
   - changed-files:
@@ -48,20 +48,20 @@ service: xmpp:
           - services/chat/xmpp-**/**
           - .github/workflows/chat-ci.yml
           - .github/workflows/reusable-docker-build.yml
-          - infra/compose/chat-xmpp.yaml
-          - infra/compose/chat-fluux.yaml
+          - infra/chat/chat-xmpp.yaml
+          - infra/chat/chat-fluux.yaml
 
 service: network:
   - changed-files:
       - any-glob-to-any-file:
           - services/network/**
-          - infra/compose/network.yaml
+          - infra/network/network.yaml
 
 service: observability:
   - changed-files:
       - any-glob-to-any-file:
           - services/observability/**
-          - infra/compose/observability.yaml
+          - infra/observability/observability.yaml
 
 packages:
   - changed-files:
@@ -73,8 +73,8 @@ infra:
           - infra/**
           - compose.yaml
           - compose.*.yaml
-          - infra/compose/networks.yaml
-          - infra/compose/cert-manager.yaml
+          - infra/networks.yaml
+          - infra/cert-manager.yaml
           - .github/workflows/lint-infra.yml
 
 ci:

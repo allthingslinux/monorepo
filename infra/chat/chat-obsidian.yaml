@@ -7,7 +7,7 @@
 
 
 include:
-  - networks.yaml
+  - ../networks.yaml
 
 services:
   atl-irc-client-obsidian:

@@ -31,7 +31,7 @@ class TestConfigurationValidation:
         assert compose_file.exists(), "Root compose.yaml should exist"
 
         irc_compose = repo_root / "infra" / "compose" / "irc.yaml"
-        assert irc_compose.exists(), "infra/compose/irc.yaml should exist"
+        assert irc_compose.exists(), "infra/chat/chat-irc.yaml should exist"
 
         content = irc_compose.read_text()
         assert "services:" in content, "IRC compose should contain services section"
@@ -244,7 +244,7 @@ class TestSSLManagement:
 
     def test_cert_manager_compose_exists(self, project_root):
         """Test that cert-manager compose file exists (replaces ssl-manager.sh)."""
-        cert_manager_compose = project_root / "infra/compose/cert-manager.yaml"
+        cert_manager_compose = project_root / "infra/cert-manager.yaml"
         assert cert_manager_compose.exists(), "Cert-manager compose should exist"
 
     @pytest.mark.integration

@@ -13,7 +13,9 @@
   - `network/` — DNS (Blocky), TURN (coturn), uptime (Gatus), SFTP
   - `observability/` — Grafana, Loki, Mimir, Alloy, Alloy Agent, Blackbox
 - `packages/ui` — @atl/ui shared design system
-- `infra/compose/` — Docker Compose fragments (chat-\*.yaml, network.yaml, observability.yaml, cert-manager.yaml, networks.yaml)
+- `infra/chat/` — Docker Compose fragments for chat services (chat-irc.yaml, chat-xmpp.yaml, chat-bridge.yaml, etc.)
+- `infra/network/` — Docker Compose fragments for network services (network.yaml)
+- `infra/observability/` — Docker Compose fragments for observability services (observability.yaml)
 - `infra/nginx/` — Nginx reverse proxy config (Prosody HTTPS)
 - `scripts/` — init.sh (data dirs + dev certs)
 
