@@ -1,0 +1,32 @@
+---
+- name: Ensure systemd user slice directory exists
+  ansible.builtin.file:
+    path: /etc/systemd/system/user-.slice.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Deploy systemd user slice resource limits
+  ansible.builtin.template:
+    src: systemd/10-pubnix-limits.conf.j2
+    dest: /etc/systemd/system/user-.slice.d/10-pubnix-limits.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd daemon
+
+- name: Deploy secured /tmp tmpfs mount unit
+  ansible.builtin.template:
+    src: systemd/tmp.mount.j2
+    dest: /etc/systemd/system/tmp.mount
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd daemon
+
+- name: Enable and mount secured /tmp
+  ansible.builtin.systemd:
+    name: tmp.mount
+    enabled: true
+    state: started

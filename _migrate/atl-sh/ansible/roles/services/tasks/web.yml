@@ -1,0 +1,46 @@
+---
+- name: Apply geerlingguy.nginx role
+  ansible.builtin.include_role:
+    name: geerlingguy.nginx
+  vars:
+    nginx_remove_default_vhost: true
+
+- name: Install fcgiwrap and certbot accessories
+  ansible.builtin.apt:
+    name:
+      - fcgiwrap
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Deploy tilde site config
+  ansible.builtin.template:
+    src: tilde-site.conf.j2
+    dest: /etc/nginx/conf.d/tilde.conf
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable fcgiwrap
+  ansible.builtin.service:
+    name: fcgiwrap
+    enabled: true
+    state: started
+
+- name: Obtain SSL certificate
+  ansible.builtin.command:
+    cmd: >
+      certbot certonly --nginx
+      --non-interactive
+      --agree-tos
+      --email {{ admin_email }}
+      -d {{ pubnix_domain }}
+      {% if use_staging_certs | default(false) %}--staging{% endif %}
+    creates: /etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem
+  failed_when: false
+  when: "'dev' not in group_names"
+
+- name: Enable auto-renewal timer
+  ansible.builtin.systemd:
+    name: certbot.timer
+    enabled: true
+    state: started

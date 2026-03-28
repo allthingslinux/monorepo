@@ -1,0 +1,38 @@
+---
+- name: Install efingerd
+  ansible.builtin.apt:
+    name:
+      - efingerd
+      - finger
+    state: present
+
+- name: Ensure efingerd scripts are executable
+  ansible.builtin.file:
+    path: "/etc/efingerd/{{ item }}"
+    mode: "0755"
+  loop:
+    - luser
+    - nouser
+    - list
+    - log
+
+- name: Deploy finger systemd socket
+  ansible.builtin.template:
+    src: finger.socket.j2
+    dest: /etc/systemd/system/finger.socket
+    mode: "0644"
+  notify: Restart finger
+
+- name: Deploy finger systemd service
+  ansible.builtin.template:
+    src: finger@.service.j2
+    dest: /etc/systemd/system/finger@.service
+    mode: "0644"
+  notify: Restart finger
+
+- name: Enable and start finger socket
+  ansible.builtin.systemd:
+    name: finger.socket
+    enabled: true
+    state: started
+    daemon_reload: true

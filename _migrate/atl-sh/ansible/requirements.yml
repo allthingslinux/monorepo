@@ -1,0 +1,13 @@
+---
+collections:
+  - name: community.general
+    version: ">=12.0.0"
+  - name: ansible.posix
+    version: ">=2.0.0"
+
+roles:
+  - name: robertdebock.auditd
+  - name: geerlingguy.nginx
+  - name: geerlingguy.ntp
+  - name: robertdebock.fail2ban
+  - name: robertdebock.logrotate

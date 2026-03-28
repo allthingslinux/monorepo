@@ -1,0 +1,33 @@
+---
+# Blacklist unused/dangerous kernel modules
+- name: Create module blacklist configuration
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/cis-hardening.conf
+    content: |
+      # Unused filesystems
+      install cramfs /bin/true
+      install freevxfs /bin/true
+      install jffs2 /bin/true
+      install hfs /bin/true
+      install hfsplus /bin/true
+      install udf /bin/true
+
+      # USB storage (critical for pubnix - prevents data exfiltration)
+      install usb-storage /bin/true
+
+      # Unused network protocols
+      install dccp /bin/true
+      install sctp /bin/true
+      install rds /bin/true
+      install tipc /bin/true
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Update initramfs
+
+- name: Disable Bluetooth
+  ansible.builtin.systemd:
+    name: bluetooth
+    enabled: false
+    state: stopped
+  failed_when: false

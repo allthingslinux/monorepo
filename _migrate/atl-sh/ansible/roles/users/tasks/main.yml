@@ -1,0 +1,104 @@
+---
+- name: Ensure pubnix group exists
+  ansible.builtin.group:
+    name: "{{ pubnix_group }}"
+    state: present
+
+- name: Deploy skel files
+  ansible.builtin.copy:
+    src: "{{ skel_source }}/"
+    dest: /etc/skel/
+    mode: "0644"
+    directory_mode: "0755"
+
+- name: Deploy PAM resource limits
+  ansible.builtin.template:
+    src: limits.conf.j2
+    dest: /etc/security/limits.d/pubnix.conf
+    mode: "0644"
+
+- name: Remove default MOTD
+  ansible.builtin.file:
+    path: /etc/motd
+    state: absent
+
+- name: Ensure update-motd.d exists
+  ansible.builtin.file:
+    path: /etc/update-motd.d
+    state: directory
+    mode: "0755"
+
+- name: Deploy dynamic MOTD script
+  ansible.builtin.template:
+    src: 10-motd.j2
+    dest: /etc/update-motd.d/10-motd
+    mode: "0755"
+
+- name: Set system-wide GEM config to use homedir
+  ansible.builtin.lineinfile:
+    path: /etc/gemrc
+    create: true
+    line: "gem: --user-install --bindir ~/.local/bin"
+    mode: "0644"
+
+- name: Set system-wide NPM config to use homedir
+  ansible.builtin.lineinfile:
+    path: /etc/npmrc
+    create: true
+    line: "prefix = ${HOME}/.npm-packages"
+    mode: "0644"
+
+- name: Configure polyinstantiated directories (pam_namespace)
+  ansible.builtin.copy:
+    dest: /etc/security/namespace.conf
+    content: |
+      /tmp      /tmp/inst/           user      root
+      /var/tmp  /var/tmp/inst/       user      root
+      /run/lock /run/lock/inst/      user      root
+    mode: "0644"
+
+- name: Create backend instance directories for pam_namespace
+  ansible.builtin.copy:
+    dest: /etc/tmpfiles.d/namespaces.conf
+    content: |
+      d     /tmp/inst         0000 root root -   -
+      d     /var/tmp/inst     0000 root root -   -
+      d     /run/lock/inst    0000 root root -   -
+    mode: "0644"
+
+- name: Enable pam_namespace in common-session
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/common-session
+    insertafter: "session\\s+required\\s+pam_env\\.so"
+    line: "session required pam_namespace.so"
+    state: present
+
+- name: Deploy per-user logrotate cron job
+  ansible.builtin.template:
+    src: user-logrotate.sh.j2
+    dest: /etc/cron.daily/user-logrotate
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Deploy social commands
+  ansible.builtin.copy:
+    src: "social/{{ item }}"
+    dest: "/usr/local/bin/{{ item | replace('.sh', '') }}"
+    mode: "0755"
+  loop:
+    - plan.sh
+    - lastplan.sh
+    - online.sh
+
+- name: Deploy community command (templated)
+  ansible.builtin.template:
+    src: social/community.sh.j2
+    dest: /usr/local/bin/community
+    mode: "0755"
+
+- name: Deploy menu command (templated)
+  ansible.builtin.template:
+    src: social/menu.sh.j2
+    dest: /usr/local/bin/menu
+    mode: "0755"

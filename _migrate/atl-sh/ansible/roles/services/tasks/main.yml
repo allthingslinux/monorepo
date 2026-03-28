@@ -1,0 +1,21 @@
+---
+- name: Import web tasks
+  ansible.builtin.import_tasks: web.yml
+
+- name: Import webring tasks
+  ansible.builtin.import_tasks: webring.yml
+
+- name: Import gemini tasks
+  ansible.builtin.import_tasks: gemini.yml
+
+- name: Import gopher tasks
+  ansible.builtin.import_tasks: gopher.yml
+
+- name: Import finger tasks
+  ansible.builtin.import_tasks: finger.yml
+
+- name: Import games tasks
+  ansible.builtin.import_tasks: games.yml
+
+- name: Import dict tasks
+  ansible.builtin.import_tasks: dict.yml

@@ -1,0 +1,21 @@
+---
+# Automatic security updates
+- name: Install unattended-upgrades
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+      - apt-listchanges
+    state: present
+    update_cache: true
+
+- name: Configure unattended-upgrades
+  ansible.builtin.debconf:
+    name: unattended-upgrades
+    question: unattended-upgrades/enable_auto_updates
+    value: 'true'
+    vtype: boolean
+
+- name: Enable automatic security updates
+  ansible.builtin.command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+  changed_when: false

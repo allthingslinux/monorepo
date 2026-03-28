@@ -1,0 +1,24 @@
+---
+- name: Install gophernicus
+  ansible.builtin.apt:
+    name: gophernicus
+    state: present
+
+- name: Create gopher root
+  ansible.builtin.file:
+    path: "{{ gopher_root }}"
+    state: directory
+    mode: "0755"
+
+- name: Deploy gophernicus config
+  ansible.builtin.template:
+    src: gophernicus.env.j2
+    dest: /etc/default/gophernicus
+    mode: "0644"
+  notify: Restart gophernicus
+
+- name: Enable gophernicus socket
+  ansible.builtin.systemd:
+    name: gophernicus.socket
+    enabled: true
+    state: started

@@ -1,0 +1,27 @@
+---
+# Sudo hardening
+- name: Configure sudo hardening
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/hardening
+    content: |
+      # Sudo hardening configuration
+      Defaults use_pty
+      Defaults logfile="/var/log/sudo.log"
+      Defaults timestamp_timeout=5
+      Defaults !visiblepw
+      Defaults always_set_home
+      Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    mode: '0440'
+    owner: root
+    group: root
+    validate: 'visudo -cf %s'
+
+- name: Ensure sudo log file exists
+  ansible.builtin.file:
+    path: /var/log/sudo.log
+    state: touch
+    mode: '0600'
+    owner: root
+    group: root
+    modification_time: preserve
+    access_time: preserve

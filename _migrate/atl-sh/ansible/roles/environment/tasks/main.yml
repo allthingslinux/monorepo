@@ -1,0 +1,42 @@
+---
+# tasks file for environment
+
+- name: Create global pnpm store directory
+  ansible.builtin.file:
+    path: /var/cache/pnpm
+    state: directory
+    mode: '1777' # Sticky bit so users can manage their own files but not others'
+    owner: root
+    group: root
+
+- name: Create global uv cache directory
+  ansible.builtin.file:
+    path: /var/cache/uv
+    state: directory
+    mode: '1777' # Sticky bit so users can manage their own files
+    owner: root
+    group: root
+
+- name: Create global poetry cache directory
+  ansible.builtin.file:
+    path: /var/cache/poetry
+    state: directory
+    mode: '1777' # Sticky bit so users can manage their own files
+    owner: root
+    group: root
+
+- name: Deploy environment paths profile script
+  ansible.builtin.template:
+    src: environment-paths.sh.j2
+    dest: /etc/profile.d/environment-paths.sh
+    owner: root
+    group: root
+    mode: '0644'
+- name: Import systemd limits tasks
+  ansible.builtin.import_tasks: systemd_limits.yml
+
+- name: Import quotas tasks
+  ansible.builtin.import_tasks: quotas.yml
+
+- name: Import xdg tasks
+  ansible.builtin.import_tasks: xdg.yml

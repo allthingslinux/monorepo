@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+# {{ ansible_managed }}
+# Webring navigation CGI — handles next/prev/random redirects.
+# Query params: action=(next|prev|random), user=<username>
+
+import json
+import os
+import random
+import urllib.parse
+from pathlib import Path
+
+MEMBERS_FILE = Path("/var/www/html/ring/members.json")
+
+
+def respond(status: str, location: str | None = None, body: str = "") -> None:
+    print(f"Status: {status}\r")
+    if location:
+        print(f"Location: {location}\r")
+    print("Content-Type: text/plain\r")
+    print("\r")
+    if body:
+        print(body)
+
+
+def main():
+    try:
+        data = json.loads(MEMBERS_FILE.read_text())
+        members = data.get("members", [])
+    except Exception as e:
+        respond("500 Internal Server Error", body=f"Could not load member list: {e}")
+        return
+
+    if not members:
+        respond("302 Found", location="/ring/")
+        return
+
+    qs = urllib.parse.parse_qs(os.environ.get("QUERY_STRING", ""))
+    action = qs.get("action", ["next"])[0].lower()
+    user = qs.get("user", [""])[0].strip()
+
+    if action == "random":
+        target = random.choice(members)
+    else:
+        idx = next((i for i, m in enumerate(members) if m["username"] == user), -1)
+        if idx == -1:
+            respond("302 Found", location="/ring/")
+            return
+        if action == "prev":
+            target = members[(idx - 1) % len(members)]
+        else:
+            target = members[(idx + 1) % len(members)]
+
+    respond("302 Found", location=target["url"])
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+
+platforms:
+  - name: instance
+    box: debian/trixie64
+    memory: 2048
+    cpus: 2
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible

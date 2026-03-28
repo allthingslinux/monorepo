@@ -1,0 +1,19 @@
+---
+pubnix_group: pubnix
+default_shell: /bin/bash
+skel_source: "{{ playbook_dir }}/../skel"
+
+# Resource limits (PAM)
+user_nproc_limit: 100
+user_nofile_limit: 1024
+user_as_limit: 8000000
+user_rss_limit: 8000000
+
+# Resource limits (systemd cgroups)
+user_cpu_quota: 200%
+user_memory_max: 1.5G
+user_tasks_max: 200
+
+# Quotas
+quota_soft: 5G
+quota_hard: 6G

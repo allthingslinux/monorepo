@@ -1,0 +1,33 @@
+---
+# File integrity monitoring with AIDE
+- name: Install AIDE
+  ansible.builtin.apt:
+    name:
+      - aide
+      - aide-common
+    state: present
+    update_cache: true
+
+- name: Initialize AIDE database
+  ansible.builtin.command:
+    cmd: aideinit
+    creates: /var/lib/aide/aide.db.new
+
+- name: Copy AIDE database
+  ansible.builtin.copy:
+    src: /var/lib/aide/aide.db.new
+    dest: /var/lib/aide/aide.db
+    remote_src: true
+    mode: '0600'
+    owner: root
+    group: root
+  when: not ansible_check_mode
+
+- name: Configure AIDE daily check
+  ansible.builtin.cron:
+    name: "AIDE integrity check"
+    minute: "0"
+    hour: "5"
+    job: "/usr/bin/aide --check | mail -s 'AIDE Report for {{ ansible_hostname }}' root"
+    user: root
+    state: present

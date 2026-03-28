@@ -1,0 +1,14 @@
+---
+# Journald hardening
+- name: Configure journald for security
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value }}"
+    state: present
+  loop:
+    - { key: 'Storage', value: 'persistent' }
+    - { key: 'Compress', value: 'yes' }
+    - { key: 'ForwardToSyslog', value: 'yes' }
+    - { key: 'MaxRetentionSec', value: '1month' }
+  notify: Restart journald

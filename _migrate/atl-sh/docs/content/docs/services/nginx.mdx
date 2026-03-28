@@ -1,0 +1,109 @@
+---
+title: Nginx (Web)
+description: Tilde site hosting, CGI scripts, and webring injection via nginx.
+---
+
+Nginx serves personal web pages at `https://atl.sh/~username` from each user's `~/public_html/` directory. It also handles CGI execution via fcgiwrap and auto-injects the webring widget into member pages.
+
+## How it works
+
+```
+Browser → nginx (:443) → /home/username/public_html/
+                        → fcgiwrap (unix socket) for *.cgi scripts
+                        → sub_filter injects webring widget.js
+```
+
+Nginx listens on ports 80 and 443. TLS is terminated by nginx using Let's Encrypt certificates managed by certbot (see [SSL/TLS](/operations/ssl-tls)). The `geerlingguy.nginx` Ansible role handles installation and base config.
+
+## Tilde URL routing
+
+The tilde location block maps `/~username/` to the user's home directory:
+
+```nginx
+location ~ ^/~(.+?)(/.*)?$ {
+    alias /home/$1/public_html$2;
+    index index.html index.htm;
+    autoindex on;
+}
+```
+
+- If `index.html` exists, it's served as the landing page
+- If not, nginx shows an auto-generated directory listing
+- Static files (HTML, CSS, JS, images) are served directly
+
+## CGI scripts
+
+Files ending in `.cgi` are executed via fcgiwrap. Any language installed on the server works — bash, Python, Perl, Ruby, etc.
+
+```bash
+#!/bin/bash
+# ~/public_html/hello.cgi
+echo "Content-Type: text/plain"
+echo ""
+echo "Hello from $(hostname) at $(date)"
+```
+
+Requirements:
+- Script must be executable (`chmod +x`)
+- Must have a valid shebang line (`#!/bin/bash`, `#!/usr/bin/env python3`, etc.)
+- Must output a `Content-Type` header followed by a blank line, then the body
+
+Standard FastCGI environment variables are available: `SCRIPT_FILENAME`, `QUERY_STRING`, `REQUEST_METHOD`, `REMOTE_ADDR`, etc.
+
+## Webring injection
+
+For users who have opted into the [webring](/webring), nginx uses `sub_filter` to inject `<script src="/ring/widget.js" defer></script>` before `</body>` in every response. The widget script checks `members.json` and only renders navigation for ring members.
+
+## Security headers
+
+Nginx adds the following headers to all responses:
+
+| Header | Value |
+|--------|-------|
+| `X-Frame-Options` | `SAMEORIGIN` |
+| `X-Content-Type-Options` | `nosniff` |
+| `X-XSS-Protection` | `1; mode=block` |
+
+Gzip compression is enabled for text, CSS, JSON, JavaScript, and XML content types.
+
+## Ansible configuration
+
+| File | Purpose |
+|------|---------|
+| `roles/services/tasks/web.yml` | Installs nginx, fcgiwrap, certbot; deploys tilde config |
+| `roles/services/templates/tilde-site.conf.j2` | Nginx server block template |
+| `roles/services/defaults/main.yml` | Default variables (`tilde_docroot`, nginx options) |
+
+Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tilde_docroot` | `public_html` | Subdirectory name under each user's home |
+| `nginx_server_tokens` | `off` | Hide nginx version in responses |
+| `nginx_client_max_body_size` | `64m` | Max upload size for CGI POST requests |
+
+## Log files
+
+| Log | Path |
+|-----|------|
+| Access log | `/var/log/nginx/access.log` |
+| Error log | `/var/log/nginx/error.log` |
+
+Logs rotate daily, keeping 14 days. Rotation is managed by logrotate with a `USR1` signal to nginx for graceful reopening.
+
+## Troubleshooting
+
+**Page returns 403 Forbidden**
+- Home directory must be `711` (traversable): `chmod 711 ~`
+- `public_html` must be `755`: `chmod 755 ~/public_html`
+- Files must be world-readable: `chmod 644 ~/public_html/index.html`
+
+**CGI script returns 502 Bad Gateway**
+- Check the script is executable: `chmod +x script.cgi`
+- Verify the shebang points to an existing interpreter
+- Test the script directly: `./script.cgi` — it should output headers + body
+- Check fcgiwrap is running: `systemctl status fcgiwrap`
+
+**Changes not appearing**
+- Nginx caches nothing by default — hard-refresh your browser (`Ctrl+Shift+R`)
+- If using Cloudflare, purge the cache there

@@ -1,0 +1,43 @@
+---
+title: atl.sh
+description: A public Unix environment run by the All Things Linux community.
+---
+
+Welcome to atl.sh — a pubnix (public-access Unix server) for the All Things Linux community. You get a shell account, web hosting, and access to a growing set of community tools and games.
+
+## Quick links
+
+**For users**
+- [User Guide](/user-guide) — connecting, finger, games, messaging
+- [Webring](/webring) — join the community webring
+- [Publishing](/publishing) — web, Gemini, Gopher, CGI, FTP
+- [Development](/development) — languages, editors, tools, package managers
+- [Resource Limits](/resources) — disk quotas, CPU/memory, process isolation
+
+**For admins**
+- [Admin Guide](/admin-guide) — deployment, roles, infrastructure
+- [Operations](/operations) — monitoring, backups, security, logs
+- [SSL/TLS](/operations/ssl-tls) · [Security](/operations/security) · [Troubleshooting](/operations/troubleshooting)
+- [Local Development](/testing) — testing with Vagrant
+
+**For contributors**
+- [Contributing](/development/contributing) — PR workflow, code style
+- [Adding a Role](/development/adding-a-role) — step-by-step guide
+- [Ansible Variables](/development/variables) — complete variable reference
+
+**Services**
+- [Nginx](/services/nginx) · [Gemini](/services/gemini) · [Gopher](/services/gopher) · [Finger](/services/finger) · [FTP](/services/ftp)
+
+**Reference**
+- [FAQ](/faq) · [Glossary](/reference/glossary) · [Code of Conduct](/code-of-conduct)
+
+## Get an account
+
+Sign up at the [ATL Portal](https://portal.allthingslinux.org). Your shell account is provisioned automatically.
+
+```bash
+ssh your-username@atl.sh
+
+# Port 2222 also works if port 22 is blocked
+ssh -p 2222 your-username@atl.sh
+```

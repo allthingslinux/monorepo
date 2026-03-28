@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+# {{ ansible_managed }}
+# Scans user home directories for ~/.ring files and rebuilds /var/www/html/ring/members.json.
+# Runs every 15 minutes via cron.
+#
+# ~/.ring file format (all fields optional — presence of file is enough to opt in):
+#   name        = Display name for your site
+#   description = One or two sentences about your site
+#   url         = Custom URL if your site is not at https://{{ pubnix_domain }}/~username/
+#
+# Requirements to be included in the ring:
+#   1. ~/.ring must exist (opt-in)
+#   2. ~/public_html/ directory must exist
+#
+# The webring widget is injected automatically into all tilde pages via nginx
+# sub_filter, so members don't need to add anything to their HTML manually.
+
+import json
+import os
+import sys
+from pathlib import Path
+
+HOMES = Path("/home")
+OUTPUT = Path("/var/www/html/ring/members.json")
+BASE_URL = "https://{{ pubnix_domain }}"
+RING_URL = f"{BASE_URL}/ring/"
+
+
+def parse_ring_file(path: Path, username: str) -> dict:
+    member = {
+        "username": username,
+        "url": f"{BASE_URL}/~{username}/",
+        "name": username,
+        "description": "",
+    }
+    try:
+        for line in path.read_text(errors="replace").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                key, _, value = line.partition("=")
+                key = key.strip().lower()
+                value = value.strip()
+                if key == "name" and value:
+                    member["name"] = value[:64]
+                elif key == "description" and value:
+                    member["description"] = value[:200]
+                elif key == "url" and value.startswith("http"):
+                    member["url"] = value[:256]
+    except Exception as e:
+        print(f"Warning: could not parse {path}: {e}", file=sys.stderr)
+    return member
+
+
+def main():
+    members = []
+
+    try:
+        homes = sorted(HOMES.iterdir())
+    except PermissionError as e:
+        print(f"Error: cannot read {HOMES}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    for home in homes:
+        if not home.is_dir():
+            continue
+        username = home.name
+
+        ring_file = home / ".ring"
+        if not ring_file.exists():
+            continue
+
+        # Must have a web presence to be included
+        if not (home / "public_html").is_dir():
+            print(f"  skip {username}: no public_html/", file=sys.stderr)
+            continue
+
+        members.append(parse_ring_file(ring_file, username))
+
+    data = {
+        "ring": "atl-webring",
+        "name": "ATL Webring",
+        "url": RING_URL,
+        "members": members,
+    }
+
+    # Write atomically to avoid serving a partial file
+    tmp = OUTPUT.with_suffix(".json.tmp")
+    try:
+        tmp.write_text(json.dumps(data, indent=2) + "\n")
+        tmp.rename(OUTPUT)
+    except Exception as e:
+        print(f"Error: could not write {OUTPUT}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"webring-scan: {len(members)} member(s) written to {OUTPUT}")
+
+
+if __name__ == "__main__":
+    main()

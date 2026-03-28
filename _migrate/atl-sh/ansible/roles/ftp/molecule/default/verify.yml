@@ -1,0 +1,76 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert vsftpd is installed
+      ansible.builtin.assert:
+        that:
+          - "'vsftpd' in ansible_facts.packages"
+        fail_msg: "vsftpd is not installed"
+
+    - name: Check vsftpd empty chroot directory exists
+      ansible.builtin.stat:
+        path: /var/run/vsftpd/empty
+      register: vsftpd_empty_dir
+
+    - name: Assert vsftpd empty chroot directory is present
+      ansible.builtin.assert:
+        that:
+          - vsftpd_empty_dir.stat.exists
+          - vsftpd_empty_dir.stat.isdir
+        fail_msg: "vsftpd empty chroot directory not found at /var/run/vsftpd/empty"
+
+    - name: Check vsftpd config file exists
+      ansible.builtin.stat:
+        path: /etc/vsftpd.conf
+      register: vsftpd_conf
+
+    - name: Assert vsftpd config is present with correct permissions
+      ansible.builtin.assert:
+        that:
+          - vsftpd_conf.stat.exists
+          - vsftpd_conf.stat.mode == '0600'
+          - vsftpd_conf.stat.pw_name == 'root'
+          - vsftpd_conf.stat.gr_name == 'root'
+        fail_msg: "vsftpd.conf missing or wrong permissions/ownership (expected 0600, root:root)"
+
+    - name: Read vsftpd config
+      ansible.builtin.slurp:
+        src: /etc/vsftpd.conf
+      register: vsftpd_config_content
+
+    - name: Assert vsftpd security settings are configured
+      ansible.builtin.assert:
+        that:
+          - "'anonymous_enable=NO' in (vsftpd_config_content.content | b64decode)"
+          - "'chroot_local_user=YES' in (vsftpd_config_content.content | b64decode)"
+          - "'ssl_enable=YES' in (vsftpd_config_content.content | b64decode)"
+          - "'force_local_logins_ssl=YES' in (vsftpd_config_content.content | b64decode)"
+        fail_msg: "vsftpd security settings are not correctly configured"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert vsftpd is running and enabled
+      ansible.builtin.assert:
+        that:
+          - "ansible_facts.services['vsftpd.service'].state == 'running'"
+        fail_msg: "vsftpd service is not running"
+
+    - name: Check vsftpd is listening on port 21
+      ansible.builtin.command: ss -tlnp
+      register: listening_ports
+      changed_when: false
+
+    - name: Assert vsftpd is bound to port 21
+      ansible.builtin.assert:
+        that:
+          - "':21' in listening_ports.stdout"
+        fail_msg: "vsftpd is not listening on port 21"

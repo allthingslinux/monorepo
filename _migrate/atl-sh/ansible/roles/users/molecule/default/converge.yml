@@ -1,0 +1,30 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    pubnix_domain: atl.sh
+    pubnix_group: users
+    default_shell: /bin/bash
+    # Point skel_source to the actual skel directory in the repo
+    skel_source: "{{ playbook_dir }}/../../../../../skel"
+
+    # PAM limits
+    user_nproc_limit: 100
+    user_nofile_limit: 1024
+    user_as_limit: 8000000
+    user_rss_limit: 8000000
+
+    # Systemd cgroup limits
+    user_cpu_quota: "200%"
+    user_memory_max: 1.5G
+    user_tasks_max: 200
+
+    # Quotas
+    quota_soft: 5G
+    quota_hard: 6G
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

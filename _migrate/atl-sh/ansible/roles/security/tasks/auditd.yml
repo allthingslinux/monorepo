@@ -1,0 +1,14 @@
+---
+- name: Remove immutable flag from audit configs before changes
+  ansible.builtin.file:
+    path: "{{ item }}"
+    attributes: -i
+  loop:
+    - /etc/audit/auditd.conf
+    - /etc/audit/rules.d/audit.rules
+  failed_when: false
+  changed_when: false
+
+- name: Apply robertdebock.auditd role
+  ansible.builtin.include_role:
+    name: robertdebock.auditd

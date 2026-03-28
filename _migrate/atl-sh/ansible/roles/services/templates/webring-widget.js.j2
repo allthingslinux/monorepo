@@ -1,0 +1,83 @@
+// {{ ansible_managed }}
+// ATL Webring widget — auto-injected into all tilde pages via nginx sub_filter.
+//
+// What this script does:
+//   1. Detects the username from the current URL (/~username/...)
+//   2. Fetches /ring/members.json
+//   3. If this user is in the ring, creates and appends the navigation widget
+//   4. Does nothing silently on non-member pages
+//
+// Manual widget: if you want to control placement or styling, add an element
+// with id="atl-webring" to your page. The script will update its links instead
+// of creating a new element.
+
+(function () {
+  var match = window.location.pathname.match(/^\/~([^\/]+)/);
+  if (!match) return;
+  var username = match[1];
+
+  fetch('/ring/members.json')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var members = data.members || [];
+      var idx = -1;
+      for (var i = 0; i < members.length; i++) {
+        if (members[i].username === username) { idx = i; break; }
+      }
+      if (idx === -1) return; // not a ring member, do nothing
+
+      var prev = members[(idx - 1 + members.length) % members.length];
+      var next = members[(idx + 1) % members.length];
+      var ringUrl = 'https://{{ pubnix_domain }}/ring/';
+
+      var existing = document.getElementById('atl-webring');
+      if (existing) {
+        // User has a manual widget — just update the links
+        var prevLink = existing.querySelector('[data-webring="prev"]');
+        var nextLink = existing.querySelector('[data-webring="next"]');
+        if (prevLink) { prevLink.href = prev.url; prevLink.textContent = '← ' + prev.name; }
+        if (nextLink) { nextLink.href = next.url; nextLink.textContent = next.name + ' →'; }
+        return;
+      }
+
+      // Auto-inject a default widget before </body>
+      var nav = document.createElement('nav');
+      nav.id = 'atl-webring';
+      nav.style.cssText = [
+        'position:fixed',
+        'bottom:0',
+        'left:0',
+        'right:0',
+        'background:rgba(13,17,23,0.92)',
+        'backdrop-filter:blur(4px)',
+        'border-top:1px solid #30363d',
+        'padding:0.4rem 1rem',
+        'font-family:monospace',
+        'font-size:0.8rem',
+        'text-align:center',
+        'z-index:9999',
+      ].join(';');
+
+      nav.innerHTML =
+        '<a href="' + esc(prev.url) + '" style="color:#58a6ff;text-decoration:none" data-webring="prev">' +
+          '&#8592; ' + esc(prev.name) +
+        '</a>' +
+        '<span style="color:#484f58;margin:0 0.75rem">&#9670;</span>' +
+        '<a href="' + esc(ringUrl) + '" style="color:#8b949e;text-decoration:none">ATL Ring</a>' +
+        '<span style="color:#484f58;margin:0 0.75rem">&#9670;</span>' +
+        '<a href="' + esc(next.url) + '" style="color:#58a6ff;text-decoration:none" data-webring="next">' +
+          esc(next.name) + ' &#8594;' +
+        '</a>';
+
+      document.body.appendChild(nav);
+    })
+    .catch(function () {}); // fail silently — never break user pages
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+})();

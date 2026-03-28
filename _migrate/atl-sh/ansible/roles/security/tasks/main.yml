@@ -1,0 +1,39 @@
+---
+- name: Import sysctl hardening
+  ansible.builtin.import_tasks: sysctl-hardening.yml
+
+- name: Import module blacklist
+  ansible.builtin.import_tasks: module-blacklist.yml
+
+- name: Import password policy
+  ansible.builtin.import_tasks: password-policy.yml
+
+- name: Import sudo hardening
+  ansible.builtin.import_tasks: sudo-hardening.yml
+
+- name: Import ssh tasks
+  ansible.builtin.import_tasks: ssh.yml
+
+- name: Import firewall tasks
+  ansible.builtin.import_tasks: firewall.yml
+
+- name: Import fail2ban tasks
+  ansible.builtin.import_tasks: fail2ban.yml
+
+- name: Import auditd setup
+  ansible.builtin.import_tasks: auditd.yml
+
+- name: Import audit hardening
+  ansible.builtin.import_tasks: audit-hardening.yml
+
+- name: Import journald hardening
+  ansible.builtin.import_tasks: journald-hardening.yml
+
+- name: Import AIDE
+  ansible.builtin.import_tasks: aide.yml
+
+- name: Import automatic updates
+  ansible.builtin.import_tasks: auto-updates.yml
+
+- name: Import malware scanners config
+  ansible.builtin.import_tasks: malware.yml

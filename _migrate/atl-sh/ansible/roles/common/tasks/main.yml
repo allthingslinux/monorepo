@@ -1,0 +1,30 @@
+---
+# {{ ansible_managed }}
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+
+- name: Install base system packages
+  ansible.builtin.apt:
+    name: "{{ common_packages }}"
+    state: present
+
+- name: Apply geerlingguy.ntp role
+  ansible.builtin.include_role:
+    name: geerlingguy.ntp
+
+- name: Configure journald caps
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#?SystemMaxUse='
+    line: 'SystemMaxUse=1G'
+    state: present
+  notify: Restart journald
+
+- name: Apply robertdebock.logrotate role
+  ansible.builtin.include_role:
+    name: robertdebock.logrotate
+  vars:
+    logrotate_entries: "{{ common_logrotate_entries | default([]) }}"

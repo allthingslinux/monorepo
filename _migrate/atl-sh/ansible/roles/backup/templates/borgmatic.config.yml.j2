@@ -1,0 +1,28 @@
+# {{ ansible_managed }}
+
+source_directories:
+{% for path in backup_paths %}
+  - {{ path }}
+{% endfor %}
+
+exclude_patterns:
+{% for pattern in backup_exclude %}
+  - {{ pattern }}
+{% endfor %}
+
+repositories:
+  - path: /var/backup/borg
+    label: local
+
+retention:
+  keep_daily: {{ backup_retention_daily }}
+  keep_weekly: {{ backup_retention_weekly }}
+  keep_monthly: {{ backup_retention_monthly }}
+
+consistency:
+  checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks
+
+encryption_passphrase: "{{ vault_backup_passphrase | default('changeme') }}"

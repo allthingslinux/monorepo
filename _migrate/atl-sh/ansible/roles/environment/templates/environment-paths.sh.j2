@@ -1,0 +1,49 @@
+#!/bin/sh
+# {{ ansible_managed }}
+# System-wide environment variables for the ATL Pubnix
+
+# Helper function to prevent duplicate PATH entries
+append_path() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
+}
+
+# Global NPM settings to prevent unprivileged users writing to /usr
+export NPM_CONFIG_PREFIX="$HOME/.local"
+append_path "$NPM_CONFIG_PREFIX/bin"
+
+# Force pnpm to use a shared global store to save disk space
+export PNPM_HOME="/var/cache/pnpm"
+append_path "$PNPM_HOME/bin"
+
+# Force uv to use a shared global cache
+export UV_CACHE_DIR="/var/cache/uv"
+
+# Rust / Cargo
+append_path "$HOME/.cargo/bin"
+
+# Go
+export GOPATH="$HOME/.go"
+append_path "$GOPATH/bin"
+
+# Pipx
+export PIPX_HOME="$HOME/.local/pipx"
+export PIPX_BIN_DIR="$HOME/.local/bin"
+append_path "$PIPX_BIN_DIR"
+
+# Poetry (Shared Cache)
+export POETRY_CACHE_DIR="/var/cache/poetry"
+
+# Ruby / Gem
+export GEM_HOME="$HOME/.local/share/gem"
+append_path "$GEM_HOME/bin"
+
+# Deno
+append_path "$HOME/.deno/bin"
+
+# PHP / Composer
+append_path "$HOME/.config/composer/vendor/bin"
+
+unset -f append_path

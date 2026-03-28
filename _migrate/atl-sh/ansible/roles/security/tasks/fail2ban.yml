@@ -1,0 +1,4 @@
+---
+- name: Apply robertdebock.fail2ban role
+  ansible.builtin.include_role:
+    name: robertdebock.fail2ban

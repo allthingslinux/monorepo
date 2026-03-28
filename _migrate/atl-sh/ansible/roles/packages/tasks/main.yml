@@ -1,0 +1,92 @@
+---
+- name: Add Nushell apt signing key
+  ansible.builtin.get_url:
+    url: https://apt.fury.io/nushell/gpg.key
+    dest: /etc/apt/keyrings/fury-nushell.gpg
+    mode: "0644"
+
+- name: Add Nushell apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/fury-nushell.gpg] https://apt.fury.io/nushell/ /"
+    filename: fury-nushell
+    state: present
+    update_cache: true
+
+- name: Install user shells
+  ansible.builtin.apt:
+    name: "{{ user_shells }}"
+    state: present
+
+- name: Install build tools
+  ansible.builtin.apt:
+    name: "{{ build_tools }}"
+    state: present
+
+- name: Install languages and runtimes
+  ansible.builtin.apt:
+    name: "{{ languages }}"
+    state: present
+
+- name: Install editors
+  ansible.builtin.apt:
+    name: "{{ editors }}"
+    state: present
+
+- name: Install terminal multiplexers
+  ansible.builtin.apt:
+    name: "{{ multiplexers }}"
+    state: present
+
+- name: Install IRC/chat clients
+  ansible.builtin.apt:
+    name: "{{ chat_clients }}"
+    state: present
+
+- name: Install mail clients
+  ansible.builtin.apt:
+    name: "{{ mail_clients }}"
+    state: present
+
+- name: Install web/gemini/gopher browsers
+  ansible.builtin.apt:
+    name: "{{ browsers }}"
+    state: present
+
+- name: Install CLI tools
+  ansible.builtin.apt:
+    name: "{{ cli_tools }}"
+    state: present
+
+- name: Install fun/community packages
+  ansible.builtin.apt:
+    name: "{{ fun_packages }}"
+    state: present
+
+- name: Install system tools
+  ansible.builtin.apt:
+    name: "{{ system_tools }}"
+    state: present
+
+- name: Enable process accounting
+  ansible.builtin.service:
+    name: acct
+    enabled: true
+    state: started
+  failed_when: false
+
+- name: Add available shells to /etc/shells
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    line: "{{ item }}"
+    state: present
+  loop:
+    - /bin/bash
+    - /usr/bin/zsh
+    - /usr/bin/fish
+    - /bin/mksh
+    - /usr/bin/tcsh
+    - /usr/bin/ksh93
+    - /usr/bin/rc
+    - /usr/bin/elvish
+    - /usr/bin/nu
+    - /usr/bin/dash

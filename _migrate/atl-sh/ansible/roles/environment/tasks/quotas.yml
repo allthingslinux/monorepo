@@ -1,0 +1,53 @@
+---
+- name: Configure disk quotas
+  when: quota_enabled | default(true)
+  block:
+    - name: Ensure quota package is installed
+      ansible.builtin.apt:
+        name: quota
+        state: present
+
+    - name: Enable user and group quotas on root filesystem
+      ansible.posix.mount:
+        path: /
+        src: "UUID={{ ansible_mounts | selectattr('mount', 'equalto', '/') | map(attribute='uuid') | first }}"
+        fstype: "{{ ansible_mounts | selectattr('mount', 'equalto', '/') | map(attribute='fstype') | first }}"
+        opts: "defaults,usrquota,grpquota"
+        state: mounted
+      notify:
+        - Remount root filesystem
+        - Initialize quota files
+
+    - name: Flush handlers to create quota files before use
+      ansible.builtin.meta: flush_handlers
+
+    - name: Initialize quota files if missing
+      ansible.builtin.command: quotacheck -cugm /
+      args:
+        creates: /aquota.user
+
+    - name: Turn on quotas
+      ansible.builtin.command: quotaon -v /
+      register: quotaon_result
+      changed_when: "'turned on' in quotaon_result.stdout"
+      failed_when: false # Ignore if already turned on
+
+    - name: Set default quota limits for new users (via adduser.conf)
+      # This relies on the 'edquota' or 'setquota' template user approach mentioned in the handbook,
+      # but for a simple Ansible roll-out, we configure adduser.conf
+      ansible.builtin.lineinfile:
+        path: /etc/adduser.conf
+        regexp: '^#?QUOTAUSER='
+        line: 'QUOTAUSER="default_quota_user"'
+        state: present
+
+    - name: Create template user for default quotas
+      ansible.builtin.user:
+        name: default_quota_user
+        state: present
+        system: true
+        create_home: false
+
+    - name: Set soft and hard limit for template user
+      ansible.builtin.command: setquota -u default_quota_user {{ quota_soft }} {{ quota_hard }} 0 0 /
+      changed_when: false

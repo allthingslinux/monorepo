@@ -1,0 +1,9 @@
+---
+ftp_port: 21
+pasv_min_port: 40000
+pasv_max_port: 40100
+
+# TLS Configuration
+# Using the same certs as the web server (Let's Encrypt)
+ftp_tls_cert: "/etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem"
+ftp_tls_key: "/etc/letsencrypt/live/{{ pubnix_domain }}/privkey.pem"

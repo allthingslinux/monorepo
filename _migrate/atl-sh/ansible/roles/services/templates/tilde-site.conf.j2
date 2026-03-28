@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+# Tilde-path URL hosting: atl.sh/~username → ~/public_html
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{ pubnix_domain }};
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    # Tilde URLs: /~username → /home/username/public_html
+    location ~ ^/~(.+?)(/.*)?$ {
+        alias /home/$1/{{ tilde_docroot }}$2;
+        index index.html index.htm;
+        autoindex on;
+
+        # CGI support for ~/public_html/*.cgi
+        location ~ \.cgi$ {
+            gzip off;
+            fastcgi_pass unix:/var/run/fcgiwrap.socket;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+        }
+    }
+
+    # Main site
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

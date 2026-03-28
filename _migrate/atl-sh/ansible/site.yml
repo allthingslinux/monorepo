@@ -1,0 +1,25 @@
+---
+# atl.sh pubnix — main playbook
+# Run with: just deploy <dev|staging|prod>
+# Or: ansible-playbook site.yml -l <dev|staging|prod> [--tags ...]
+
+- name: Configure atl.sh pubnix server
+  hosts: all
+  gather_facts: true
+  become: true
+
+  roles:
+    - { role: common, tags: ["common"] }
+    - { role: packages, tags: ["packages"] }
+    - { role: security, tags: ["security"] }
+    - { role: users, tags: ["users"] }
+    - { role: environment, tags: ["environment", "env"] }
+    - { role: services, tags: ["services", "web"] }
+    - { role: ftp, tags: ["ftp"] }
+    - { role: monitoring, tags: ["monitoring"] }
+    - { role: backup, tags: ["backup"] }
+
+  post_tasks:
+    - name: Run post-deploy service checks
+      ansible.builtin.import_tasks: tasks/verify-deploy.yml
+      tags: [verify]

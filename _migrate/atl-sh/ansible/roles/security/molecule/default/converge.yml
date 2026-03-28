@@ -1,0 +1,40 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    pubnix_domain: atl.sh
+    admin_email: admin@allthingslinux.org
+
+    ssh_ports:
+      - 22
+      - 2222
+    ssh_permit_root_login: "prohibit-password"
+    ssh_password_authentication: "no"
+    ssh_max_auth_tries: 3
+    ssh_login_grace_time: 30
+    ssh_client_alive_interval: 300
+    ssh_client_alive_count_max: 2
+    ssh_allow_groups: "sudo root"
+
+    fail2ban_bantime: 3600
+    fail2ban_findtime: 600
+    fail2ban_maxretry: 5
+
+    firewall_allowed_tcp_ports:
+      - "22"
+      - "2222"
+      - "80"
+      - "443"
+    firewall_rate_limit_ssh: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 0
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

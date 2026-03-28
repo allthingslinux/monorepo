@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+
+{% for port in ssh_ports %}
+Port {{ port }}
+{% endfor %}
+PermitRootLogin {{ ssh_permit_root_login }}
+PasswordAuthentication {{ ssh_password_authentication }}
+PubkeyAuthentication yes
+MaxAuthTries {{ ssh_max_auth_tries }}
+LoginGraceTime {{ ssh_login_grace_time }}
+ClientAliveInterval {{ ssh_client_alive_interval }}
+ClientAliveCountMax {{ ssh_client_alive_count_max }}
+
+# Restriction
+AllowGroups {{ ssh_allow_groups }}
+
+# Security hardening
+X11Forwarding no
+AllowTcpForwarding no
+AllowAgentForwarding no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+UsePAM yes
+StrictModes yes
+MaxSessions 10
+MaxStartups 10:30:60
+
+# Cryptographic hardening
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
+RekeyLimit 512M 1h
+
+# Logging
+SyslogFacility AUTH
+LogLevel VERBOSE
+
+# Banner
+Banner /etc/ssh/banner
+PrintMotd no
+PrintLastLog yes

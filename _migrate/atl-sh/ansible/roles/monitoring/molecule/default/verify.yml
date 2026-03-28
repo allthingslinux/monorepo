@@ -1,0 +1,70 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert prometheus-node-exporter is installed
+      ansible.builtin.assert:
+        that:
+          - "'prometheus-node-exporter' in ansible_facts.packages"
+        fail_msg: "prometheus-node-exporter is not installed"
+
+    - name: Check systemd override directory exists
+      ansible.builtin.stat:
+        path: /etc/systemd/system/prometheus-node-exporter.service.d
+      register: override_dir
+
+    - name: Assert override directory is present
+      ansible.builtin.assert:
+        that:
+          - override_dir.stat.exists
+          - override_dir.stat.isdir
+        fail_msg: "node_exporter systemd override directory not found"
+
+    - name: Check node_exporter override config exists
+      ansible.builtin.stat:
+        path: /etc/systemd/system/prometheus-node-exporter.service.d/override.conf
+      register: override_conf
+
+    - name: Assert override config is present
+      ansible.builtin.assert:
+        that:
+          - override_conf.stat.exists
+        fail_msg: "node_exporter override.conf not found"
+
+    - name: Check override config contains listen address
+      ansible.builtin.command: grep '127.0.0.1' /etc/systemd/system/prometheus-node-exporter.service.d/override.conf
+      register: listen_addr
+      changed_when: false
+
+    - name: Assert node_exporter is bound to localhost
+      ansible.builtin.assert:
+        that:
+          - listen_addr.rc == 0
+        fail_msg: "node_exporter override.conf does not set localhost listen address"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert node_exporter is running and enabled
+      ansible.builtin.assert:
+        that:
+          - "ansible_facts.services['prometheus-node-exporter.service'].state == 'running'"
+        fail_msg: "prometheus-node-exporter service is not running"
+
+    - name: Check node_exporter is listening on port 9100
+      ansible.builtin.command: ss -tlnp
+      register: listening_ports
+      changed_when: false
+
+    - name: Assert node_exporter is bound to localhost:9100
+      ansible.builtin.assert:
+        that:
+          - "'127.0.0.1:9100' in listening_ports.stdout"
+        fail_msg: "node_exporter is not listening on 127.0.0.1:9100"

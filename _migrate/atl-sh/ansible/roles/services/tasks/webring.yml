@@ -1,0 +1,66 @@
+---
+- name: Create webring directory
+  ansible.builtin.file:
+    path: /var/www/html/ring
+    state: directory
+    owner: root
+    group: www-data
+    mode: "0755"
+
+- name: Deploy webring navigation CGI
+  ansible.builtin.template:
+    src: webring-go.cgi.j2
+    dest: /var/www/html/ring/go.cgi
+    owner: root
+    group: www-data
+    mode: "0755"
+
+- name: Deploy webring landing page
+  ansible.builtin.template:
+    src: webring-index.html.j2
+    dest: /var/www/html/ring/index.html
+    owner: root
+    group: www-data
+    mode: "0644"
+
+- name: Deploy webring JS widget
+  ansible.builtin.template:
+    src: webring-widget.js.j2
+    dest: /var/www/html/ring/widget.js
+    owner: root
+    group: www-data
+    mode: "0644"
+
+- name: Deploy webring scan script
+  ansible.builtin.template:
+    src: webring-scan.py.j2
+    dest: /usr/local/bin/webring-scan
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Initialize members.json if absent
+  ansible.builtin.copy:
+    dest: /var/www/html/ring/members.json
+    content: |
+      {
+        "ring": "atl-webring",
+        "name": "ATL Webring",
+        "url": "https://{{ pubnix_domain }}/ring/",
+        "members": []
+      }
+    owner: root
+    group: www-data
+    mode: "0644"
+    force: false
+
+- name: Deploy webring scan cron job
+  ansible.builtin.cron:
+    name: webring ring scan
+    minute: "*/15"
+    job: /usr/local/bin/webring-scan
+    user: root
+
+- name: Run initial webring scan
+  ansible.builtin.command: /usr/local/bin/webring-scan
+  changed_when: false

@@ -1,0 +1,34 @@
+#!/bin/bash
+# {{ ansible_managed }}
+
+echo ""
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║   Welcome to atl.sh — your pubnix!    ║"
+echo "  ║   All Things Linux Community Shell    ║"
+echo "  ╚═══════════════════════════════════════╝"
+echo ""
+echo "  Web:    https://{{ pubnix_domain }}/~$USER"
+echo "  Gemini: gemini://{{ pubnix_domain }}/~$USER"
+echo "  Gopher: gopher://{{ pubnix_domain }}/~$USER"
+echo ""
+echo "  Docs:   https://{{ pubnix_domain }}/docs"
+echo "  IRC:    #support on irc.atl.chat"
+echo ""
+
+USERS_ONLINE=$(who | wc -l)
+USERS_TOTAL=$(getent group {{ pubnix_group }} | awk -F: '{print split($4,a,",")}')
+UPTIME=$(uptime -p)
+LOAD=$(cut -d' ' -f1-3 /proc/loadavg)
+DISK=$(df -h / | awk 'NR==2{print $3"/"$2" ("$5")"}')
+
+echo "  ┌─ System ───────────────────────────────"
+echo "  │ Uptime:  $UPTIME"
+echo "  │ Load:    $LOAD"
+echo "  │ Disk:    $DISK"
+echo "  │ Online:  $USERS_ONLINE users"
+echo "  └─────────────────────────────────────────"
+echo ""
+
+echo "Currently online:"
+users | tr ' ' '\n' | sort | uniq | xargs -r echo "  "
+echo ""

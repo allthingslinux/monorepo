@@ -1,0 +1,35 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
+- name: Restart molly-brown
+  ansible.builtin.systemd:
+    name: molly-brown@molly-brown
+    state: restarted
+
+- name: Restart gophernicus
+  ansible.builtin.systemd:
+    name: gophernicus.socket
+    state: restarted
+
+- name: Restart finger
+  ansible.builtin.systemd:
+    name: finger.socket
+    state: restarted
+    daemon_reload: true
+
+- name: Restart dictd
+  ansible.builtin.service:
+    name: dictd
+    state: restarted

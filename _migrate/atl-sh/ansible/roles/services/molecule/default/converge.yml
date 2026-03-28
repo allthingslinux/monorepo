@@ -1,0 +1,39 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    pubnix_domain: atl.sh
+    tilde_docroot: public_html
+    admin_email: admin@allthingslinux.org
+
+    # Nginx
+    nginx_worker_processes: auto
+    nginx_server_tokens: "off"
+    nginx_client_max_body_size: "64m"
+    nginx_extra_http_options: |
+      gzip on;
+      gzip_proxied any;
+      gzip_types text/plain text/css application/json application/javascript;
+
+    # Gemini
+    gemini_port: 1965
+    gemini_capsule_root: /var/gemini
+
+    # Gopher
+    gopher_port: 70
+    gopher_hostname: "{{ pubnix_domain }}"
+    gopher_root: /var/gopher
+    gopher_user_dir: public_gopher
+
+    # FTP (stub TLS paths — not validated in test)
+    ftp_port: 21
+    pasv_min_port: 40000
+    pasv_max_port: 40100
+    ftp_tls_cert: /etc/ssl/certs/ssl-cert-snakeoil.pem
+    ftp_tls_key: /etc/ssl/private/ssl-cert-snakeoil.key
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

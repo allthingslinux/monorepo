@@ -1,0 +1,29 @@
+#!/bin/bash
+# community — list all pubnix users and their status
+# Usage: community
+
+GROUP="{{ pubnix_group }}"
+GID=$(getent group "$GROUP" | cut -d: -f3)
+
+# Get users by primary GID (UID >= 1000) + supplementary group membership
+MEMBERS=$( {
+    awk -F: -v gid="$GID" '$4 == gid && $3 >= 1000 {print $1}' /etc/passwd
+    getent group "$GROUP" | cut -d: -f4 | tr ',' '\n'
+} | sort -u | grep -v '^$' )
+
+total=$(echo "$MEMBERS" | grep -c .)
+logged_in=$(who | awk '{print $1}' | sort -u)
+
+echo "=== atl.sh community ($total members) ==="
+echo ""
+printf "%-16s %-8s %s\n" "USER" "STATUS" "PLAN"
+printf "%-16s %-8s %s\n" "----" "------" "----"
+
+for user in $MEMBERS; do
+    status="offline"
+    echo "$logged_in" | grep -qx "$user" && status="online"
+    plan=""
+    [ -f "/home/$user/.plan" ] && [ -r "/home/$user/.plan" ] && \
+        plan=$(head -1 "/home/$user/.plan" | cut -c1-40)
+    printf "%-16s %-8s %s\n" "$user" "$status" "$plan"
+done

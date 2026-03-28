@@ -1,0 +1,83 @@
+---
+# Portal-triggered: create a user account on the pubnix
+# Usage: ansible-playbook playbooks/create-user.yml \
+#   -e "username=johndoe" \
+#   -e "ssh_public_key='ssh-ed25519 AAAA...'"
+
+- name: Create pubnix user account
+  hosts: "{{ target_hosts | default('staging') }}"
+  become: true
+
+  tasks:
+    - name: Ensure pubnix group exists
+      ansible.builtin.group:
+        name: "{{ pubnix_group }}"
+        state: present
+
+    - name: Create user account
+      ansible.builtin.user:
+        name: "{{ username }}"
+        group: "{{ pubnix_group }}"
+        shell: "{{ default_shell }}"
+        create_home: true
+        skeleton: /etc/skel
+        state: present
+
+    - name: Set home directory traversable for web/gemini/gopher
+      ansible.builtin.file:
+        path: "/home/{{ username }}"
+        mode: "0711"
+
+    - name: Deploy SSH authorized key
+      ansible.posix.authorized_key:
+        user: "{{ username }}"
+        key: "{{ ssh_public_key }}"
+        state: present
+        exclusive: false
+      no_log: true
+
+    - name: Set disk quota
+      community.general.filesystem:
+        fstype: ext4
+        dev: "{{ quota_device | default('/dev/sda1') }}"
+      when: false # Placeholder — enable when quotas are configured
+      tags: ["quota"]
+
+    - name: Create Gemini capsule directory under molly-brown docbase
+      ansible.builtin.file:
+        path: "{{ gemini_capsule_root | default('/var/gemini') }}/public_gemini/{{ username }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ pubnix_group }}"
+        mode: "0755"
+
+    - name: Move skel Gemini content to capsule directory
+      ansible.builtin.shell: |
+        if [ -d "/home/{{ username }}/public_gemini" ] && [ ! -L "/home/{{ username }}/public_gemini" ]; then
+          cp -a "/home/{{ username }}/public_gemini/." "{{ gemini_capsule_root | default('/var/gemini') }}/public_gemini/{{ username }}/"
+          rm -rf "/home/{{ username }}/public_gemini"
+        fi
+      args:
+        creates: "/home/{{ username }}/public_gemini/.symlinked"
+
+    - name: Symlink user home public_gemini to capsule directory
+      ansible.builtin.file:
+        src: "{{ gemini_capsule_root | default('/var/gemini') }}/public_gemini/{{ username }}"
+        dest: "/home/{{ username }}/public_gemini"
+        state: link
+        owner: "{{ username }}"
+        group: "{{ pubnix_group }}"
+        force: true
+
+    - name: Verify home directory structure
+      ansible.builtin.stat:
+        path: "/home/{{ username }}/{{ item }}"
+      loop:
+        - "public_html/index.html"
+        - "public_gemini/index.gmi"
+        - "public_gopher/gophermap"
+      register: skel_check
+
+    - name: Report user creation
+      ansible.builtin.debug:
+        msg: "User {{ username }} created successfully. Home: /home/{{ username }}"

@@ -1,0 +1,39 @@
+---
+# Portal-triggered: disable/archive a user account
+# Usage: ansible-playbook playbooks/remove-user.yml -e "username=johndoe"
+
+- name: Remove pubnix user account
+  hosts: "{{ target_hosts | default('staging') }}"
+  become: true
+
+  vars:
+    archive_home: true
+    archive_path: /var/archive/users
+
+  tasks:
+    - name: Ensure archive directory exists
+      ansible.builtin.file:
+        path: "{{ archive_path }}"
+        state: directory
+        mode: "0700"
+      when: archive_home
+
+    - name: Archive home directory
+      community.general.archive:
+        path: "/home/{{ username }}"
+        dest: "{{ archive_path }}/{{ username }}-{{ ansible_date_time.date }}.tar.gz"
+        format: gz
+        mode: "0600"
+      when: archive_home
+      failed_when: false
+
+    - name: Lock user account
+      ansible.builtin.user:
+        name: "{{ username }}"
+        password_lock: true
+        shell: /usr/sbin/nologin
+        state: present
+
+    - name: Report user removal
+      ansible.builtin.debug:
+        msg: "User {{ username }} locked and archived to {{ archive_path }}"

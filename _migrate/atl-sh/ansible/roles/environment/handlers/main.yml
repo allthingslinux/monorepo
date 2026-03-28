@@ -1,0 +1,15 @@
+---
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Remount root filesystem
+  ansible.posix.mount:
+    path: /
+    state: remounted
+
+- name: Initialize quota files
+  ansible.builtin.command: quotacheck -cugm /
+  args:
+    creates: /aquota.user
+  changed_when: true

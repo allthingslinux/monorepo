@@ -1,0 +1,28 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 0
+
+  vars:
+    backup_retention_daily: 7
+    backup_retention_weekly: 4
+    backup_retention_monthly: 6
+    backup_paths:
+      - /home
+      - /etc
+      - /var/spool/cron
+    backup_exclude:
+      - "*.cache"
+      - "*.tmp"
+      - "node_modules"
+    vault_backup_passphrase: "molecule-test-passphrase"
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

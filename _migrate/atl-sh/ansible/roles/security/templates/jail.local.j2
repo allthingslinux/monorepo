@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+[DEFAULT]
+bantime  = {{ fail2ban_bantime }}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
+
+[sshd]
+enabled = true
+# Combine all ports for fail2ban
+port    = {{ ssh_ports | join(',') }}
+filter  = sshd
+logpath = /var/log/auth.log

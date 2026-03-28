@@ -1,0 +1,19 @@
+---
+# Enhanced auditd configuration
+- name: Configure audit backlog limit in GRUB
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="audit=1 audit_backlog_limit=8192"'
+    state: present
+  notify: Update GRUB
+
+- name: Make audit configuration immutable
+  ansible.builtin.file:
+    path: "{{ item }}"
+    attributes: +i
+  loop:
+    - /etc/audit/auditd.conf
+    - /etc/audit/rules.d/audit.rules
+  failed_when: false
+  changed_when: false

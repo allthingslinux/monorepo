@@ -1,0 +1,80 @@
+---
+- name: Install molly-brown
+  ansible.builtin.apt:
+    name: molly-brown
+    state: present
+
+- name: Create capsule root
+  ansible.builtin.file:
+    path: "{{ gemini_capsule_root }}"
+    state: directory
+    mode: "0755"
+
+- name: Create capsule user homes directory
+  ansible.builtin.file:
+    path: "{{ gemini_capsule_root }}/public_gemini"
+    state: directory
+    mode: "0755"
+
+- name: Create log directory
+  ansible.builtin.file:
+    path: /var/log/molly-brown
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Check if SSL certs exist
+  ansible.builtin.stat:
+    path: /etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem
+  register: ssl_cert
+
+- name: Generate self-signed cert for dev
+  ansible.builtin.command:
+    cmd: >
+      openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes
+      -keyout /etc/ssl/private/molly-brown.key
+      -out /etc/ssl/certs/molly-brown.crt
+      -days 3650 -subj "/CN={{ pubnix_domain }}"
+      -addext "subjectAltName=DNS:{{ pubnix_domain }}"
+    creates: /etc/ssl/certs/molly-brown.crt
+  when: not ssl_cert.stat.exists
+
+- name: Set TLS key permissions for molly-brown
+  ansible.builtin.file:
+    path: /etc/ssl/private/molly-brown.key
+    owner: root
+    group: ssl-cert
+    mode: "0640"
+  when: not ssl_cert.stat.exists
+
+- name: Deploy molly-brown config
+  ansible.builtin.template:
+    src: molly-brown.ini.j2
+    dest: /etc/molly-brown/molly-brown.conf
+    mode: "0644"
+  notify: Restart molly-brown
+
+- name: Create molly-brown systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/molly-brown@molly-brown.service.d
+    state: directory
+    mode: "0755"
+
+- name: Deploy molly-brown systemd override for log access
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/molly-brown@molly-brown.service.d/logs.conf
+    content: |
+      [Service]
+      LogsDirectory=molly-brown
+      ReadWritePaths=/var/log/molly-brown
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart molly-brown
+
+- name: Enable molly-brown service
+  ansible.builtin.systemd:
+    name: molly-brown@molly-brown
+    enabled: true
+    state: started

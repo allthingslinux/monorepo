@@ -1,0 +1,155 @@
+{# {{ ansible_managed }} #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATL Webring</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: monospace;
+      background: #0d1117;
+      color: #c9d1d9;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+    h1 { color: #58a6ff; font-size: 1.5rem; margin-bottom: 0.25rem; }
+    h2 { color: #8b949e; font-size: 0.9rem; font-weight: normal; margin-bottom: 2rem; }
+    h3 { color: #58a6ff; font-size: 1rem; margin: 2rem 0 0.75rem; }
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .ring-nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+    .ring-nav a {
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 0.4rem 0.9rem;
+      border-radius: 4px;
+    }
+    .ring-nav a:hover { border-color: #58a6ff; text-decoration: none; }
+    pre {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      margin: 0.75rem 0;
+    }
+    .member-list { margin-top: 0.5rem; }
+    .member {
+      border-bottom: 1px solid #21262d;
+      padding: 0.75rem 0;
+    }
+    .member:last-child { border-bottom: none; }
+    .member-name { color: #e6edf3; font-weight: bold; }
+    .member-desc { color: #8b949e; font-size: 0.9rem; margin-top: 0.2rem; }
+    .member-url { font-size: 0.85rem; }
+    #count { color: #8b949e; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    footer { margin-top: 3rem; color: #484f58; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+<h1>ATL Webring</h1>
+<h2>A ring of personal sites from the All Things Linux pubnix community.</h2>
+
+<div class="ring-nav">
+  <a href="/ring/go.cgi?action=prev">&#8592; Prev</a>
+  <a href="/ring/go.cgi?action=random">Random</a>
+  <a href="/ring/go.cgi?action=next">Next &#8594;</a>
+</div>
+
+<h3>Members</h3>
+<div id="count">Loading…</div>
+<div class="member-list" id="members">
+  <noscript>
+    <p>Enable JavaScript to see the member directory, or view
+    <a href="/ring/members.json">members.json</a> directly.</p>
+  </noscript>
+</div>
+
+<h3>Join</h3>
+<p>
+  Any atl.sh user with a page at <code>/~username/</code> can join.
+  Create <code>~/.ring</code> in your home directory to opt in:
+</p>
+<pre># ~/.ring — all fields are optional
+name        = Your Site Name
+description = A short description of your site.
+url         = https://example.com  # only if your site is elsewhere</pre>
+<p>
+  Your site will appear in the ring within 15 minutes once you have both
+  <code>~/.ring</code> and <code>~/public_html/</code>.
+  Add the widget to your page so visitors can navigate the ring:
+</p>
+<pre>&lt;!-- Add to your ~/public_html/index.html footer --&gt;
+&lt;nav&gt;
+  &lt;a id="webring-prev" href="/ring/"&gt;&amp;larr; Prev&lt;/a&gt; &amp;middot;
+  &lt;a href="/ring/"&gt;ATL Ring&lt;/a&gt; &amp;middot;
+  &lt;a id="webring-next" href="/ring/"&gt;Next &amp;rarr;&lt;/a&gt;
+&lt;/nav&gt;
+&lt;script src="https://{{ pubnix_domain }}/ring/widget.js" defer&gt;&lt;/script&gt;</pre>
+<p>
+  Or use direct links with your username hardcoded (works without JavaScript):
+</p>
+<pre>&lt;nav&gt;
+  &lt;a href="/ring/go.cgi?action=prev&amp;user=YOUR_USERNAME"&gt;&amp;larr; Prev&lt;/a&gt; &amp;middot;
+  &lt;a href="/ring/"&gt;ATL Ring&lt;/a&gt; &amp;middot;
+  &lt;a href="/ring/go.cgi?action=next&amp;user=YOUR_USERNAME"&gt;Next &amp;rarr;&lt;/a&gt;
+&lt;/nav&gt;</pre>
+
+<footer>
+  Member list refreshes every 15 minutes &mdash;
+  <a href="/ring/members.json">members.json</a>
+</footer>
+
+<script>
+  fetch('/ring/members.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var members = data.members || [];
+      document.getElementById('count').textContent =
+        members.length + ' member' + (members.length === 1 ? '' : 's');
+
+      var list = document.getElementById('members');
+      list.innerHTML = '';
+      if (members.length === 0) {
+        list.innerHTML = '<p style="color:#8b949e">No members yet. Be the first!</p>';
+        return;
+      }
+      members.forEach(function(m) {
+        var div = document.createElement('div');
+        div.className = 'member';
+        div.innerHTML =
+          '<div class="member-name">' + esc(m.name) + '</div>' +
+          (m.description ? '<div class="member-desc">' + esc(m.description) + '</div>' : '') +
+          '<div class="member-url"><a href="' + esc(m.url) + '">' + esc(m.url) + '</a></div>';
+        list.appendChild(div);
+      });
+    })
+    .catch(function() {
+      document.getElementById('count').textContent = '';
+      document.getElementById('members').innerHTML =
+        '<p style="color:#8b949e">Could not load member list. ' +
+        '<a href="/ring/members.json">View raw JSON</a>.</p>';
+    });
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert nginx is running
+      ansible.builtin.assert:
+        that:
+          - "ansible_facts.services['nginx.service'].state == 'running'"
+        fail_msg: "nginx is not running"
+
+    - name: Check protocol root directories exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: protocol_dirs
+      loop:
+        - /var/gemini
+        - /var/gopher
+        - /var/www/html
+
+    - name: Assert protocol directories are present
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.isdir
+        fail_msg: "Missing protocol directory: {{ item.item }}"
+      loop: "{{ protocol_dirs.results }}"
+
+    - name: Check webring directory exists
+      ansible.builtin.stat:
+        path: /var/www/html/ring
+      register: webring_dir
+
+    - name: Assert webring is deployed
+      ansible.builtin.assert:
+        that:
+          - webring_dir.stat.exists
+        fail_msg: "Webring directory not found at /var/www/html/ring"
+
+    - name: Check webring files are present
+      ansible.builtin.stat:
+        path: "/var/www/html/ring/{{ item }}"
+      register: webring_files
+      loop:
+        - members.json
+        - widget.js
+        - go.cgi
+        - index.html
+
+    - name: Assert webring files are deployed
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+        fail_msg: "Missing webring file: {{ item.item }}"
+      loop: "{{ webring_files.results }}"
+
+    - name: Check nginx is listening on port 80
+      ansible.builtin.command: ss -tlnp
+      register: listening_ports
+      changed_when: false
+
+    - name: Assert nginx is bound to port 80
+      ansible.builtin.assert:
+        that:
+          - "':80' in listening_ports.stdout"
+        fail_msg: "nginx is not listening on port 80"

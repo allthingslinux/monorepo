@@ -1,0 +1,8 @@
+---
+roles:
+  - robertdebock.auditd
+  - robertdebock.fail2ban
+
+collections:
+  - community.general
+  - ansible.posix

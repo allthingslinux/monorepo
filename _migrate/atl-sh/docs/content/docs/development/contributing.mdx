@@ -1,0 +1,131 @@
+---
+title: Contributing
+description: How to contribute to atl.sh — PR workflow, code style, and development setup.
+---
+
+atl.sh is open source at [github.com/allthingslinux/atl.sh](https://github.com/allthingslinux/atl.sh). Pull requests and bug reports are welcome.
+
+## Getting started
+
+1. Fork and clone the repository
+2. Install dependencies:
+   ```bash
+   just install        # Ansible roles and collections
+   pre-commit install  # Git hooks
+   ```
+3. Set up a dev VM (see [Local Development](/testing)):
+   ```bash
+   ssh-keygen -f .ssh/dev_key -t ed25519 -N ""
+   just dev-up
+   just deploy dev
+   ```
+
+## Workflow
+
+1. Create a branch from `main`
+2. Make your changes in the Ansible code
+3. Test against the dev VM: `just deploy dev`
+4. Run the smoke test: `just smoke-test dev`
+5. Run linters: `just lint`
+6. Commit with descriptive messages (see below)
+7. Open a pull request
+
+## Commit messages
+
+Use conventional commit prefixes:
+
+| Prefix | Use for |
+|--------|---------|
+| `fix(role):` | Bug fixes — `fix(gemini): use EC key with SAN` |
+| `feat(role):` | New features — `feat: add smoke-test playbook` |
+| `docs:` | Documentation only — `docs: add troubleshooting page` |
+| `refactor(role):` | Code restructuring without behavior change |
+| `chore:` | Maintenance — dependency updates, CI changes |
+
+Commit each file individually with a descriptive message. This makes `git log` useful and reverts clean.
+
+## Code style
+
+### Ansible conventions
+
+- YAML files use 2-space indentation
+- Task names are sentence case: `Install molly-brown`, not `install molly-brown`
+- Use `ansible.builtin.` fully qualified module names
+- Handlers go in `handlers/main.yml`, not inline
+- Handler names must match `notify:` strings exactly (case-sensitive)
+- Use `ansible.builtin.template` for config files, not `copy` with inline content
+- Templates go in `templates/` with a `.j2` extension
+- Default variables go in `defaults/main.yml`
+
+### Role structure
+
+```
+roles/my-role/
+├── tasks/
+│   └── main.yml
+├── handlers/
+│   └── main.yml
+├── templates/
+│   └── config.j2
+├── defaults/
+│   └── main.yml
+└── molecule/
+    └── default/
+```
+
+## Linting
+
+Pre-commit hooks run automatically on `git commit`. To run manually:
+
+```bash
+just lint          # pre-commit + ansible-lint
+just syntax-check  # playbook syntax only
+```
+
+The pre-commit config checks:
+- Trailing whitespace
+- End-of-file newlines
+- YAML syntax
+- Terraform formatting (if applicable)
+
+## Testing
+
+### Dev VM
+
+The primary testing method. Deploy your changes and verify:
+
+```bash
+just deploy dev                    # full run
+just deploy-tag dev services       # single role
+just deploy-check dev              # dry run (no changes)
+```
+
+### Smoke test
+
+The automated smoke test creates a temporary `_smoketest` user, validates all services end-to-end, then cleans up:
+
+```bash
+just smoke-test dev
+```
+
+It checks: SSH login, skel files, home permissions, security restrictions, PAM limits, cgroup config, private /tmp, web serving, Gemini, Gopher, finger, and FTP.
+
+### Molecule
+
+Individual roles can be tested with Molecule:
+
+```bash
+just molecule-test environment
+```
+
+## What to work on
+
+- Check [GitHub Issues](https://github.com/allthingslinux/atl.sh/issues) for open tasks
+- Package requests from users (add to `roles/packages/`)
+- Documentation improvements
+- New service integrations (see [Adding a Role](/development/adding-a-role))
+- Security hardening improvements
+
+## Questions?
+
+Join `#support` on `irc.atl.chat` (port 6697, SSL).

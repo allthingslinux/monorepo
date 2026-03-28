@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+[Slice]
+CPUAccounting=yes
+CPUQuota={{ user_cpu_quota }}
+MemoryAccounting=yes
+MemoryMax={{ user_memory_max }}
+TasksMax={{ user_tasks_max }}

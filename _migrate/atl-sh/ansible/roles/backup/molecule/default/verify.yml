@@ -1,0 +1,68 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert borgbackup and borgmatic are installed
+      ansible.builtin.assert:
+        that:
+          - "'borgbackup' in ansible_facts.packages"
+          - "'borgmatic' in ansible_facts.packages"
+        fail_msg: "borgbackup or borgmatic is not installed"
+
+    - name: Check borgmatic config directory exists
+      ansible.builtin.stat:
+        path: /etc/borgmatic
+      register: borgmatic_dir
+
+    - name: Assert borgmatic config directory is present with correct permissions
+      ansible.builtin.assert:
+        that:
+          - borgmatic_dir.stat.exists
+          - borgmatic_dir.stat.isdir
+          - borgmatic_dir.stat.mode == '0700'
+        fail_msg: "borgmatic config directory missing or wrong permissions (expected 0700)"
+
+    - name: Check borgmatic config file exists
+      ansible.builtin.stat:
+        path: /etc/borgmatic/config.yaml
+      register: borgmatic_config
+
+    - name: Assert borgmatic config is present with correct permissions
+      ansible.builtin.assert:
+        that:
+          - borgmatic_config.stat.exists
+          - borgmatic_config.stat.mode == '0600'
+        fail_msg: "borgmatic config.yaml missing or wrong permissions (expected 0600)"
+
+    - name: Read borgmatic config
+      ansible.builtin.slurp:
+        src: /etc/borgmatic/config.yaml
+      register: borgmatic_yaml
+
+    - name: Assert borgmatic config contains expected paths
+      ansible.builtin.assert:
+        that:
+          - "'/home' in (borgmatic_yaml.content | b64decode)"
+          - "'/etc' in (borgmatic_yaml.content | b64decode)"
+          - "'keep_daily' in (borgmatic_yaml.content | b64decode)"
+          - "'keep_weekly' in (borgmatic_yaml.content | b64decode)"
+        fail_msg: "borgmatic config is missing expected backup paths or retention settings"
+
+    - name: Check borgmatic.timer is enabled
+      ansible.builtin.command: systemctl is-enabled borgmatic.timer
+      register: borgmatic_timer
+      changed_when: false
+      failed_when: false
+
+    - name: Assert borgmatic.timer is enabled
+      ansible.builtin.assert:
+        that:
+          - "borgmatic_timer.stdout == 'enabled'"
+        fail_msg: "borgmatic.timer is not enabled"

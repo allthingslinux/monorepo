@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+@{{ pubnix_group }}    soft    nproc     {{ user_nproc_limit }}
+@{{ pubnix_group }}    hard    nproc     {{ user_nproc_limit }}
+@{{ pubnix_group }}    soft    nofile    {{ user_nofile_limit }}
+@{{ pubnix_group }}    hard    nofile    {{ user_nofile_limit }}
+
+# Memory limits based on standard pubnix configurations
+@{{ pubnix_group }}    hard    as        {{ user_as_limit }}
+@{{ pubnix_group }}    hard    rss       {{ user_rss_limit }}

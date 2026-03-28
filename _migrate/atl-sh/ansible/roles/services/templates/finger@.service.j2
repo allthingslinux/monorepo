@@ -1,0 +1,11 @@
+[Unit]
+Description=Finger Protocol Service
+Documentation=man:efingerd(8)
+
+[Service]
+ExecStart=/usr/sbin/efingerd
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
+NoNewPrivileges=true
+PrivateTmp=true

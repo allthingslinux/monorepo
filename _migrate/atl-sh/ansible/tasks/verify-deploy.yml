@@ -1,0 +1,97 @@
+---
+# Post-deploy smoke checks (imported from site.yml post_tasks).
+# Mirrors playbooks/smoke-test.yml service checks without creating a temp user.
+# Skip with: ansible-playbook site.yml --skip-tags verify
+
+- name: Verify nginx is active
+  ansible.builtin.systemd:
+    name: nginx
+  register: verify_nginx
+  failed_when: verify_nginx.status.ActiveState != "active"
+
+- name: Verify nginx serves webring (HTTP)
+  ansible.builtin.uri:
+    url: "http://127.0.0.1/ring/index.html"
+    headers:
+      Host: "{{ pubnix_domain }}"
+    status_code: 200
+
+- name: Verify molly-brown is active
+  ansible.builtin.systemd:
+    name: molly-brown@molly-brown
+  register: verify_molly
+  failed_when: verify_molly.status.ActiveState != "active"
+
+- name: Verify Gemini responds on local port
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: "{{ gemini_port | default(1965) }}"
+    timeout: 15
+
+- name: Verify Gemini returns a status line for root URL
+  ansible.builtin.shell: |
+    set -euo pipefail
+    printf 'gemini://{{ pubnix_domain }}/\r\n' \
+      | openssl s_client -connect 127.0.0.1:{{ gemini_port | default(1965) }} -quiet -verify_quiet 2>/dev/null \
+      | head -1
+  register: verify_gemini
+  changed_when: false
+  failed_when: verify_gemini.stdout is not match('^\d\d')
+
+- name: Verify gophernicus socket is active
+  ansible.builtin.systemd:
+    name: gophernicus.socket
+  register: verify_gopher_socket
+  failed_when: verify_gopher_socket.status.ActiveState != "active"
+
+- name: Verify Gopher returns a menu for root selector
+  ansible.builtin.shell: |
+    set -euo pipefail
+    echo / | nc -q1 127.0.0.1 {{ gopher_port | default(70) }}
+  register: verify_gopher
+  changed_when: false
+  failed_when: verify_gopher.stdout | length == 0
+
+- name: Verify finger socket is active
+  ansible.builtin.systemd:
+    name: finger.socket
+  register: verify_finger_socket
+  failed_when: verify_finger_socket.status.ActiveState != "active"
+
+- name: Verify finger port accepts connections
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 79
+    timeout: 10
+
+- name: Verify FTP port accepts connections
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 21
+    timeout: 10
+
+- name: Verify dictd is active
+  ansible.builtin.systemd:
+    name: dictd
+  register: verify_dictd
+  failed_when: verify_dictd.status.ActiveState != "active"
+
+- name: Verify dict lookup returns definitions
+  ansible.builtin.command:
+    cmd: dict hello
+  register: verify_dict
+  changed_when: false
+  failed_when: >
+    'definition' not in verify_dict.stdout and 'definitions found' not in verify_dict.stdout
+
+- name: Verify prometheus-node-exporter is active
+  ansible.builtin.systemd:
+    name: prometheus-node-exporter
+  register: verify_node_exporter
+  failed_when: verify_node_exporter.status.ActiveState != "active"
+
+- name: Verify borgmatic timer is enabled
+  ansible.builtin.systemd:
+    name: borgmatic.timer
+  register: verify_borgmatic
+  failed_when: verify_borgmatic.status.UnitFileState not in ["enabled", "static"]

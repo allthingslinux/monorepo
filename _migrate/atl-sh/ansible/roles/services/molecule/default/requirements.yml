@@ -1,0 +1,8 @@
+---
+roles:
+  - geerlingguy.nginx
+  - robertdebock.logrotate
+
+collections:
+  - community.general
+  - ansible.posix

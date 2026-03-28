@@ -1,0 +1,12 @@
+---
+backup_retention_daily: 7
+backup_retention_weekly: 4
+backup_retention_monthly: 6
+backup_paths:
+  - /home
+  - /etc
+  - /var/spool/cron
+backup_exclude:
+  - "*.cache"
+  - "*.tmp"
+  - "node_modules"

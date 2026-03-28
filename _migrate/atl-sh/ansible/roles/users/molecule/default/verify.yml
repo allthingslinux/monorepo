@@ -1,0 +1,74 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Check skel directories exist
+      ansible.builtin.stat:
+        path: "/etc/skel/{{ item }}"
+      register: skel_dirs
+      loop:
+        - public_html
+        - public_gemini
+        - public_gopher
+
+    - name: Assert skel directories are present
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.isdir
+        fail_msg: "Missing skel directory: {{ item.item }}"
+      loop: "{{ skel_dirs.results }}"
+
+    - name: Check skel dotfiles exist
+      ansible.builtin.stat:
+        path: "/etc/skel/{{ item }}"
+      register: skel_files
+      loop:
+        - .bashrc
+        - .tmux.conf
+        - .plan
+        - .project
+
+    - name: Assert skel dotfiles are present
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+        fail_msg: "Missing skel file: {{ item.item }}"
+      loop: "{{ skel_files.results }}"
+
+    - name: Check PAM limits file exists
+      ansible.builtin.stat:
+        path: /etc/security/limits.d/pubnix.conf
+      register: pam_limits
+
+    - name: Assert PAM limits are configured
+      ansible.builtin.assert:
+        that:
+          - pam_limits.stat.exists
+        fail_msg: "PAM limits file not found"
+
+    - name: Check MOTD script exists and is executable
+      ansible.builtin.stat:
+        path: /etc/update-motd.d/10-motd
+      register: motd_script
+
+    - name: Assert MOTD script is present and executable
+      ansible.builtin.assert:
+        that:
+          - motd_script.stat.exists
+          - motd_script.stat.executable
+        fail_msg: "MOTD script missing or not executable"
+
+    - name: Check pam_namespace is configured
+      ansible.builtin.command: grep pam_namespace /etc/pam.d/common-session
+      register: pam_namespace
+      changed_when: false
+
+    - name: Assert pam_namespace is enabled
+      ansible.builtin.assert:
+        that:
+          - pam_namespace.rc == 0
+        fail_msg: "pam_namespace not configured in /etc/pam.d/common-session"

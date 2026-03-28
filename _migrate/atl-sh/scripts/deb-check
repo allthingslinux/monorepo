@@ -1,0 +1,36 @@
+#!/bin/bash
+# deb-check — check if packages are available in Debian Trixie via the dev VM
+# Usage:
+#   ./deb-check <package>          # exact package info
+#   ./deb-check -s <term>          # search packages by keyword
+#   ./deb-check -l <pkg> [pkg...]  # batch check multiple packages
+
+SSH="ssh -p 2223 -i .ssh/dev_key -o StrictHostKeyChecking=no -o LogLevel=ERROR root@127.0.0.1"
+
+case "$1" in
+  -s|--search)
+    shift
+    $SSH "apt-cache search '$*' | sort"
+    ;;
+  -l|--list)
+    shift
+    for pkg in "$@"; do
+      ver=$($SSH "apt-cache policy '$pkg' 2>/dev/null | grep 'Candidate:' | awk '{print \$2}'" 2>/dev/null)
+      installed=$($SSH "dpkg -l '$pkg' 2>/dev/null | grep -q '^ii' && echo ' [INSTALLED]'" 2>/dev/null)
+      if [ -n "$ver" ] && [ "$ver" != "(none)" ]; then
+        printf "✓ %-25s %s%s\n" "$pkg" "$ver" "$installed"
+      else
+        printf "✗ %-25s NOT IN REPOS\n" "$pkg"
+      fi
+    done
+    ;;
+  -h|--help)
+    echo "Usage:"
+    echo "  ./deb-check <package>          Show package info"
+    echo "  ./deb-check -s <term>          Search by keyword"
+    echo "  ./deb-check -l pkg1 pkg2 ...   Batch check availability"
+    ;;
+  *)
+    $SSH "apt-cache show '$1' 2>/dev/null | grep -E '^(Package|Version|Installed-Size|Depends|Description-en):' | head -10; echo '---'; dpkg -l '$1' 2>/dev/null | grep -q '^ii' && echo 'STATUS: INSTALLED' || echo 'STATUS: not installed'"
+    ;;
+esac

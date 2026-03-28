@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+
+platforms:
+  - name: instance
+    box: debian/trixie64
+    memory: 4096
+    cpus: 2
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: ansible

@@ -1,0 +1,207 @@
+---
+title: Security Deep Dive
+description: CIS hardening, audit rules, user isolation, and the defense-in-depth model on atl.sh.
+---
+
+atl.sh is a multi-user system where untrusted users have shell access. Security is enforced through multiple overlapping layers — no single mechanism is relied upon alone.
+
+## Defense-in-depth model
+
+```
+┌─────────────────────────────────────────────┐
+│  Network: UFW firewall + Fail2ban           │
+├─────────────────────────────────────────────┤
+│  Authentication: SSH key-only, no passwords │
+├─────────────────────────────────────────────┤
+│  Authorization: AllowGroups, sudo disabled  │
+├─────────────────────────────────────────────┤
+│  Isolation: cgroups, quotas, private /tmp   │
+├─────────────────────────────────────────────┤
+│  Monitoring: auditd, AIDE, process acct     │
+├─────────────────────────────────────────────┤
+│  Hardening: CIS sysctl, module blacklist    │
+└─────────────────────────────────────────────┘
+```
+
+## Kernel hardening (sysctl)
+
+CIS-aligned kernel parameters set via `security/tasks/sysctl-hardening.yml`:
+
+| Parameter | Value | Purpose |
+|-----------|-------|---------|
+| `kernel.randomize_va_space` | `2` | Full ASLR |
+| `kernel.yama.ptrace_scope` | `2` | Only root can ptrace |
+| `kernel.dmesg_restrict` | `1` | Users can't read kernel ring buffer |
+| `kernel.kptr_restrict` | `2` | Hide kernel pointers |
+| `kernel.sysrq` | `0` | Disable magic SysRq key |
+| `net.ipv4.conf.all.rp_filter` | `1` | Strict reverse path filtering |
+| `net.ipv4.conf.all.accept_redirects` | `0` | Reject ICMP redirects |
+| `net.ipv4.conf.all.send_redirects` | `0` | Don't send ICMP redirects |
+| `net.ipv4.icmp_echo_ignore_broadcasts` | `1` | Ignore broadcast pings |
+| `net.ipv4.tcp_syncookies` | `1` | SYN flood protection |
+
+## Module blacklist
+
+Uncommon kernel modules are blacklisted to reduce attack surface (`security/tasks/module-blacklist.yml`):
+
+- Uncommon filesystems: `cramfs`, `freevxfs`, `hfs`, `hfsplus`, `jffs2`, `squashfs`, `udf`
+- Uncommon network protocols: `dccp`, `sctp`, `rds`, `tipc`
+- USB storage: `usb-storage` (server has no need for USB mass storage)
+
+## SSH hardening
+
+| Setting | Value |
+|---------|-------|
+| Ports | 22, 2222 |
+| Authentication | Key-only (passwords disabled) |
+| Root login | `prohibit-password` (key-only) |
+| Max auth tries | 3 |
+| Login grace time | 30 seconds |
+| Allowed groups | `pubnix`, `root`, `sudo` |
+| Client alive interval | 300s (5 min) |
+| Client alive count max | 2 |
+
+Users outside the allowed groups cannot SSH in at all.
+
+## Firewall (UFW)
+
+Default policy: deny incoming, allow outgoing. Only explicitly listed TCP ports are open:
+
+`22, 2222, 70, 79, 80, 443, 1965, 21, 40000–40100`
+
+SSH (port 22) is additionally rate-limited by UFW.
+
+## Fail2ban
+
+Monitors SSH auth failures:
+
+| Setting | Value |
+|---------|-------|
+| Ban time | 1 hour (3600s) |
+| Detection window | 10 minutes (600s) |
+| Max failures | 5 |
+
+```bash
+fail2ban-client status sshd      # view current bans
+fail2ban-client set sshd unbanip 1.2.3.4  # unban an IP
+```
+
+## User isolation
+
+### Cgroup v2 slices
+
+Each user session runs in a systemd user slice with hard limits:
+
+| Resource | Limit |
+|----------|-------|
+| CPU | 200% (2 cores) |
+| Memory | 1.5 GB |
+| Tasks | 200 (processes + threads) |
+
+Exceeding memory triggers the OOM killer. Exceeding tasks prevents new process creation.
+
+### Disk quotas
+
+XFS/ext4 quotas per user:
+
+| Limit | Value |
+|-------|-------|
+| Soft | 5 GB (grace period warning) |
+| Hard | 6 GB (writes fail) |
+
+### Private /tmp
+
+`pam_namespace` polyinstantiation gives each login session an isolated `/tmp`, `/var/tmp`, and `/run/lock`. Users cannot see each other's temporary files.
+
+### PAM limits
+
+Additional limits via `/etc/security/limits.conf`:
+
+| Limit | Value |
+|-------|-------|
+| `nproc` | 100 |
+| `nofile` | 1024 |
+| `core` | 0 (no core dumps) |
+
+### Privilege restrictions
+
+- `sudo` and `su` are blocked for pubnix users
+- `/etc/shadow` is not readable by users
+- `/root` is not accessible
+- `/etc` is read-only for users
+- `dmesg` is restricted (`kernel.dmesg_restrict=1`)
+
+## Audit logging (auditd)
+
+40+ audit rules organized by category:
+
+### Self-auditing
+Monitors changes to audit infrastructure itself: `/var/log/audit/`, `/etc/audit/`, audit tools.
+
+### Identity and authentication
+Watches: `/etc/passwd`, `/etc/shadow`, `/etc/group`, `/etc/gshadow`, `/etc/sudoers`, `/etc/sudoers.d/`
+
+### Network configuration
+Watches: `/etc/hosts`, `/etc/network/`
+
+### SSH configuration
+Watches: `/etc/ssh/sshd_config`
+
+### Suspicious activity (LOLBins)
+Execution monitoring for: `wget`, `curl`, `nc`, `socat`, `sudo`, `su`
+
+### Scripting interpreters
+Syscall monitoring (`execve`) for user-invoked: `python3`, `perl`, `ruby`, `vim`
+Tagged with MITRE ATT&CK technique IDs (e.g., `T1059_Command_Execution`).
+
+### Privilege and permission changes
+Syscall monitoring for: `chmod`, `chown`, `fchmod`, `fchown` — filtered to real users (`auid >= 1000`).
+
+### System integrity
+Watches: `/etc/sysctl.conf`, `/etc/sysctl.d/`, `/etc/modprobe.d/`
+
+### Login integrity
+Watches: `/var/log/lastlog`, `/var/log/faillock`, `/var/log/tallylog`
+
+### Time manipulation
+Syscall monitoring: `adjtimex`, `settimeofday`, `clock_settime`
+
+### Process tracing
+Syscall monitoring: `ptrace`, `memfd_create`
+
+```bash
+# Query audit log
+ausearch -ts recent              # recent events
+ausearch -k priv_esc             # privilege escalation
+ausearch -k T1059_Command_Execution  # scripting interpreter use
+ausearch -k perm_mod             # permission changes
+aureport --summary               # summary report
+```
+
+## File integrity (AIDE)
+
+AIDE runs daily at 05:00 UTC via systemd timer. It checksums system binaries, config files, and kernel settings, reporting any unexpected changes.
+
+```bash
+aide --check                     # manual check
+aide --update                    # update database after intentional changes
+mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+```
+
+## Malware scanning
+
+Three scanners are installed and configured:
+
+| Tool | Purpose |
+|------|---------|
+| `rkhunter` | Rootkit detection |
+| `chkrootkit` | Rootkit detection (second opinion) |
+| `lynis` | Security auditing and compliance |
+
+## Automatic updates
+
+`unattended-upgrades` applies security patches automatically. Check history:
+
+```bash
+cat /var/log/unattended-upgrades/unattended-upgrades.log
+```

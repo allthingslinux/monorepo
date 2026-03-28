@@ -1,0 +1,62 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert base packages are installed
+      ansible.builtin.assert:
+        that:
+          - "'apt-transport-https' in ansible_facts.packages"
+          - "'ca-certificates' in ansible_facts.packages"
+          - "'curl' in ansible_facts.packages"
+          - "'wget' in ansible_facts.packages"
+          - "'gnupg' in ansible_facts.packages"
+          - "'sudo' in ansible_facts.packages"
+          - "'rsync' in ansible_facts.packages"
+          - "'man-db' in ansible_facts.packages"
+        fail_msg: "One or more base packages are missing"
+
+    - name: Check journald SystemMaxUse setting
+      ansible.builtin.command: grep -E '^SystemMaxUse=' /etc/systemd/journald.conf
+      register: journald_conf
+      changed_when: false
+
+    - name: Assert journald is capped at 1G
+      ansible.builtin.assert:
+        that:
+          - "'SystemMaxUse=1G' in journald_conf.stdout"
+        fail_msg: "journald SystemMaxUse is not set to 1G"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert NTP service is running
+      ansible.builtin.assert:
+        that:
+          - >
+            ansible_facts.services['ntp.service'] is defined and
+            ansible_facts.services['ntp.service'].state == 'running'
+            or
+            ansible_facts.services['chrony.service'] is defined and
+            ansible_facts.services['chrony.service'].state == 'running'
+            or
+            ansible_facts.services['ntpsec.service'] is defined and
+            ansible_facts.services['ntpsec.service'].state == 'running'
+        fail_msg: "No NTP service is running"
+
+    - name: Check logrotate is installed
+      ansible.builtin.stat:
+        path: /usr/sbin/logrotate
+      register: logrotate_bin
+
+    - name: Assert logrotate is present
+      ansible.builtin.assert:
+        that:
+          - logrotate_bin.stat.exists
+        fail_msg: "logrotate binary not found"

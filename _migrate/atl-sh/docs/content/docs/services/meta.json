@@ -1,0 +1,4 @@
+{
+  "title": "Services",
+  "pages": ["nginx", "gemini", "gopher", "finger", "ftp"]
+}

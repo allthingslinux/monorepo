@@ -1,0 +1,103 @@
+---
+title: Webring
+description: Join the ATL Webring to connect your personal site to the community.
+---
+
+The ATL Webring links personal sites from atl.sh members into a ring — visitors can navigate from one site to the next, discovering what everyone is building and writing.
+
+The ring is self-managing and the widget auto-injects: just create `~/.ring` and you'll appear within 15 minutes, widget included.
+
+## Joining
+
+You need two things:
+
+1. **A web page** — your site must exist at `~/public_html/`
+2. **An opt-in file** — create `~/.ring` in your home directory
+
+The simplest opt-in is an empty file:
+
+```bash
+touch ~/.ring
+```
+
+Or add optional metadata:
+
+```bash
+cat > ~/.ring << 'EOF'
+name        = Your Site Name
+description = A short description of your site.
+EOF
+```
+
+All fields are optional. If omitted, your username is used as your display name and your tilde URL (`https://atl.sh/~your-username/`) is used as your site URL.
+
+### External sites
+
+If your primary site is elsewhere, you can point the ring at it:
+
+```
+name        = My Blog
+description = Notes on Linux and homelab.
+url         = https://example.com
+```
+
+## The Widget
+
+The webring navigation bar is **injected automatically** into all `~/public_html/` pages for ring members. You don't need to add anything to your HTML. It appears as a fixed bar at the bottom of the page showing the names of the previous and next sites:
+
+```
+← Alice's Corner  ◆  ATL Ring  ◆  Bob's Workshop →
+```
+
+The widget fetches `members.json` on load and only renders for users who are actually in the ring — it does nothing on non-member pages.
+
+### Custom placement
+
+If you want the widget in a specific location on your page rather than the auto-injected bottom bar, add an element with `id="atl-webring"` containing links with `data-webring="prev"` and `data-webring="next"`:
+
+```html
+<nav id="atl-webring">
+  <a href="/ring/" data-webring="prev">← Prev</a> ·
+  <a href="/ring/">ATL Ring</a> ·
+  <a href="/ring/" data-webring="next">Next →</a>
+</nav>
+```
+
+The widget script detects this element and updates the `href` and text attributes with the real prev/next site names, instead of creating the default bottom bar.
+
+### Plain HTML fallback (no JavaScript)
+
+If you prefer no JavaScript dependency at all, hardcode the links with your username:
+
+```html
+<nav>
+  <a href="https://atl.sh/ring/go.cgi?action=prev&user=YOUR_USERNAME">← Prev</a> ·
+  <a href="https://atl.sh/ring/">ATL Ring</a> ·
+  <a href="https://atl.sh/ring/go.cgi?action=next&user=YOUR_USERNAME">Next →</a>
+</nav>
+```
+
+Note: these links always say "Prev" and "Next" rather than showing the actual site names.
+
+## How It Works
+
+A scan script runs every 15 minutes, checking every home directory for `~/.ring` and `~/public_html/`. It builds `/ring/members.json`, sorted alphabetically by username for a stable ring order.
+
+Nginx injects `<script src="/ring/widget.js" defer></script>` before `</body>` in every tilde page response. The script fetches `members.json`, finds the current user's position in the ring, and renders the navigation bar — or does nothing if the user isn't a member.
+
+To **leave the ring**, delete `~/.ring`:
+
+```bash
+rm ~/.ring
+```
+
+Your site is removed from `members.json` within 15 minutes and the widget stops rendering on your pages automatically.
+
+## Ring Index
+
+The full member directory is at [atl.sh/ring/](https://atl.sh/ring/). From there you can browse all members or jump to a random site.
+
+```bash
+# See all ring members from the command line
+curl -s https://atl.sh/ring/members.json | python3 -m json.tool
+```

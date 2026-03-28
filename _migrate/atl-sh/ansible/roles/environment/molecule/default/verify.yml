@@ -1,0 +1,57 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Check shared cache directories
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: cache_dirs
+      loop:
+        - /var/cache/pnpm
+        - /var/cache/uv
+        - /var/cache/poetry
+
+    - name: Assert cache directories exist with sticky bit
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.isdir
+          - item.stat.mode == '1777'
+        fail_msg: "Cache directory missing or wrong permissions: {{ item.item }}"
+      loop: "{{ cache_dirs.results }}"
+
+    - name: Check environment paths profile script
+      ansible.builtin.stat:
+        path: /etc/profile.d/environment-paths.sh
+      register: env_paths
+
+    - name: Assert environment paths script is present
+      ansible.builtin.assert:
+        that:
+          - env_paths.stat.exists
+        fail_msg: "environment-paths.sh not found in /etc/profile.d/"
+
+    - name: Check PATH entries in profile script
+      ansible.builtin.command: grep -E '\.local/bin|\.cargo/bin|\.go/bin' /etc/profile.d/environment-paths.sh
+      register: path_entries
+      changed_when: false
+
+    - name: Assert key PATH entries are present
+      ansible.builtin.assert:
+        that:
+          - path_entries.rc == 0
+        fail_msg: "PATH entries missing from environment-paths.sh"
+
+    - name: Check systemd user slice limits
+      ansible.builtin.stat:
+        path: /etc/systemd/system/user-.slice.d/limits.conf
+      register: slice_limits
+
+    - name: Assert systemd cgroup limits are configured
+      ansible.builtin.assert:
+        that:
+          - slice_limits.stat.exists
+        fail_msg: "systemd user slice limits not configured"

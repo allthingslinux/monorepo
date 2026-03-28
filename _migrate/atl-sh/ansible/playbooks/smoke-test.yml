@@ -1,0 +1,207 @@
+---
+# End-to-end smoke test for pubnix user features
+# Creates a temporary user, validates all services, then removes it.
+#
+# Usage: ansible-playbook playbooks/smoke-test.yml -e "target_hosts=dev"
+#        just smoke-test dev
+
+- name: Smoke test pubnix features
+  hosts: "{{ target_hosts | default('dev') }}"
+  become: true
+
+  vars:
+    test_user: _smoketest
+    test_home: "/home/{{ test_user }}"
+    gemini_root: "{{ gemini_capsule_root | default('/var/gemini') }}"
+
+  tasks:
+    # ── Setup ──────────────────────────────────────────────
+    - name: Create test user
+      ansible.builtin.user:
+        name: "{{ test_user }}"
+        group: "{{ pubnix_group }}"
+        shell: "{{ default_shell }}"
+        create_home: true
+        skeleton: /etc/skel
+        state: present
+
+    - name: Set home directory traversable
+      ansible.builtin.file:
+        path: "{{ test_home }}"
+        mode: "0711"
+
+    - name: Set up Gemini capsule directory
+      ansible.builtin.file:
+        path: "{{ gemini_root }}/public_gemini/{{ test_user }}"
+        state: directory
+        owner: "{{ test_user }}"
+        group: "{{ pubnix_group }}"
+        mode: "0755"
+
+    - name: Move Gemini skel content to capsule
+      ansible.builtin.shell: |
+        if [ -d "{{ test_home }}/public_gemini" ] && [ ! -L "{{ test_home }}/public_gemini" ]; then
+          cp -a "{{ test_home }}/public_gemini/." "{{ gemini_root }}/public_gemini/{{ test_user }}/"
+          rm -rf "{{ test_home }}/public_gemini"
+        fi
+      changed_when: false
+
+    - name: Symlink home public_gemini to capsule
+      ansible.builtin.file:
+        src: "{{ gemini_root }}/public_gemini/{{ test_user }}"
+        dest: "{{ test_home }}/public_gemini"
+        state: link
+        force: true
+
+    # ── Tests ──────────────────────────────────────────────
+    - name: "TEST: Skeleton files exist"
+      ansible.builtin.stat:
+        path: "{{ test_home }}/{{ item }}"
+      loop:
+        - public_html/index.html
+        - public_gemini/index.gmi
+        - public_gopher/gophermap
+        - .plan
+        - .project
+        - .bashrc
+        - .tmux.conf
+        - README.md
+      register: skel_results
+      failed_when: not skel_results.stat.exists
+
+    - name: "TEST: Home directory is 711"
+      ansible.builtin.stat:
+        path: "{{ test_home }}"
+      register: home_stat
+      failed_when: home_stat.stat.mode != '0711'
+
+    - name: "TEST: User is only in pubnix group"
+      ansible.builtin.command:
+        cmd: "id -Gn {{ test_user }}"
+      register: user_groups
+      changed_when: false
+      failed_when: "'sudo' in user_groups.stdout or 'wheel' in user_groups.stdout or 'root' in user_groups.stdout"
+
+    - name: "TEST: Cannot read /etc/shadow"
+      ansible.builtin.command:
+        cmd: "su -s /bin/sh {{ test_user }} -c 'cat /etc/shadow'"
+      register: shadow_test
+      changed_when: false
+      failed_when: shadow_test.rc == 0
+
+    - name: "TEST: Cannot write to /etc"
+      ansible.builtin.command:
+        cmd: "su -s /bin/sh {{ test_user }} -c 'touch /etc/_smoketest'"
+      register: etc_test
+      changed_when: false
+      failed_when: etc_test.rc == 0
+
+    - name: "TEST: PAM nproc limit is set"
+      ansible.builtin.command:
+        cmd: "su -s /bin/sh {{ test_user }} -c 'ulimit -u'"
+      register: nproc_test
+      changed_when: false
+      failed_when: nproc_test.stdout | int > 200
+
+    - name: Get test user UID
+      ansible.builtin.command:
+        cmd: "id -u {{ test_user }}"
+      register: test_uid
+      changed_when: false
+
+    - name: "TEST: Cgroup user slice config exists"
+      ansible.builtin.stat:
+        path: /etc/systemd/system/user-.slice.d/limits.conf
+      register: cgroup_conf
+      failed_when: not cgroup_conf.stat.exists
+
+    - name: "TEST: Nginx serves ~user page"
+      ansible.builtin.uri:
+        url: "http://localhost/~{{ test_user }}/index.html"
+        headers:
+          Host: "{{ pubnix_domain }}"
+        return_content: false
+        status_code: 200
+
+    - name: "TEST: Molly-brown is running"
+      ansible.builtin.systemd:
+        name: molly-brown@molly-brown
+      register: molly_status
+      failed_when: molly_status.status.ActiveState != 'active'
+
+    - name: "TEST: Gemini serves ~user capsule"
+      ansible.builtin.shell:
+        cmd: >
+          printf 'gemini://{{ pubnix_domain }}/~{{ test_user }}/\r\n'
+          | openssl s_client -connect localhost:1965 -quiet -verify_quiet 2>/dev/null
+          | head -1
+      register: gemini_test
+      changed_when: false
+      failed_when: "'20 ' not in gemini_test.stdout"
+
+    - name: "TEST: Gopher serves ~user hole"
+      ansible.builtin.shell:
+        cmd: "echo '/~{{ test_user }}' | nc -q1 localhost 70"
+      register: gopher_test
+      changed_when: false
+      failed_when: "'Welcome' not in gopher_test.stdout"
+
+    - name: "TEST: Finger returns user info"
+      ansible.builtin.shell:
+        cmd: "echo '{{ test_user }}' | nc -w2 localhost 79 | grep -c '{{ test_user }}'"
+      register: finger_test
+      changed_when: false
+      failed_when: finger_test.stdout | int < 1
+      environment:
+        PYTHONIOENCODING: "utf-8:surrogateescape"
+
+    - name: "TEST: vsftpd is running on port 21"
+      ansible.builtin.wait_for:
+        port: 21
+        timeout: 5
+
+    - name: "TEST: dictd is running"
+      ansible.builtin.service:
+        name: dictd
+      register: dictd_status
+      failed_when: dictd_status.status.ActiveState != 'active'
+
+    - name: "TEST: dict lookup returns definitions"
+      ansible.builtin.command:
+        cmd: dict hello
+      register: dict_test
+      changed_when: false
+      failed_when: "'definition' not in dict_test.stdout and 'definitions found' not in dict_test.stdout"
+
+    - name: "TEST: Private /tmp isolation"
+      ansible.builtin.shell:
+        cmd: |
+          # Write a file as test user via SSH session (triggers pam_namespace)
+          su -s /bin/sh {{ test_user }} -c 'echo marker > /tmp/_smoketest_marker'
+          # Check it's NOT in global /tmp
+          [ ! -f /tmp/_smoketest_marker ] && echo "ISOLATED" || echo "LEAKED"
+      register: tmp_test
+      changed_when: false
+      # Note: su doesn't trigger pam_namespace (only SSH does), so we just verify the config
+      ignore_errors: true
+
+    - name: "TEST: pam_namespace is configured"
+      ansible.builtin.command:
+        cmd: grep -q '/tmp.*inst.*user' /etc/security/namespace.conf
+      changed_when: false
+
+    # ── Teardown ───────────────────────────────────────────
+    - name: Remove Gemini capsule directory
+      ansible.builtin.file:
+        path: "{{ gemini_root }}/public_gemini/{{ test_user }}"
+        state: absent
+
+    - name: Remove test user
+      ansible.builtin.user:
+        name: "{{ test_user }}"
+        state: absent
+        remove: true
+
+    - name: Print results
+      ansible.builtin.debug:
+        msg: "All smoke tests passed ✓"

@@ -1,0 +1,95 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert shells are installed
+      ansible.builtin.assert:
+        that:
+          - "'zsh' in ansible_facts.packages"
+          - "'fish' in ansible_facts.packages"
+          - "'mksh' in ansible_facts.packages"
+        fail_msg: "One or more shells are missing"
+
+    - name: Assert key build tools are installed
+      ansible.builtin.assert:
+        that:
+          - "'gcc' in ansible_facts.packages"
+          - "'make' in ansible_facts.packages"
+          - "'clang' in ansible_facts.packages"
+          - "'gdb' in ansible_facts.packages"
+        fail_msg: "One or more build tools are missing"
+
+    - name: Assert key languages are installed
+      ansible.builtin.assert:
+        that:
+          - "'python3' in ansible_facts.packages"
+          - "'golang' in ansible_facts.packages"
+          - "'rustc' in ansible_facts.packages"
+          - "'nodejs' in ansible_facts.packages"
+          - "'ruby' in ansible_facts.packages"
+          - "'lua5.4' in ansible_facts.packages"
+          - "'ghc' in ansible_facts.packages"
+        fail_msg: "One or more language runtimes are missing"
+
+    - name: Assert key editors are installed
+      ansible.builtin.assert:
+        that:
+          - "'vim' in ansible_facts.packages"
+          - "'neovim' in ansible_facts.packages"
+          - "'nano' in ansible_facts.packages"
+          - "'emacs-nox' in ansible_facts.packages"
+          - "'helix' in ansible_facts.packages"
+        fail_msg: "One or more editors are missing"
+
+    - name: Assert terminal multiplexers are installed
+      ansible.builtin.assert:
+        that:
+          - "'tmux' in ansible_facts.packages"
+          - "'screen' in ansible_facts.packages"
+        fail_msg: "One or more terminal multiplexers are missing"
+
+    - name: Assert key CLI tools are installed
+      ansible.builtin.assert:
+        that:
+          - "'git' in ansible_facts.packages"
+          - "'ripgrep' in ansible_facts.packages"
+          - "'fzf' in ansible_facts.packages"
+          - "'jq' in ansible_facts.packages"
+          - "'htop' in ansible_facts.packages"
+        fail_msg: "One or more CLI tools are missing"
+
+    - name: Assert fun packages are installed
+      ansible.builtin.assert:
+        that:
+          - "'fortune-mod' in ansible_facts.packages"
+          - "'cowsay' in ansible_facts.packages"
+          - "'figlet' in ansible_facts.packages"
+        fail_msg: "One or more fun packages are missing"
+
+    - name: Assert system tools are installed
+      ansible.builtin.assert:
+        that:
+          - "'acct' in ansible_facts.packages"
+          - "'quota' in ansible_facts.packages"
+          - "'sysstat' in ansible_facts.packages"
+        fail_msg: "One or more system tools are missing"
+
+    - name: Read /etc/shells
+      ansible.builtin.slurp:
+        src: /etc/shells
+      register: shells_file
+
+    - name: Assert shells are registered in /etc/shells
+      ansible.builtin.assert:
+        that:
+          - "'/usr/bin/zsh' in (shells_file.content | b64decode)"
+          - "'/usr/bin/fish' in (shells_file.content | b64decode)"
+          - "'/bin/mksh' in (shells_file.content | b64decode)"
+        fail_msg: "One or more shells missing from /etc/shells"

@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+[Service]
+ExecStart=
+ExecStart=/usr/bin/prometheus-node-exporter --web.listen-address={{ node_exporter_listen }}

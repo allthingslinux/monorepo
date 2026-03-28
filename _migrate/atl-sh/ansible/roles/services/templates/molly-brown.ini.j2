@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+# Molly Brown configuration for {{ pubnix_domain }}
+
+Port = {{ gemini_port }}
+Hostname = "{{ pubnix_domain }}"
+{% if 'dev' in group_names %}
+CertPath = "/etc/ssl/certs/molly-brown.crt"
+KeyPath = "/etc/ssl/private/molly-brown.key"
+{% else %}
+CertPath = "/etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem"
+KeyPath = "/etc/letsencrypt/live/{{ pubnix_domain }}/privkey.pem"
+{% endif %}
+DocBase = "{{ gemini_capsule_root }}"
+HomeDocBase = "public_gemini"
+AccessLog = "/var/log/molly-brown/access.log"
+ErrorLog = "/var/log/molly-brown/error.log"
+GeminiExt = "gmi"
+DirectoryListing = true
+DirectorySort = "Name"
+
+CGIPaths = ["/cgi-bin"]

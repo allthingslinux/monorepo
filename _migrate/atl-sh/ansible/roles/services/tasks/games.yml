@@ -1,0 +1,169 @@
+---
+# ──────────────────────────────────────────────
+# NetHack
+# ──────────────────────────────────────────────
+
+- name: Install nethack
+  ansible.builtin.apt:
+    name: nethack-console
+    state: present
+
+- name: Ensure nethack config directory exists
+  ansible.builtin.file:
+    path: /etc/nethack
+    state: directory
+    mode: "0755"
+
+- name: Ensure nethack shared data directory exists
+  ansible.builtin.file:
+    path: /var/games/nethack
+    state: directory
+    owner: games
+    group: games
+    mode: "0775"
+
+- name: Ensure nethack dumps directory exists
+  ansible.builtin.file:
+    path: /var/games/nethack/dumps
+    state: directory
+    owner: games
+    group: games
+    mode: "0775"
+
+- name: Deploy site-wide nethackrc
+  ansible.builtin.template:
+    src: nethackrc.j2
+    # The nethack-console wrapper falls back to nethackrc.console when the user
+    # has no ~/.nethackrc. Deploying to nethackrc.console (not nethackrc) is
+    # required for the wrapper's fallback logic to pick it up.
+    dest: /etc/nethack/nethackrc.console
+    mode: "0644"
+
+# ──────────────────────────────────────────────
+# Roguelikes
+# ──────────────────────────────────────────────
+
+- name: Install roguelike games
+  ansible.builtin.apt:
+    name:
+      - angband        # Tolkien dungeon crawler, 100 levels to Morgoth
+      - crawl          # Dungeon Crawl Stone Soup, best modern roguelike
+      - slashem        # NetHack variant with extra races, roles, and content
+    state: present
+
+# ──────────────────────────────────────────────
+# Arcade / Action
+# ──────────────────────────────────────────────
+
+- name: Install arcade games
+  ansible.builtin.apt:
+    name:
+      - ninvaders       # Space Invaders clone
+      - moon-buggy      # Side-scrolling moon rover
+      - nsnake          # Classic snake
+      - vitetris        # Feature-rich Tetris with 2-player split-screen
+    state: present
+
+# ──────────────────────────────────────────────
+# Puzzle / Skill
+# ──────────────────────────────────────────────
+
+- name: Install puzzle and skill games
+  ansible.builtin.apt:
+    name:
+      - nudoku          # Sudoku with 4 difficulty levels
+      - typespeed       # Type falling words — creates natural server leaderboard
+      - dopewars        # NYC drug dealer simulator, classic shareware
+    state: present
+
+# ──────────────────────────────────────────────
+# BSD Games (meta-package — ~40 classic games)
+# Includes: hunt (multiplayer deathmatch), adventure, worm, trek,
+#           backgammon, cribbage, sail, battlestar, and many more
+# ──────────────────────────────────────────────
+
+- name: Install bsd-games collection
+  ansible.builtin.apt:
+    name: bsdgames
+    state: present
+
+# ──────────────────────────────────────────────
+# ASCIIquarium (Perl script, not in apt)
+# ──────────────────────────────────────────────
+
+- name: Install ASCIIquarium Perl dependencies
+  ansible.builtin.apt:
+    name:
+      - libcurses-perl
+    state: present
+
+- name: Download ASCIIquarium
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/cmatsuoka/asciiquarium/master/asciiquarium
+    dest: /usr/local/bin/asciiquarium
+    mode: "0755"
+
+# ──────────────────────────────────────────────
+# Botany (shared plant-growing game)
+# ──────────────────────────────────────────────
+
+# Botany is not on PyPI — the "botany" PyPI package is an unrelated calculator.
+# Install from source; all users must run the same botany.py so the shared
+# SQLite garden DB (stored next to botany.py) is the same file for everyone.
+
+- name: Install git (required for botany clone)
+  ansible.builtin.apt:
+    name: git
+    state: present
+
+- name: Clone botany from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/jifunks/botany.git
+    dest: /opt/botany
+    version: master
+    update: true
+
+- name: Make botany.py executable
+  ansible.builtin.file:
+    path: /opt/botany/botany.py
+    mode: "0755"
+
+- name: Create botany SQLite directory with world-writable permissions
+  ansible.builtin.file:
+    path: /opt/botany/sqlite
+    state: directory
+    mode: "0777"
+
+- name: Initialize botany garden database
+  ansible.builtin.command:
+    cmd: python3 -c "import sqlite3; sqlite3.connect('/opt/botany/sqlite/garden_db.sqlite').close()"
+    creates: /opt/botany/sqlite/garden_db.sqlite
+
+- name: Set botany database permissions
+  ansible.builtin.file:
+    path: /opt/botany/sqlite/garden_db.sqlite
+    mode: "0666"
+
+- name: Initialize botany garden file
+  ansible.builtin.copy:
+    dest: /opt/botany/garden_file.json
+    content: "{}"
+    mode: "0666"
+    force: false
+
+- name: Deploy botany wrapper script
+  ansible.builtin.copy:
+    dest: /usr/local/bin/botany
+    mode: "0755"
+    content: |
+      #!/bin/bash
+      exec python3 /opt/botany/botany.py "$@"
+
+- name: Deploy weekly botany visitor reset cron
+  ansible.builtin.cron:
+    name: botany weekly visitor reset
+    weekday: "0"
+    hour: "3"
+    minute: "0"
+    job: python3 /opt/botany/clear_weekly_users.py
+    user: root

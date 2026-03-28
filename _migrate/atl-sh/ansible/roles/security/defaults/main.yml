@@ -1,0 +1,191 @@
+---
+ssh_ports:
+  - 22
+  - 2222
+ssh_permit_root_login: "prohibit-password"
+ssh_password_authentication: "no"
+ssh_max_auth_tries: 3
+ssh_login_grace_time: 30
+ssh_client_alive_interval: 300
+ssh_client_alive_count_max: 2
+ssh_allow_groups: "pubnix root sudo"
+
+fail2ban_bantime: 3600
+fail2ban_findtime: 600
+fail2ban_maxretry: 5
+
+# robertdebock.auditd variables — aligned with audit-hardening.yml intent
+auditd_max_log_file_action: rotate
+auditd_space_left_action: email
+auditd_admin_space_left_action: halt
+auditd_disk_full_action: halt
+auditd_disk_error_action: halt
+
+
+firewall_allowed_tcp_ports:
+  - "22" # SSH primary
+  - "2222" # SSH secondary
+  - "70" # Gopher
+  - "80" # HTTP
+  - "443" # HTTPS
+  - "1965" # Gemini
+  - "21"   # FTP Control
+  - "40000:40100" # FTP Passive Data
+
+firewall_rate_limit_ssh: true
+
+auditd_rules:
+  # Self Auditing
+  - file: /var/log/audit/
+    permissions: [write, read, attribute_change]
+    keyname: auditlog
+  - file: /etc/audit/
+    permissions: [write, attribute_change]
+    keyname: auditconfig
+  - file: /sbin/auditctl
+    permissions: [execute]
+    keyname: audittools
+  - file: /usr/sbin/augenrules
+    permissions: [execute]
+    keyname: audittools
+
+  # System Integrity
+  - file: /etc/sysctl.conf
+    permissions: [write, attribute_change]
+    keyname: sysctl
+  - file: /etc/sysctl.d
+    permissions: [write, attribute_change]
+    keyname: sysctl
+  - file: /etc/modprobe.d
+    permissions: [write, attribute_change]
+    keyname: modprobe
+
+  # Identity & Authentication
+  - file: /etc/group
+    permissions: [write, attribute_change]
+    keyname: etcgroup
+  - file: /etc/passwd
+    permissions: [write, attribute_change]
+    keyname: etcpasswd
+  - file: /etc/gshadow
+    permissions: [write, attribute_change]
+    keyname: etcgroup
+  - file: /etc/shadow
+    permissions: [write, attribute_change]
+    keyname: etcpasswd
+  - file: /etc/sudoers
+    permissions: [write, attribute_change]
+    keyname: actions
+  - file: /etc/sudoers.d/
+    permissions: [write, attribute_change]
+    keyname: actions
+
+  # Network Environment
+  - file: /etc/hosts
+    permissions: [write, attribute_change]
+    keyname: network_modifications
+  - file: /etc/network/
+    permissions: [write, attribute_change]
+    keyname: network
+
+  # SSH Configuration
+  - file: /etc/ssh/sshd_config
+    permissions: [write, attribute_change]
+    keyname: sshd
+
+  # Suspicious Activity Monitoring
+  - file: /usr/bin/wget
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/curl
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/nc
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/socat
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/sudo
+    permissions: [execute]
+    keyname: priv_esc
+  - file: /usr/bin/su
+    permissions: [execute]
+    keyname: priv_esc
+
+  # System Calls - Time/Execution
+  - syscall: adjtimex
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: settimeofday
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: clock_settime
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: ptrace
+    action: always
+    filter: exit
+    keyname: tracing
+  - syscall: memfd_create
+    action: always
+    filter: exit
+    keyname: anon_file_create
+
+  # LOLBins (Execution/LOTL) - Better to use syscalls than watches for execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/python3", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/perl", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/ruby", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/vim", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_and_Scripting_Interpreter
+
+  # Login/Session Integrity
+  - file: /var/log/lastlog
+    permissions: [write, attribute_change]
+    keyname: logins
+  - file: /var/log/faillock
+    permissions: [write, attribute_change]
+    keyname: logins
+  - file: /var/log/tallylog
+    permissions: [write, attribute_change]
+    keyname: logins
+
+  # Privileged Activity - Detailed monitoring
+  - syscall: chmod
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: chown
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: fchmod
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: fchown
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod

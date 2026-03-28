@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 0
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

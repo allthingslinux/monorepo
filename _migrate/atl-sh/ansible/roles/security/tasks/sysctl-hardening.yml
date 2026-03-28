@@ -1,0 +1,70 @@
+---
+# Consolidated sysctl hardening
+- name: Configure sysctl hardening parameters
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.d/99-hardening.conf
+    reload: true
+  changed_when: false
+  loop:
+    # Kernel hardening
+    # Enable ASLR - randomizes memory addresses to prevent exploits
+    - { name: 'kernel.randomize_va_space', value: '2' }
+    # Restrict dmesg to root - prevents reading kernel ring buffer
+    - { name: 'kernel.dmesg_restrict', value: '1' }
+    # Restrict ptrace to parent processes - prevents cross-user debugging
+    - { name: 'kernel.yama.ptrace_scope', value: '1' }
+    # Hide kernel pointers - prevents address leaks
+    - { name: 'kernel.kptr_restrict', value: '2' }
+    # Restrict perf profiling - prevents info leaks
+    - { name: 'kernel.perf_event_paranoid', value: '2' }
+    # Disable core dumps for setuid programs
+    - { name: 'fs.suid_dumpable', value: '0' }
+
+    # Network - IPv4
+    # Disable IP forwarding - not a router
+    - { name: 'net.ipv4.ip_forward', value: '0' }
+    # Enable SYN cookies - protects against SYN flood DoS
+    - { name: 'net.ipv4.tcp_syncookies', value: '1' }
+    # Enable reverse path filtering - anti-spoofing
+    - { name: 'net.ipv4.conf.all.rp_filter', value: '1' }
+    - { name: 'net.ipv4.conf.default.rp_filter', value: '1' }
+    # Ignore ICMP redirects - prevents MITM attacks
+    - { name: 'net.ipv4.conf.all.accept_redirects', value: '0' }
+    - { name: 'net.ipv4.conf.default.accept_redirects', value: '0' }
+    # Don't send ICMP redirects
+    - { name: 'net.ipv4.conf.all.send_redirects', value: '0' }
+    - { name: 'net.ipv4.conf.default.send_redirects', value: '0' }
+    # Disable source routing - prevents route manipulation
+    - { name: 'net.ipv4.conf.all.accept_source_route', value: '0' }
+    - { name: 'net.ipv4.conf.default.accept_source_route', value: '0' }
+    # Ignore broadcast pings - prevents Smurf DoS
+    - { name: 'net.ipv4.icmp_echo_ignore_broadcasts', value: '1' }
+    # Ignore malformed ICMP errors
+    - { name: 'net.ipv4.icmp_ignore_bogus_error_responses', value: '1' }
+    # Log martian packets - helps detect spoofing
+    - { name: 'net.ipv4.conf.all.log_martians', value: '1' }
+    - { name: 'net.ipv4.conf.default.log_martians', value: '1' }
+
+    # Network - IPv6
+    # Disable IPv6 forwarding
+    - { name: 'net.ipv6.conf.all.forwarding', value: '0' }
+    # Disable IPv6 source routing
+    - { name: 'net.ipv6.conf.all.accept_source_route', value: '0' }
+    - { name: 'net.ipv6.conf.default.accept_source_route', value: '0' }
+    # Ignore IPv6 ICMP redirects
+    - { name: 'net.ipv6.conf.all.accept_redirects', value: '0' }
+    - { name: 'net.ipv6.conf.default.accept_redirects', value: '0' }
+    # Ignore IPv6 router advertisements - prevents rogue routers
+    - { name: 'net.ipv6.conf.all.accept_ra', value: '0' }
+    - { name: 'net.ipv6.conf.default.accept_ra', value: '0' }
+
+- name: Configure core dump limits
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    line: "* hard core 0"
+    state: present
+    create: true
+    mode: '0644'

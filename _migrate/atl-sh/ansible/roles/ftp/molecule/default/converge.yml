@@ -1,0 +1,31 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    pubnix_domain: atl.sh
+    ftp_port: 21
+    pasv_min_port: 40000
+    pasv_max_port: 40100
+    ftp_tls_cert: /etc/ssl/certs/vsftpd-test.pem
+    ftp_tls_key: /etc/ssl/private/vsftpd-test.key
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 0
+
+    - name: Generate self-signed TLS cert for vsftpd testing
+      ansible.builtin.command:
+        cmd: >
+          openssl req -x509 -nodes -days 365 -newkey rsa:2048
+          -keyout /etc/ssl/private/vsftpd-test.key
+          -out /etc/ssl/certs/vsftpd-test.pem
+          -subj "/CN=localhost"
+        creates: /etc/ssl/certs/vsftpd-test.pem
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

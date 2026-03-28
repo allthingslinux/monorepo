@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars and fill in secrets
+# terraform.tfvars is gitignored — never commit it
+
+hcloud_token         = ""
+cloudflare_api_token = ""
+cloudflare_zone_id   = ""
+
+# Optional overrides (defaults are fine for testing)
+# server_name         = "staging.atl.sh"
+# server_type         = "cx32"
+# server_location     = "fsn1"
+# server_image        = "debian-13"
+# ssh_public_key_path = "~/.ssh/id_ed25519.pub"
+# dns_subdomain       = "staging"

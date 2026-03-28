@@ -1,0 +1,16 @@
+# Welcome to my Gemini capsule!
+
+This is my space on the atl.sh pubnix.
+
+## About Me
+
+Write something about yourself here.
+
+## Links
+
+=> gemini://atl.sh/ atl.sh — All Things Linux pubnix
+=> https://allthingslinux.org All Things Linux
+
+---
+
+Edit ~/public_gemini/index.gmi to customize this page.

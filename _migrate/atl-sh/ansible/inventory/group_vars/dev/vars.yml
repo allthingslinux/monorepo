@@ -1,0 +1,5 @@
+---
+# Dev-only overrides (Vagrant VM)
+# Use self-signed certs (created by services/gemini role) — no Let's Encrypt
+ftp_tls_cert: /etc/ssl/certs/molly-brown.crt
+ftp_tls_key: /etc/ssl/private/molly-brown.key

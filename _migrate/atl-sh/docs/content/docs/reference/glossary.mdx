@@ -1,0 +1,42 @@
+---
+title: Glossary
+description: Definitions of terms used throughout the atl.sh documentation.
+---
+
+| Term | Definition |
+|------|-----------|
+| **AIDE** | Advanced Intrusion Detection Environment — file integrity checker that detects unauthorized changes to system files |
+| **auditd** | Linux audit daemon — logs security-relevant system events based on configurable rules |
+| **Borgmatic** | Wrapper around BorgBackup that simplifies backup configuration and scheduling |
+| **certbot** | Let's Encrypt client that automates TLS certificate issuance and renewal |
+| **cgroup** | Control group — Linux kernel feature for limiting and isolating resource usage (CPU, memory, processes) per user or process group |
+| **CGI** | Common Gateway Interface — protocol for web servers to execute scripts and return dynamic content |
+| **chroot** | Change root — restricts a process's view of the filesystem to a subdirectory |
+| **DocBase** | Molly-brown's root directory for serving Gemini content |
+| **efingerd** | Extensible finger daemon — runs shell scripts to handle finger protocol queries |
+| **Fail2ban** | Intrusion prevention tool that bans IPs after repeated authentication failures |
+| **fcgiwrap** | FastCGI wrapper that executes CGI scripts via the FastCGI protocol |
+| **Gemini** | Lightweight internet protocol (port 1965) — simpler than HTTP, uses TLS, serves gemtext documents |
+| **gemtext** | Gemini's markup format — line-oriented, no inline formatting, links on their own lines |
+| **Gopher** | Internet protocol from 1991 (port 70) — hierarchical menu system, predecessor to the web |
+| **Gophernicus** | Modern Gopher server with tilde user support and automatic directory listings |
+| **gophermap** | Gopher menu file — tab-separated entries defining links, text, and directory structure |
+| **HomeDocBase** | Molly-brown setting that maps tilde URLs to user subdirectories within DocBase |
+| **LOLBin** | Living Off the Land Binary — legitimate system tool that can be abused for malicious purposes (e.g., `curl`, `wget`, `nc`) |
+| **MITRE ATT&CK** | Framework of adversary tactics and techniques — used to tag auditd rules |
+| **molly-brown** | Gemini protocol server written in Go — serves capsules with tilde user support |
+| **MOTD** | Message of the Day — text displayed to users on SSH login |
+| **pam_namespace** | PAM module that creates per-session isolated directories (private `/tmp`) |
+| **PAM** | Pluggable Authentication Modules — Linux framework for authentication, session setup, and resource limits |
+| **pubnix** | Public-access Unix system — a shared server where community members get shell accounts |
+| **skel** | Skeleton directory (`/etc/skel/`) — files copied to every new user's home directory on account creation |
+| **socket activation** | systemd feature where a service starts on-demand when a connection arrives on its socket, rather than running continuously |
+| **sub_filter** | Nginx directive that modifies response bodies — used to inject the webring widget script |
+| **tilde** | The `~` character in URLs (e.g., `atl.sh/~username`) — convention from Unix home directory paths, giving rise to "tilde clubs" and "tildeverse" |
+| **tildeverse** | Network of pubnix servers that share the tilde URL convention and community culture |
+| **TOFU** | Trust On First Use — TLS verification model used by Gemini clients where the first certificate seen is trusted |
+| **UFW** | Uncomplicated Firewall — iptables/nftables frontend for managing firewall rules |
+| **user slice** | systemd unit (`user-<uid>.slice`) that contains all processes for a user session, enabling per-user resource limits |
+| **vsftpd** | Very Secure FTP Daemon — FTP server with mandatory TLS support |
+| **webring** | Collection of member websites linked in a ring — visitors navigate between sites using next/prev links |
+| **XDG** | freedesktop.org specification for standard user directories (`~/.config`, `~/.local/share`, etc.) |

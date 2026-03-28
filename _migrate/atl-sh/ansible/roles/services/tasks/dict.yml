@@ -1,0 +1,53 @@
+---
+# DICT server (RFC 2229) — localhost dictionary lookups via `dict` command
+
+- name: Install dictd server, client, and dictionaries
+  ansible.builtin.apt:
+    name:
+      - dictd
+      - dict
+      - dict-gcide       # Comprehensive English (Webster's + supplements)
+      - dict-wn          # WordNet lexical database
+      - dict-jargon      # The Jargon File (hacker culture)
+      - dict-foldoc      # Free On-Line Dictionary of Computing
+      - dict-vera        # V.E.R.A. computing acronyms
+      - dict-devil       # The Devil's Dictionary (Ambrose Bierce)
+      - dict-elements    # Periodic table data
+    state: present
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Fix dpkg if dict package postinst failed
+  ansible.builtin.command: dpkg --configure -a
+  changed_when: false
+  failed_when: false
+
+- name: Configure dictd to listen on localhost only
+  ansible.builtin.copy:
+    dest: /etc/dictd/dictd.conf
+    content: |
+      # dictd configuration — managed by Ansible
+      global {
+        listen_to 127.0.0.1
+      }
+
+      # Databases are auto-registered by dictdconfig from installed dict-* packages.
+      # Run `dictdconfig -w` to regenerate /var/lib/dictd/db.list after changes.
+      include /var/lib/dictd/db.list
+    mode: "0644"
+  notify: Restart dictd
+
+- name: Generate dictionary database list
+  ansible.builtin.command: dictdconfig -w
+  changed_when: false
+
+- name: Reset dictd systemd failure state
+  ansible.builtin.command: systemctl reset-failed dictd.service
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start dictd
+  ansible.builtin.service:
+    name: dictd
+    enabled: true
+    state: started

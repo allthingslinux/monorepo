@@ -1,0 +1,18 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    node_exporter_port: 9100
+    node_exporter_listen: "127.0.0.1:9100"
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 0
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

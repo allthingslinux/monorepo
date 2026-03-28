@@ -1,0 +1,21 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "user-guide",
+    "webring",
+    "publishing",
+    "development",
+    "resources",
+    "---",
+    "services",
+    "---",
+    "admin-guide",
+    "operations",
+    "testing",
+    "---",
+    "faq",
+    "reference",
+    "code-of-conduct"
+  ]
+}

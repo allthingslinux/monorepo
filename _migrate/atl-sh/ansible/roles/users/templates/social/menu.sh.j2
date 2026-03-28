@@ -1,0 +1,165 @@
+#!/bin/bash
+# menu — interactive guide to atl.sh services and commands
+# Uses whiptail for TUI menus
+
+DOMAIN="{{ pubnix_domain }}"
+
+main_menu() {
+    while true; do
+        choice=$(whiptail --title "atl.sh — Main Menu" --menu "Welcome to atl.sh! Choose a category:" 20 60 10 \
+            "1" "Community & Social" \
+            "2" "Hosting & Publishing" \
+            "3" "Communication" \
+            "4" "Games & Fun" \
+            "5" "Networking Tools" \
+            "6" "Reference & Lookup" \
+            "7" "Quick Info" \
+            3>&1 1>&2 2>&3) || break
+        case "$choice" in
+            1) social_menu ;;
+            2) hosting_menu ;;
+            3) comms_menu ;;
+            4) games_menu ;;
+            5) network_menu ;;
+            6) reference_menu ;;
+            7) info_screen ;;
+        esac
+    done
+}
+
+social_menu() {
+    choice=$(whiptail --title "Community & Social" --menu "" 18 65 8 \
+        "online"    "See who's logged in right now" \
+        "community" "List all atl.sh members" \
+        "plan"      "Read someone's .plan (plan <user>)" \
+        "lastplan"  "Recent .plan updates" \
+        "finger"    "Finger a user (finger <user>@$DOMAIN)" \
+        "wall"      "Broadcast a message to all users" \
+        "talk"      "Two-way chat with a user (talk <user>)" \
+        "botany"    "Tend your virtual plant" \
+        3>&1 1>&2 2>&3) || return
+    run_or_show "$choice"
+}
+
+hosting_menu() {
+    choice=$(whiptail --title "Hosting & Publishing" --menu "" 16 65 6 \
+        "web"    "Your website: https://$DOMAIN/~\$USER" \
+        "gemini" "Your capsule: gemini://$DOMAIN/~\$USER" \
+        "gopher" "Your gopherhole: gopher://$DOMAIN/~\$USER" \
+        "finger" "Your .plan: finger \$USER@$DOMAIN" \
+        "ring"   "Join the webring: touch ~/.ring" \
+        "ftp"    "Upload via SFTP or FTP/S (port 21)" \
+        3>&1 1>&2 2>&3) || return
+    case "$choice" in
+        web)    show_msg "Web Hosting" "Edit files in ~/public_html/\nYour site: https://$DOMAIN/~$USER\nCGI scripts work too — make them executable." ;;
+        gemini) show_msg "Gemini Capsule" "Edit files in ~/public_gemini/\nYour capsule: gemini://$DOMAIN/~$USER\nWrite in .gmi (gemtext) format." ;;
+        gopher) show_msg "Gopherhole" "Edit ~/public_gopher/gophermap\nYour hole: gopher://$DOMAIN/~$USER" ;;
+        finger) show_msg "Finger / .plan" "Edit ~/.plan to share what you're working on.\nAnyone can read it: finger $USER@$DOMAIN" ;;
+        ring)   show_msg "Webring" "Join: touch ~/.ring\nLeave: rm ~/.ring\nBrowse: https://$DOMAIN/ring/" ;;
+        ftp)    show_msg "FTP Access" "SFTP: sftp $USER@$DOMAIN\nFTP/S: connect to port 21 with explicit TLS" ;;
+    esac
+}
+
+comms_menu() {
+    choice=$(whiptail --title "Communication" --menu "" 14 65 5 \
+        "talk"    "Split-screen chat with another user" \
+        "wall"    "Broadcast to all logged-in users" \
+        "irssi"   "IRC client (irssi)" \
+        "weechat" "IRC client (weechat)" \
+        "alpine"  "Mail client (alpine)" \
+        3>&1 1>&2 2>&3) || return
+    run_or_show "$choice"
+}
+
+games_menu() {
+    choice=$(whiptail --title "Games & Fun" --menu "" 18 65 9 \
+        "nethack"     "NetHack — classic dungeon crawler" \
+        "crawl"       "Dungeon Crawl Stone Soup" \
+        "angband"     "Angband — Tolkien roguelike" \
+        "botany"      "Botany — grow a virtual plant" \
+        "ninvaders"   "Space Invaders" \
+        "bastet"      "Bastard Tetris" \
+        "moon-buggy"  "Moon Buggy" \
+        "nudoku"      "Sudoku" \
+        "fortune"     "Random fortune cookie" \
+        3>&1 1>&2 2>&3) || return
+    run_or_show "$choice"
+}
+
+network_menu() {
+    choice=$(whiptail --title "Networking Tools" --menu "" 18 65 9 \
+        "gping"       "Ping with a live graph" \
+        "trip"        "Traceroute TUI (trippy)" \
+        "xh"          "Modern HTTP client" \
+        "drill"       "DNS lookup (from ldnsutils)" \
+        "prettyping"  "Colorized ping" \
+        "speedtest"   "Bandwidth test (speedtest-cli)" \
+        "sipcalc"     "Subnet calculator" \
+        "termshark"   "Wireshark for the terminal" \
+        "geoiplookup" "IP geolocation lookup" \
+        3>&1 1>&2 2>&3) || return
+    run_or_show "$choice"
+}
+
+reference_menu() {
+    choice=$(whiptail --title "Reference & Lookup" --menu "" 14 65 5 \
+        "dict"     "Look up a word (dict <word>)" \
+        "man"      "Manual pages (man <command>)" \
+        "tldr"     "Simplified man pages (tldr <command>)" \
+        "wtfdb"    "Acronym lookup (dict -d vera <term>)" \
+        "jargon"   "Hacker jargon (dict -d jargon <term>)" \
+        3>&1 1>&2 2>&3) || return
+    case "$choice" in
+        dict)   prompt_and_run "dict" "Word to look up:" ;;
+        man)    prompt_and_run "man" "Command:" ;;
+        tldr)   prompt_and_run "tldr" "Command:" ;;
+        wtfdb)  prompt_and_run "dict -d vera" "Acronym:" ;;
+        jargon) prompt_and_run "dict -d jargon" "Term:" ;;
+    esac
+}
+
+info_screen() {
+    users_online=$(who | awk '{print $1}' | sort -u | wc -l)
+    uptime_str=$(uptime -p)
+    shell_count=$(grep -c '^/' /etc/shells)
+    whiptail --title "atl.sh Quick Info" --msgbox "\
+Domain:     $DOMAIN
+SSH:        ssh <user>@$DOMAIN (ports 22, 2222)
+Web:        https://$DOMAIN/~<user>
+Gemini:     gemini://$DOMAIN/~<user>
+Gopher:     gopher://$DOMAIN/~<user>
+Finger:     finger <user>@$DOMAIN
+
+Users online: $users_online
+Uptime:       $uptime_str
+Shells:       $shell_count available (chsh to change)
+
+Disk quota:   5 GB soft / 6 GB hard
+RAM limit:    1.5 GB per user
+CPU limit:    2 cores per user" 20 55
+}
+
+show_msg() {
+    whiptail --title "$1" --msgbox "$2" 12 65
+}
+
+prompt_and_run() {
+    cmd="$1"
+    prompt="$2"
+    input=$(whiptail --title "$cmd" --inputbox "$prompt" 8 50 3>&1 1>&2 2>&3) || return
+    [ -n "$input" ] && clear && $cmd "$input" && echo "" && read -rp "Press Enter to continue..."
+}
+
+run_or_show() {
+    cmd="$1"
+    if command -v "$cmd" &>/dev/null; then
+        clear
+        "$cmd"
+        echo ""
+        read -rp "Press Enter to continue..."
+    else
+        show_msg "$cmd" "Run: $cmd"
+    fi
+}
+
+main_menu

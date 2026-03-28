@@ -1,0 +1,148 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Check sysctl hardening file exists
+      ansible.builtin.stat:
+        path: /etc/sysctl.d/99-hardening.conf
+      register: sysctl_conf
+
+    - name: Assert sysctl hardening config is present
+      ansible.builtin.assert:
+        that:
+          - sysctl_conf.stat.exists
+        fail_msg: "sysctl hardening config not found at /etc/sysctl.d/99-hardening.conf"
+
+    - name: Read sysctl hardening config
+      ansible.builtin.slurp:
+        src: /etc/sysctl.d/99-hardening.conf
+      register: sysctl_content
+
+    - name: Assert key sysctl hardening values are configured
+      ansible.builtin.assert:
+        that:
+          - "'kernel.randomize_va_space' in (sysctl_content.content | b64decode)"
+          - "'kernel.dmesg_restrict' in (sysctl_content.content | b64decode)"
+          - "'net.ipv4.tcp_syncookies' in (sysctl_content.content | b64decode)"
+          - "'net.ipv4.ip_forward' in (sysctl_content.content | b64decode)"
+        fail_msg: "One or more sysctl hardening parameters are missing"
+
+    - name: Check module blacklist config exists
+      ansible.builtin.stat:
+        path: /etc/modprobe.d/cis-hardening.conf
+      register: modprobe_conf
+
+    - name: Assert module blacklist is configured
+      ansible.builtin.assert:
+        that:
+          - modprobe_conf.stat.exists
+        fail_msg: "Module blacklist config not found at /etc/modprobe.d/cis-hardening.conf"
+
+    - name: Check sudo hardening config exists
+      ansible.builtin.stat:
+        path: /etc/sudoers.d/hardening
+      register: sudo_hardening
+
+    - name: Assert sudo hardening is configured
+      ansible.builtin.assert:
+        that:
+          - sudo_hardening.stat.exists
+          - sudo_hardening.stat.mode == '0440'
+        fail_msg: "sudo hardening file missing or wrong permissions"
+
+    - name: Check sshd config
+      ansible.builtin.command: sshd -T
+      register: sshd_config
+      changed_when: false
+
+    - name: Assert SSH is hardened
+      ansible.builtin.assert:
+        that:
+          - "'passwordauthentication no' in sshd_config.stdout"
+          - "'maxauthtries 3' in sshd_config.stdout"
+          - "'logingracetime 30' in sshd_config.stdout"
+        fail_msg: "sshd is not hardened as expected"
+
+    - name: Check UFW status
+      ansible.builtin.command: ufw status
+      register: ufw_status
+      changed_when: false
+
+    - name: Assert UFW is active
+      ansible.builtin.assert:
+        that:
+          - "'Status: active' in ufw_status.stdout"
+        fail_msg: "UFW firewall is not active"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert security services are running
+      ansible.builtin.assert:
+        that:
+          - "ansible_facts.services['fail2ban.service'].state == 'running'"
+          - "ansible_facts.services['auditd.service'].state == 'running'"
+        fail_msg: "One or more security services are not running"
+
+    - name: Check password quality config
+      ansible.builtin.command: grep -E '^minlen' /etc/security/pwquality.conf
+      register: pwquality_conf
+      changed_when: false
+
+    - name: Assert password quality policy is configured
+      ansible.builtin.assert:
+        that:
+          - pwquality_conf.rc == 0
+        fail_msg: "Password quality policy not configured in /etc/security/pwquality.conf"
+
+    - name: Check journald hardening
+      ansible.builtin.command: grep -E '^Storage=' /etc/systemd/journald.conf
+      register: journald_storage
+      changed_when: false
+
+    - name: Assert journald storage is set to persistent
+      ansible.builtin.assert:
+        that:
+          - "'Storage=persistent' in journald_storage.stdout"
+        fail_msg: "journald Storage is not set to persistent"
+
+    - name: Check AIDE is installed
+      ansible.builtin.package_facts:
+        manager: apt
+
+    - name: Assert AIDE is installed
+      ansible.builtin.assert:
+        that:
+          - "'aide' in ansible_facts.packages"
+        fail_msg: "AIDE is not installed"
+
+    - name: Check AIDE database exists
+      ansible.builtin.stat:
+        path: /var/lib/aide/aide.db
+      register: aide_db
+
+    - name: Assert AIDE database is initialized
+      ansible.builtin.assert:
+        that:
+          - aide_db.stat.exists
+        fail_msg: "AIDE database not found — aideinit may not have run"
+
+    - name: Check unattended-upgrades is installed
+      ansible.builtin.assert:
+        that:
+          - "'unattended-upgrades' in ansible_facts.packages"
+        fail_msg: "unattended-upgrades is not installed"
+
+    - name: Check core dump limit is configured
+      ansible.builtin.command: grep '* hard core 0' /etc/security/limits.conf
+      register: coredump_limit
+      changed_when: false
+
+    - name: Assert core dumps are disabled
+      ansible.builtin.assert:
+        that:
+          - coredump_limit.rc == 0
+        fail_msg: "Core dump hard limit not set in /etc/security/limits.conf"

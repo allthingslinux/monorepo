@@ -1,0 +1,49 @@
+---
+nginx_worker_processes: auto
+nginx_server_tokens: "off"
+nginx_client_max_body_size: "64m"
+
+# Global HTTP options for geerlingguy.nginx
+nginx_extra_http_options: |
+  add_header X-Frame-Options "SAMEORIGIN";
+  add_header X-Content-Type-Options "nosniff";
+  add_header X-XSS-Protection "1; mode=block";
+  gzip on;
+  gzip_proxied any;
+  gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+tilde_docroot: public_html
+
+
+gemini_port: 1965
+gemini_capsule_root: /var/gemini
+
+gopher_port: 70
+gopher_hostname: "{{ pubnix_domain }}"
+gopher_root: /var/gopher
+gopher_user_dir: public_gopher
+
+# Logrotate configurations for services
+logrotate_entries:
+  - name: nginx
+    path: "/var/log/nginx/*.log"
+    frequency: daily
+    keep: 14
+    compress: true
+    delaycompress: true
+    dateext: true
+    maxsize: 100M
+    missingok: true
+    notifempty: true
+    sharedscripts: true
+    postrotate: "[ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`"
+  - name: fail2ban
+    path: "/var/log/fail2ban.log"
+    frequency: weekly
+    keep: 4
+    compress: true
+    delaycompress: true
+    dateext: true
+    missingok: true
+    notifempty: true
+    postrotate: "fail2ban-client flushlogs > /dev/null || true"
