@@ -17,10 +17,10 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "knip": "^6.0.6",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "husky": "^9.1.7",
+    "knip": "^6.0.6",
     "lint-staged": "^16.4.0",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
@@ -29,16 +29,28 @@
     "typescript": "^5.9.3",
     "ultracite": "7.3.2"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "oxlint",
+      "oxfmt"
+    ],
+    "*.py": [
+      "uv run ruff check --fix",
+      "uv run ruff format"
+    ],
+    "*.sh": [
+      "shellcheck",
+      "shfmt -ln bash -i 2 -ci -bn -sr -s -w"
+    ],
+    "*.tf": [
+      "terraform fmt"
+    ]
+  },
   "engines": {
     "node": ">=24.0.0",
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.28.2",
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["oxlint", "oxfmt"],
-    "*.py": ["uv run ruff check --fix", "uv run ruff format"],
-    "*.sh": ["shellcheck", "shfmt -ln bash -i 2 -ci -bn -sr -s -w"]
-  },
   "pnpm": {
     "overrides": {
       "zod": "4.3.6"

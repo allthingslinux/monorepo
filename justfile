@@ -267,3 +267,121 @@ docker-clean:
 docker-push-all:
     @echo "Push all service images to GHCR..."
     docker compose {{ chat_compose }} push
+
+# ── Pubnix (infra/sh — atl.sh server provisioning) ────────────────────────────
+
+pubnix_ansible := "infra/sh/ansible"
+pubnix_terraform := "infra/sh/terraform"
+pubnix_root := "infra/sh"
+
+[group('pubnix')]
+pubnix-setup:
+    cd {{ pubnix_root }} && uv sync
+    just pubnix-install
+    @echo "Pubnix tooling ready. Run 'just pubnix-dev-up' to start the dev VM."
+
+[group('pubnix')]
+pubnix-install:
+    cd {{ pubnix_ansible }} && ansible-galaxy role install -r requirements.yml -p ../.ansible/roles --force
+    cd {{ pubnix_ansible }} && ansible-galaxy collection install -r requirements.yml -p ../.ansible/collections --force
+
+[group('pubnix')]
+pubnix-deploy target:
+    cd {{ pubnix_ansible }} && ansible-playbook site.yml -l "{{ target }}"
+
+[group('pubnix')]
+pubnix-deploy-tag target tag:
+    cd {{ pubnix_ansible }} && ansible-playbook site.yml -l "{{ target }}" --tags "{{ tag }}"
+
+[group('pubnix')]
+pubnix-deploy-check target:
+    cd {{ pubnix_ansible }} && ansible-playbook site.yml -l "{{ target }}" --check --diff
+
+[group('pubnix')]
+pubnix-deploy-list-tags:
+    cd {{ pubnix_ansible }} && ansible-playbook site.yml --list-tags
+
+[group('pubnix')]
+pubnix-ping target:
+    cd {{ pubnix_ansible }} && ansible "{{ target }}" -m ping
+
+[group('pubnix')]
+pubnix-syntax-check:
+    cd {{ pubnix_ansible }} && ansible-playbook site.yml --syntax-check
+
+[group('pubnix')]
+pubnix-create-user username key target:
+    cd {{ pubnix_ansible }} && ansible-playbook playbooks/create-user.yml -e "username={{ username }}" -e "ssh_public_key='{{ key }}'" -e "target_hosts={{ target }}"
+
+[group('pubnix')]
+pubnix-remove-user username target:
+    cd {{ pubnix_ansible }} && ansible-playbook playbooks/remove-user.yml -e "username={{ username }}" -e "target_hosts={{ target }}"
+
+[group('pubnix')]
+pubnix-smoke-test target="dev":
+    cd {{ pubnix_ansible }} && ansible-playbook playbooks/smoke-test.yml -e "target_hosts={{ target }}"
+
+[group('pubnix')]
+pubnix-vault-edit:
+    ansible-vault edit {{ pubnix_ansible }}/inventory/group_vars/all/vault.yml
+
+[group('pubnix')]
+pubnix-molecule-test role:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd {{ pubnix_root }}
+    ANSIBLE_LIBRARY=$(uv run python3 -c "import molecule_plugins, os; print(os.path.dirname(molecule_plugins.__file__) + '/vagrant/modules')")
+    cd ansible/roles/{{ role }}
+    ANSIBLE_LIBRARY="$ANSIBLE_LIBRARY" uv run molecule test
+
+[group('pubnix')]
+pubnix-molecule-converge role:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd {{ pubnix_root }}
+    ANSIBLE_LIBRARY=$(uv run python3 -c "import molecule_plugins, os; print(os.path.dirname(molecule_plugins.__file__) + '/vagrant/modules')")
+    cd ansible/roles/{{ role }}
+    ANSIBLE_LIBRARY="$ANSIBLE_LIBRARY" uv run molecule converge
+
+[group('pubnix')]
+pubnix-molecule-verify role:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd {{ pubnix_root }}
+    ANSIBLE_LIBRARY=$(uv run python3 -c "import molecule_plugins, os; print(os.path.dirname(molecule_plugins.__file__) + '/vagrant/modules')")
+    cd ansible/roles/{{ role }}
+    ANSIBLE_LIBRARY="$ANSIBLE_LIBRARY" uv run molecule verify
+
+[group('pubnix')]
+pubnix-molecule-destroy role:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd {{ pubnix_root }}
+    ANSIBLE_LIBRARY=$(uv run python3 -c "import molecule_plugins, os; print(os.path.dirname(molecule_plugins.__file__) + '/vagrant/modules')")
+    cd ansible/roles/{{ role }}
+    ANSIBLE_LIBRARY="$ANSIBLE_LIBRARY" uv run molecule destroy
+
+[group('pubnix')]
+pubnix-tf-init:
+    cd {{ pubnix_terraform }} && terraform init
+
+[group('pubnix')]
+pubnix-tf-plan:
+    cd {{ pubnix_terraform }} && terraform plan
+
+[group('pubnix')]
+pubnix-tf-apply:
+    cd {{ pubnix_terraform }} && terraform apply
+
+[group('pubnix')]
+pubnix-dev-up:
+    cd {{ pubnix_root }} && vagrant up
+
+[group('pubnix')]
+pubnix-dev-down:
+    cd {{ pubnix_root }} && vagrant halt
+
+[group('pubnix')]
+pubnix-lint:
+    cd {{ pubnix_root }} && uvx pre-commit run --all-files
+    cd {{ pubnix_ansible }} && uv run ansible-lint

@@ -67,6 +67,13 @@ packages:
   - changed-files:
       - any-glob-to-any-file: packages/**
 
+pubnix:
+  - changed-files:
+      - any-glob-to-any-file:
+          - infra/sh/**
+          - apps/docs/sh/**
+          - .github/workflows/pubnix-ci.yml
+
 infra:
   - changed-files:
       - any-glob-to-any-file:
