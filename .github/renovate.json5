@@ -208,9 +208,11 @@
   ignorePaths: ["**/.cursor/skills/**"],
   // Extend docker-compose file matching to include compose fragments under infra/
   // Default pattern only matches compose*.y{a,}ml and docker-compose*.y{a,}ml
+  // Exclude infra/sh/ (Ansible YAML, not compose)
   "docker-compose": {
     fileMatch: [
-      "(^|/)infra/.+\\.ya?ml$",
+      "(^|/)infra/(?!sh/).+\\.ya?ml$",
+      "(^|/)infra/[^/]+\\.ya?ml$",
     ],
   },
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
