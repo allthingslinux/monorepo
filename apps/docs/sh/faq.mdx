@@ -1,0 +1,65 @@
+---
+title: FAQ
+description: Frequently asked questions about atl.sh.
+---
+
+## What is atl.sh?
+
+atl.sh is a pubnix (public-access Unix server) run by the All Things Linux community. You get a shell account with web hosting, Gemini, Gopher, and Finger support.
+
+## How do I get an account?
+
+Sign up through the [ATL Portal](https://portal.allthingslinux.org). Your shell account is provisioned automatically.
+
+## How do I connect?
+
+```bash
+ssh your-username@atl.sh
+```
+
+## How do I make a web page?
+
+Edit `~/public_html/index.html`. Your page will be live at `https://atl.sh/~your-username`.
+
+## What is Gemini?
+
+Gemini is a lightweight internet protocol — a simpler alternative to the web. Edit `~/public_gemini/index.gmi` to create your capsule.
+
+## What is Gopher?
+
+Gopher is a classic internet protocol from 1991. Edit `~/public_gopher/gophermap` to create your gopher hole.
+
+## What is Finger?
+
+Finger is a Unix protocol for looking up information about users. Edit `~/.plan` to share what you're working on. Anyone can run `finger your-username@atl.sh` to see it.
+
+## What games are available?
+
+- **Nethack** — classic roguelike with a shared high score table (`nethack`)
+- **Botany** — grow a virtual plant; neighbors can water it while you're away (`botany`)
+- **Dungeon Crawl Stone Soup** — modern roguelike (`crawl`)
+- **Angband** — Tolkien-themed dungeon crawler (`angband`)
+- **SLASHEM** — NetHack variant (`slashem`)
+- **BSD Games** — ~40 classics including `adventure`, `hunt`, `backgammon` (`bsdgames`)
+- **Arcade**: `ninvaders`, `moon-buggy`, `nsnake`, `bastet`, `netris`, `vitetris`
+- **Puzzle**: `nudoku`, `typespeed`, `dopewars`
+- **Novelty**: `asciiquarium`, `cmatrix`, `sl`, `cowsay`, `fortune`, `figlet`
+
+## Can I install my own software?
+
+You can install software to `~/.local/` using language package managers (pip, npm, gem, cargo). System packages are managed by admins — suggest additions on IRC `#support`.
+
+## How do I upload files?
+
+You can use **SFTP** (over SSH) or **FTPS** (Explicit FTP over TLS). Your home directory is the root for both.
+
+## What are the resource limits?
+
+- Disk: 5GB soft / 6GB hard (XFS/Ext4 Quotas)
+- Processes (Tasks): 200 max (systemd cgroups)
+- Memory: 1.5GB RAM max
+- CPU: 200% (2 cores) max
+
+## Is this free?
+
+Yes, always. Supported by the All Things Linux community.

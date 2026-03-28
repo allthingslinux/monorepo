@@ -1,0 +1,158 @@
+---
+title: Publishing
+description: Host websites, Gemini capsules, Gopher holes, and CGI scripts on atl.sh.
+---
+
+atl.sh supports four publishing protocols. All content lives in subdirectories of your home folder and goes live automatically — no deployment step needed.
+
+| Protocol | Directory | Public address |
+|----------|-----------|----------------|
+| HTTPS | `~/public_html/` | `https://atl.sh/~your-username` |
+| Gemini | `~/public_gemini/` | `gemini://atl.sh/~your-username` |
+| Gopher | `~/public_gopher/` | `gopher://atl.sh/~your-username` |
+| FTP/S | `~/` (home root) | `ftp://atl.sh` (port 21) |
+
+## Web (HTTPS)
+
+Drop files into `~/public_html/` and they're live at `https://atl.sh/~your-username`.
+
+- **TLS**: Handled automatically via Let's Encrypt with auto-renewal.
+- **Directory listing**: If there's no `index.html`, nginx shows a file listing.
+- **Any static content works**: HTML, CSS, JavaScript, images, text files.
+
+### CGI scripts
+
+Files ending in `.cgi` in `~/public_html/` are executed as CGI scripts via fcgiwrap. The script can be written in any language installed on the server.
+
+```bash
+#!/bin/bash
+# ~/public_html/hello.cgi
+echo "Content-Type: text/plain"
+echo ""
+echo "Hello from $(hostname) at $(date)"
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/public_html/hello.cgi
+```
+
+Access it at `https://atl.sh/~your-username/hello.cgi`.
+
+The `SCRIPT_FILENAME`, `QUERY_STRING`, `REQUEST_METHOD`, and other standard FastCGI params are available in the environment.
+
+## Gemini
+
+[Gemini](https://geminiprotocol.net/) is a lightweight protocol — simpler than the web, more capable than Gopher. Edit files in `~/public_gemini/` with the `.gmi` extension.
+
+Your capsule is served by [Molly Brown](https://tildegit.org/solderpunk/molly-brown) on port 1965 with a Let's Encrypt certificate.
+
+### Gemtext format
+
+Gemtext is a simple line-oriented format. Each line has a type determined by its prefix:
+
+```
+# Heading 1
+## Heading 2
+### Heading 3
+
+Plain paragraph text. No inline formatting.
+
+=> gemini://atl.sh/ Link text here
+=> https://example.com External links work too
+
+* List item
+* Another item
+
+> Blockquote text
+
+``` (code block, fenced with backticks)
+```
+
+### Directory listing
+
+If a directory has no `index.gmi`, Molly Brown generates a directory listing automatically.
+
+### CGI in Gemini
+
+Scripts placed in `~/public_gemini/cgi-bin/` are executed as Gemini CGI. The script must output a valid Gemini response (status line + content):
+
+```bash
+#!/bin/bash
+echo "20 text/gemini"
+echo "# Dynamic Gemini page"
+echo "Generated at $(date)"
+```
+
+### Clients
+
+- `amfora` — already installed, run it from the shell
+- [Lagrange](https://gmi.skyjake.fi/lagrange/) — graphical client
+- [Kristall](https://kristall.random-projects.net/) — multi-protocol browser
+
+## Gopher
+
+Gopher is the internet before the web — a hierarchical menu system from 1991. Edit `~/public_gopher/gophermap` to define your hole's menu.
+
+Your hole is served by [Gophernicus](https://github.com/gophernicus/gophernicus) on port 70.
+
+### Gophermap format
+
+Each line is a tab-separated entry:
+
+```
+iThis is a text note (no link)	fake	(NULL)	0
+1Link to a submenu	/path/to/dir	atl.sh	70
+0Link to a text file	/path/to/file.txt	atl.sh	70
+hLink to a website	URL:https://example.com	atl.sh	70
+```
+
+Item type codes:
+
+| Type | Meaning |
+|------|---------|
+| `i` | Informational text (no link) |
+| `0` | Text file |
+| `1` | Directory/submenu |
+| `7` | Search |
+| `h` | HTML (external URL) |
+| `9` | Binary file |
+| `g` | GIF image |
+| `I` | Image |
+
+### Clients
+
+- `lynx` — already installed (`lynx gopher://atl.sh/~your-username`)
+- Firefox with [OverbiteNX](https://addons.mozilla.org/en-US/firefox/addon/overbite-nx/) extension
+
+## FTP/S
+
+You can upload files to your home directory using FTP with Explicit TLS (FTPS). Anonymous access is disabled — log in with your shell username and password.
+
+**Connection details:**
+
+| Setting | Value |
+|---------|-------|
+| Host | `atl.sh` |
+| Port | `21` |
+| Encryption | Explicit FTP over TLS (FTPS) |
+| Username | your shell username |
+| Password | your shell password |
+| Passive ports | 40000–40100 |
+
+Your home directory is the FTP root — you land in `~/` on connect.
+
+### FileZilla setup
+
+1. Open Site Manager → New Site
+2. Protocol: **FTP - File Transfer Protocol**
+3. Encryption: **Require explicit FTP over TLS**
+4. Host: `atl.sh`, Port: `21`
+5. Logon Type: **Normal**, enter username and password
+
+**SFTP** (SSH File Transfer Protocol) also works and is simpler — use port 22 with your SSH key, no separate password needed:
+
+```bash
+sftp your-username@atl.sh
+```

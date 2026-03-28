@@ -1,0 +1,144 @@
+---
+title: Ansible Variables
+description: Complete reference of Ansible variables used across all atl.sh roles.
+---
+
+All variables are defined in `ansible/inventory/group_vars/`. Shared defaults live in `all/vars.yml`, per-environment overrides in `<env>/vars.yml`, and secrets in `all/vault.yml` (encrypted).
+
+## Global variables (`all/vars.yml`)
+
+### Domain and identity
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `pubnix_domain` | `atl.sh` | Primary domain for all services |
+| `admin_email` | `admin@allthingslinux.org` | Used for Let's Encrypt registration and alerts |
+
+### System
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `timezone` | `UTC` | Server timezone |
+| `ntp_servers` | `[0.pool.ntp.org, 1.pool.ntp.org]` | NTP time sources |
+| `pubnix_group` | `users` | Primary group for pubnix user accounts |
+| `default_shell` | `/bin/bash` | Default shell for new accounts |
+
+### Resource limits (PAM)
+
+Set in `/etc/security/limits.conf`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `user_nproc_limit` | `100` | Max processes per user |
+| `user_nofile_limit` | `1024` | Max open file descriptors |
+| `user_as_limit` | `8000000` | Max address space (KB) |
+| `user_rss_limit` | `8000000` | Max resident set size (KB) |
+
+### Resource limits (systemd cgroups)
+
+Applied via per-user systemd slices:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `user_cpu_quota` | `200%` | CPU quota (200% = 2 cores) |
+| `user_memory_max` | `1.5G` | Memory limit per user |
+| `user_tasks_max` | `200` | Max tasks (processes + threads) |
+
+### Disk quotas
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `quota_soft` | `5G` | Soft limit (triggers grace period warning) |
+| `quota_hard` | `6G` | Hard limit (writes fail) |
+
+### Backup
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `backup_retention_daily` | `7` | Daily backups to keep |
+| `backup_retention_weekly` | `4` | Weekly backups to keep |
+| `backup_retention_monthly` | `6` | Monthly backups to keep |
+| `backup_paths` | `/home, /etc, /var/spool/cron` | Directories to back up |
+
+### Monitoring
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `node_exporter_version` | `1.8.2` | Prometheus Node Exporter version |
+
+## Role defaults
+
+Each role defines its own defaults in `roles/<role>/defaults/main.yml`.
+
+### Security role
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ssh_ports` | `[22, 2222]` | SSH listening ports |
+| `ssh_permit_root_login` | `prohibit-password` | Root login policy |
+| `ssh_password_authentication` | `no` | Disable password auth |
+| `ssh_max_auth_tries` | `3` | Max auth attempts per connection |
+| `ssh_login_grace_time` | `30` | Seconds to complete auth |
+| `ssh_client_alive_interval` | `300` | Keepalive interval (seconds) |
+| `ssh_client_alive_count_max` | `2` | Missed keepalives before disconnect |
+| `ssh_allow_groups` | `pubnix root sudo` | Groups allowed to SSH |
+| `fail2ban_bantime` | `3600` | Ban duration (seconds) |
+| `fail2ban_findtime` | `600` | Detection window (seconds) |
+| `fail2ban_maxretry` | `5` | Failures before ban |
+| `firewall_allowed_tcp_ports` | See below | Open TCP ports |
+| `firewall_rate_limit_ssh` | `true` | Rate-limit SSH connections |
+
+Firewall ports: `22, 2222, 70, 80, 443, 1965, 21, 40000:40100`
+
+### Services role
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tilde_docroot` | `public_html` | User web directory name |
+| `nginx_server_tokens` | `off` | Hide nginx version |
+| `nginx_client_max_body_size` | `64m` | Max upload size |
+| `gemini_port` | `1965` | Molly-brown listening port |
+| `gemini_capsule_root` | `/var/gemini` | Gemini DocBase path |
+| `gopher_port` | `70` | Gophernicus listening port |
+| `gopher_hostname` | `{{ pubnix_domain }}` | Hostname in gopher links |
+| `gopher_root` | `/var/gopher` | Gopher document root |
+| `gopher_user_dir` | `public_gopher` | User gopher directory name |
+
+### FTP role
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ftp_port` | `21` | FTP control port |
+| `pasv_min_port` | `40000` | Passive range start |
+| `pasv_max_port` | `40100` | Passive range end |
+| `ftp_tls_cert` | Let's Encrypt fullchain | TLS certificate path |
+| `ftp_tls_key` | Let's Encrypt privkey | TLS private key path |
+
+## Per-environment overrides
+
+### Dev (`dev/vars.yml`)
+
+```yaml
+ftp_tls_cert: /etc/ssl/certs/molly-brown.crt
+ftp_tls_key: /etc/ssl/private/molly-brown.key
+```
+
+Uses the self-signed cert from the Gemini role since Let's Encrypt isn't available in the Vagrant VM.
+
+### Staging (`staging/vars.yml`)
+
+No overrides currently — uses all defaults.
+
+### Production (`prod/vars.yml`)
+
+No overrides currently — uses all defaults.
+
+## Vault secrets (`all/vault.yml`)
+
+Encrypted with Ansible Vault. Edit with:
+
+```bash
+just vault-edit
+```
+
+Contains Borgmatic repository credentials, Cloudflare API tokens, and other secrets consumed by roles. Never commit this file unencrypted.

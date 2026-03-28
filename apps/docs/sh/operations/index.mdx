@@ -1,0 +1,213 @@
+---
+title: Operations
+description: Monitoring, backups, security hardening, and maintenance for atl.sh admins.
+---
+
+## Monitoring
+
+The server runs [Prometheus Node Exporter](https://github.com/prometheus/node_exporter) for system metrics, along with hardware monitoring daemons.
+
+| Service | Purpose |
+|---------|---------|
+| `node_exporter` | CPU, memory, disk, network metrics (Prometheus) |
+| `smartd` | S.M.A.R.T. disk health monitoring |
+| `lm-sensors` | CPU/motherboard temperature and fan sensors |
+
+All three are enabled and started on boot. Node Exporter exposes metrics on `localhost:9100` — not exposed to the public internet.
+
+Useful admin commands:
+
+```bash
+# Disk health
+smartctl -a /dev/sda
+
+# Temperature and sensors
+sensors
+
+# Bandwidth stats
+vnstat
+
+# System overview
+glances
+```
+
+## Backups
+
+Backups run via [Borgmatic](https://torsion.org/borgmatic/) on a systemd timer.
+
+### What's backed up
+
+| Path | Contents |
+|------|---------|
+| `/home` | All user home directories |
+| `/etc` | System configuration |
+| `/var/spool/cron` | Cron jobs |
+
+Cache directories, temporary files, and `node_modules/` are excluded automatically.
+
+### Retention policy
+
+| Frequency | Keep |
+|-----------|------|
+| Daily | 7 days |
+| Weekly | 4 weeks |
+| Monthly | 6 months |
+
+### Borgmatic commands
+
+```bash
+# Run backup manually
+borgmatic
+
+# List archives
+borgmatic list
+
+# Check backup integrity
+borgmatic check
+
+# Extract a file from backup
+borgmatic extract --archive latest --path /home/username/important-file.txt
+```
+
+## Security
+
+### SSH
+
+| Setting | Value |
+|---------|-------|
+| Ports | 22 (primary), 2222 (secondary) |
+| Authentication | Key-only (passwords disabled) |
+| Max auth attempts | 3 |
+| Login grace period | 30s |
+| Allowed groups | `pubnix`, `root`, `sudo` |
+
+Port 2222 is useful for users behind firewalls that block 22:
+
+```bash
+ssh -p 2222 your-username@atl.sh
+```
+
+### Fail2ban
+
+Brute-force protection on SSH.
+
+| Setting | Value |
+|---------|-------|
+| Ban time | 1 hour (3600s) |
+| Detection window | 10 minutes (600s) |
+| Max failures | 5 |
+
+```bash
+# View current bans
+fail2ban-client status sshd
+
+# Unban an IP
+fail2ban-client set sshd unbanip 1.2.3.4
+```
+
+### UFW Firewall
+
+Open TCP ports:
+
+| Port | Service |
+|------|---------|
+| 22, 2222 | SSH |
+| 70 | Gopher |
+| 79 | Finger |
+| 80 | HTTP |
+| 443 | HTTPS |
+| 1965 | Gemini |
+| 21 | FTP control |
+| 40000–40100 | FTP passive data |
+
+```bash
+ufw status verbose
+```
+
+### File Integrity (AIDE)
+
+[AIDE](https://aide.github.io/) checks system file integrity daily at 05:00 UTC and emails a report to root. It monitors system binaries, configuration files, and kernel settings.
+
+```bash
+# Run a manual check
+aide --check
+
+# Update the database after intentional changes
+aide --update
+mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+```
+
+### Audit Logging
+
+`auditd` records security-relevant events with 40+ rules covering:
+
+- Identity files (`/etc/passwd`, `/etc/shadow`, `/etc/sudoers`)
+- SSH configuration changes
+- Privilege escalation (`sudo`, `su`)
+- Suspicious tools (`wget`, `curl`, `nc`, `socat`)
+- Scripting interpreters run by users (Python, Perl, Ruby, Vim)
+- System calls: `ptrace`, `memfd_create`, `execve`, `chmod`, `chown`
+
+```bash
+# View recent audit events
+ausearch -ts recent
+
+# View sudo usage
+ausearch -k priv_esc
+
+# View file permission changes
+ausearch -k perm_mod
+
+# Generate a report
+aureport --summary
+```
+
+### Automatic Updates
+
+Unattended security upgrades are enabled via `unattended-upgrades`. Security patches are applied automatically without requiring manual intervention.
+
+```bash
+# View upgrade history
+cat /var/log/unattended-upgrades/unattended-upgrades.log
+```
+
+## User Management
+
+### Creating a user
+
+```bash
+just create-user username 'ssh-ed25519 AAAA...' prod
+```
+
+This runs `ansible/playbooks/create-user.yml` which:
+1. Creates the system account in the `users` group
+2. Installs their SSH public key
+3. Copies `/etc/skel/` to their home directory (including `public_html/`, `public_gemini/`, `public_gopher/`, `.plan`, `.project`, `.tmux.conf`, etc.)
+
+### Removing a user
+
+```bash
+just remove-user username prod
+```
+
+## Log Locations
+
+| Log | Path |
+|-----|------|
+| Nginx access/error | `/var/log/nginx/` |
+| Molly Brown (Gemini) | `/var/log/molly-brown/` |
+| Fail2ban | `/var/log/fail2ban.log` |
+| Audit log | `/var/log/audit/audit.log` |
+| System journal | `journalctl` (1 GB cap) |
+| Borgmatic | `journalctl -u borgmatic` |
+
+```bash
+# Follow nginx access log
+tail -f /var/log/nginx/access.log
+
+# View all journal since last boot
+journalctl -b
+
+# View logs for a specific service
+journalctl -u sshd -f
+```

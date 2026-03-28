@@ -1,0 +1,256 @@
+---
+title: Development Environment
+description: Languages, compilers, package managers, and tools available on atl.sh.
+---
+
+atl.sh is a full development environment. Everything is pre-installed system-wide and available immediately after login.
+
+## Languages and Runtimes
+
+| Language | Commands | Notes |
+|----------|----------|-------|
+| Python | `python3`, `pip3`, `ipython3`, `bpython` | venv, pip, pipx all available |
+| Node.js | `node`, `npm`, `npx` | packages install to `~/.local` |
+| Ruby | `ruby`, `gem`, `irb` | gems install to `~/.local/share/gem` |
+| Go | `go` | workspace at `~/.go` |
+| Rust | `rustc`, `cargo` | toolchain at `~/.cargo` |
+| Lua | `lua5.4` | |
+| Perl | `perl` | |
+| PHP | `php` (CLI only) | |
+| Java | `java`, `javac` | OpenJDK |
+| Elixir | `elixir`, `iex`, `mix` | Erlang/OTP included |
+| Erlang | `erl`, `erlc` | |
+| Haskell | `ghc`, `runghc` | |
+| OCaml | `ocaml`, `ocamlopt` | |
+| Scala | `scala`, `scalac` | |
+| Racket | `racket` | |
+| Ada | `gnat` | |
+| Fortran | `gfortran` | |
+| D | `gdc`, `ldc` | Two compilers |
+| Pascal | `fpc` (Free Pascal) | |
+| COBOL | `cobc` (GnuCOBOL) | |
+| Vala | `valac` | |
+| Assembly | `nasm`, `yasm` | |
+| C# | `mcs` (Mono) | |
+| Objective-C | `gobjc`, `gobjc++` | |
+
+## Compilers and Build Tools
+
+```bash
+# C/C++
+gcc, g++, clang, clang++
+
+# Debuggers
+gdb, cgdb, lldb, valgrind, ltrace, strace
+
+# Build systems
+make, cmake, ninja, meson, autoconf, automake
+
+# Linkers / performance
+mold          # fast linker
+ccache        # compiler cache
+linux-perf    # performance profiling
+hyperfine     # benchmarking tool
+
+# Parsing tools
+bison, flex
+```
+
+## Package Installation
+
+All language package managers are configured to install into your home directory — nothing goes into system paths. Binaries land in `~/.local/bin`, which is already in your `PATH`.
+
+### Python
+
+```bash
+# Isolated tool install (recommended)
+pipx install black
+pipx install poetry
+
+# Per-project virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+pip install requests
+
+# uv (fast pip replacement, also available)
+uv pip install requests
+```
+
+Poetry and uv share a system-wide cache at `/var/cache/poetry` and `/var/cache/uv` to avoid re-downloading packages across users.
+
+### Node.js
+
+```bash
+# npm installs to ~/.local automatically
+npm install -g typescript
+
+# pnpm (shared global store at /var/cache/pnpm)
+pnpm add -g tsx
+```
+
+### Ruby
+
+```bash
+# gems install to ~/.local/share/gem
+gem install rails
+```
+
+### Go
+
+```bash
+# binaries land in ~/.go/bin (already in PATH)
+go install golang.org/x/tools/cmd/gopls@latest
+```
+
+### Rust
+
+```bash
+# Cargo is pre-installed
+cargo install ripgrep
+```
+
+### PHP
+
+```bash
+# Composer installs to ~/.config/composer
+composer global require laravel/installer
+```
+
+### Deno
+
+```bash
+# Already in PATH at ~/.deno/bin
+deno install --global npm:typescript
+```
+
+## Editors
+
+| Editor | Command | Style |
+|--------|---------|-------|
+| Neovim | `nvim` | Modal, highly extensible |
+| Vim | `vim` | Modal, ubiquitous |
+| Emacs | `emacs` | Everything editor |
+| Nano | `nano` | Simple, non-modal |
+| Micro | `micro` | Modern, keyboard shortcuts like GUI editors |
+| Joe | `joe` | WordStar-style |
+| Mg | `mg` | Tiny Emacs-compatible |
+| Ed | `ed` | The standard editor |
+
+## Terminal Multiplexers
+
+| Tool | Command | Notes |
+|------|---------|-------|
+| tmux | `tmux` | Default config pre-installed (see below) |
+| screen | `screen` | Classic |
+| byobu | `byobu` | tmux/screen wrapper with status bar |
+| tmate | `tmate` | tmux + instant terminal sharing |
+
+### tmux defaults
+
+Your `~/.tmux.conf` comes pre-configured:
+
+- **Prefix**: `Ctrl-a` (instead of the default `Ctrl-b`)
+- **Mouse**: enabled — click to select panes and windows
+- **256 colors**: enabled
+- **Windows**: start at index 1
+- **History**: 10,000 lines per pane
+
+Common commands with the `Ctrl-a` prefix:
+
+```
+Ctrl-a c     new window
+Ctrl-a n/p   next/previous window
+Ctrl-a "     split horizontally
+Ctrl-a %     split vertically
+Ctrl-a d     detach (session keeps running)
+tmux attach  reattach to your session
+```
+
+## Shells
+
+The default shell is `bash`. You can switch to any of the following:
+
+| Shell | Change command |
+|-------|---------------|
+| zsh | `chsh -s /usr/bin/zsh` |
+| fish | `chsh -s /usr/bin/fish` |
+| mksh | `chsh -s /bin/mksh` |
+
+Changes take effect on next login.
+
+## Useful CLI Tools
+
+A selection of what's available:
+
+```bash
+# File navigation
+lf, ranger, mc          # terminal file managers
+eza                     # modern ls replacement
+bat                     # cat with syntax highlighting
+fd                      # fast find replacement
+fzf                     # fuzzy finder
+zoxide                  # smart cd replacement
+
+# Search
+ripgrep (rg)            # fast grep replacement
+
+# Git
+tig                     # terminal git browser
+lazygit                 # full TUI git client
+git-delta               # better diffs
+git-lfs                 # large file storage
+gh                      # GitHub CLI
+
+# Data
+jq, yq                  # JSON/YAML processors
+sqlite3                 # SQLite CLI
+bc                      # calculator
+
+# Network
+curl, wget, httpie      # HTTP clients
+mosh                    # mobile shell (UDP, survives roaming)
+mtr                     # traceroute + ping combined
+nmap                    # network scanner
+iperf3                  # bandwidth testing
+
+# Monitoring
+htop, btop, glances     # process monitors
+iotop                   # I/O monitor
+nethogs                 # per-process network usage
+vnstat                  # bandwidth statistics
+
+# Documentation
+tealdeer (tldr)         # practical command examples
+man, info               # full manuals
+
+# Misc
+direnv                  # per-directory environment variables
+tmuxinator              # tmux session manager
+shellcheck              # shell script linter
+universal-ctags         # code tagging
+units                   # unit conversion
+pv                      # pipe progress viewer
+```
+
+## Environment Paths
+
+The following paths are added to your `PATH` at login via `/etc/profile.d/environment-paths.sh`:
+
+| Path | Purpose |
+|------|---------|
+| `~/.local/bin` | pip tools, pipx, npm, general local installs |
+| `~/.cargo/bin` | Rust/Cargo binaries |
+| `~/.go/bin` | Go binaries |
+| `~/.local/share/gem/bin` | Ruby gems |
+| `~/.deno/bin` | Deno |
+| `~/.config/composer/vendor/bin` | PHP Composer |
+| `/var/cache/pnpm/bin` | pnpm global binaries |
+
+XDG directories are also set:
+
+| Variable | Path |
+|----------|------|
+| `XDG_CONFIG_HOME` | `~/.config` |
+| `XDG_CACHE_HOME` | `~/.cache` |
+| `XDG_DATA_HOME` | `~/.local/share` |
+| `XDG_STATE_HOME` | `~/.local/state` |

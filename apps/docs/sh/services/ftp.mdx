@@ -1,0 +1,107 @@
+---
+title: FTP (vsftpd)
+description: Explicit FTP over TLS with vsftpd for file uploads.
+---
+
+[vsftpd](https://security.appspot.com/vsftpd.html) provides FTP access with mandatory TLS encryption on port 21. Users log in with their shell credentials and land in their home directory.
+
+## How it works
+
+```
+FTP client → vsftpd (:21, Explicit TLS)
+            → control channel (port 21)
+            → passive data channels (ports 40000–40100)
+            → user's home directory
+```
+
+Anonymous access is disabled. All connections require authentication and TLS — unencrypted FTP is rejected.
+
+## Connection details
+
+| Setting | Value |
+|---------|-------|
+| Host | `atl.sh` |
+| Port | `21` |
+| Encryption | Explicit FTP over TLS (FTPS) |
+| Username | Shell username |
+| Password | Shell password |
+| Passive ports | 40000–40100 |
+| Root directory | User's home (`~/`) |
+
+Users are chrooted to their home directory — they cannot navigate above `~/`.
+
+## SFTP alternative
+
+SFTP (SSH File Transfer Protocol) is also available and often simpler since it uses your existing SSH key:
+
+```bash
+sftp your-username@atl.sh
+```
+
+No separate password needed — it uses the same key-based auth as SSH.
+
+## FileZilla setup
+
+1. Site Manager → New Site
+2. Protocol: **FTP - File Transfer Protocol**
+3. Encryption: **Require explicit FTP over TLS**
+4. Host: `atl.sh`, Port: `21`
+5. Logon Type: **Normal**, enter username and password
+
+## Configuration
+
+vsftpd is configured via `/etc/vsftpd.conf`, templated from `vsftpd.conf.j2`:
+
+| Setting | Value |
+|---------|-------|
+| `anonymous_enable` | `NO` |
+| `local_enable` | `YES` |
+| `write_enable` | `YES` |
+| `chroot_local_user` | `YES` |
+| `ssl_enable` | `YES` |
+| `force_local_data_ssl` | `YES` |
+| `force_local_logins_ssl` | `YES` |
+| `ssl_ciphers` | `HIGH` |
+
+### TLS certificates
+
+- **Production/staging**: Uses Let's Encrypt certs shared with nginx
+- **Dev**: Uses the self-signed cert from the Gemini role (`/etc/ssl/certs/molly-brown.crt`)
+
+## Ansible configuration
+
+| File | Purpose |
+|------|---------|
+| `roles/ftp/tasks/main.yml` | Install vsftpd, deploy config, enable service |
+| `roles/ftp/templates/vsftpd.conf.j2` | Config template |
+| `roles/ftp/defaults/main.yml` | Default variables |
+
+Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ftp_port` | `21` | Control port |
+| `pasv_min_port` | `40000` | Passive range start |
+| `pasv_max_port` | `40100` | Passive range end |
+| `ftp_tls_cert` | Let's Encrypt fullchain | TLS certificate path |
+| `ftp_tls_key` | Let's Encrypt privkey | TLS private key path |
+
+The dev environment overrides `ftp_tls_cert` and `ftp_tls_key` to use the self-signed Gemini cert.
+
+## Troubleshooting
+
+**"530 Login incorrect"**
+- FTP uses PAM authentication — verify the user has a valid password set
+- SFTP (over SSH) is usually easier since it uses key-based auth
+
+**"SSL/TLS handshake failed"**
+- Ensure your client is set to **Explicit** TLS, not Implicit
+- The server only supports TLSv1 and above (SSLv2/v3 disabled)
+
+**"425 Security: Bad IP connecting"**
+- Some NAT configurations cause the data connection IP to differ from the control connection
+- Try active mode instead of passive, or use SFTP
+
+**Can't write files**
+- Check disk quota: `quota -s`
+- Verify file permissions in the target directory

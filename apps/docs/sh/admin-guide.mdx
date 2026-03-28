@@ -1,0 +1,259 @@
+---
+title: Admin Guide
+description: Deployment, infrastructure, and operational reference for atl.sh admins.
+---
+
+This guide covers everything you need to build, configure, and manage atl.sh:
+from first-time infrastructure provisioning through day-to-day operations.
+
+## Prerequisites
+
+Install these tools before doing anything else:
+
+- [Ansible](https://docs.ansible.com/) — configuration management
+- [just](https://github.com/casey/just) — task runner (`just` to list all commands)
+- [Terraform](https://www.terraform.io/) 1.8+ — infrastructure provisioning
+- [Vagrant](https://www.vagrantup.com/) + [vagrant-libvirt](https://github.com/vagrant-libvirt/vagrant-libvirt) — local dev VMs
+
+Run `just` with no arguments at any time to see every available command.
+
+## Initial Setup
+
+Follow these steps when setting up the project for the first time.
+
+1. Clone the repository and install Ansible dependencies:
+
+   ```bash
+   just install
+   ```
+
+2. Install pre-commit hooks (runs lint on each commit):
+
+   ```bash
+   pre-commit install
+   ```
+
+3. Provision the staging VPS with Terraform (production is bare-metal and not
+   managed by Terraform):
+
+   ```bash
+   cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+   # Edit terraform.tfvars with Hetzner API token, Cloudflare credentials, etc.
+   just tf-init
+   just tf-apply
+   ```
+
+4. Configure the server with Ansible:
+
+   ```bash
+   just deploy staging   # staging VPS first
+   just deploy prod      # physical server when ready
+   ```
+
+## Environments
+
+| Target    | Host              | Description                    |
+|-----------|-------------------|--------------------------------|
+| `dev`     | `127.0.0.1:2223`  | Local Vagrant VM               |
+| `staging` | `staging.atl.sh`  | Hetzner Cloud VPS              |
+| `prod`    | `atl.sh`          | Physical Hetzner dedicated server |
+
+The inventory lives in `ansible/inventory/`. Each environment maps to an
+Ansible host group with its own `host_vars` for per-environment overrides.
+
+## Command Reference
+
+All commands run via `just`. Run `just` to list them.
+
+### Deployment
+
+```bash
+just deploy <target>           # full playbook run
+just deploy-check <target>     # dry run (--check --diff, no changes)
+just deploy-tag <target> <tag> # selective run by role tag
+just deploy-list-tags          # list all available tags
+just deploy-list-tasks <target># list tasks that would run
+```
+
+### Infrastructure (staging only)
+
+Terraform manages only the staging VPS and Cloudflare DNS. Production is
+bare-metal and not provisioned by Terraform.
+
+```bash
+just tf-init    # initialize Terraform backend and providers
+just tf-plan    # preview infrastructure changes
+just tf-apply   # apply infrastructure changes
+```
+
+### User Management
+
+```bash
+just create-user <username> '<ssh-key>' <target>
+just remove-user <username> <target>
+```
+
+### Inventory & Diagnostics
+
+```bash
+just ping <target>             # test SSH connectivity (Ansible ping)
+just inventory-list <target>   # list inventory hosts as JSON
+just inventory-graph           # show inventory as tree
+just syntax-check              # validate playbook syntax
+just config-dump               # show effective Ansible configuration
+just ansible-doc <module>      # look up module documentation
+```
+
+### Development
+
+```bash
+just dev-up     # start Vagrant dev VM (requires .ssh/dev_key)
+just dev-down   # halt Vagrant dev VM
+just dev-check  # verify dev prerequisites
+```
+
+### Other
+
+```bash
+just install    # install Ansible roles and collections
+just lint       # run all linters (pre-commit, ansible-lint)
+just vault-edit # edit encrypted secrets
+```
+
+## Selective Deployment
+
+Deploy only specific roles using tags. This is useful for iterating on a single
+role without running the full playbook.
+
+```bash
+just deploy-tag prod base          # apt, packages, NTP, shells, languages
+just deploy-tag prod infra         # SSH, firewall, fail2ban, AIDE, auditd, monitoring, backups
+just deploy-tag prod users         # skel files, MOTD, PAM limits
+just deploy-tag prod environment   # cgroup limits, quotas, tmpfs, PATH
+just deploy-tag prod services      # nginx, Gemini, Gopher, finger, FTP, games, webring
+```
+
+You can combine tags:
+
+```bash
+just deploy-tag prod "infra,services"
+```
+
+## Ansible Roles
+
+The playbook uses five roles, each handling a distinct layer of the system.
+
+| Role          | Purpose                                                         |
+|---------------|-----------------------------------------------------------------|
+| `base`        | Apt cache, base packages, NTP, shells, languages, editors, CLI tools |
+| `infra`       | SSH hardening, firewall, fail2ban, auditd, AIDE, monitoring, backups |
+| `users`       | Skel files, MOTD, PAM limits                                    |
+| `environment` | Cgroup limits, disk quotas, tmpfs isolation, XDG dirs, PATH     |
+| `services`    | Nginx, Gemini, Gopher, finger, FTP, games, webring              |
+
+The `infra` role is further split internally into three task files
+(`security/`, `monitoring.yml`, `backup.yml`) to keep concerns navigable
+without creating extra top-level roles.
+
+## User Management
+
+### Creating a user
+
+```bash
+just create-user johndoe 'ssh-ed25519 AAAA...' prod
+```
+
+This runs `ansible/playbooks/create-user.yml`, which:
+
+1. Creates a system account in the `pubnix` group
+2. Installs the SSH public key to `~/.ssh/authorized_keys`
+3. Copies `/etc/skel/` to their home directory, which includes:
+   - `public_html/` — static web hosting root
+   - `public_gemini/` — Gemini capsule root
+   - `public_gopher/` — Gopher hole root
+   - `.plan`, `.project` — finger profile files
+   - `.tmux.conf` — pre-configured tmux with `Ctrl-a` prefix
+
+### Removing a user
+
+```bash
+just remove-user johndoe prod
+```
+
+This runs `ansible/playbooks/remove-user.yml`, which removes the account and
+home directory.
+
+## Secrets Management
+
+All secrets live in `ansible/inventory/group_vars/all/vault.yml`, encrypted
+with Ansible Vault. Never commit this file unencrypted.
+
+```bash
+# Edit secrets
+just vault-edit
+
+# Run a playbook with vault decryption (prompts for password)
+cd ansible && ansible-playbook site.yml --ask-vault-pass
+
+# Or store the vault password in a file (do not commit this file)
+echo "your-vault-password" > .vault-pass
+cd ansible && ansible-playbook site.yml --vault-password-file ../.vault-pass
+```
+
+Variables stored in the vault include Borgmatic repository credentials,
+Cloudflare API tokens, and any other credentials the roles consume.
+
+## Logging and Auditing
+
+The server uses a hybrid logging approach.
+
+| Log source  | Mechanism | Location |
+|-------------|-----------|----------|
+| System logs | `systemd-journald` (1 GB cap) | `journalctl` |
+| Nginx       | `logrotate` | `/var/log/nginx/` |
+| Fail2ban    | `logrotate` | `/var/log/fail2ban.log` |
+| Gemini      | `molly-brown` | `/var/log/molly-brown/` |
+| Audit log   | `auditd` | `/var/log/audit/audit.log` |
+| Backups     | `borgmatic` timer | `journalctl -u borgmatic` |
+
+`auditd` runs 40+ rules covering identity files, privilege escalation, network
+configuration changes, suspicious tools (`wget`, `curl`, `nc`, `socat`),
+scripting interpreters run by users, and system calls (`ptrace`,
+`memfd_create`, `execve`, `chmod`, `chown`).
+
+```bash
+# Follow nginx access log in real time
+tail -f /var/log/nginx/access.log
+
+# View all logs since last boot
+journalctl -b
+
+# Stream logs for a specific service
+journalctl -u sshd -f
+
+# Recent audit events
+ausearch -ts recent
+
+# Privilege escalation events
+ausearch -k priv_esc
+
+# Generate audit summary report
+aureport --summary
+```
+
+## Linting
+
+Run all linters before opening a pull request:
+
+```bash
+just lint
+```
+
+This runs `pre-commit` against all files (trailing whitespace, YAML checks,
+`terraform fmt`/`validate`) followed by `ansible-lint` separately.
+
+To check only playbook syntax without running all hooks:
+
+```bash
+just syntax-check
+```

@@ -1,0 +1,97 @@
+---
+title: Resource Limits
+description: Disk quotas, CPU and memory limits, and process isolation on atl.sh.
+---
+
+atl.sh enforces per-user resource limits to keep the server fair and stable for everyone. Here's what applies to your account.
+
+## Disk Quota
+
+| Limit | Value |
+|-------|-------|
+| Soft limit | 5 GB |
+| Hard limit | 6 GB |
+
+The soft limit triggers a grace period warning. The hard limit is absolute — writes fail once you hit it.
+
+Check your current usage:
+
+```bash
+quota -s          # your disk usage and limits
+du -sh ~          # total home directory size
+du -sh ~/*/       # breakdown by subdirectory
+ncdu ~            # interactive disk usage browser
+```
+
+Things that eat disk quickly: language package caches, build artifacts, log files. Keep `node_modules/`, `target/`, `.cache/`, and similar directories in check.
+
+## CPU Limit
+
+| Limit | Value |
+|-------|-------|
+| Max CPU | 200% (2 cores) |
+
+Enforced via systemd cgroup v2 per-user slice. Long-running CPU-intensive processes are fine — just be considerate of other users.
+
+## Memory Limit
+
+| Limit | Value |
+|-------|-------|
+| Max RAM | 1.5 GB |
+
+Enforced via systemd cgroup v2. If your processes exceed this, the kernel OOM-kills them.
+
+## Process Limits
+
+| Limit | Value |
+|-------|-------|
+| Max tasks (processes + threads) | 200 |
+
+Set via both PAM (`nproc`) and systemd cgroup.
+
+## /tmp Isolation
+
+Your `/tmp`, `/var/tmp`, and `/run/lock` are **private to your session** via `pam_namespace`. Other users cannot see or access files you create there. This is per-login — a new SSH session gets a fresh namespace.
+
+This means:
+- `/tmp/myfile` from your session is invisible to other users
+- Shared IPC via `/tmp` across users won't work (use sockets in your home directory instead)
+
+## Persistent Sessions with tmux
+
+SSH sessions end when you disconnect. Use `tmux` to keep processes running:
+
+```bash
+tmux              # start a new session
+# ... start your process ...
+# Ctrl-a d        detach (process keeps running)
+
+tmux attach       # reattach later
+tmux ls           # list running sessions
+```
+
+Long-running jobs like servers, builds, or downloads should always run inside tmux.
+
+## Process Accounting
+
+The server runs `acct` (process accounting), which records every command executed by every user. Admins can review this with `lastcomm` and `sa`. This is a standard pubnix practice — be aware that your command history is logged at the system level.
+
+## Checking Resource Usage
+
+```bash
+# Your current processes
+ps aux --user $USER
+
+# Memory and CPU usage
+htop              # filter by user with 'u'
+btop
+
+# Per-process network usage
+nethogs
+
+# Disk I/O
+iotop
+
+# Bandwidth
+vnstat            # historical bandwidth stats
+```

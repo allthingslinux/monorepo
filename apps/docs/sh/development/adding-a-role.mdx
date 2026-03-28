@@ -1,0 +1,165 @@
+---
+title: Adding a Role
+description: Step-by-step guide for adding a new Ansible role to atl.sh.
+---
+
+This guide walks through adding a new role to the atl.sh Ansible configuration — from creating the directory structure to wiring it into the playbook and smoke test.
+
+## 1. Create the role directory
+
+```bash
+mkdir -p ansible/roles/my-role/{tasks,handlers,templates,defaults}
+```
+
+Minimum files:
+
+```
+ansible/roles/my-role/
+├── tasks/
+│   └── main.yml        # Task definitions
+├── handlers/
+│   └── main.yml        # Service restart/reload handlers
+├── templates/
+│   └── config.j2       # Jinja2 config templates
+└── defaults/
+    └── main.yml        # Default variable values
+```
+
+## 2. Write the tasks
+
+`tasks/main.yml` — follow the install → configure → enable pattern:
+
+```yaml
+---
+- name: Install my-service
+  ansible.builtin.apt:
+    name: my-service
+    state: present
+
+- name: Deploy configuration
+  ansible.builtin.template:
+    src: config.j2
+    dest: /etc/my-service/config.conf
+    mode: "0644"
+  notify: Restart my-service
+
+- name: Enable and start service
+  ansible.builtin.systemd:
+    name: my-service
+    enabled: true
+    state: started
+```
+
+Conventions:
+- Use fully qualified module names (`ansible.builtin.apt`, not `apt`)
+- Task names are sentence case
+- Config files use templates, not `copy` with inline content
+- Service changes trigger handlers via `notify:`
+
+## 3. Add handlers
+
+`handlers/main.yml`:
+
+```yaml
+---
+- name: Restart my-service
+  ansible.builtin.systemd:
+    name: my-service
+    state: restarted
+```
+
+Handler names must match `notify:` strings exactly — they're case-sensitive.
+
+## 4. Define defaults
+
+`defaults/main.yml` — every variable your role uses should have a default:
+
+```yaml
+---
+my_service_port: 8080
+my_service_option: "value"
+```
+
+Variables that differ per environment go in `inventory/group_vars/<env>/vars.yml`.
+
+Secrets go in `inventory/group_vars/all/vault.yml` (encrypted with Ansible Vault).
+
+## 5. Wire into site.yml
+
+Add the role to `ansible/site.yml` in the correct position. Roles run in order:
+
+```yaml
+roles:
+  - { role: common, tags: ["common"] }
+  - { role: packages, tags: ["packages"] }
+  - { role: security, tags: ["security"] }
+  - { role: users, tags: ["users"] }
+  - { role: environment, tags: ["environment"] }
+  - { role: services, tags: ["services"] }
+  - { role: ftp, tags: ["ftp"] }
+  - { role: my-role, tags: ["my-role"] }      # ← add here
+  - { role: monitoring, tags: ["monitoring"] }
+  - { role: backup, tags: ["backup"] }
+```
+
+Place it after the roles it depends on. Most new services go between `ftp` and `monitoring`.
+
+## 6. Open firewall ports
+
+If your service needs external access, add the port to `roles/security/defaults/main.yml`:
+
+```yaml
+firewall_allowed_tcp_ports:
+  - "22"
+  # ...existing ports...
+  - "8080"  # my-service
+```
+
+## 7. Add a smoke test check
+
+Edit `ansible/playbooks/smoke-test.yml` to validate your service. Add a task in the test section:
+
+```yaml
+- name: "Test: my-service responds"
+  ansible.builtin.uri:
+    url: "http://localhost:8080/health"
+    status_code: 200
+  register: my_service_test
+  failed_when: my_service_test.status != 200
+```
+
+## 8. Test it
+
+```bash
+# Deploy just your role
+just deploy-tag dev my-role
+
+# Full deploy to verify no conflicts
+just deploy dev
+
+# Run smoke tests
+just smoke-test dev
+```
+
+## 9. Document it
+
+Add a page at `docs/content/docs/services/my-service.mdx` covering:
+- How it works (request flow)
+- Configuration (key settings)
+- Ansible files and variables
+- Troubleshooting
+
+Add the page to `docs/content/docs/services/meta.json`.
+
+## 10. Commit
+
+Commit each file individually:
+
+```bash
+git add ansible/roles/my-role/tasks/main.yml
+git commit -m "feat(my-role): add task definitions"
+
+git add ansible/roles/my-role/templates/config.j2
+git commit -m "feat(my-role): add config template"
+# ...etc
+```

@@ -135,6 +135,51 @@
             "pages": ["sh/index"]
           },
           {
+            "group": "atl.sh — User Docs",
+            "pages": [
+              "sh/user-guide",
+              "sh/publishing",
+              "sh/webring",
+              "sh/faq",
+              "sh/resources"
+            ]
+          },
+          {
+            "group": "atl.sh — Services",
+            "pages": [
+              "sh/services/nginx",
+              "sh/services/gemini",
+              "sh/services/gopher",
+              "sh/services/finger",
+              "sh/services/ftp"
+            ]
+          },
+          {
+            "group": "atl.sh — Operations",
+            "pages": [
+              "sh/admin-guide",
+              "sh/architecture",
+              "sh/operations/index",
+              "sh/operations/security",
+              "sh/operations/ssl-tls",
+              "sh/operations/troubleshooting"
+            ]
+          },
+          {
+            "group": "atl.sh — Development",
+            "pages": [
+              "sh/development/index",
+              "sh/development/contributing",
+              "sh/development/adding-a-role",
+              "sh/development/variables",
+              "sh/development/testing"
+            ]
+          },
+          {
+            "group": "atl.sh — Reference",
+            "pages": ["sh/reference/glossary", "sh/code-of-conduct"]
+          },
+          {
             "group": "atl.tools",
             "pages": ["tools/index"]
           },

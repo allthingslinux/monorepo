@@ -1,0 +1,108 @@
+---
+title: Gemini (molly-brown)
+description: Gemini capsule hosting with molly-brown, TLS certificates, and the reversed symlink architecture.
+---
+
+[Molly Brown](https://tildegit.org/solderpunk/molly-brown) serves Gemini capsules at `gemini://atl.sh/~username` on port 1965. Each user's capsule content lives under their `~/public_gemini/` directory.
+
+## How it works
+
+```
+Gemini client → molly-brown (:1965, TLS)
+                → /var/gemini/public_gemini/username/
+                ← ~/public_gemini is a symlink TO that path
+```
+
+Molly-brown resolves tilde URLs as `DocBase/HomeDocBase/username` — i.e., `/var/gemini/public_gemini/username/`. It refuses to follow symlinks that point outside its `DocBase` for security.
+
+### The reversed symlink
+
+This creates a constraint: user files can't live in `~/public_gemini/` with a symlink into `/var/gemini/`, because molly-brown would refuse to follow it. Instead, the architecture is reversed:
+
+1. Actual files live at `/var/gemini/public_gemini/username/`
+2. `~/public_gemini` is a symlink pointing TO `/var/gemini/public_gemini/username/`
+
+From the user's perspective, editing `~/public_gemini/index.gmi` works normally — the symlink is transparent. But molly-brown sees the files at their real path inside its DocBase and serves them without following any symlinks.
+
+The `create-user.yml` playbook handles this automatically when provisioning new accounts.
+
+## Configuration
+
+Molly-brown's config lives at `/etc/molly-brown/molly-brown.conf`, templated from `molly-brown.ini.j2`:
+
+| Setting | Value |
+|---------|-------|
+| `Port` | `1965` |
+| `Hostname` | `atl.sh` |
+| `DocBase` | `/var/gemini` |
+| `HomeDocBase` | `public_gemini` |
+| `GeminiExt` | `gmi` |
+| `DirectoryListing` | `true` |
+| `CGIPaths` | `/cgi-bin` |
+
+### TLS certificates
+
+- **Production/staging**: Uses Let's Encrypt certs from `/etc/letsencrypt/live/atl.sh/`
+- **Dev**: Uses a self-signed EC key with SAN (Go's TLS library rejects CN-only certs)
+
+The self-signed cert is generated with:
+```bash
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes \
+  -keyout /etc/ssl/private/molly-brown.key \
+  -out /etc/ssl/certs/molly-brown.crt \
+  -days 3650 -subj "/CN=atl.sh" \
+  -addext "subjectAltName=DNS:atl.sh"
+```
+
+The private key is owned by `root:ssl-cert` with mode `0640` so molly-brown (which runs as the `molly-brown` user in the `ssl-cert` group) can read it.
+
+## CGI scripts
+
+Scripts in `~/public_gemini/cgi-bin/` are executed as Gemini CGI. The script must output a valid Gemini response:
+
+```bash
+#!/bin/bash
+echo "20 text/gemini"
+echo "# Dynamic page"
+echo "Generated at $(date)"
+```
+
+## Systemd
+
+Molly-brown runs as `molly-brown@molly-brown.service`. A systemd override at `/etc/systemd/system/molly-brown@molly-brown.service.d/logs.conf` grants write access to `/var/log/molly-brown/` despite `ProtectSystem=strict` in the upstream unit.
+
+## Ansible configuration
+
+| File | Purpose |
+|------|---------|
+| `roles/services/tasks/gemini.yml` | Install, cert generation, config deploy, systemd override |
+| `roles/services/templates/molly-brown.ini.j2` | Config template |
+| `roles/services/defaults/main.yml` | Default variables |
+
+Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `gemini_port` | `1965` | Listening port |
+| `gemini_capsule_root` | `/var/gemini` | DocBase path |
+
+## Log files
+
+| Log | Path |
+|-----|------|
+| Access log | `/var/log/molly-brown/access.log` |
+| Error log | `/var/log/molly-brown/error.log` |
+
+## Troubleshooting
+
+**Capsule returns "51 Not found"**
+- Check the real path exists: `ls -la /var/gemini/public_gemini/username/`
+- Verify the symlink: `ls -la ~/public_gemini` — should point to `/var/gemini/public_gemini/username`
+- Files must be world-readable
+
+**TLS handshake fails (dev)**
+- The self-signed cert must have a SAN extension. Go's TLS library rejects CN-only certs. Re-run `just deploy-tag dev services` to regenerate.
+
+**Service won't start**
+- Check logs: `journalctl -u molly-brown@molly-brown -e`
+- Verify cert permissions: `ls -la /etc/ssl/private/molly-brown.key` — must be readable by `ssl-cert` group

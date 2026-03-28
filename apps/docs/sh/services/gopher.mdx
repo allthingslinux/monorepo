@@ -1,0 +1,95 @@
+---
+title: Gopher (Gophernicus)
+description: Gopher hole hosting with Gophernicus, gophermap format, and socket activation.
+---
+
+[Gophernicus](https://github.com/gophernicus/gophernicus) serves Gopher holes at `gopher://atl.sh/~username` on port 70. Each user's content lives in `~/public_gopher/`.
+
+## How it works
+
+```
+Gopher client → Gophernicus (:70, systemd socket-activated)
+                → /home/username/public_gopher/
+```
+
+Gophernicus is socket-activated via `gophernicus.socket`. It maps tilde selectors to user home directories using the `-u` flag, which tells it to look for `public_gopher/` inside each user's home.
+
+## Gophermap format
+
+Create `~/public_gopher/gophermap` to define your hole's menu. Each line is tab-separated:
+
+```
+iWelcome to my gopher hole	fake	(NULL)	0
+i	fake	(NULL)	0
+1My projects	/~username/projects	atl.sh	70
+0About me	/~username/about.txt	atl.sh	70
+hMy website	URL:https://atl.sh/~username	atl.sh	70
+```
+
+### Item type codes
+
+| Type | Meaning |
+|------|---------|
+| `i` | Informational text (no link) |
+| `0` | Text file |
+| `1` | Directory / submenu |
+| `7` | Search query |
+| `h` | HTML link (prefix URL with `URL:`) |
+| `9` | Binary file |
+| `g` | GIF image |
+| `I` | Other image |
+
+If no `gophermap` exists, Gophernicus generates a directory listing automatically.
+
+### Plain text files
+
+Any `.txt` file in `~/public_gopher/` is served as a type-0 text document. No special formatting needed — just write plain text.
+
+## Configuration
+
+Gophernicus is configured via `/etc/default/gophernicus`:
+
+```bash
+GOPHERNICUS_OPTS="-h atl.sh -r /var/gopher -u public_gopher"
+```
+
+| Flag | Value | Purpose |
+|------|-------|---------|
+| `-h` | `atl.sh` | Hostname in generated links |
+| `-r` | `/var/gopher` | Document root |
+| `-u` | `public_gopher` | User directory name (for tilde selectors) |
+
+## Ansible configuration
+
+| File | Purpose |
+|------|---------|
+| `roles/services/tasks/gopher.yml` | Install, config deploy, enable socket |
+| `roles/services/templates/gophernicus.env.j2` | Config template |
+| `roles/services/defaults/main.yml` | Default variables |
+
+Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `gopher_port` | `70` | Listening port |
+| `gopher_hostname` | `{{ pubnix_domain }}` | Hostname for generated links |
+| `gopher_root` | `/var/gopher` | Document root |
+| `gopher_user_dir` | `public_gopher` | User subdirectory name |
+
+## Clients
+
+- `lynx` — installed on the server: `lynx gopher://atl.sh/~username`
+- Firefox with [OverbiteNX](https://addons.mozilla.org/en-US/firefox/addon/overbite-nx/) extension
+- [Lagrange](https://gmi.skyjake.fi/lagrange/) — multi-protocol graphical client
+
+## Troubleshooting
+
+**Hole returns empty or "error"**
+- Home directory must be `711`: `chmod 711 ~`
+- `public_gopher` must be `755`: `chmod 755 ~/public_gopher`
+- Check gophermap syntax — tabs must be real tab characters, not spaces
+- Test locally: `echo "/~username" | nc localhost 70`
+
+**Socket not listening**
+- Check: `systemctl status gophernicus.socket`
+- Restart: `sudo systemctl restart gophernicus.socket`

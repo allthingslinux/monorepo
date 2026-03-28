@@ -1,0 +1,174 @@
+---
+title: Troubleshooting
+description: Diagnostic commands, common issues, and resolution steps for atl.sh.
+---
+
+Start here when something isn't working. Issues are organized by symptom so you can jump to the relevant section.
+
+## Quick health check
+
+Run these on the server to get a fast overview:
+
+```bash
+# All listening services
+ss -tlnp | grep -E ':(22|70|79|80|443|1965|21)\b'
+
+# Service status at a glance
+for svc in sshd nginx molly-brown@molly-brown gophernicus.socket finger.socket vsftpd; do
+  printf "%-30s %s\n" "$svc" "$(systemctl is-active $svc)"
+done
+
+# Disk and memory
+df -h / /home
+free -h
+
+# Recent errors in journal
+journalctl -p err --since "1 hour ago" --no-pager
+```
+
+## SSH connection issues
+
+**"Connection refused" on port 22**
+- Port may be blocked by your ISP or network. Try port 2222: `ssh -p 2222 username@atl.sh`
+- Check the server: `systemctl status sshd`
+
+**"Permission denied (publickey)"**
+- Passwords are disabled — only key-based auth works
+- Verify your key is correct: `ssh -vvv username@atl.sh` and look for "Offering public key"
+- Check `~/.ssh/authorized_keys` on the server has your public key
+- Key file permissions must be `600`: `chmod 600 ~/.ssh/id_ed25519`
+
+**Connection drops after a few minutes of inactivity**
+- SSH keepalive is set to 300s (5 min) with 2 retries. Add to your local `~/.ssh/config`:
+  ```
+  Host atl.sh
+      ServerAliveInterval 60
+  ```
+
+## Web pages (nginx)
+
+**403 Forbidden**
+- Home directory must be traversable: `chmod 711 ~`
+- `public_html` must be readable: `chmod 755 ~/public_html`
+- Files must be world-readable: `chmod 644 ~/public_html/index.html`
+- Check: `namei -l ~/public_html/index.html` — every directory in the path needs `x` for others
+
+**502 Bad Gateway on CGI scripts**
+- Script must be executable: `chmod +x ~/public_html/script.cgi`
+- Must have a valid shebang: `head -1 ~/public_html/script.cgi`
+- Must output headers correctly — test directly: `~/public_html/script.cgi`
+- Check fcgiwrap: `systemctl status fcgiwrap`
+
+**404 Not Found for tilde URL**
+- User must exist: `getent passwd username`
+- Directory must exist: `ls -la /home/username/public_html/`
+
+## Gemini capsules
+
+**"51 Not found" for tilde URL**
+- Check the real path: `ls -la /var/gemini/public_gemini/username/`
+- Verify the symlink: `readlink ~/public_gemini` — should be `/var/gemini/public_gemini/username`
+- If the symlink is wrong, recreate it (admin): re-run `just create-user` or fix manually
+
+**TLS handshake failure**
+- Dev uses self-signed certs — your client must accept them
+- The cert must have a SAN extension (Go rejects CN-only). Re-deploy: `just deploy-tag dev services`
+- Check cert: `openssl s_client -connect localhost:1965 -servername atl.sh </dev/null 2>/dev/null | openssl x509 -noout -text | grep -A1 "Subject Alternative"`
+
+**Service won't start**
+- `journalctl -u molly-brown@molly-brown -e`
+- Check key permissions: `ls -la /etc/ssl/private/molly-brown.key` — needs `root:ssl-cert 0640`
+
+## Gopher holes
+
+**Empty response or error**
+- Home dir must be `711`: `chmod 711 ~`
+- `public_gopher` must be `755`: `chmod 755 ~/public_gopher`
+- Test: `echo "/~username" | nc localhost 70`
+- Gophermap tabs must be real `\t` characters, not spaces
+
+**Socket not listening**
+- `systemctl status gophernicus.socket`
+- `sudo systemctl restart gophernicus.socket`
+
+## Finger
+
+**No output or "no such user"**
+- User must exist: `getent passwd username`
+- `~/.plan` must exist and be readable: `ls -la ~/.plan`
+- Test: `finger username@localhost`
+
+**Garbled output**
+- Emoji or non-ASCII in `.plan` can cause issues with some finger clients
+- Stick to ASCII for maximum compatibility
+
+## FTP
+
+**"530 Login incorrect"**
+- FTP uses PAM password auth. If you only have SSH key auth, use SFTP instead: `sftp username@atl.sh`
+
+**TLS handshake failed**
+- Use **Explicit** TLS (FTPS), not Implicit
+- SSLv2 and SSLv3 are disabled — client must support TLSv1+
+
+## Disk quota exceeded
+
+```bash
+# Check your usage
+quota -s
+
+# Find large files
+du -sh ~/* | sort -rh | head -10
+
+# Common space hogs
+du -sh ~/.cache ~/.local ~/node_modules ~/.cargo/registry 2>/dev/null | sort -rh
+```
+
+Clean up:
+```bash
+# Language caches
+pip cache purge
+npm cache clean --force
+cargo cache --autoclean
+
+# Build artifacts
+find ~ -name node_modules -type d -exec rm -rf {} + 2>/dev/null
+find ~ -name target -path '*/target/debug' -type d -exec rm -rf {} + 2>/dev/null
+find ~ -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null
+```
+
+## Process killed (OOM)
+
+If your process disappears without explanation, it likely hit the 1.5 GB memory limit:
+
+```bash
+# Check if OOM killed your process
+journalctl -k | grep -i "killed process"
+
+# Monitor memory usage
+watch -n1 'ps aux --user $USER --sort=-%mem | head -10'
+```
+
+Reduce memory usage or split work into smaller chunks.
+
+## Private /tmp confusion
+
+Each SSH session gets an isolated `/tmp` via `pam_namespace`. This means:
+- Files in `/tmp` from one session are invisible to other sessions
+- You can't use `/tmp` for IPC between users
+- Use `~/` or a socket in your home directory for cross-session communication
+
+## Ansible deployment issues
+
+**"Failed to connect" during `just deploy dev`**
+- Is the VM running? `vagrant status`
+- Can you SSH manually? `ssh -i .ssh/dev_key -p 2223 root@127.0.0.1`
+- Check port: `ss -tlnp | grep 2223`
+
+**Handler not triggered**
+- Handlers run at the end of the play, not immediately. Use `flush_handlers` if you need immediate execution.
+- Handler names are case-sensitive — check for mismatches between `notify:` and the handler name
+
+**Idempotency failure (changed on every run)**
+- `creates:` parameter missing on `command`/`shell` tasks
+- Template has a timestamp or random value that changes each run
