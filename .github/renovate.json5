@@ -206,6 +206,13 @@
   // Paths to exclude from Renovate scanning (no PRs/alerts for these)
   // .cursor/skills contains template package.json files; we don't want dependency PRs for them
   ignorePaths: ["**/.cursor/skills/**"],
+  // Extend docker-compose file matching to include compose fragments under infra/
+  // Default pattern only matches compose*.y{a,}ml and docker-compose*.y{a,}ml
+  "docker-compose": {
+    fileMatch: [
+      "(^|/)infra/.+\\.ya?ml$",
+    ],
+  },
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
   platformAutomerge: true,
   // Branch rebasing configuration
