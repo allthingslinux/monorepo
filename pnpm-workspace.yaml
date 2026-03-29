@@ -4,6 +4,7 @@ packages:
   - "apps/docs"
   - "apps/portal"
   - "apps/portal/packages/*"
+  - "apps/tools"
   - "packages/*"
 
 catalog:
