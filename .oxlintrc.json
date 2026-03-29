@@ -10,8 +10,6 @@
     "**/.turbo/**",
     "**/*.min.js",
     "**/next-env.d.ts",
-    "**/cloudflare-env.d.ts",
-    "**/worker-configuration.d.ts",
     "apps/web/.contentlayer/**",
     "apps/web/.open-next/**",
     "apps/web/.wrangler/**",
