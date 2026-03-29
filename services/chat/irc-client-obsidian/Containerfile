@@ -3,7 +3,7 @@
 # VITE_HIDE_SERVER_LIST=true removes the Discover page and multi-server UI.
 # VITE_DEFAULT_IRC_SERVER auto-connects to the ATL IRC WebSocket.
 
-FROM node:23-alpine AS builder
+FROM node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b AS builder
 
 ARG VITE_DEFAULT_IRC_SERVER
 ARG VITE_DEFAULT_IRC_SERVER_NAME
