@@ -1,11 +1,32 @@
 name: Portal CI
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "apps/portal/**"
+      - "packages/ui/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "turbo.json"
+      - ".oxlintrc.json"
+      - ".oxfmtrc.jsonc"
+      - ".github/workflows/portal-ci.yml"
   push:
     branches: [main]
+    paths:
+      - "apps/portal/**"
+      - "packages/ui/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "turbo.json"
+      - ".oxlintrc.json"
+      - ".oxfmtrc.jsonc"
+      - ".github/workflows/portal-ci.yml"
   merge_group:
     branches: [main]
 
@@ -22,56 +43,55 @@ jobs:
   changes:
     name: File Detection
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      typescript: ${{ steps.ts_changes.outputs.any_changed }}
-      config: ${{ steps.config_changes.outputs.any_changed }}
-      tests: ${{ steps.test_changes.outputs.any_changed }}
-      any: ${{ steps.ts_changes.outputs.any_changed == 'true' || steps.config_changes.outputs.any_changed == 'true' || steps.test_changes.outputs.any_changed == 'true' }}
+      typescript: ${{ steps.portal_changes.outputs.typescript_any_changed }}
+      config: ${{ steps.portal_changes.outputs.config_any_changed }}
+      tests: ${{ steps.portal_changes.outputs.tests_any_changed }}
+      any: ${{ (steps.portal_changes.outputs.typescript_any_changed == 'true' || steps.portal_changes.outputs.config_any_changed == 'true' || steps.portal_changes.outputs.tests_any_changed == 'true') && 'true' || 'false' }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-      - name: Check TypeScript
+      - name: Detect portal-related changes
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: ts_changes
+        id: portal_changes
         with:
-          files: |
-            apps/portal/src/**/*.{ts,tsx}
-            apps/portal/packages/*/src/**/*.{ts,tsx}
-            **/tsconfig.json
-            package.json
-            pnpm-lock.yaml
-            apps/portal/package.json
-            apps/portal/packages/**/package.json
-      - name: Check Config
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: config_changes
-        with:
-          files: |
-            apps/portal/next.config.ts
-            **/.oxlintrc.json
-            **/.oxfmtrc.jsonc
-            apps/portal/vitest.config.ts
-            turbo.json
-            apps/portal/turbo.json
-            .github/workflows/portal-ci.yml
-      - name: Check Tests
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: test_changes
-        with:
-          files: |
-            apps/portal/tests/**/*
-            apps/portal/vitest.config.ts
-            apps/portal/vitest.setup.ts
+          files_yaml: |
+            typescript:
+              - apps/portal/src/**/*.ts
+              - apps/portal/src/**/*.tsx
+              - apps/portal/packages/*/src/**/*.ts
+              - apps/portal/packages/*/src/**/*.tsx
+              - packages/ui/**/*.ts
+              - packages/ui/**/*.tsx
+              - packages/ui/**/*.css
+              - "**/tsconfig.json"
+              - package.json
+              - pnpm-lock.yaml
+              - apps/portal/package.json
+              - apps/portal/packages/**/package.json
+            config:
+              - apps/portal/next.config.ts
+              - "**/.oxlintrc.json"
+              - "**/.oxfmtrc.jsonc"
+              - apps/portal/vitest.config.ts
+              - turbo.json
+              - apps/portal/turbo.json
+              - .github/workflows/portal-ci.yml
+            tests:
+              - apps/portal/tests/**/*
+              - apps/portal/vitest.config.ts
+              - apps/portal/vitest.setup.ts
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.any || github.event_name == 'workflow_dispatch'
+    if: needs.changes.outputs.any == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 10
     permissions:
       contents: read
@@ -94,7 +114,7 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.typescript || needs.changes.outputs.config || github.event_name == 'workflow_dispatch'
+    if: needs.changes.outputs.any == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 10
     permissions:
       contents: read
@@ -121,7 +141,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.any || github.event_name == 'workflow_dispatch'
+    if: needs.changes.outputs.any == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 15
     permissions:
       contents: read
@@ -147,9 +167,9 @@ jobs:
         with:
           path: |
             apps/portal/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-nextjs-portal-${{ hashFiles('pnpm-lock.yaml', 'apps/portal/package.json', 'apps/portal/next.config.ts') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-
+            ${{ runner.os }}-nextjs-portal-
       - name: Build
         run: pnpm exec turbo run build --filter=@atl/portal
 
@@ -157,7 +177,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.any || needs.changes.outputs.tests || github.event_name == 'workflow_dispatch'
+    if: >-
+      needs.changes.outputs.any == 'true' ||
+      needs.changes.outputs.tests == 'true' ||
+      github.event_name == 'merge_group'
     timeout-minutes: 20
     permissions:
       contents: read
@@ -192,7 +215,10 @@ jobs:
     name: Dead Code (Knip)
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.typescript || needs.changes.outputs.config || github.event_name == 'workflow_dispatch'
+    if: >-
+      needs.changes.outputs.typescript == 'true' ||
+      needs.changes.outputs.config == 'true' ||
+      github.event_name == 'merge_group'
     timeout-minutes: 10
     permissions:
       contents: read
@@ -223,6 +249,10 @@ jobs:
       pull-requests: write
       id-token: write
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
