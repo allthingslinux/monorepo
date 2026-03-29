@@ -209,7 +209,7 @@ const website = await Nextjs("website", {
   previewSubdomains: profile.previewUrls,
   url: profile.previewUrls,
   wrangler: {
-    path: ".alchemy/local/wrangler.jsonc",
+    path: "wrangler.jsonc",
     secrets: true,
     transform: mergeWrangler,
   },
