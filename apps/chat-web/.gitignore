@@ -1,0 +1,2 @@
+# Alchemy generates wrangler.jsonc from alchemy.run.ts — do not track
+wrangler.jsonc
