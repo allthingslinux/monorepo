@@ -464,9 +464,8 @@ main() {
   ok "Migration complete."
   echo ""
   echo -e "  ${DIM}Next steps:${RESET}"
-  echo -e "  ${DIM}  1. Verify Caddy/reverse-proxy config points to new container names (atl-tools-*)${RESET}"
-  echo -e "  ${DIM}  2. Set ALLOY_REMOTE_WRITE_URL and ALLOY_LOKI_URL in $INSTALL_DIR/.env${RESET}"
-  echo -e "  ${DIM}  3. Archive or remove $OLD_DIR once satisfied${RESET}"
+  echo -e "  ${DIM}  1. Set ALLOY_REMOTE_WRITE_URL and ALLOY_LOKI_URL in $INSTALL_DIR/.env${RESET}"
+  echo -e "  ${DIM}  2. Archive or remove $OLD_DIR once satisfied${RESET}"
   echo ""
 }
 
