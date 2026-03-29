@@ -46,7 +46,7 @@ jobs:
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Deploy with Alchemy (OpenNext build runs in-stack)
-        run: pnpm run deploy
+        run: pnpm exec alchemy deploy --app tools-web --stage prod
         env:
           ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
           ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
