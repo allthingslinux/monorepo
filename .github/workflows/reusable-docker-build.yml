@@ -2,6 +2,10 @@ name: Reusable — Docker Build & Push
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        description: Token for GHCR login (pass secrets.GITHUB_TOKEN from the caller)
+        required: true
     inputs:
       context:
         required: true
