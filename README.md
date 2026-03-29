@@ -1,6 +1,6 @@
 # allthingslinux monorepo
 
-Unified monorepo for [All Things Linux](https://allthingslinux.org): marketing site, portal (identity stack), chat infrastructure (IRC / XMPP / bridge), network services, and observability stack.
+Unified monorepo for [All Things Linux](https://allthingslinux.org): marketing site, portal (identity stack), chat infrastructure (IRC / XMPP / bridge), self-hosted tools ([atl.tools](https://atl.tools)), network services, and observability stack.
 
 ## Layout
 
@@ -10,20 +10,24 @@ apps/
 ├── portal         @atl/portal — identity & admin portal (Next.js 16, PostgreSQL)
 ├── chat-web       @atl/chat-web — atl.chat landing page (Next.js 16)
 ├── docs           @atl/docs — product documentation (Mintlify)
+├── tools          @atl/tools — atl.tools directory (Next.js 16, OpenNext / Cloudflare)
 └── bridge         Discord↔IRC↔XMPP bridge (Python / uv — NOT in pnpm workspace)
 
 packages/
-└── ui             @atl/ui — shared design system (shadcn/ui + @base-ui/react)
+├── ui             @atl/ui — shared design system (shadcn/ui + @base-ui/react)
+└── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools
 
 services/
 ├── chat/          IRC (UnrealIRCd + Atheme), XMPP (Prosody), web clients
 ├── network/       DNS (Blocky), TURN (coturn), uptime (Gatus), SFTP
+├── tools/         Self-hosted tools (PrivateBin, SearXNG, Stirling-PDF, …)
 └── observability/ Grafana, Loki, Mimir, Alloy, Alloy Agent, Blackbox
 
 infra/
 ├── chat/          Docker Compose fragments (chat-*.yaml)
 ├── network/       Docker Compose fragments (network.yaml)
 ├── observability/ Docker Compose fragments (observability.yaml)
+├── tools/         Docker Compose fragments (tools-*.yaml)
 ├── nginx/         Nginx reverse proxy config (Prosody HTTPS)
 ├── sh/            atl.sh pubnix provisioning (Ansible, Terraform, skel, Vagrant)
 ├── cert-manager.yaml  TLS certificate management (included by root compose.yaml)
@@ -110,6 +114,20 @@ Run `just` to see all available recipes grouped by domain.
 | `just docs-build`         | Build docs                       |
 | `just docs-check-links`   | Check for broken links           |
 
+### Tools (atl.tools)
+
+| Command                 | Purpose                                |
+| ----------------------- | -------------------------------------- |
+| `just tools-dev`        | Start all tools Docker services (dev)  |
+| `just tools-up`         | Start all tools Docker services (prod) |
+| `just tools-down`       | Stop all tools Docker services         |
+| `just tools-logs`       | Tail tools container logs              |
+| `just tools-status`     | Show running tools containers          |
+| `just tools-build`      | Build custom service images            |
+| `just tools-web-dev`    | atl.tools Next.js dev server           |
+| `just tools-web-build`  | Build atl.tools site                   |
+| `just tools-web-deploy` | Deploy atl.tools to Cloudflare Workers |
+
 ### Chat services (Docker)
 
 | Command               | Purpose                                      |
@@ -175,17 +193,17 @@ Portal has its own `.env` at `apps/portal/.env` — see `apps/portal/README.md` 
 
 ## Shared config
 
-| Concern             | Location                                                                    |
-| ------------------- | --------------------------------------------------------------------------- |
-| Git                 | Root `.gitignore`                                                           |
-| Commits             | `commitlint.config.cjs` + `.husky/commit-msg`                               |
-| Lint / format       | `.oxlintrc.json` + `.oxfmtrc.jsonc` (Ultracite: Oxlint + Oxfmt)             |
-| Pre-commit          | Husky + lint-staged (see below)                                             |
-| Turborepo           | Root `turbo.json`; app overrides in `apps/*/turbo.json`                     |
-| Dependency versions | `pnpm-workspace.yaml` `catalog:` section                                    |
-| CI                  | `.github/workflows/` + `.github/actions/setup-node-pnpm/`                   |
-| Renovate            | `.github/renovate.json5`                                                    |
-| Docker              | `infra/{chat,network,observability}/*.yaml` included by root `compose.yaml` |
+| Concern             | Location                                                                          |
+| ------------------- | --------------------------------------------------------------------------------- |
+| Git                 | Root `.gitignore`                                                                 |
+| Commits             | `commitlint.config.cjs` + `.husky/commit-msg`                                     |
+| Lint / format       | `.oxlintrc.json` + `.oxfmtrc.jsonc` (Ultracite: Oxlint + Oxfmt)                   |
+| Pre-commit          | Husky + lint-staged (see below)                                                   |
+| Turborepo           | Root `turbo.json`; app overrides in `apps/*/turbo.json`                           |
+| Dependency versions | `pnpm-workspace.yaml` `catalog:` section                                          |
+| CI                  | `.github/workflows/` + `.github/actions/setup-node-pnpm/`                         |
+| Renovate            | `.github/renovate.json5`                                                          |
+| Docker              | `infra/{chat,network,observability,tools}/*.yaml` included by root `compose.yaml` |
 
 ### Pre-commit hooks (Husky + lint-staged)
 
@@ -205,6 +223,8 @@ Workflows in `.github/workflows/`:
 - `portal-migrate.yml` — manual database migration
 - `portal-maintenance.yml` — TODO-to-issue conversion
 - `web-deploy.yml` — OpenNext deploy to Cloudflare Workers (PR previews + prod)
+- `tools-ci.yml` — type-check + lint for apps/tools and packages/tools-manifest
+- `tools-deploy.yml` — OpenNext deploy of atl.tools to Cloudflare Workers (prod-only)
 - `chat-ci.yml` — bridge lint / test / coverage, Docker builds for IRC / XMPP / bridge
 - `pubnix-ci.yml` — ansible-lint + molecule tests for atl.sh provisioning
 - `docs-ci.yml` — Mintlify validate + broken link check
