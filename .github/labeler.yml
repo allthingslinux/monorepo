@@ -29,7 +29,9 @@ app: tools:
 
 app: chat-web:
   - changed-files:
-      - any-glob-to-any-file: apps/chat-web/**
+      - any-glob-to-any-file:
+          - apps/chat-web/**
+          - .github/workflows/chat-web*
 
 app: bridge:
   - changed-files:
