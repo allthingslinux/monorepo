@@ -18,6 +18,15 @@ app: docs:
           - apps/docs/**
           - .github/workflows/docs-*
 
+app: tools:
+  - changed-files:
+      - any-glob-to-any-file:
+          - apps/tools/**
+          - packages/tools-manifest/**
+          - infra/tools/**
+          - services/tools/**
+          - .github/workflows/tools-*
+
 app: chat-web:
   - changed-files:
       - any-glob-to-any-file: apps/chat-web/**
