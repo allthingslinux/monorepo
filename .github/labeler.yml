@@ -1,24 +1,24 @@
-app: portal:
+"app: portal":
   - changed-files:
       - any-glob-to-any-file:
           - apps/portal/**
           - .github/workflows/portal-*
           - .github/scripts/portal/**
 
-app: web:
+"app: web":
   - changed-files:
       - any-glob-to-any-file:
           - apps/web/**
           - .github/workflows/web-*
           - .github/scripts/web/**
 
-app: docs:
+"app: docs":
   - changed-files:
       - any-glob-to-any-file:
           - apps/docs/**
           - .github/workflows/docs-*
 
-app: tools:
+"app: tools":
   - changed-files:
       - any-glob-to-any-file:
           - apps/tools-web/**
@@ -27,13 +27,13 @@ app: tools:
           - services/tools/**
           - .github/workflows/tools-*
 
-app: chat-web:
+"app: chat-web":
   - changed-files:
       - any-glob-to-any-file:
           - apps/chat-web/**
           - .github/workflows/chat-web*
 
-app: bridge:
+"app: bridge":
   - changed-files:
       - any-glob-to-any-file:
           - apps/bridge/**
@@ -42,7 +42,7 @@ app: bridge:
           - .github/workflows/reusable-py-check.yml
           - infra/chat/chat-bridge.yaml
 
-service: irc:
+"service: irc":
   - changed-files:
       - any-glob-to-any-file:
           - services/chat/irc-**/**
@@ -53,7 +53,7 @@ service: irc:
           - infra/chat/chat-obsidian.yaml
           - infra/chat/chat-gamja.yaml
 
-service: xmpp:
+"service: xmpp":
   - changed-files:
       - any-glob-to-any-file:
           - services/chat/xmpp-**/**
@@ -62,13 +62,13 @@ service: xmpp:
           - infra/chat/chat-xmpp.yaml
           - infra/chat/chat-fluux.yaml
 
-service: network:
+"service: network":
   - changed-files:
       - any-glob-to-any-file:
           - services/network/**
           - infra/network/network.yaml
 
-service: observability:
+"service: observability":
   - changed-files:
       - any-glob-to-any-file:
           - services/observability/**
