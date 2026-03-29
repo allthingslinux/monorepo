@@ -1,5 +1,5 @@
-import { tokyoNightHex } from '@atl/tools-manifest';
-import type { ServiceDefinition } from '@atl/tools-manifest';
+import { tokyoNightHex } from "@atl/tools-manifest";
+import type { ServiceDefinition } from "@atl/tools-manifest";
 import {
   ArrowLeftRight,
   Braces,

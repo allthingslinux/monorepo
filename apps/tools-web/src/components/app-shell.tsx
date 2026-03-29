@@ -21,7 +21,9 @@ export function AppShell({ services }: AppShellProps) {
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const categories = [...new Set(services.map((s) => s.category))] as ServiceCategory[];
+  const categories = [
+    ...new Set(services.map((s) => s.category)),
+  ] as ServiceCategory[];
 
   const allTags = [...new Set(services.flatMap((s) => s.tags))].toSorted();
 

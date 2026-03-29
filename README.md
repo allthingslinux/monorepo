@@ -10,12 +10,12 @@ apps/
 ├── portal         @atl/portal — identity & admin portal (Next.js 16, PostgreSQL)
 ├── chat-web       @atl/chat-web — atl.chat landing page (Next.js 16)
 ├── docs           @atl/docs — product documentation (Mintlify)
-├── tools          @atl/tools — atl.tools directory (Next.js 16, OpenNext / Cloudflare)
+├── tools-web      @atl/tools-web — atl.tools directory (Next.js 16, OpenNext / Cloudflare)
 └── bridge         Discord↔IRC↔XMPP bridge (Python / uv — NOT in pnpm workspace)
 
 packages/
 ├── ui             @atl/ui — shared design system (shadcn/ui + @base-ui/react)
-└── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools
+└── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools-web
 
 services/
 ├── chat/          IRC (UnrealIRCd + Atheme), XMPP (Prosody), web clients
@@ -223,7 +223,7 @@ Workflows in `.github/workflows/`:
 - `portal-migrate.yml` — manual database migration
 - `portal-maintenance.yml` — TODO-to-issue conversion
 - `web-deploy.yml` — OpenNext deploy to Cloudflare Workers (PR previews + prod)
-- `tools-ci.yml` — type-check + lint for apps/tools and packages/tools-manifest
+- `tools-ci.yml` — type-check + lint for apps/tools-web and packages/tools-manifest
 - `tools-deploy.yml` — OpenNext deploy of atl.tools to Cloudflare Workers (prod-only)
 - `chat-ci.yml` — bridge lint / test / coverage, Docker builds for IRC / XMPP / bridge
 - `pubnix-ci.yml` — ansible-lint + molecule tests for atl.sh provisioning

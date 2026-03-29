@@ -4,13 +4,13 @@ name: Tools CI
 on:
   pull_request:
     paths:
-      - "apps/tools/**"
+      - "apps/tools-web/**"
       - "packages/tools-manifest/**"
       - ".github/workflows/tools-ci.yml"
   push:
     branches: [main]
     paths:
-      - "apps/tools/**"
+      - "apps/tools-web/**"
       - "packages/tools-manifest/**"
       - ".github/workflows/tools-ci.yml"
   merge_group:
@@ -49,7 +49,7 @@ jobs:
         run: pnpm --filter @atl/tools-manifest exec tsc --noEmit
 
       - name: Type check tools app
-        run: pnpm --filter @atl/tools exec tsc --noEmit
+        run: pnpm --filter @atl/tools-web exec tsc --noEmit
 
   lint:
     name: Lint
@@ -72,4 +72,4 @@ jobs:
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Lint
-        run: pnpm exec ultracite check apps/tools packages/tools-manifest
+        run: pnpm exec ultracite check apps/tools-web packages/tools-manifest

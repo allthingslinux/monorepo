@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "apps/tools/**"
+      - "apps/tools-web/**"
       - "packages/tools-manifest/**"
       - ".github/workflows/tools-deploy.yml"
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
       url: https://atl.tools
     defaults:
       run:
-        working-directory: apps/tools
+        working-directory: apps/tools-web
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0

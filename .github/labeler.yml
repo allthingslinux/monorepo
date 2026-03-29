@@ -21,7 +21,7 @@ app: docs:
 app: tools:
   - changed-files:
       - any-glob-to-any-file:
-          - apps/tools/**
+          - apps/tools-web/**
           - packages/tools-manifest/**
           - infra/tools/**
           - services/tools/**

@@ -18,7 +18,7 @@
     "apps/portal/references/**",
     "apps/portal/drizzle/**",
     "apps/portal/.cursor/skills/**",
-    "apps/tools/src/components/ui/**",
+    "apps/tools-web/src/components/ui/**",
     "packages/ui/**",
     "apps/web/**",
     "apps/chat-web/**"

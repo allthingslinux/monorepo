@@ -282,15 +282,15 @@ tools-build:
 
 [group('tools')]
 tools-web-dev:
-    pnpm --filter @atl/tools dev
+    pnpm --filter @atl/tools-web dev
 
 [group('tools')]
 tools-web-build:
-    pnpm --filter @atl/tools build
+    pnpm --filter @atl/tools-web build
 
 [group('tools')]
 tools-web-deploy:
-    pnpm --filter @atl/tools run deploy
+    pnpm --filter @atl/tools-web run deploy
 
 # ── CI & Config Validation ────────────────────────────────────────────────────
 [group('ci')]
