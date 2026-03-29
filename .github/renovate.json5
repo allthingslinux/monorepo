@@ -210,9 +210,9 @@
   // Default pattern only matches compose*.y{a,}ml and docker-compose*.y{a,}ml
   // Exclude infra/sh/ (Ansible YAML, not compose)
   "docker-compose": {
-    fileMatch: [
-      "(^|/)infra/(?!sh/).+\\.ya?ml$",
-      "(^|/)infra/[^/]+\\.ya?ml$",
+    managerFilePatterns: [
+      "/infra/(?!sh/).+\\.ya?ml$/",
+      "/infra/[^/]+\\.ya?ml$/",
     ],
   },
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
