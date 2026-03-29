@@ -217,16 +217,17 @@ Portal has its own `.env` at `apps/portal/.env` — see `apps/portal/README.md` 
 
 Workflows in `.github/workflows/`:
 
-- `portal-ci.yml` — lint, type-check, build, test, knip, release
+- `portal-ci.yml` — lint, type-check, build, test, knip, release for @atl/portal
 - `portal-deploy.yml` — Docker build + SSH deploy (staging / production)
 - `portal-rollback.yml` — manual rollback via workflow_dispatch
 - `portal-migrate.yml` — manual database migration
-- `portal-maintenance.yml` — TODO-to-issue conversion
-- `web-deploy.yml` — OpenNext deploy to Cloudflare Workers (PR previews + prod)
-- `tools-ci.yml` — type-check + lint for apps/tools-web and packages/tools-manifest
-- `tools-deploy.yml` — OpenNext deploy of atl.tools to Cloudflare Workers (prod-only)
+- `portal-maintenance.yml` — TODO-to-issue conversion on push to main
+- `web-deploy.yml` — Alchemy / OpenNext deploy to Cloudflare Workers (PR previews + prod)
 - `chat-ci.yml` — bridge lint / test / coverage, Docker builds for IRC / XMPP / bridge
-- `pubnix-ci.yml` — ansible-lint + molecule tests for atl.sh provisioning
+- `chat-web-ci.yml` — lint, typecheck, turbo build for @atl/chat-web
+- `chat-web-deploy.yml` — Alchemy / OpenNext deploy for atl.chat (prod)
+- `tools-ci.yml` / `tools-deploy.yml` — @atl/tools-web + tools-manifest checks and deploy
+- `pubnix-ci.yml` — Ansible lint, Terraform validate, ShellCheck for `infra/sh` (Molecule is local: `just pubnix-molecule-test`)
 - `docs-ci.yml` — Mintlify validate + broken link check
 - `codeql.yml` — CodeQL SAST (JS/TS, Python, Actions)
 - `dependency-review.yml` — PR dependency vulnerability check
@@ -236,6 +237,10 @@ Workflows in `.github/workflows/`:
 - `pr-label.yml` — auto-label PRs by changed paths
 
 Reusable workflows: `reusable-py-check.yml`, `reusable-docker-build.yml`
+
+Composite: `.github/actions/setup-node-pnpm/` (Node + pnpm + frozen install).
+
+**Maintainers:** required checks and merge queue — [.github/REQUIRED_CHECKS.md](.github/REQUIRED_CHECKS.md); workflow metrics — [.github/docs/CI_METRICS.md](.github/docs/CI_METRICS.md); `harden-runner` policy — [.github/HARDEN_RUNNER.md](.github/HARDEN_RUNNER.md).
 
 ## License
 

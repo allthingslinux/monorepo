@@ -44,7 +44,7 @@ Workflows live in `.github/workflows/`. Naming convention: `{app}-{action}.yml` 
 - `chat-web-ci.yml` — lint, typecheck, turbo build for @atl/chat-web
 - `chat-web-deploy.yml` — Alchemy/OpenNext deploy for atl.chat (prod)
 - `tools-ci.yml` / `tools-deploy.yml` — @atl/tools-web + tools-manifest checks and deploy
-- `pubnix-ci.yml` — Ansible lint, Terraform validate, ShellCheck for `infra/sh`
+- `pubnix-ci.yml` — Ansible lint, Terraform validate, ShellCheck for `infra/sh` (Molecule: `just pubnix-molecule-test` locally)
 - `docs-ci.yml` — Mintlify validate + broken link check
 - `codeql.yml` — CodeQL SAST for JS/TS, Python, and Actions workflows
 - `dependency-review.yml` — PR dependency vulnerability check
@@ -61,6 +61,12 @@ Reusable workflows:
 Composite actions:
 
 - `.github/actions/setup-node-pnpm/` — corepack + pnpm + Node + frozen install
+
+CI maintainer docs:
+
+- [.github/REQUIRED_CHECKS.md](.github/REQUIRED_CHECKS.md) — required status checks and merge queue mapping
+- [.github/docs/CI_METRICS.md](.github/docs/CI_METRICS.md) — sampling workflow duration with `gh`
+- [.github/HARDEN_RUNNER.md](.github/HARDEN_RUNNER.md) — `step-security/harden-runner` usage policy
 
 Pre-commit (Husky + lint-staged):
 
