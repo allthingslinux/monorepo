@@ -1,10 +1,25 @@
 name: Chat CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
+    paths:
+      - "services/chat/**"
+      - "apps/bridge/**"
+      - "infra/**"
+      - "compose.yaml"
+      - ".github/workflows/chat-ci.yml"
   pull_request:
     branches: [main]
+    paths:
+      - "services/chat/**"
+      - "apps/bridge/**"
+      - "infra/**"
+      - "compose.yaml"
+      - ".github/workflows/chat-ci.yml"
   merge_group:
     branches: [main]
 
@@ -16,57 +31,45 @@ jobs:
   changes:
     name: File Detection
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      irc: ${{ steps.irc_changes.outputs.any_changed }}
-      xmpp: ${{ steps.xmpp_changes.outputs.any_changed }}
-      bridge: ${{ steps.bridge_changes.outputs.any_changed }}
-      clients: ${{ steps.client_changes.outputs.any_changed }}
-      infra: ${{ steps.infra_changes.outputs.any_changed }}
+      irc: ${{ steps.chat_changes.outputs.irc_any_changed }}
+      xmpp: ${{ steps.chat_changes.outputs.xmpp_any_changed }}
+      bridge: ${{ steps.chat_changes.outputs.bridge_any_changed }}
+      clients: ${{ steps.chat_changes.outputs.clients_any_changed }}
+      infra: ${{ steps.chat_changes.outputs.infra_any_changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-      - name: Check IRC
+      - name: Detect chat-related changes
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: irc_changes
+        id: chat_changes
         with:
-          files: |
-            services/chat/irc-server/**
-            services/chat/irc-services/**
-            services/chat/irc-webpanel/**
-      - name: Check XMPP
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: xmpp_changes
-        with:
-          files: services/chat/xmpp-server/**
-      - name: Check Bridge
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: bridge_changes
-        with:
-          files: apps/bridge/**
-      - name: Check Clients
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: client_changes
-        with:
-          files: |
-            services/chat/irc-client-lounge/**
-            services/chat/irc-client-obsidian/**
-            services/chat/xmpp-client-fluux/**
-      - name: Check Infra
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: infra_changes
-        with:
-          files: |
-            infra/**
-            compose.yaml
-            .github/workflows/chat-ci.yml
+          files_yaml: |
+            irc:
+              - services/chat/irc-server/**
+              - services/chat/irc-services/**
+              - services/chat/irc-webpanel/**
+            xmpp:
+              - services/chat/xmpp-server/**
+            bridge:
+              - apps/bridge/**
+            clients:
+              - services/chat/irc-client-lounge/**
+              - services/chat/irc-client-obsidian/**
+              - services/chat/xmpp-client-fluux/**
+            infra:
+              - infra/**
+              - compose.yaml
+              - .github/workflows/chat-ci.yml
 
   check-bridge:
     needs: changes
-    if: needs.changes.outputs.bridge == 'true'
+    if: needs.changes.outputs.bridge == 'true' || github.event_name == 'merge_group'
     uses: ./.github/workflows/reusable-py-check.yml
     with:
       python-version: "3.12"
@@ -74,7 +77,7 @@ jobs:
 
   test-bridge:
     needs: [changes, check-bridge]
-    if: needs.changes.outputs.bridge == 'true'
+    if: needs.changes.outputs.bridge == 'true' || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -120,11 +123,55 @@ jobs:
         if: always()
         run: uv cache prune --ci
 
+  validate-infra:
+    name: Infra Compose Validation
+    needs: changes
+    if: needs.changes.outputs.infra == 'true' || github.event_name == 'merge_group'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Validate compose configuration
+        run: docker compose config -q
+
+  validate-clients:
+    name: Client Assets Check
+    needs: changes
+    if: needs.changes.outputs.clients == 'true' || github.event_name == 'merge_group'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Verify client directories exist
+        run: |
+          set -euo pipefail
+          for d in services/chat/irc-client-lounge services/chat/irc-client-obsidian services/chat/xmpp-client-fluux; do
+            if [ ! -d "$d" ]; then
+              echo "missing directory: $d"
+              exit 1
+            fi
+          done
+
   docker-irc:
     needs: changes
     if: needs.changes.outputs.irc == 'true'
     uses: ./.github/workflows/reusable-docker-build.yml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       context: services/chat/irc-server
       image-name: ghcr.io/allthingslinux/irc-server
@@ -134,7 +181,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.irc == 'true'
     uses: ./.github/workflows/reusable-docker-build.yml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       context: services/chat/irc-services
       image-name: ghcr.io/allthingslinux/irc-services
@@ -144,7 +192,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.xmpp == 'true'
     uses: ./.github/workflows/reusable-docker-build.yml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       context: services/chat/xmpp-server
       image-name: ghcr.io/allthingslinux/xmpp-server
@@ -154,7 +203,8 @@ jobs:
     needs: [changes, test-bridge]
     if: needs.changes.outputs.bridge == 'true'
     uses: ./.github/workflows/reusable-docker-build.yml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       context: apps/bridge
       image-name: ghcr.io/allthingslinux/bridge
