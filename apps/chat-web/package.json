@@ -2,13 +2,21 @@
   "name": "@atl/chat-web",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
+  "exports": {
+    "./alchemy": "./alchemy.run.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "alchemy deploy --app chat-web",
+    "destroy": "alchemy destroy --app chat-web"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "catalog:",
     "@radix-ui/react-slot": "catalog:",
+    "alchemy": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "lucide-react": "catalog:",
@@ -18,11 +26,13 @@
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260317.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   }
 }
