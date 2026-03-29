@@ -1,0 +1,22 @@
+# =============================================================================
+# hckrnws — A cleaner reading experience for HackerNews
+# https://github.com/rajatkulkarni95/hckrnws
+# =============================================================================
+
+services:
+  atl-tools-hckrnws:
+    build:
+      context: ../../services/tools/hckrnws
+      dockerfile: Containerfile
+    container_name: atl-tools-hckrnws
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${HCKRNWS_PORT:-3000}:3000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    networks:
+      - atl-tools

@@ -1,0 +1,28 @@
+# =============================================================================
+# PrivateBin — Zero-knowledge pastebin
+# https://github.com/PrivateBin/PrivateBin
+# =============================================================================
+
+services:
+  atl-tools-privatebin:
+    image: privatebin/nginx-fpm-alpine:stable
+    container_name: atl-tools-privatebin
+    restart: unless-stopped
+    read_only: true
+    user: "65534:82"
+    environment:
+      - TZ=UTC
+      - PHP_TZ=UTC
+    volumes:
+      - ../../services/tools/privatebin/conf.php:/srv/cfg/conf.php:ro
+      - ../../services/tools/privatebin/data:/srv/data
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${PRIVATEBIN_PORT:-8080}:8080"
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    networks:
+      - atl-tools

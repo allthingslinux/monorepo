@@ -22,6 +22,14 @@ include:
   - infra/chat/chat-fluux.yaml
   - infra/network/network.yaml
   - infra/observability/observability.yaml
+  - infra/tools/tools-privatebin.yaml
+  - infra/tools/tools-cyberchef.yaml
+  - infra/tools/tools-convertx.yaml
+  - infra/tools/tools-searxng.yaml
+  - infra/tools/tools-it-tools.yaml
+  - infra/tools/tools-jsoncrack.yaml
+  - infra/tools/tools-stirling-pdf.yaml
+  - infra/tools/tools-hckrnws.yaml
 
 services:
   dozzle:

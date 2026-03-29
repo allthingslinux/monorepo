@@ -1,0 +1,22 @@
+# =============================================================================
+# JSON Crack — Visualize JSON into interactive graphs
+# https://github.com/AykutSarac/jsoncrack.com
+# =============================================================================
+
+services:
+  atl-tools-jsoncrack:
+    build:
+      context: ../../services/tools/jsoncrack
+      dockerfile: Containerfile
+    container_name: atl-tools-jsoncrack
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${JSONCRACK_PORT:-8890}:8080"
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    networks:
+      - atl-tools

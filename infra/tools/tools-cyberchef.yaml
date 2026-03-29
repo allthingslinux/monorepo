@@ -1,0 +1,20 @@
+# =============================================================================
+# CyberChef — The Cyber Swiss Army Knife
+# https://github.com/gchq/CyberChef
+# =============================================================================
+
+services:
+  atl-tools-cyberchef:
+    image: ghcr.io/gchq/cyberchef:10.22.1
+    container_name: atl-tools-cyberchef
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${CYBERCHEF_PORT:-1337}:80"
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    networks:
+      - atl-tools

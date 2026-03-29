@@ -1,0 +1,34 @@
+{
+  "name": "@atl/tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "deploy": "opennextjs-cloudflare build && tsx alchemy.run.ts --stage prod",
+    "destroy": "tsx alchemy.run.ts --destroy --stage prod",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@atl/tools-manifest": "workspace:*",
+    "@opennextjs/cloudflare": "latest",
+    "alchemy": "latest",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "tsx": "^4",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
+  }
+}

@@ -252,6 +252,46 @@ docs-build:
 docs-check-links:
     pnpm --filter @atl/docs run lint:links
 
+# ── Tools (atl.tools — self-hosted service directory) ────────────────────────
+
+tools_compose := "-f compose.yaml --env-file .env --env-file .env.dev"
+
+[group('tools')]
+tools-dev:
+    docker compose {{ tools_compose }} up -d atl-tools-privatebin atl-tools-cyberchef atl-tools-convertx atl-tools-searxng atl-tools-it-tools atl-tools-jsoncrack atl-tools-stirling-pdf atl-tools-hckrnws
+
+[group('tools')]
+tools-up service:
+    docker compose {{ tools_compose }} up -d {{ service }}
+
+[group('tools')]
+tools-down:
+    docker compose {{ tools_compose }} stop atl-tools-privatebin atl-tools-cyberchef atl-tools-convertx atl-tools-searxng atl-tools-it-tools atl-tools-jsoncrack atl-tools-stirling-pdf atl-tools-hckrnws
+
+[group('tools')]
+tools-logs service="":
+    docker compose {{ tools_compose }} logs -f {{ service }}
+
+[group('tools')]
+tools-status:
+    docker compose {{ tools_compose }} ps atl-tools-privatebin atl-tools-cyberchef atl-tools-convertx atl-tools-searxng atl-tools-it-tools atl-tools-jsoncrack atl-tools-stirling-pdf atl-tools-hckrnws
+
+[group('tools')]
+tools-build:
+    docker compose {{ tools_compose }} build atl-tools-jsoncrack atl-tools-hckrnws
+
+[group('tools')]
+tools-web-dev:
+    pnpm --filter @atl/tools dev
+
+[group('tools')]
+tools-web-build:
+    pnpm --filter @atl/tools build
+
+[group('tools')]
+tools-web-deploy:
+    pnpm --filter @atl/tools run deploy
+
 # ── CI & Config Validation ────────────────────────────────────────────────────
 [group('ci')]
 renovate-validate:
