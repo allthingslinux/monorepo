@@ -41,6 +41,10 @@ Workflows live in `.github/workflows/`. Naming convention: `{app}-{action}.yml` 
 - `portal-maintenance.yml` — TODO-to-issue conversion on push to main
 - `web-deploy.yml` — Alchemy/OpenNext deploy to Cloudflare Workers (PR previews + prod)
 - `chat-ci.yml` — bridge lint/test/coverage, Docker builds for IRC/XMPP/bridge images
+- `chat-web-ci.yml` — lint, typecheck, turbo build for @atl/chat-web
+- `chat-web-deploy.yml` — Alchemy/OpenNext deploy for atl.chat (prod)
+- `tools-ci.yml` / `tools-deploy.yml` — @atl/tools-web + tools-manifest checks and deploy
+- `pubnix-ci.yml` — Ansible lint, Terraform validate, ShellCheck for `infra/sh`
 - `docs-ci.yml` — Mintlify validate + broken link check
 - `codeql.yml` — CodeQL SAST for JS/TS, Python, and Actions workflows
 - `dependency-review.yml` — PR dependency vulnerability check
