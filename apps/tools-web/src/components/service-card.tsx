@@ -6,6 +6,7 @@ import {
   ClipboardPaste,
   FileText,
   FlaskConical,
+  Newspaper,
   Search,
   Terminal,
 } from "lucide-react";
@@ -19,6 +20,7 @@ const iconMap: Record<
   ClipboardPaste,
   FileText,
   FlaskConical,
+  Newspaper,
   Search,
   Terminal,
 };

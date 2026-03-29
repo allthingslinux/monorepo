@@ -39,7 +39,3 @@ services:
         compress: "true"
     networks:
       - atl-tools
-
-networks:
-  atl-tools:
-    external: true
