@@ -13,14 +13,11 @@ git clone https://github.com/allthingslinux/allthingslinux.git
 cd allthingslinux
 pnpm install
 
-# Setup Cloudflare bindings (R2, KV) - IMPORTANT: Update wrangler.jsonc with KV ID from output
-pnpm run setup:bindings
-
 # Start development
-pnpm run dev:all
+pnpm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) for Next.js dev, or [http://localhost:8788](http://localhost:8788) for Cloudflare Workers simulation.
+Open [http://localhost:3000](http://localhost:3000) for Next.js dev.
 
 ## 📋 Tech Stack
 
@@ -29,7 +26,7 @@ Open [http://localhost:3000](http://localhost:3000) for Next.js dev, or [http://
 - **Content:** Contentlayer (MDX blogs)
 - **Deployment:** [Alchemy](https://alchemy.run) (TypeScript IaC) + OpenNext on Cloudflare Workers
   - Stages map to workers in `alchemy.run.ts` (`prod`, `dev`, `pr-<number>`, local defaults)
-  - OpenNext build is invoked by Alchemy (`opennextjs-cloudflare build`); committed `wrangler.jsonc` stays for `wrangler dev` / reference
+  - Alchemy handles the full pipeline: OpenNext build, worker upload, domain binding, wrangler.jsonc generation
 - **Background Jobs:** Trigger.dev
 - **Package Manager:** pnpm
 
@@ -56,8 +53,6 @@ pnpm install
 ```bash
 # Create R2 buckets and KV namespaces
 pnpm run setup:bindings
-
-# IMPORTANT: Update wrangler.jsonc with the KV namespace ID shown in the script output
 ```
 
 ### 3. Configure Secrets
@@ -83,13 +78,12 @@ pnpm run secrets:prod  # Upload production secrets to prod worker
 ### 4. Start Development
 
 ```bash
-pnpm run dev:all  # Next.js + Wrangler + Trigger.dev
+pnpm run dev  # Next.js dev server
 ```
 
 **URLs:**
 
 - **Next.js Dev:** [http://localhost:3000](http://localhost:3000) (with HMR)
-- **Workers Sim:** [http://localhost:8788](http://localhost:8788) (Cloudflare environment)
 
 ## 🚀 Deployment
 
@@ -113,7 +107,7 @@ pnpm run dev:all  # Next.js + Wrangler + Trigger.dev
 
 See [`docs/integrations/quickbooks.md`](docs/integrations/quickbooks.md) for detailed QuickBooks integration setup.
 
-**Architecture:** Separate Cloudflare Workers per stage; bindings are declared in `alchemy.run.ts` and aligned with `wrangler.jsonc`. CI uses [`web-deploy.yml`](../../.github/workflows/web-deploy.yml).
+**Architecture:** Separate Cloudflare Workers per stage; bindings are declared in `alchemy.run.ts`. CI uses [`web-deploy.yml`](../../.github/workflows/web-deploy.yml).
 
 ### Alchemy (local)
 
@@ -140,23 +134,17 @@ CI uses the same Alchemy flow in [`web-deploy.yml`](../../.github/workflows/web-
 ### Build process
 
 ```bash
-# OpenNext bundle for Cloudflare (after Next build when needed)
-pnpm run build:all
-
 # Next.js build only
 pnpm run build
 
-# Unminified OpenNext build (profiling / debugging)
-pnpm run build:opennext:profile
-
-# Then test locally with the worker dev server
-pnpm run wrangler
+# Deploy (Alchemy handles OpenNext build internally)
+pnpm run deploy
 ```
 
 ```bash
 # Development commands
-pnpm run dev:all       # Start all services
-pnpm run trigger       # Start Trigger.dev CLI
+pnpm run dev            # Start Next.js dev server
+pnpm run trigger        # Start Trigger.dev CLI
 ```
 
 ## 📁 Project Structure
@@ -197,7 +185,7 @@ pnpm run secrets:prod   # Upload secrets to prod worker
 - **GitHub Environments** are the recommended way for CI/CD (secrets isolated per environment)
 - **Secrets are encrypted** and managed via `wrangler secret put` or GitHub Environments
 - **Use `.dev.vars`** only for non-sensitive local config
-- **Environment variables** are defined in `wrangler.jsonc` per environment
+- **Environment variables** are defined in `alchemy.run.ts` per stage
 - **Environment isolation**: Separate workers for dev/prod with isolated secrets
 
 ## 📁 Project Structure
@@ -214,40 +202,35 @@ pnpm run secrets:prod   # Upload secrets to prod worker
 ├── content/             # MDX blog content
 ├── public/              # Static assets
 ├── scripts/             # Build & utility scripts
-└── wrangler.jsonc       # Cloudflare Workers config
+├── types/               # Cloudflare binding types (alchemy-generated)
+└── alchemy.run.ts       # Alchemy infrastructure definition
 ```
 
 ## 🛠️ Development Scripts
 
 ```bash
 # Development
-pnpm run dev:all        # Full stack (Next.js + Wrangler + Trigger)
 pnpm run dev            # Next.js development server
 pnpm run dev:turbo      # Next.js with TurboPack (faster)
-pnpm run wrangler       # Cloudflare Workers dev server
 pnpm run trigger        # Trigger.dev background jobs
 
 # Building
-pnpm run build:all             # OpenNext Cloudflare bundle (alias for build:opennext)
-pnpm run build                 # Next.js build only
-pnpm run build:opennext        # Cloudflare OpenNext build
-pnpm run build:opennext:profile # Unminified OpenNext (profiling)
+pnpm run build          # Next.js build
 
 # Quality
-pnpm run type-check     # contentlayer + TypeScript (from repo root: pnpm --filter @atl/web type-check)
-pnpm run check          # type-check + Ultracite (oxlint + oxfmt) for this app
+pnpm run type-check     # contentlayer + TypeScript
+pnpm run check          # type-check + Ultracite (oxlint + oxfmt)
 
 # Deployment (Alchemy)
 pnpm run deploy         # alchemy deploy --app web
 pnpm run destroy        # alchemy destroy --app web
 
 # Secrets
-pnpm run secrets:dev    # Upload dev secrets to dev worker (repo .github/scripts/web/secrets.sh)
-pnpm run secrets:prod   # Upload prod secrets to prod worker (repo .github/scripts/web/secrets.sh)
+pnpm run secrets:dev    # Upload dev secrets to dev worker
+pnpm run secrets:prod   # Upload prod secrets to prod worker
 
 # Infrastructure
 pnpm run setup:bindings # Setup Cloudflare bindings (R2, KV)
-pnpm run cf:typegen     # Generate Cloudflare types
 pnpm run analyze:bundle # Bundle size analysis guidance
 pnpm run coc:generate   # Generate Code of Conduct
 ```
@@ -299,12 +282,6 @@ pnpm run trigger
 For performance analysis and debugging:
 
 ```bash
-# Build with profiling (unminified code for easier debugging)
-pnpm run build:opennext:profile
-
-# Run worker locally after build:opennext
-pnpm run wrangler
-
 # Analyze bundle size after building
 pnpm run analyze:bundle
 # After running, check .open-next/server-functions/default/handler.mjs.meta.json
