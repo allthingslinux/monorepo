@@ -10,12 +10,6 @@ This document explains all available pnpm scripts in the project.
 - `pnpm run dev:turbo`
   Starts Next.js development server using TurboPack (experimental faster Rust-based engine).
 
-- `pnpm run dev:all`
-  Runs full-stack development: Next.js + Cloudflare Workers simulator + Trigger.dev background jobs.
-
-- `pnpm run wrangler`
-  Starts Cloudflare Workers development server with local environment simulation at `http://localhost:8788`.
-
 - `pnpm run trigger`
   Starts Trigger.dev development server for background job management.
 
@@ -24,23 +18,12 @@ This document explains all available pnpm scripts in the project.
 - `pnpm run build`
   Compiles Next.js application for production.
 
-- `pnpm run build:all`
-  Alias for `build:opennext` (OpenNext Cloudflare worker bundle). Use after `pnpm run build` when you need the full pipeline locally.
-
-- `pnpm run build:opennext`
-  Compiles the application using OpenNext.js Cloudflare adapter for Cloudflare Workers deployment.
-
-- `pnpm run build:opennext:profile`
-  Compiles with --noMinify flag for performance profiling and debugging (unminified code).
-
-## Local Cloudflare testing
-
-After `pnpm run build:opennext`, use `pnpm run wrangler` to run the worker locally (`wrangler dev --env local`). There is no separate `preview` script; CI deploys with Alchemy (`web-deploy` workflow).
-
 ## Deployment
 
+Alchemy handles the full deploy pipeline: OpenNext build, worker upload, domain binding, and wrangler.jsonc generation.
+
 - `pnpm run deploy`
-  Runs `alchemy deploy --app web` from `apps/web`. Use `--stage dev` or `--stage prod` when you need shared workers; default stage is your POSIX username.
+  Runs `alchemy deploy --app web`. Default stage is your POSIX username; use `--stage dev` or `--stage prod` for shared workers.
 
 - `pnpm run destroy`
   Runs `alchemy destroy --app web` (tear down Alchemy-managed resources for this app).
@@ -50,10 +33,10 @@ After `pnpm run build:opennext`, use `pnpm run wrangler` to run the worker local
 ## Secrets Management
 
 - `pnpm run secrets:dev`
-  Uploads secrets from `.env.secrets.dev` to the development Cloudflare Worker (uses `../../.github/scripts/web/secrets.sh` from `apps/web`).
+  Uploads secrets to the development Cloudflare Worker.
 
 - `pnpm run secrets:prod`
-  Uploads secrets from `.env.secrets.prod` to the production Cloudflare Worker (uses `../../.github/scripts/web/secrets.sh` from `apps/web`).
+  Uploads secrets to the production Cloudflare Worker.
 
 ## Code Quality
 
@@ -61,7 +44,7 @@ After `pnpm run build:opennext`, use `pnpm run wrangler` to run the worker local
   Runs `contentlayer2 build` then `tsc --noEmit` (generated types + MDX pipeline).
 
 - `pnpm run check`
-  Runs `type-check` then `ultracite check` (Oxlint + Oxfmt). Repo root `pnpm check` / `pnpm fix` only run Ultracite across the monorepo.
+  Runs `type-check` then `ultracite check` (Oxlint + Oxfmt).
 
 - `pnpm run fix`
   Runs `ultracite fix` for this package context.
@@ -69,16 +52,13 @@ After `pnpm run build:opennext`, use `pnpm run wrangler` to run the worker local
 ## Infrastructure
 
 - `pnpm run setup:bindings`
-  Sets up Cloudflare bindings (R2 buckets, KV namespaces). IMPORTANT: Update wrangler.jsonc with the KV ID from the script output.
-
-- `pnpm run cf:typegen`
-  Generates TypeScript types for Cloudflare Workers bindings and environment variables.
+  Sets up Cloudflare bindings (R2 buckets, KV namespaces).
 
 - `pnpm run test`
-  Runs the test suite using Vitest with Cloudflare Workers testing capabilities.
+  Runs the test suite using Vitest.
 
 - `pnpm run analyze:bundle`
-  Provides guidance for bundle size analysis using ESBuild Bundle Analyzer on the built worker code.
+  Provides guidance for bundle size analysis using ESBuild Bundle Analyzer.
 
 - `pnpm run coc:generate`
   Generates the Code of Conduct markdown file from TOML configuration.
