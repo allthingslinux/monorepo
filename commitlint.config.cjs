@@ -23,6 +23,7 @@ module.exports = {
         "web",
         "portal",
         "chat",
+        "bridge",
         "docs",
         "ui",
         // Infrastructure & ops
