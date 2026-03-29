@@ -24,6 +24,7 @@ module.exports = {
         "portal",
         "chat",
         "bridge",
+        "tools",
         "docs",
         "ui",
         // Infrastructure & ops
