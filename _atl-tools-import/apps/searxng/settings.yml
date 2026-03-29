@@ -1,0 +1,118 @@
+# =============================================================================
+# SearXNG settings — atl.tools
+# Uses use_default_settings to inherit all defaults from upstream.
+# Only overrides are listed here.
+# https://docs.searxng.org/admin/settings/settings.html#use-default-settings
+# =============================================================================
+
+use_default_settings: true
+
+brand:
+  custom:
+    links:
+      atl.tools: https://atl.tools
+
+general:
+  instance_name: "search.atl.tools"
+  privacypolicy_url: false
+  donation_url: false
+  contact_url: false
+  enable_metrics: true
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "auto"
+  formats:
+    - html
+
+server:
+  base_url: false # overridden by SEARXNG_BASE_URL env
+  secret_key: "override-me" # overridden by SEARXNG_SECRET env
+  limiter: false
+  public_instance: false
+  image_proxy: true
+  method: "POST"
+  default_http_headers:
+    X-Content-Type-Options: nosniff
+    X-Download-Options: noopen
+    X-Robots-Tag: noindex, nofollow
+    Referrer-Policy: no-referrer
+
+valkey:
+  url: valkey://valkey:6379/0
+
+ui:
+  query_in_title: false
+  default_theme: simple
+  theme_args:
+    simple_style: dark
+  search_on_category_select: true
+  hotkeys: default
+  url_formatting: pretty
+
+outgoing:
+  request_timeout: 2.0
+  max_request_timeout: 10.0
+  pool_connections: 100
+  pool_maxsize: 20
+  keepalive_expiry: 5.0
+  enable_http2: true
+
+plugins:
+  searx.plugins.calculator.SXNGPlugin:
+    active: true
+  searx.plugins.hash_plugin.SXNGPlugin:
+    active: true
+  searx.plugins.self_info.SXNGPlugin:
+    active: true
+  searx.plugins.unit_converter.SXNGPlugin:
+    active: true
+  searx.plugins.ahmia_filter.SXNGPlugin:
+    active: true
+  searx.plugins.hostnames.SXNGPlugin:
+    active: true
+  searx.plugins.tracker_url_remover.SXNGPlugin:
+    active: true
+
+engines:
+  # enable engines that are disabled by default
+  - name: arch linux wiki
+    disabled: false
+  - name: nixos wiki
+    engine: mediawiki
+    shortcut: nixw
+    base_url: https://wiki.nixos.org/
+    search_type: text
+    disabled: false
+    categories: [it, software wikis]
+  - name: github
+    disabled: false
+  - name: codeberg
+    disabled: false
+  - name: docker hub
+    disabled: false
+  - name: hackernews
+    disabled: false
+  - name: crates.io
+    disabled: false
+  - name: npm
+    disabled: false
+  - name: stackoverflow
+    disabled: false
+  - name: lib.rs
+    disabled: false
+  - name: sourcehut
+    disabled: false
+  - name: google scholar
+    disabled: false
+  - name: wolframalpha
+    disabled: false
+
+  # disable engines we don't want
+  - name: 9gag
+    disabled: true
+  - name: bitchute
+    disabled: true
+  - name: reddit
+    disabled: true

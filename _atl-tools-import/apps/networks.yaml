@@ -1,0 +1,11 @@
+# =============================================================================
+# Shared Docker Network
+# =============================================================================
+# Single network for all ATL Tools services.
+# Included by root compose.yaml and apps/*/compose.yaml
+# =============================================================================
+
+networks:
+  atl-tools:
+    name: atl-tools
+    driver: bridge

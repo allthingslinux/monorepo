@@ -1,0 +1,17 @@
+# =============================================================================
+# CyberChef — The Cyber Swiss Army Knife
+# https://github.com/gchq/CyberChef
+# =============================================================================
+
+services:
+  cyberchef:
+    image: ghcr.io/gchq/cyberchef:10.22.1
+    container_name: atl-cyberchef
+    restart: unless-stopped
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:${CYBERCHEF_PORT:-1337}:80"
+    networks:
+      - atl-tools
+
+include:
+  - ../networks.yaml

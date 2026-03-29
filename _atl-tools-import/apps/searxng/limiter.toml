@@ -1,0 +1,19 @@
+# SearXNG rate limiter configuration
+# https://docs.searxng.org/admin/searx.limiter.html
+
+[botdetection]
+ipv4_prefix = 32
+ipv6_prefix = 48
+trusted_proxies = [
+  '127.0.0.0/8',
+  '::1',
+  '172.16.0.0/12',
+  '10.0.0.0/8',
+  'fd00::/8',
+]
+
+[botdetection.ip_limit]
+link_token = true
+
+[botdetection.ip_lists]
+pass_searxng_org = true

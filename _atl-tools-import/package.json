@@ -1,0 +1,29 @@
+{
+  "name": "atl.tools",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "deploy": "pnpm --filter @atl.tools/web run deploy",
+    "deploy:prod": "pnpm --filter @atl.tools/web run deploy:prod",
+    "destroy": "pnpm --filter @atl.tools/web run destroy",
+    "destroy:prod": "pnpm --filter @atl.tools/web run destroy:prod"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.0",
+    "turbo": "^2.5.4",
+    "ultracite": "7.2.4"
+  }
+}
