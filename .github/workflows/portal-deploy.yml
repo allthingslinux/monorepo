@@ -1,5 +1,8 @@
 name: Portal Deploy
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
@@ -13,6 +16,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "apps/portal/**"
+      - "packages/ui/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "turbo.json"
+      - ".github/workflows/portal-deploy.yml"
+      - ".github/scripts/portal/**"
+      - "apps/portal/Containerfile"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
