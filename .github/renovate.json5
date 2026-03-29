@@ -208,11 +208,13 @@
   ignorePaths: ["**/.cursor/skills/**"],
   // Extend docker-compose file matching to include compose fragments under infra/
   // Default pattern only matches compose*.y{a,}ml and docker-compose*.y{a,}ml
-  // Exclude infra/sh/ (Ansible YAML, not compose)
+  // Exclude infra/sh/ (Ansible YAML, not compose) — RE2 has no lookaheads, so list dirs explicitly
   "docker-compose": {
     managerFilePatterns: [
-      "/infra/(?!sh/).+\\.ya?ml$/",
-      "/infra/[^/]+\\.ya?ml$/",
+      "/^infra/chat/.+\\.ya?ml$/",
+      "/^infra/network/.+\\.ya?ml$/",
+      "/^infra/observability/.+\\.ya?ml$/",
+      "/^infra/[^/]+\\.ya?ml$/",
     ],
   },
   // Use platform-native automerge (GitHub/GitLab built-in automerge)
