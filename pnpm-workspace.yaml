@@ -23,7 +23,7 @@ catalog:
   "tailwind-merge": "^3.4.1"
   "tailwindcss-animate": "^1.0.7"
   "@radix-ui/react-slot": "^1.1.0"
-  "@cloudflare/next-on-pages": "^1.13.5"
+  "alchemy": "^0.90.0"
   "@opennextjs/cloudflare": "latest"
   "wrangler": "^4.69.0"
 
