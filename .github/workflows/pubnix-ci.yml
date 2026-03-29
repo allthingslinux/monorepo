@@ -1,5 +1,8 @@
 name: Pubnix CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -11,6 +14,8 @@ on:
     paths:
       - "infra/sh/**"
       - ".github/workflows/pubnix-ci.yml"
+  merge_group:
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,7 +30,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: astral-sh/setup-uv@6b9c6063abd6010835c3c7f4a7d0c4e2f17d8b9a # v5
+      - uses: astral-sh/setup-uv@6b9c6063abd6010835c3544eaaeab6a6af3f3f0d # v5
         with:
           enable-cache: true
       - run: uv sync
