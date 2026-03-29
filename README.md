@@ -25,9 +25,18 @@ infra/
 ├── network/       Docker Compose fragments (network.yaml)
 ├── observability/ Docker Compose fragments (observability.yaml)
 ├── nginx/         Nginx reverse proxy config (Prosody HTTPS)
-└── sh/            atl.sh pubnix provisioning (Ansible, Terraform, skel, Vagrant)
+├── sh/            atl.sh pubnix provisioning (Ansible, Terraform, skel, Vagrant)
+├── cert-manager.yaml  TLS certificate management (included by root compose.yaml)
+└── networks.yaml      Shared Docker network definitions (included by root compose.yaml)
 
 scripts/           Shell scripts (init.sh — data dirs + dev certs)
+
+tests/
+├── unit/          Bridge unit tests
+├── integration/   Bridge integration tests
+├── e2e/           End-to-end tests
+├── protocol/      Protocol-level tests
+└── ...            fixtures/, controllers/, irc_utils/, utils/, legacy/
 ```
 
 `apps/` = software we build and own (polyglot: Next.js + Python).
@@ -62,47 +71,70 @@ Run `just` to see all available recipes grouped by domain.
 
 ### Workspace
 
-| Command          | Purpose                                    |
-| ---------------- | ------------------------------------------ |
-| `just setup`     | Full bootstrap (JS + Python + env + certs) |
-| `just dev`       | Start all JS apps via Turborepo            |
-| `just build`     | Production build (Turbo graph)             |
-| `just check`     | Lint + format check (Ultracite)            |
-| `just fix`       | Lint + format fix (Ultracite)              |
-| `just typecheck` | TypeScript validation across all packages  |
-| `just test`      | Run all tests via Turborepo                |
-| `just clean`     | Remove build artifacts                     |
+| Command                  | Purpose                                    |
+| ------------------------ | ------------------------------------------ |
+| `just setup`             | Full bootstrap (JS + Python + env + certs) |
+| `just install`           | `pnpm install`                             |
+| `just install-frozen`    | `pnpm install --frozen-lockfile`           |
+| `just dev`               | Start all JS apps via Turborepo            |
+| `just build`             | Production build (Turbo graph)             |
+| `just check`             | Lint + format check (Ultracite)            |
+| `just fix`               | Lint + format fix (Ultracite)              |
+| `just typecheck`         | TypeScript validation across all packages  |
+| `just test`              | Run all tests via Turborepo                |
+| `just test-coverage`     | Run tests with coverage                    |
+| `just clean`             | Remove build artifacts                     |
+| `just renovate-validate` | Validate Renovate config                   |
+| `just docker-clean`      | Prune unused Docker images and volumes     |
 
 ### Apps
 
-| Command                 | Purpose                   |
-| ----------------------- | ------------------------- |
-| `just portal-dev`       | Portal dev server         |
-| `just portal-db-up`     | Start PostgreSQL (Docker) |
-| `just portal-db-push`   | Push schema to dev DB     |
-| `just portal-db-studio` | Open Drizzle Studio       |
-| `just web-dev`          | Marketing site dev server |
-| `just chat-web-dev`     | atl.chat dev server       |
-| `just docs-dev`         | Mintlify docs preview     |
+| Command                   | Purpose                          |
+| ------------------------- | -------------------------------- |
+| `just web-dev`            | Marketing site dev server        |
+| `just web-build`          | Build marketing site             |
+| `just web-deploy`         | Deploy to Cloudflare Workers     |
+| `just chat-web-dev`       | atl.chat dev server              |
+| `just chat-web-build`     | Build atl.chat site              |
+| `just portal-dev`         | Portal dev server                |
+| `just portal-build`       | Build portal                     |
+| `just portal-start`       | Start portal (production mode)   |
+| `just portal-db-up`       | Start PostgreSQL (Docker)        |
+| `just portal-db-down`     | Stop PostgreSQL                  |
+| `just portal-db-generate` | Generate Drizzle migration files |
+| `just portal-db-migrate`  | Run pending migrations           |
+| `just portal-db-push`     | Push schema to dev DB            |
+| `just portal-db-seed`     | Seed the database                |
+| `just portal-db-studio`   | Open Drizzle Studio              |
+| `just docs-dev`           | Mintlify docs preview            |
+| `just docs-build`         | Build docs                       |
+| `just docs-check-links`   | Check for broken links           |
 
 ### Chat services (Docker)
 
-| Command            | Purpose                               |
-| ------------------ | ------------------------------------- |
-| `just chat-dev`    | Start all chat services (dev profile) |
-| `just chat-down`   | Stop chat services                    |
-| `just chat-logs`   | Tail logs (optionally filter by name) |
-| `just chat-status` | Show running containers               |
-| `just chat-build`  | Build all service images              |
+| Command               | Purpose                                      |
+| --------------------- | -------------------------------------------- |
+| `just chat-init`      | Initialize chat data directories and config  |
+| `just chat-dev`       | Start all chat services (dev profile)        |
+| `just chat-prod`      | Start all chat services (production profile) |
+| `just chat-down`      | Stop chat services (dev)                     |
+| `just chat-down-prod` | Stop chat services (production)              |
+| `just chat-logs`      | Tail logs (optionally filter by name)        |
+| `just chat-status`    | Show running containers                      |
+| `just chat-build`     | Build all service images                     |
+| `just prosody-token`  | Generate a Prosody API token                 |
+| `just gencloak`       | Generate IRC cloaking key                    |
 
 ### Bridge (Python)
 
-| Command                 | Purpose                  |
-| ----------------------- | ------------------------ |
-| `just bridge-check`     | Ruff lint + format check |
-| `just bridge-fix`       | Ruff lint fix + format   |
-| `just bridge-typecheck` | basedpyright type check  |
-| `just bridge-test`      | pytest suite             |
+| Command                 | Purpose                    |
+| ----------------------- | -------------------------- |
+| `just bridge-install`   | `uv sync --all-extras`     |
+| `just bridge-check`     | Ruff lint + format check   |
+| `just bridge-fix`       | Ruff lint fix + format     |
+| `just bridge-typecheck` | basedpyright type check    |
+| `just bridge-test`      | pytest suite               |
+| `just bridge-logs`      | Tail bridge container logs |
 
 ### Pubnix (atl.sh)
 
@@ -129,6 +161,15 @@ Three env file layers at the repo root:
 | `.env.prod` | Production overrides                    |
 
 Docker Compose always requires `--env-file .env --env-file .env.dev` (or `.env.prod`). The `just` recipes handle this automatically.
+
+Two Compose override files handle environment-specific service config:
+
+| File                         | Purpose                                        |
+| ---------------------------- | ---------------------------------------------- |
+| `compose.dev-override.yaml`  | Dev overrides (bind mounts, debug ports, etc.) |
+| `compose.prod-override.yaml` | Production overrides (restart policies, etc.)  |
+
+`just chat-dev` uses `compose.yaml` + `compose.dev-override.yaml`. `just chat-prod` uses `compose.yaml` + `compose.prod-override.yaml`.
 
 Portal has its own `.env` at `apps/portal/.env` — see `apps/portal/README.md` for details.
 
@@ -165,6 +206,7 @@ Workflows in `.github/workflows/`:
 - `portal-maintenance.yml` — TODO-to-issue conversion
 - `web-deploy.yml` — OpenNext deploy to Cloudflare Workers (PR previews + prod)
 - `chat-ci.yml` — bridge lint / test / coverage, Docker builds for IRC / XMPP / bridge
+- `pubnix-ci.yml` — ansible-lint + molecule tests for atl.sh provisioning
 - `docs-ci.yml` — Mintlify validate + broken link check
 - `codeql.yml` — CodeQL SAST (JS/TS, Python, Actions)
 - `dependency-review.yml` — PR dependency vulnerability check
