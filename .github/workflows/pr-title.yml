@@ -1,5 +1,9 @@
 name: PR Title Validation
 
+permissions:
+  pull-requests: read
+  statuses: write
+
 on:
   pull_request_target:
     types: [opened, reopened, edited, synchronize]
@@ -13,9 +17,6 @@ jobs:
     name: Validate PR Title
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      pull-requests: read
-      statuses: write
     steps:
       - name: Validate PR title
         uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
