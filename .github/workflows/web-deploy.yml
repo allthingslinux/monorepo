@@ -56,9 +56,6 @@ jobs:
             apps/web/prettier.config.mjs
             apps/web/components.json
             apps/web/src/env.ts
-            apps/web/cloudflare-env.d.ts
-            apps/web/worker-configuration.d.ts
-            apps/web/wrangler.jsonc
             apps/web/alchemy.run.ts
             apps/web/trigger.config.ts
             apps/web/src/trigger/**
