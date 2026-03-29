@@ -30,6 +30,7 @@ include:
   - infra/tools/tools-jsoncrack.yaml
   - infra/tools/tools-stirling-pdf.yaml
   - infra/tools/tools-hckrnws.yaml
+  - infra/tools/tools-alloy-agent.yaml
 
 services:
   dozzle:

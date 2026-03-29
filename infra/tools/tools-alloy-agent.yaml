@@ -1,0 +1,45 @@
+# =============================================================================
+# Grafana Alloy Agent — atl.tools VPS
+# Collects host/container metrics and Docker logs, forwards to central stack.
+# Config: services/observability/alloy-agent/config.alloy
+# =============================================================================
+
+services:
+  atl-tools-alloy-agent:
+    image: grafana/alloy:latest
+    container_name: atl-tools-alloy-agent
+    restart: unless-stopped
+    volumes:
+      - ../../services/observability/alloy-agent/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/lib/alloy:/var/lib/alloy
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    environment:
+      - REMOTE_WRITE_URL=${ALLOY_REMOTE_WRITE_URL:?ALLOY_REMOTE_WRITE_URL is required}
+      - LOKI_URL=${ALLOY_LOKI_URL:?ALLOY_LOKI_URL is required}
+      - HOSTNAME=atl-tools
+    ports:
+      - "${TAILSCALE_IP:?TAILSCALE_IP is required}:12345:12345"
+    logging:
+      driver: json-file
+      options:
+        max-size: "${LOG_MAX_SIZE:-50m}"
+        max-file: "${LOG_MAX_FILES:-5}"
+        compress: "true"
+    networks:
+      - atl-tools
+
+networks:
+  atl-tools:
+    external: true

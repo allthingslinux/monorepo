@@ -279,10 +279,19 @@ prometheus.scrape "minio_wiki" {
 
 prometheus.scrape "blackbox" {
   targets = [
-    {"__address__" = "https://metrics.atl.services", "module" = "http_2xx"},
-    {"__address__" = "https://chat.atl.services",    "module" = "http_2xx"},
-    {"__address__" = "https://wiki.atl.services",    "module" = "http_2xx"},
-    {"__address__" = "https://iso.atl.dev",          "module" = "http_2xx"},
+    {"__address__" = "https://metrics.atl.services",  "module" = "http_2xx"},
+    {"__address__" = "https://chat.atl.services",     "module" = "http_2xx"},
+    {"__address__" = "https://wiki.atl.services",     "module" = "http_2xx"},
+    {"__address__" = "https://iso.atl.dev",           "module" = "http_2xx"},
+    // atl.tools services
+    {"__address__" = "https://paste.atl.tools",       "module" = "http_2xx"},
+    {"__address__" = "https://cyberchef.atl.tools",   "module" = "http_2xx"},
+    {"__address__" = "https://convert.atl.tools",     "module" = "http_2xx"},
+    {"__address__" = "https://search.atl.tools",      "module" = "http_2xx"},
+    {"__address__" = "https://it.atl.tools",          "module" = "http_2xx"},
+    {"__address__" = "https://json.atl.tools",        "module" = "http_2xx"},
+    {"__address__" = "https://hn.atl.tools",          "module" = "http_2xx"},
+    {"__address__" = "https://pdf.atl.tools",         "module" = "http_2xx"},
   ]
   metrics_path = "/probe"
   job_name = "blackbox"
