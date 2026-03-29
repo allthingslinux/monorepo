@@ -1,5 +1,8 @@
 name: Lint Infra
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches: [main]
@@ -17,6 +20,8 @@ on:
       - .github/scripts/**/*.sh
       - scripts/**/*.sh
       - "**/Containerfile"
+  merge_group:
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,42 +31,37 @@ jobs:
   changes:
     name: File Detection
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      workflows: ${{ steps.workflow_changes.outputs.any_changed }}
-      docker: ${{ steps.docker_changes.outputs.any_changed }}
-      shell: ${{ steps.shell_changes.outputs.any_changed }}
+      workflows: ${{ steps.detect.outputs.workflows_any_changed }}
+      docker: ${{ steps.detect.outputs.docker_any_changed }}
+      shell: ${{ steps.detect.outputs.shell_any_changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-      - name: Check Workflows
+      - name: Detect infra-related changes
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: workflow_changes
+        id: detect
         with:
-          files: |
-            .github/workflows/**
-            .github/actions/**
-      - name: Check Containerfiles
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: docker_changes
-        with:
-          files: "**/Containerfile"
-      - name: Check Shell Scripts
-        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47
-        id: shell_changes
-        with:
-          files: |
-            .github/scripts/**/*.sh
-            scripts/**/*.sh
+          files_yaml: |
+            workflows:
+              - .github/workflows/**
+              - .github/actions/**
+            docker:
+              - "**/Containerfile"
+            shell:
+              - .github/scripts/**/*.sh
+              - scripts/**/*.sh
 
   actionlint:
     name: Actionlint
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.workflows == 'true'
+    if: needs.changes.outputs.workflows == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 5
     permissions:
       contents: read
@@ -84,7 +84,7 @@ jobs:
     name: Hadolint
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.docker == 'true'
+    if: needs.changes.outputs.docker == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 5
     permissions:
       contents: read
@@ -107,7 +107,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     needs: [changes]
-    if: needs.changes.outputs.shell == 'true'
+    if: needs.changes.outputs.shell == 'true' || github.event_name == 'merge_group'
     timeout-minutes: 5
     permissions:
       contents: read
