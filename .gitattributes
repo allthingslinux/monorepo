@@ -28,17 +28,17 @@ pyproject.toml linguist-detectable
 # Text Processing
 # ===============
 
-# Line ending normalization
-*.sh text eol=lf
-*.py text eol=lf
-*.yaml text eol=lf
-*.yml text eol=lf
-*.conf text eol=lf
-*.template text eol=lf
-*.md text eol=lf
-*.json text eol=lf
-*.toml text eol=lf
-*.ini text eol=lf
+# Line ending normalization — text=auto lets git normalize on checkout
+*.sh text=auto eol=lf
+*.py text=auto eol=lf
+*.yaml text=auto eol=lf
+*.yml text=auto eol=lf
+*.conf text=auto eol=lf
+*.template text=auto eol=lf
+*.md text=auto eol=lf
+*.json text=auto eol=lf
+*.toml text=auto eol=lf
+*.ini text=auto eol=lf
 
 # Binary Files
 # ============
@@ -164,18 +164,6 @@ pyproject.toml linguist-language=TOML
 
 # Git Attributes
 # ==============
-
-# Ensure proper line endings for Windows compatibility
-*.sh text=auto eol=lf
-*.py text=auto eol=lf
-*.yaml text=auto eol=lf
-*.yml text=auto eol=lf
-*.conf text=auto eol=lf
-*.template text=auto eol=lf
-*.md text=auto eol=lf
-*.json text=auto eol=lf
-*.toml text=auto eol=lf
-*.ini text=auto eol=lf
 
 # Binary files should not be processed
 *.tar.gz -text
