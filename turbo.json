@@ -32,19 +32,23 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
       "outputs": [],
-      "env": ["DATABASE_URL"]
+      "env": ["DATABASE_URL", "FIBERY_ACCOUNT", "FIBERY_TOKEN"]
     },
 
     "test:coverage": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
       "outputs": ["coverage/**"],
-      "env": ["DATABASE_URL"]
+      "env": ["DATABASE_URL", "FIBERY_ACCOUNT", "FIBERY_TOKEN"]
     },
 
     "transit": { "dependsOn": ["^transit"] },
     "clean": { "cache": false },
-    "typegen": { "inputs": ["src/app/**"], "outputs": [".next/types/**"], "cache": false },
+    "typegen": {
+      "inputs": ["src/app/**"],
+      "outputs": [".next/types/**"],
+      "cache": false
+    },
 
     "//#check": {},
     "//#fix": { "cache": false },
