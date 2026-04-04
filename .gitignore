@@ -115,7 +115,7 @@ infra/sh/terraform/.terraform.lock.hcl
 
 .kiro/specs
 .playwright-mcp/
-
+/org/
 
 # START Ruler Generated Files
 /.cursor/mcp.json
