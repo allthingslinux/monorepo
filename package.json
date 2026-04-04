@@ -6,19 +6,31 @@
     "prepare": "husky",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "check": "ultracite check",
-    "fix": "ultracite fix",
-    "type-check": "turbo run type-check",
-    "test": "turbo run test",
-    "test:coverage": "turbo run test:coverage",
-    "clean": "turbo run clean --continue || true",
+    "ts:lint": "oxfmt --check . && oxlint --type-aware --allow tsconfig-error",
+    "ts:fix": "ultracite fix --type-aware",
+    "ts:fix:unsafe": "ultracite fix --type-aware --unsafe",
+    "ts:types": "turbo run type-check",
+    "ts:test": "turbo run test",
+    "ts:test:coverage": "turbo run test:coverage",
+    "ts:knip": "knip",
+    "fmt:fix": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
     "py:check": "uv run ruff check apps/bridge/src apps/bridge/tests && uv run ruff format --check apps/bridge/src apps/bridge/tests",
+    "py:fix": "uv run ruff check --fix apps/bridge/src apps/bridge/tests && uv run ruff format apps/bridge/src apps/bridge/tests",
     "py:test": "uv run pytest apps/bridge/tests -v --tb=short",
-    "knip": "knip"
+    "lint": "pnpm ts:lint && pnpm py:check",
+    "fix": "pnpm ts:fix && pnpm fmt:fix && pnpm py:fix",
+    "test": "pnpm ts:test && pnpm py:test",
+    "clean": "turbo run clean --continue || true",
+    "ruler:apply": "ruler apply",
+    "ruler:revert": "ruler revert",
+    "ruler:dry-run": "ruler apply --dry-run --verbose"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/types": "^20.5.0",
+    "@intellectronica/ruler": "^0.3.38",
     "husky": "^9.1.7",
     "knip": "^6.0.6",
     "lint-staged": "^16.4.0",
@@ -26,25 +38,8 @@
     "oxlint": "^1.56.0",
     "oxlint-tsgolint": "^0.17.2",
     "turbo": "^2.8.20",
-    "typescript": "^5.9.3",
+    "typescript": "catalog:",
     "ultracite": "7.3.2"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "oxlint",
-      "oxfmt"
-    ],
-    "*.py": [
-      "uv run ruff check --fix",
-      "uv run ruff format"
-    ],
-    "*.sh": [
-      "shellcheck",
-      "shfmt -ln bash -i 2 -ci -bn -sr -s -w"
-    ],
-    "*.tf": [
-      "terraform fmt"
-    ]
   },
   "engines": {
     "node": ">=24.0.0",
