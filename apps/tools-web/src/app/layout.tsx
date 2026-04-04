@@ -1,32 +1,24 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  IBM_Plex_Sans,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 
 import "./globals.css";
 
-// Display font — headings only
-const bricolage = Bricolage_Grotesque({
+const inter = Inter({
   display: "swap",
   subsets: ["latin"],
-  variable: "--font-bricolage",
+  variable: "--font-inter",
 });
 
-// Body font — all prose and UI text
-const ibmPlex = IBM_Plex_Sans({
+const geistSans = Geist({
   display: "swap",
   subsets: ["latin"],
-  variable: "--font-ibm-plex",
-  weight: ["300", "400", "500", "600"],
+  variable: "--font-geist-sans",
 });
 
-// Mono — accents, tags, badges
-const jetbrains = JetBrains_Mono({
+const geistMono = Geist_Mono({
   display: "swap",
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -43,14 +35,10 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={`${bricolage.variable} ${ibmPlex.variable} ${jetbrains.variable}`}
+      className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} dark`}
       lang="en"
-      style={{ colorScheme: "dark" }}
     >
-      <head>
-        <meta content="#181924" name="theme-color" />
-      </head>
-      <body>{children}</body>
+      <body className="min-h-screen font-sans antialiased">{children}</body>
     </html>
   );
 }

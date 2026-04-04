@@ -1,11 +1,12 @@
 "use client";
 
-import type { ServiceCategory, ServiceDefinition } from "@atl/tools-manifest";
-import { categoryLabels } from "@atl/tools-manifest";
 import { Code2, MessageCircle, PackageSearch, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+import type { ServiceCategory, ServiceDefinition } from "@atl/tools-manifest";
+import { categoryLabels } from "@atl/tools-manifest";
 
 import { ServiceCard } from "./service-card";
 
@@ -66,22 +67,24 @@ export function AppShell({ services }: AppShellProps) {
       }
     };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    return () => {
+      window.removeEventListener("keydown", handler);
+    };
   }, [focusSearch]);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-base">
+    <div className="bg-background flex h-dvh overflow-hidden">
       {/* Skip link */}
       <a
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2 focus-visible:z-50 focus-visible:rounded-md focus-visible:border focus-visible:border-blue focus-visible:bg-base focus-visible:px-3 focus-visible:py-1.5 focus-visible:text-blue focus-visible:text-sm"
+        className="focus-visible:border-primary focus-visible:bg-background focus-visible:text-primary sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2 focus-visible:z-50 focus-visible:rounded-md focus-visible:border focus-visible:px-3 focus-visible:py-1.5 focus-visible:text-sm"
         href="#main-content"
       >
         Skip to content
       </a>
       {/* ── Sidebar ─────────────────────────────────── */}
-      <aside className="hidden w-[220px] shrink-0 flex-col border-surface0 border-r bg-mantle md:flex">
+      <aside className="border-border bg-card hidden w-[220px] shrink-0 flex-col border-r md:flex">
         {/* Brand */}
-        <div className="border-surface0 border-b px-4 py-5">
+        <div className="border-border border-b px-4 py-5">
           <Link className="group flex items-center gap-2.5" href="/">
             <Image
               alt=""
@@ -90,7 +93,7 @@ export function AppShell({ services }: AppShellProps) {
               src="/logo_only.png"
               width={32}
             />
-            <span className="font-semibold text-lg text-text/90 tracking-tight transition-colors group-hover:text-text">
+            <span className="text-foreground/90 group-hover:text-foreground text-lg font-semibold tracking-tight transition-colors">
               atl.tools
             </span>
           </Link>
@@ -102,34 +105,38 @@ export function AppShell({ services }: AppShellProps) {
           <button
             className={`flex w-full cursor-pointer items-center justify-between rounded-md border-l-2 px-3 py-2 text-sm transition-colors ${
               activeCategory === "all"
-                ? "border-l-blue bg-surface0 font-medium text-text"
-                : "border-l-transparent text-text/50 hover:bg-surface0/50 hover:text-text/90"
+                ? "border-l-primary bg-muted text-foreground font-medium"
+                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground/90 border-l-transparent"
             }`}
-            onClick={() => setActiveCategory("all")}
+            onClick={() => {
+              setActiveCategory("all");
+            }}
             type="button"
           >
             <span>All tools</span>
-            <span className="font-mono text-text/30 text-xs">
+            <span className="text-muted-foreground/50 font-mono text-xs">
               {services.length}
             </span>
           </button>
 
-          <div className="mt-4 mb-1 px-3 font-mono text-text/35 text-xs uppercase tracking-wider">
+          <div className="text-muted-foreground/60 mt-4 mb-1 px-3 font-mono text-xs tracking-wider uppercase">
             Categories
           </div>
           {categories.map((cat) => (
             <button
               className={`flex w-full cursor-pointer items-center justify-between rounded-md border-l-2 px-3 py-2 text-sm transition-colors ${
                 activeCategory === cat
-                  ? "border-l-blue bg-surface0 font-medium text-text"
-                  : "border-l-transparent text-text/50 hover:bg-surface0/50 hover:text-text/90"
+                  ? "border-l-primary bg-muted text-foreground font-medium"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground/90 border-l-transparent"
               }`}
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => {
+                setActiveCategory(cat);
+              }}
               type="button"
             >
               <span>{categoryLabels[cat]}</span>
-              <span className="font-mono text-overlay2 text-xs">
+              <span className="text-muted-foreground font-mono text-xs">
                 {countForCategory(cat)}
               </span>
             </button>
@@ -137,13 +144,15 @@ export function AppShell({ services }: AppShellProps) {
 
           {/* Tags */}
           <div className="mt-5 mb-2 flex items-center justify-between px-3">
-            <span className="font-mono text-text/35 text-xs uppercase tracking-wider">
+            <span className="text-muted-foreground/60 font-mono text-xs tracking-wider uppercase">
               Tags
             </span>
             {activeTags.length > 0 && (
               <button
-                className="cursor-pointer font-mono text-text/40 text-xs transition-colors hover:text-text/70"
-                onClick={() => setActiveTags([])}
+                className="text-muted-foreground/70 hover:text-foreground/70 cursor-pointer font-mono text-xs transition-colors"
+                onClick={() => {
+                  setActiveTags([]);
+                }}
                 type="button"
               >
                 clear
@@ -157,11 +166,13 @@ export function AppShell({ services }: AppShellProps) {
                 <button
                   className={`cursor-pointer rounded-full border px-2.5 py-0.5 font-mono text-xs transition-colors ${
                     isActive
-                      ? "border-blue/40 bg-blue/15 text-blue"
-                      : "border-overlay0/40 bg-surface0/60 text-text/40 hover:border-overlay0 hover:text-text/70"
+                      ? "border-primary/40 bg-primary/15 text-primary"
+                      : "border-border/40 bg-muted/60 text-muted-foreground/70 hover:border-border hover:text-foreground/70"
                   }`}
                   key={tag}
-                  onClick={() => toggleTag(tag)}
+                  onClick={() => {
+                    toggleTag(tag);
+                  }}
                   type="button"
                 >
                   {tag}
@@ -175,7 +186,7 @@ export function AppShell({ services }: AppShellProps) {
       {/* ── Main ────────────────────────────────────── */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="shrink-0 border-surface0 border-b bg-mantle px-6 py-4">
+        <div className="border-border bg-card shrink-0 border-b px-6 py-4">
           {/* Title + search row */}
           <div className="flex items-center gap-3">
             {/* Mobile brand */}
@@ -187,16 +198,20 @@ export function AppShell({ services }: AppShellProps) {
                 src="/logo_only.png"
                 width={20}
               />
-              <span className="font-semibold text-sm text-text">atl.tools</span>
+              <span className="text-foreground text-sm font-semibold">
+                atl.tools
+              </span>
             </div>
 
             {/* Desktop title */}
             <div className="hidden flex-1 items-center gap-3 md:flex">
-              <h1 className="font-semibold text-sm text-text tracking-tight">
+              <h1 className="text-foreground text-sm font-semibold tracking-tight">
                 Tools
               </h1>
-              <span className="select-none text-overlay0 text-xs">/</span>
-              <p className="font-mono text-overlay2 text-xs">
+              <span className="text-muted-foreground/60 text-xs select-none">
+                /
+              </span>
+              <p className="text-muted-foreground font-mono text-xs">
                 {filtered.length === services.length
                   ? `${activeCount} active`
                   : `${filtered.length} of ${services.length}`}{" "}
@@ -207,13 +222,19 @@ export function AppShell({ services }: AppShellProps) {
             {/* Search input */}
             <div className="relative flex items-center">
               <Search
-                className="pointer-events-none absolute left-3 text-overlay2"
+                className="text-muted-foreground pointer-events-none absolute left-3"
                 size={14}
               />
               <input
-                className="w-44 rounded-lg border border-surface1 bg-surface0 py-1.5 pr-8 pl-8 text-sm text-text placeholder-overlay1 transition-colors focus-visible:border-blue focus-visible:outline-none md:w-56"
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Escape" && setSearch("")}
+                className="border-border bg-muted text-foreground placeholder-muted-foreground/70 focus-visible:border-primary w-44 rounded-lg border py-1.5 pr-8 pl-8 text-sm transition-colors focus-visible:outline-none md:w-56"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setSearch("");
+                  }
+                }}
                 placeholder="Search tools..."
                 ref={searchRef}
                 type="text"
@@ -222,14 +243,16 @@ export function AppShell({ services }: AppShellProps) {
               {search ? (
                 <button
                   aria-label="Clear search"
-                  className="absolute right-2.5 cursor-pointer text-overlay2 transition-colors hover:text-text"
-                  onClick={() => setSearch("")}
+                  className="text-muted-foreground hover:text-foreground absolute right-2.5 cursor-pointer transition-colors"
+                  onClick={() => {
+                    setSearch("");
+                  }}
                   type="button"
                 >
                   <X aria-hidden="true" size={13} />
                 </button>
               ) : (
-                <span className="pointer-events-none absolute right-2.5 select-none font-mono text-overlay1 text-xs">
+                <span className="text-muted-foreground/70 pointer-events-none absolute right-2.5 font-mono text-xs select-none">
                   ⌘K
                 </span>
               )}
@@ -238,7 +261,7 @@ export function AppShell({ services }: AppShellProps) {
 
           {/* Mobile: stats + category chips */}
           <div className="mt-3 space-y-2 md:hidden">
-            <p className="font-mono text-overlay2 text-xs">
+            <p className="text-muted-foreground font-mono text-xs">
               {filtered.length === services.length
                 ? `${activeCount} active`
                 : `${filtered.length} of ${services.length}`}{" "}
@@ -248,10 +271,12 @@ export function AppShell({ services }: AppShellProps) {
               <button
                 className={`shrink-0 cursor-pointer rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
                   activeCategory === "all"
-                    ? "border-blue/40 bg-blue/15 font-medium text-blue"
-                    : "border-surface1/60 bg-surface0 text-subtext0 hover:bg-surface1 hover:text-text"
+                    ? "border-primary/40 bg-primary/15 text-primary font-medium"
+                    : "border-border/60 bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
-                onClick={() => setActiveCategory("all")}
+                onClick={() => {
+                  setActiveCategory("all");
+                }}
                 type="button"
               >
                 all
@@ -260,11 +285,13 @@ export function AppShell({ services }: AppShellProps) {
                 <button
                   className={`shrink-0 cursor-pointer rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
                     activeCategory === cat
-                      ? "border-blue/40 bg-blue/15 font-medium text-blue"
-                      : "border-surface1/60 bg-surface0 text-subtext0 hover:bg-surface1 hover:text-text"
+                      ? "border-primary/40 bg-primary/15 text-primary font-medium"
+                      : "border-border/60 bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                   }`}
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                  }}
                   type="button"
                 >
                   {categoryLabels[cat].toLowerCase()}
@@ -279,11 +306,13 @@ export function AppShell({ services }: AppShellProps) {
                   <button
                     className={`shrink-0 cursor-pointer rounded-full border px-2.5 py-0.5 font-mono text-xs transition-colors ${
                       isActive
-                        ? "border-blue/40 bg-blue/15 text-blue"
-                        : "border-surface1/60 bg-surface0 text-overlay2"
+                        ? "border-primary/40 bg-primary/15 text-primary"
+                        : "border-border/60 bg-muted text-muted-foreground"
                     }`}
                     key={tag}
-                    onClick={() => toggleTag(tag)}
+                    onClick={() => {
+                      toggleTag(tag);
+                    }}
                     type="button"
                   >
                     {tag}
@@ -311,11 +340,13 @@ export function AppShell({ services }: AppShellProps) {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-24 text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-surface0 text-overlay2">
+              <div className="bg-muted text-muted-foreground mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
                 <PackageSearch aria-hidden="true" size={22} strokeWidth={1.5} />
               </div>
-              <p className="mb-1 font-semibold text-text">No tools found</p>
-              <p className="font-mono text-sm text-subtext0">
+              <p className="text-foreground mb-1 font-semibold">
+                No tools found
+              </p>
+              <p className="text-muted-foreground font-mono text-sm">
                 {(() => {
                   if (search) {
                     return `No results for "${search}"`;
@@ -331,11 +362,11 @@ export function AppShell({ services }: AppShellProps) {
         </main>
 
         {/* Footer */}
-        <footer className="flex shrink-0 items-center justify-between border-surface0 border-t bg-mantle px-6 py-3">
-          <span className="text-subtext0 text-xs">
+        <footer className="border-border bg-card flex shrink-0 items-center justify-between border-t px-6 py-3">
+          <span className="text-muted-foreground text-xs">
             Built with 💛 by{" "}
             <a
-              className="text-mauve transition-colors hover:text-text"
+              className="text-accent hover:text-foreground transition-colors"
               href="https://allthingslinux.org"
             >
               All Things Linux
@@ -343,7 +374,7 @@ export function AppShell({ services }: AppShellProps) {
           </span>
           <div className="flex items-center gap-4">
             <a
-              className="flex items-center gap-2 font-mono text-overlay2 text-xs transition-colors hover:text-subtext0"
+              className="text-muted-foreground hover:text-foreground/80 flex items-center gap-2 font-mono text-xs transition-colors"
               href="https://discord.gg/linux"
               rel="noopener noreferrer"
               target="_blank"
@@ -352,7 +383,7 @@ export function AppShell({ services }: AppShellProps) {
               Discord
             </a>
             <a
-              className="flex items-center gap-2 font-mono text-overlay2 text-xs transition-colors hover:text-subtext0"
+              className="text-muted-foreground hover:text-foreground/80 flex items-center gap-2 font-mono text-xs transition-colors"
               href="https://github.com/allthingslinux/atl.tools"
               rel="noopener noreferrer"
               target="_blank"

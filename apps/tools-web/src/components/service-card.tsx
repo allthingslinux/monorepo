@@ -1,5 +1,3 @@
-import { tokyoNightHex } from "@atl/tools-manifest";
-import type { ServiceDefinition } from "@atl/tools-manifest";
 import {
   ArrowLeftRight,
   Braces,
@@ -10,6 +8,9 @@ import {
   Search,
   Terminal,
 } from "lucide-react";
+
+import { tokyoNightHex } from "@atl/tools-manifest";
+import type { ServiceDefinition } from "@atl/tools-manifest";
 
 const iconMap: Record<
   string,
@@ -46,7 +47,7 @@ export function ServiceCard({
 
   return (
     <a
-      className={`service-card group flex h-full flex-col overflow-hidden rounded-lg border border-surface1/50 bg-surface0 no-underline ${serviceIsActive ? "" : "pointer-events-none opacity-50"}`}
+      className={`service-card group border-border/50 bg-card flex h-full flex-col overflow-hidden rounded-lg border no-underline ${serviceIsActive ? "" : "pointer-events-none opacity-50"}`}
       href={serviceIsActive ? url : undefined}
       rel="noopener noreferrer"
       style={
@@ -70,30 +71,30 @@ export function ServiceCard({
         <div className="mb-1.5 flex items-center justify-between">
           <div className="flex min-w-0 items-center gap-2">
             <Icon
-              className="shrink-0 text-subtext0"
+              className="text-muted-foreground shrink-0"
               size={16}
               strokeWidth={1.75}
             />
-            <h3 className="truncate font-semibold text-base text-text tracking-tight">
+            <h3 className="text-foreground truncate font-semibold tracking-tight">
               {name}
             </h3>
           </div>
           {status === "active" && (
             <span
               aria-hidden="true"
-              className="status-dot ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-green"
+              className="status-dot bg-success ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
             />
           )}
           {status === "maintenance" && (
             <span
               aria-hidden="true"
-              className="ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-yellow"
+              className="bg-warning ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
             />
           )}
           {status === "planned" && (
             <span
               aria-hidden="true"
-              className="ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-overlay2"
+              className="bg-muted-foreground ml-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full"
             />
           )}
         </div>
@@ -104,7 +105,7 @@ export function ServiceCard({
         </p>
 
         {/* Description */}
-        <p className="truncate text-sm text-subtext0 leading-relaxed">
+        <p className="text-muted-foreground truncate text-sm leading-relaxed">
           {description}
         </p>
 
@@ -116,8 +117,8 @@ export function ServiceCard({
               <button
                 className={`cursor-pointer rounded-full border px-2.5 py-0.5 font-mono text-xs transition-colors ${
                   isActive
-                    ? "border-blue/40 bg-blue/15 text-blue"
-                    : "border-surface2/60 bg-surface1 text-subtext0 hover:border-surface2 hover:text-text"
+                    ? "border-primary/40 bg-primary/15 text-primary"
+                    : "border-border/60 bg-muted text-muted-foreground hover:border-border hover:text-foreground"
                 }`}
                 key={tag}
                 onClick={(e) => {

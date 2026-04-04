@@ -1,72 +1,14 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
-  /* ── ATL color scheme — exact oklch from allthingslinux.org ── */
-  --color-crust: oklch(0.13 0.028 261.7); /* --popover           */
-  --color-mantle: oklch(0.21 0.034 264.7); /* --sidebar           */
-  --color-base: oklch(0.183 0.0204 284.2); /* --background        */
-  --color-surface0: oklch(0.216 0.0254 284.1); /* --card              */
-  --color-surface1: oklch(0.245 0.029 272); /* between card/border */
-  --color-surface2: oklch(0.26 0.031 265); /* between card/border */
-  --color-overlay0: oklch(0.278 0.033 256.8); /* --border / --muted  */
-  --color-overlay1: oklch(0.42 0.028 260); /* mid overlay         */
-  --color-overlay2: oklch(0.55 0.025 261); /* light overlay       */
-  --color-subtext0: oklch(0.707 0.022 261.3); /* --muted-foreground  */
-  --color-subtext1: oklch(0.84 0.014 252); /* secondary text      */
-  --color-text: oklch(0.985 0.002 247.8); /* --foreground        */
+@import "@atl/ui/styles/design-tokens.css";
 
-  --color-rosewater: #ff9e64;
-  --color-flamingo: #f7768e;
-  --color-pink: #ff007c;
-  --color-mauve: #bb9af7;
-  --color-red: #f7768e;
-  --color-maroon: #db4b4b;
-  --color-peach: #ff9e64;
-  --color-yellow: #e0af68;
-  --color-green: #9ece6a;
-  --color-teal: #73daca;
-  --color-sky: #7dcfff;
-  --color-sapphire: #2ac3de;
-  --color-blue: #7aa2f7;
-  --color-lavender: #9d7cd8;
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
 
-  /* ── Typography ───────────────────────────────────── */
-  /* IBM Plex Sans for body — clean, developer-native   */
-  --font-sans: var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
-  /* Bricolage Grotesque for headings — distinctive display */
-  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  /* JetBrains Mono for tags, badges, accents           */
-  --font-mono: var(--font-jetbrains), ui-monospace, "Cascadia Code", monospace;
-}
+@custom-variant dark (&:is(.dark *));
 
-/* ── Base ─────────────────────────────────────────────── */
-@layer base {
-  body {
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.6;
-    color: var(--color-text);
-    background-color: var(--color-base);
-  }
+/* ── App-specific styles ─────────────────────────────── */
 
-  ::selection {
-    color: var(--color-text);
-    background-color: color-mix(in srgb, var(--color-mauve) 30%, transparent);
-  }
-
-  * {
-    scrollbar-color: var(--color-surface1) transparent;
-    scrollbar-width: thin;
-  }
-
-  /* ── Focus-visible ring ───────────────────────────── */
-  :focus-visible {
-    outline: 2px solid var(--color-blue);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-}
-
-/* ── Card hover ───────────────────────────────────────── */
 .service-card {
   cursor: pointer;
   transition:
@@ -75,11 +17,10 @@
 }
 
 .service-card:hover {
-  background-color: var(--color-surface1);
-  border-color: var(--color-surface2);
+  background-color: var(--card);
+  border-color: var(--border);
 }
 
-/* ── Staggered card fade-in ───────────────────────────── */
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -95,7 +36,6 @@
   animation: fade-up 0.3s ease-out both;
 }
 
-/* ── Active status pulse ──────────────────────────────── */
 @keyframes pulse-dot {
   0%,
   100% {
@@ -110,25 +50,9 @@
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* ── Hide scrollbar utility ───────────────────────────── */
 .no-scrollbar {
   scrollbar-width: none;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* ── Respect reduced-motion preference ───────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .card-enter {
-    animation: none;
-  }
-
-  .status-dot {
-    animation: none;
-  }
-
-  .service-card {
-    transition: none;
-  }
 }

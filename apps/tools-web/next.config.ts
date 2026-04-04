@@ -5,4 +5,5 @@ const config: NextConfig = {};
 
 export default config;
 
-initOpenNextCloudflareForDev();
+// oxlint-disable-next-line no-void
+void initOpenNextCloudflareForDev();

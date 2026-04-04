@@ -16,16 +16,18 @@
   },
   "dependencies": {
     "@atl/tools-manifest": "workspace:*",
+    "@atl/ui": "workspace:*",
     "@opennextjs/cloudflare": "catalog:",
     "alchemy": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "tw-animate-css": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260317.1",
-    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

@@ -8,7 +8,10 @@ import { CloudflareStateStore, FileSystemStateStore } from "alchemy/state";
 const cwd = import.meta.dirname;
 
 function createStateStore(scope: Scope) {
-  if (process.env.ALCHEMY_STATE_TOKEN) {
+  if (
+    process.env.ALCHEMY_STATE_TOKEN !== undefined &&
+    process.env.ALCHEMY_STATE_TOKEN !== ""
+  ) {
     return new CloudflareStateStore(scope);
   }
   return new FileSystemStateStore(scope, {
