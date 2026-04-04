@@ -11,16 +11,16 @@
       Defaults !visiblepw
       Defaults always_set_home
       Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    mode: '0440'
+    mode: "0440"
     owner: root
     group: root
-    validate: 'visudo -cf %s'
+    validate: "visudo -cf %s"
 
 - name: Ensure sudo log file exists
   ansible.builtin.file:
     path: /var/log/sudo.log
     state: touch
-    mode: '0600'
+    mode: "0600"
     owner: root
     group: root
     modification_time: preserve

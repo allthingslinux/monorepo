@@ -6,13 +6,13 @@
     name:
       - dictd
       - dict
-      - dict-gcide       # Comprehensive English (Webster's + supplements)
-      - dict-wn          # WordNet lexical database
-      - dict-jargon      # The Jargon File (hacker culture)
-      - dict-foldoc      # Free On-Line Dictionary of Computing
-      - dict-vera        # V.E.R.A. computing acronyms
-      - dict-devil       # The Devil's Dictionary (Ambrose Bierce)
-      - dict-elements    # Periodic table data
+      - dict-gcide # Comprehensive English (Webster's + supplements)
+      - dict-wn # WordNet lexical database
+      - dict-jargon # The Jargon File (hacker culture)
+      - dict-foldoc # Free On-Line Dictionary of Computing
+      - dict-vera # V.E.R.A. computing acronyms
+      - dict-devil # The Devil's Dictionary (Ambrose Bierce)
+      - dict-elements # Periodic table data
     state: present
   environment:
     DEBIAN_FRONTEND: noninteractive

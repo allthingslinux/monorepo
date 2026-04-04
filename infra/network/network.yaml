@@ -1,4 +1,3 @@
-
 services:
   # Turn/Stun Server
   # NOTE: Coturn often requires host networking to handle NAT/IP detection correctly without complex config.
@@ -24,7 +23,7 @@ services:
     container_name: atl-proxy
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "/usr/bin/check-health" ]
+      test: ["CMD", "/usr/bin/check-health"]
       interval: 10s
       timeout: 3s
     ports:

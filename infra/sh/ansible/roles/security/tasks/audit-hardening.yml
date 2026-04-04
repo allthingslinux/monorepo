@@ -3,7 +3,7 @@
 - name: Configure audit backlog limit in GRUB
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    regexp: '^GRUB_CMDLINE_LINUX='
+    regexp: "^GRUB_CMDLINE_LINUX="
     line: 'GRUB_CMDLINE_LINUX="audit=1 audit_backlog_limit=8192"'
     state: present
   notify: Update GRUB

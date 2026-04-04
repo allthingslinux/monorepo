@@ -6,7 +6,6 @@
 # Served at webxmpp.atl.chat with TLS via shared wildcard certs.
 # =============================================================================
 
-
 include:
   - ../networks.yaml
 

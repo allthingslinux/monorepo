@@ -2,7 +2,6 @@
 # Bridge Stack - Discord↔IRC↔XMPP (apps/bridge in-repo)
 # =============================================================================
 
-
 include:
   - ../networks.yaml
 

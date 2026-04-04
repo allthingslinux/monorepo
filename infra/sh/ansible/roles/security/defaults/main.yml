@@ -21,7 +21,6 @@ auditd_admin_space_left_action: halt
 auditd_disk_full_action: halt
 auditd_disk_error_action: halt
 
-
 firewall_allowed_tcp_ports:
   - "22" # SSH primary
   - "2222" # SSH secondary
@@ -29,7 +28,7 @@ firewall_allowed_tcp_ports:
   - "80" # HTTP
   - "443" # HTTPS
   - "1965" # Gemini
-  - "21"   # FTP Control
+  - "21" # FTP Control
   - "40000:40100" # FTP Passive Data
 
 firewall_rate_limit_ssh: true

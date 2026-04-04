@@ -5,7 +5,7 @@
     state: directory
     owner: root
     group: root
-    mode: '0755'
+    mode: "0755"
 
 - name: Deploy systemd user slice resource limits
   ansible.builtin.template:
@@ -13,7 +13,7 @@
     dest: /etc/systemd/system/user-.slice.d/10-pubnix-limits.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify: Reload systemd daemon
 
 - name: Deploy secured /tmp tmpfs mount unit
@@ -22,7 +22,7 @@
     dest: /etc/systemd/system/tmp.mount
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify: Reload systemd daemon
 
 - name: Enable and mount secured /tmp

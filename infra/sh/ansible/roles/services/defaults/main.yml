@@ -14,7 +14,6 @@ nginx_extra_http_options: |
 
 tilde_docroot: public_html
 
-
 gemini_port: 1965
 gemini_capsule_root: /var/gemini
 

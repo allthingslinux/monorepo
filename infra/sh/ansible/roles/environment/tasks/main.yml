@@ -5,7 +5,7 @@
   ansible.builtin.file:
     path: /var/cache/pnpm
     state: directory
-    mode: '1777' # Sticky bit so users can manage their own files but not others'
+    mode: "1777" # Sticky bit so users can manage their own files but not others'
     owner: root
     group: root
 
@@ -13,7 +13,7 @@
   ansible.builtin.file:
     path: /var/cache/uv
     state: directory
-    mode: '1777' # Sticky bit so users can manage their own files
+    mode: "1777" # Sticky bit so users can manage their own files
     owner: root
     group: root
 
@@ -21,7 +21,7 @@
   ansible.builtin.file:
     path: /var/cache/poetry
     state: directory
-    mode: '1777' # Sticky bit so users can manage their own files
+    mode: "1777" # Sticky bit so users can manage their own files
     owner: root
     group: root
 
@@ -31,7 +31,7 @@
     dest: /etc/profile.d/environment-paths.sh
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 - name: Import systemd limits tasks
   ansible.builtin.import_tasks: systemd_limits.yml
 

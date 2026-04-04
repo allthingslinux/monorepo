@@ -37,7 +37,7 @@
       # but for a simple Ansible roll-out, we configure adduser.conf
       ansible.builtin.lineinfile:
         path: /etc/adduser.conf
-        regexp: '^#?QUOTAUSER='
+        regexp: "^#?QUOTAUSER="
         line: 'QUOTAUSER="default_quota_user"'
         state: present
 

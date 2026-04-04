@@ -18,8 +18,8 @@
 - name: Configure journald caps
   ansible.builtin.lineinfile:
     path: /etc/systemd/journald.conf
-    regexp: '^#?SystemMaxUse='
-    line: 'SystemMaxUse=1G'
+    regexp: "^#?SystemMaxUse="
+    line: "SystemMaxUse=1G"
     state: present
   notify: Restart journald
 

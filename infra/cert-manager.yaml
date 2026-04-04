@@ -5,7 +5,6 @@
 # Scripts in scripts/cert-manager/
 # =============================================================================
 
-
 include:
   - networks.yaml
 

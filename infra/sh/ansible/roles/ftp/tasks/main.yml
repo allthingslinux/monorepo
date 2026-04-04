@@ -8,7 +8,7 @@
   ansible.builtin.file:
     path: /var/run/vsftpd/empty
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Deploy vsftpd configuration
   ansible.builtin.template:
@@ -16,7 +16,7 @@
     dest: /etc/vsftpd.conf
     owner: root
     group: root
-    mode: '0600'
+    mode: "0600"
   notify: Restart vsftpd
 
 - name: Ensure vsftpd is enabled and started

@@ -5,7 +5,6 @@
 # Plugins: janitor (upload cleanup), giphy (/giphy search|random)
 # =============================================================================
 
-
 include:
   - ../networks.yaml
 
@@ -39,7 +38,15 @@ services:
         required: false
 
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9000/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

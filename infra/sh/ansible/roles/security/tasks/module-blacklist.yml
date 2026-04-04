@@ -20,7 +20,7 @@
       install sctp /bin/true
       install rds /bin/true
       install tipc /bin/true
-    mode: '0644'
+    mode: "0644"
     owner: root
     group: root
   notify: Update initramfs

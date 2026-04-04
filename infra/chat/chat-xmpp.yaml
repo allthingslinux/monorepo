@@ -4,7 +4,6 @@
 # Paths are relative to this file's directory (infra/chat/)
 # =============================================================================
 
-
 include:
   - ../networks.yaml
 
@@ -72,12 +71,7 @@ services:
     # HTTP status only — avoid probing :5347 with nc/tcp (spurious "component disconnected" in Prosody logs).
     healthcheck:
       test:
-        [
-          "CMD",
-          "sh",
-          "-c",
-          "curl -sf http://localhost:5280/status >/dev/null",
-        ]
+        ["CMD", "sh", "-c", "curl -sf http://localhost:5280/status >/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -5,7 +5,6 @@
 # VITE_HIDE_SERVER_LIST=true hides the Discover page / multi-server UI.
 # =============================================================================
 
-
 include:
   - ../networks.yaml
 

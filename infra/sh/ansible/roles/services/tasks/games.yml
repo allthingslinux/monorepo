@@ -46,9 +46,9 @@
 - name: Install roguelike games
   ansible.builtin.apt:
     name:
-      - angband        # Tolkien dungeon crawler, 100 levels to Morgoth
-      - crawl          # Dungeon Crawl Stone Soup, best modern roguelike
-      - slashem        # NetHack variant with extra races, roles, and content
+      - angband # Tolkien dungeon crawler, 100 levels to Morgoth
+      - crawl # Dungeon Crawl Stone Soup, best modern roguelike
+      - slashem # NetHack variant with extra races, roles, and content
     state: present
 
 # ──────────────────────────────────────────────
@@ -58,10 +58,10 @@
 - name: Install arcade games
   ansible.builtin.apt:
     name:
-      - ninvaders       # Space Invaders clone
-      - moon-buggy      # Side-scrolling moon rover
-      - nsnake          # Classic snake
-      - vitetris        # Feature-rich Tetris with 2-player split-screen
+      - ninvaders # Space Invaders clone
+      - moon-buggy # Side-scrolling moon rover
+      - nsnake # Classic snake
+      - vitetris # Feature-rich Tetris with 2-player split-screen
     state: present
 
 # ──────────────────────────────────────────────
@@ -71,9 +71,9 @@
 - name: Install puzzle and skill games
   ansible.builtin.apt:
     name:
-      - nudoku          # Sudoku with 4 difficulty levels
-      - typespeed       # Type falling words — creates natural server leaderboard
-      - dopewars        # NYC drug dealer simulator, classic shareware
+      - nudoku # Sudoku with 4 difficulty levels
+      - typespeed # Type falling words — creates natural server leaderboard
+      - dopewars # NYC drug dealer simulator, classic shareware
     state: present
 
 # ──────────────────────────────────────────────
