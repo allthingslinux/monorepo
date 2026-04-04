@@ -54,7 +54,9 @@ def is_xmpp_echo(comp: XMPPComponent, room_jid: str, nick: str) -> bool:
     if not real_jid:
         return False
     sender_domain = JID(str(real_jid)).domain
-    our_domain = JID(comp._component_jid).domain if "@" in comp._component_jid else comp._component_jid
+    our_domain = (
+        JID(comp._component_jid).domain if "@" in comp._component_jid else comp._component_jid
+    )
     return sender_domain == our_domain
 
 
@@ -246,7 +248,9 @@ async def on_groupchat_message(comp: XMPPComponent, msg: Any) -> None:
     if reply_to_xmpp_id:
         reply_to_id = comp._msgid_tracker.get_discord_id(reply_to_xmpp_id)
         if reply_to_id:
-            logger.debug("Resolved XMPP reply target {} -> Discord {}", reply_to_xmpp_id, reply_to_id)
+            logger.debug(
+                "Resolved XMPP reply target {} -> Discord {}", reply_to_xmpp_id, reply_to_id
+            )
 
     # Get or generate message ID. XEP-0444 §4.2: for groupchat, MUST use stanza-id, NOT
     # the top-level id. Reactions in MUC require the stanza-id from the MUC server because
@@ -254,7 +258,11 @@ async def on_groupchat_message(comp: XMPPComponent, msg: Any) -> None:
     # to the sender and the server.
     stanza_id_val = sid_elem.get("id") if sid_elem is not None and sid_elem.get("id") else None
     top_level_id = msg.get("id")
-    xmpp_msg_id = str(stanza_id_val) if stanza_id_val else (top_level_id or f"xmpp:{room_jid}:{nick}:{id(msg)}")
+    xmpp_msg_id = (
+        str(stanza_id_val)
+        if stanza_id_val
+        else (top_level_id or f"xmpp:{room_jid}:{nick}:{id(msg)}")
+    )
 
     # Collect ID aliases for edit lookup: clients may use origin-id or top-level id for
     # replace_id in corrections; we must resolve any of them to Discord.
@@ -407,7 +415,9 @@ def on_reactions(comp: XMPPComponent, msg: Any) -> None:
         comp._bus.publish("xmpp", evt)
 
 
-async def _send_moderation_for_retraction(comp: XMPPComponent, room_jid: str, target_msg_id: str) -> None:
+async def _send_moderation_for_retraction(
+    comp: XMPPComponent, room_jid: str, target_msg_id: str
+) -> None:
     """Send XEP-0425 moderation request so Dino (and similar) delete locally. Fire-and-forget."""
     try:
         plugin = comp.plugin.get("xep_0425", None)
@@ -542,7 +552,9 @@ def on_moderated_message(comp: XMPPComponent, msg: Any) -> None:
         author_id=moderator,
         author_display=moderator,
     )
-    logger.info("moderation bridged: room={} moderator={} message={}", room_jid, moderator, target_msg_id)
+    logger.info(
+        "moderation bridged: room={} moderator={} message={}", room_jid, moderator, target_msg_id
+    )
     comp._bus.publish("xmpp", evt)
 
 
@@ -601,7 +613,9 @@ def try_handle_moderation(comp: XMPPComponent, msg: Any, room_jid: str) -> None:
         author_id=moderator,
         author_display=moderator,
     )
-    logger.info("moderation bridged: room={} moderator={} target={}", room_jid, moderator, target_msg_id)
+    logger.info(
+        "moderation bridged: room={} moderator={} target={}", room_jid, moderator, target_msg_id
+    )
     comp._bus.publish("xmpp", evt)
 
 
@@ -879,7 +893,9 @@ def on_muc_presence(comp: XMPPComponent, presence: Any) -> None:
             if code == 332:
                 logger.warning("Removed from MUC {} due to server shutdown (status 332)", room_jid)
             elif code == 321:
-                logger.warning("Removed from MUC {} due to affiliation change (status 321)", room_jid)
+                logger.warning(
+                    "Removed from MUC {} due to affiliation change (status 321)", room_jid
+                )
             elif code == 322:
                 logger.warning("Removed from MUC {} — room now members-only (status 322)", room_jid)
 

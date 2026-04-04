@@ -118,7 +118,9 @@ async def send_message_as_user(
                 # attaches the XEP-0428 <fallback for="urn:xmpp:reply:0"> element.
                 if reply_to_body is not None:
                     reply.add_quoted_fallback(
-                        _xml_escape(reply_to_body[:200]),  # XML-escape and truncate to avoid oversized stanzas
+                        _xml_escape(
+                            reply_to_body[:200]
+                        ),  # XML-escape and truncate to avoid oversized stanzas
                         nickname=reply_to_author_nick,
                     )
                 else:
@@ -307,7 +309,9 @@ async def send_retraction_as_user(
         msg.enable("store")
         comp._recent_sent_nicks[(muc_jid, nick)] = None
         msg.send()
-        logger.info("sent retraction for message {} to room {} (from IRC/Discord)", target_msg_id, muc_jid)
+        logger.info(
+            "sent retraction for message {} to room {} (from IRC/Discord)", target_msg_id, muc_jid
+        )
     except Exception as exc:
         logger.exception("Failed to send retraction: {}", exc)
 
@@ -341,7 +345,9 @@ async def send_retraction_as_bridge(
         fb["for"] = "urn:xmpp:message-retract:1"
         msg.enable("store")
         msg.send()
-        logger.info("sent retraction for message {} to room {} (from bridge)", target_msg_id, muc_jid)
+        logger.info(
+            "sent retraction for message {} to room {} (from bridge)", target_msg_id, muc_jid
+        )
     except Exception as exc:
         logger.exception("Failed to send retraction from bridge: {}", exc)
 

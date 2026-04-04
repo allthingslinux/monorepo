@@ -56,7 +56,9 @@ async def fetch_avatar_bytes(comp: XMPPComponent, avatar_url: str) -> bytes | No
         async with comp._session.get(avatar_url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
             if resp.status == 200:
                 return await resp.read()
-            logger.warning("Failed to fetch avatar from {}: status {}", avatar_url[:80], resp.status)
+            logger.warning(
+                "Failed to fetch avatar from {}: status {}", avatar_url[:80], resp.status
+            )
     except (aiohttp.ClientError, OSError, ValueError, AttributeError) as exc:
         logger.exception("Error fetching avatar from {}: {}", avatar_url[:80], exc)
     return None

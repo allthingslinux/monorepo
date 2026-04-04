@@ -202,7 +202,12 @@ def _capture_stanza_id_from_echo(tracker: XMPPMessageIDTracker, msg: Any, room_j
             our_id,
         )
     # Only replace our_id for corrections when server rewrote top-level id
-    if stanza_id and stanza_id != our_id and msg_id_attr == stanza_id and tracker.update_xmpp_id(our_id, stanza_id):
+    if (
+        stanza_id
+        and stanza_id != our_id
+        and msg_id_attr == stanza_id
+        and tracker.update_xmpp_id(our_id, stanza_id)
+    ):
         logger.info(
             "Updated msgid mapping {} -> {} (server rewrote id); corrections use stanza-id",
             our_id,
@@ -250,14 +255,18 @@ class XMPPComponent(ComponentXMPP):
         )  # (muc_jid, user_jid) — avoid re-join
         # Track which (muc_jid, user_jid) pairs have had their avatar hash broadcast
         # so we don't re-broadcast on every message.  Cleared when avatar changes.
-        self._avatar_broadcast_done: TTLCache[tuple[str, str], None] = TTLCache(maxsize=10000, ttl=86400)
+        self._avatar_broadcast_done: TTLCache[tuple[str, str], None] = TTLCache(
+            maxsize=10000, ttl=86400
+        )
         # Dedupe: MUC delivers same message to each occupant (listener + puppets) — process once
         self._seen_msg_ids: TTLCache[tuple[str, str], None] = TTLCache(maxsize=500, ttl=60)
         # Fallback echo detection when get_jid_property returns None (MUC may not expose real JID)
         # Must cover MUC_JOIN_WAIT_S + queue delay so echo suppression never expires mid-send.
         self._recent_sent_nicks: TTLCache[tuple[str, str], None] = TTLCache(maxsize=200, ttl=90)
         # XEP-0444: track per-user reaction sets to detect removals (full set sent each update)
-        self._reactions_by_user: TTLCache[tuple[str, str], frozenset[str]] = TTLCache(maxsize=2000, ttl=3600)
+        self._reactions_by_user: TTLCache[tuple[str, str], frozenset[str]] = TTLCache(
+            maxsize=2000, ttl=3600
+        )
         # Dedupe moderation: MUC delivers to each occupant + multiple handlers fire per stanza
         self._seen_moderation_ids: TTLCache[str, None] = TTLCache(maxsize=200, ttl=60)
         # Dedupe retractions: MUC echo + multiple occupant copies
@@ -338,8 +347,12 @@ class XMPPComponent(ComponentXMPP):
         self.add_event_handler("ibb_stream_end", self._on_ibb_stream_end)
         self.add_event_handler("chatstate_composing", self._on_chatstate_composing)
         self.add_event_handler("chatstate_paused", self._on_chatstate_paused)
-        self.add_event_handler("chatstate_active", self._on_chatstate_paused)  # active = typing stopped
-        self.add_event_handler("chatstate_inactive", self._on_chatstate_paused)  # inactive = user switched away
+        self.add_event_handler(
+            "chatstate_active", self._on_chatstate_paused
+        )  # active = typing stopped
+        self.add_event_handler(
+            "chatstate_inactive", self._on_chatstate_paused
+        )  # inactive = user switched away
         self.add_event_handler("session_start", self._on_session_start)
         self.add_event_handler("disconnected", self._on_disconnected)
 
@@ -389,14 +402,18 @@ class XMPPComponent(ComponentXMPP):
     # ===================================================================
 
     def _debug_iq_received(self, iq: Any) -> None:
-        logger.debug("IQ received: type={} from={} to={} id={}", iq["type"], iq["from"], iq["to"], iq["id"])
+        logger.debug(
+            "IQ received: type={} from={} to={} id={}", iq["type"], iq["from"], iq["to"], iq["id"]
+        )
 
     # ===================================================================
     # Debug: log all incoming IQs
     # ===================================================================
 
     def _debug_iq_received(self, iq: Any) -> None:
-        logger.debug("IQ received: type={} from={} to={} id={}", iq["type"], iq["from"], iq["to"], iq["id"])
+        logger.debug(
+            "IQ received: type={} from={} to={} id={}", iq["type"], iq["from"], iq["to"], iq["id"]
+        )
 
     # ===================================================================
     # PubSub vCard4 handler (Gajim compatibility)
@@ -448,7 +465,9 @@ class XMPPComponent(ComponentXMPP):
             ET.SubElement(nick_el, f"{{{self._NS_VCARD4_XML}}}text").text = nickname
         note_el = ET.SubElement(vcard4, f"{{{self._NS_VCARD4_XML}}}note")
         origin = self._puppet_origins.get(target, "unknown")
-        ET.SubElement(note_el, f"{{{self._NS_VCARD4_XML}}}text").text = f"Bridged from {origin} (via atl.chat bridge)"
+        ET.SubElement(
+            note_el, f"{{{self._NS_VCARD4_XML}}}text"
+        ).text = f"Bridged from {origin} (via atl.chat bridge)"
         reply.send()
         logger.debug("Served vCard4 PubSub for {} (from={})", target, iq["from"])
 
@@ -476,7 +495,9 @@ class XMPPComponent(ComponentXMPP):
                             timeout=30,
                             maxchars=0,  # Requirement 10.11 / 18.1: suppress MUC history replay
                         )
-                        logger.info("Joined MUC {} as listener ({})", mapping.xmpp.muc_jid, bridge_nick)
+                        logger.info(
+                            "Joined MUC {} as listener ({})", mapping.xmpp.muc_jid, bridge_nick
+                        )
                     except XMPPError as exc:
                         logger.warning("Failed to join MUC {}: {}", mapping.xmpp.muc_jid, exc)
 
@@ -679,9 +700,13 @@ class XMPPComponent(ComponentXMPP):
     ) -> None:
         from bridge.adapters.xmpp.outbound import send_reaction_as_user
 
-        await send_reaction_as_user(self, discord_id, muc_jid, target_msg_id, emoji, nick, is_remove=is_remove)
+        await send_reaction_as_user(
+            self, discord_id, muc_jid, target_msg_id, emoji, nick, is_remove=is_remove
+        )
 
-    async def send_retraction_as_user(self, discord_id: str, muc_jid: str, target_msg_id: str, nick: str) -> None:
+    async def send_retraction_as_user(
+        self, discord_id: str, muc_jid: str, target_msg_id: str, nick: str
+    ) -> None:
         from bridge.adapters.xmpp.outbound import send_retraction_as_user
 
         await send_retraction_as_user(self, discord_id, muc_jid, target_msg_id, nick)
@@ -710,12 +735,16 @@ class XMPPComponent(ComponentXMPP):
 
     # --- Media (delegate to media.py) ---
 
-    async def send_file_as_user(self, discord_id: str, peer_jid: str, data: bytes, nick: str) -> None:
+    async def send_file_as_user(
+        self, discord_id: str, peer_jid: str, data: bytes, nick: str
+    ) -> None:
         from bridge.adapters.xmpp.media import send_file_as_user
 
         await send_file_as_user(self, discord_id, peer_jid, data, nick)
 
-    async def send_file_url_as_user(self, discord_id: str, muc_jid: str, data: bytes, filename: str, nick: str) -> None:
+    async def send_file_url_as_user(
+        self, discord_id: str, muc_jid: str, data: bytes, filename: str, nick: str
+    ) -> None:
         from bridge.adapters.xmpp.media import send_file_url_as_user
 
         await send_file_url_as_user(self, discord_id, muc_jid, data, filename, nick)
@@ -745,11 +774,19 @@ class XMPPComponent(ComponentXMPP):
         return await fetch_avatar_bytes(self, avatar_url)
 
     async def set_avatar_for_user(
-        self, discord_id: str, nick: str, avatar_url: str | None, *, display_name: str | None = None, origin: str = ""
+        self,
+        discord_id: str,
+        nick: str,
+        avatar_url: str | None,
+        *,
+        display_name: str | None = None,
+        origin: str = "",
     ) -> str | None:
         from bridge.adapters.xmpp.avatar import set_avatar_for_user
 
-        return await set_avatar_for_user(self, discord_id, nick, avatar_url, display_name=display_name, origin=origin)
+        return await set_avatar_for_user(
+            self, discord_id, nick, avatar_url, display_name=display_name, origin=origin
+        )
 
     async def _broadcast_avatar_presence(self, user_jid: str, avatar_hash: str) -> None:
         from bridge.adapters.xmpp.avatar import broadcast_avatar_presence

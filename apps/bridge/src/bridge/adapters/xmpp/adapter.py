@@ -82,7 +82,9 @@ class XMPPAdapter(AdapterBase):
         self._router = router
         self._identity = identity_resolver
         self._msgid_resolver = msgid_resolver
-        self._outbound: asyncio.Queue[MessageOut | MessageDeleteOut | ReactionOut] = asyncio.Queue(maxsize=500)
+        self._outbound: asyncio.Queue[MessageOut | MessageDeleteOut | ReactionOut] = asyncio.Queue(
+            maxsize=500
+        )
         self._send_lock = asyncio.Lock()
         self._component: XMPPComponent | None = None
         self._consumer_task: asyncio.Task[None] | None = None
@@ -157,7 +159,9 @@ class XMPPAdapter(AdapterBase):
                     await asyncio.sleep(0.25)
                     continue
                 if isinstance(evt, ReactionOut):
-                    logger.debug("dequeued ReactionOut discord_id={} emoji={}", evt.message_id, evt.emoji)
+                    logger.debug(
+                        "dequeued ReactionOut discord_id={} emoji={}", evt.message_id, evt.emoji
+                    )
                     await self._handle_reaction_out(evt)
                     await asyncio.sleep(0.25)
                     continue
@@ -169,7 +173,9 @@ class XMPPAdapter(AdapterBase):
                 else:
                     async with self._send_lock:
                         muc_jid = mapping.xmpp.muc_jid
-                        logger.debug("processing MessageOut discord_id={} -> {}", evt.message_id, muc_jid)
+                        logger.debug(
+                            "processing MessageOut discord_id={} -> {}", evt.message_id, muc_jid
+                        )
 
                         # Resolve XMPP nick (identity or fallback for dev without Portal)
                         nick = await self._resolve_nick_async(evt)
@@ -180,7 +186,9 @@ class XMPPAdapter(AdapterBase):
                         if self._identity and evt.author_id:
                             try:
                                 if origin == "discord":
-                                    avatar_url = await self._identity.avatar_for_discord(evt.author_id)
+                                    avatar_url = await self._identity.avatar_for_discord(
+                                        evt.author_id
+                                    )
                                 elif origin == "irc":
                                     avatar_url = await self._identity.avatar_for_irc(evt.author_id)
                                 elif origin == "xmpp":
@@ -189,7 +197,9 @@ class XMPPAdapter(AdapterBase):
                                         real_jid if isinstance(real_jid, str) else evt.author_id
                                     )
                                 else:
-                                    avatar_url = await self._identity.avatar_for_discord(evt.author_id)
+                                    avatar_url = await self._identity.avatar_for_discord(
+                                        evt.author_id
+                                    )
                             except Exception:
                                 pass
                         avatar_url = avatar_url or evt.avatar_url
@@ -200,7 +210,11 @@ class XMPPAdapter(AdapterBase):
                         avatar_hash: str | None = None
                         if avatar_url:
                             avatar_hash = await self._component.set_avatar_for_user(
-                                evt.author_id, nick, avatar_url, display_name=evt.author_display, origin=origin
+                                evt.author_id,
+                                nick,
+                                avatar_url,
+                                display_name=evt.author_display,
+                                origin=origin,
                             )
 
                         # Check if this is an edit
@@ -209,7 +223,9 @@ class XMPPAdapter(AdapterBase):
                             # Look up original XMPP message ID (stored when we sent Discord→XMPP)
                             lookup_id = evt.message_id or evt.raw.get("replace_id")
                             original_xmpp_id = (
-                                self._component._msgid_tracker.get_xmpp_id(lookup_id) if lookup_id else None
+                                self._component._msgid_tracker.get_xmpp_id(lookup_id)
+                                if lookup_id
+                                else None
                             )
                             logger.debug(
                                 "edit lookup discord_msg_id={} lookup_id={} -> xmpp_id={}",
@@ -238,8 +254,10 @@ class XMPPAdapter(AdapterBase):
                             # the reply to the displayed message (MUC uses stanza-id).
                             reply_to_xmpp_id = None
                             if evt.reply_to_id:
-                                reply_to_xmpp_id = self._component._msgid_tracker.get_xmpp_id_for_reaction(
-                                    evt.reply_to_id
+                                reply_to_xmpp_id = (
+                                    self._component._msgid_tracker.get_xmpp_id_for_reaction(
+                                        evt.reply_to_id
+                                    )
                                 )
                             reply_to_author_nick: str | None = evt.raw.get("reply_quoted_author")
                             reply_to_body: str | None = evt.raw.get("reply_quoted_content")
@@ -256,7 +274,10 @@ class XMPPAdapter(AdapterBase):
                             processed = extract_code_blocks(content)
                             had_paste = False
                             if processed.blocks:
-                                logger.debug("found {} code block(s), uploading to paste", len(processed.blocks))
+                                logger.debug(
+                                    "found {} code block(s), uploading to paste",
+                                    len(processed.blocks),
+                                )
                                 for i, block in enumerate(processed.blocks):
                                     url = await upload_paste(block.content, lang=block.lang)
                                     if url:
@@ -266,7 +287,9 @@ class XMPPAdapter(AdapterBase):
                                     else:
                                         snippet = block.content.replace("\n", " ").strip()[:80]
                                         label = f"[code] (paste failed) {snippet}…"
-                                        logger.warning("paste block {} upload failed, using inline snippet", i)
+                                        logger.warning(
+                                            "paste block {} upload failed, using inline snippet", i
+                                        )
                                     processed.text = processed.text.replace(f"{{PASTE_{i}}}", label)
                                 content = processed.text
                                 logger.debug("paste replaced content -> {!r}", content[:120])
@@ -287,7 +310,9 @@ class XMPPAdapter(AdapterBase):
                                     markup_spans = None
                                 else:
                                     content = xmpp_markup.body
-                                    markup_spans = xmpp_markup.spans if xmpp_markup.has_markup else None
+                                    markup_spans = (
+                                        xmpp_markup.spans if xmpp_markup.has_markup else None
+                                    )
                             else:
                                 markup_spans = None
 
@@ -295,8 +320,14 @@ class XMPPAdapter(AdapterBase):
                             # render them inline (they rely on URL file extension).
                             # Skip if content came from a paste upload — it's not an image.
                             is_media = False
-                            if not had_paste and content and content.strip().startswith(("http://", "https://")):
-                                logger.debug("probing bare URL for image reupload: {}", content.strip()[:80])
+                            if (
+                                not had_paste
+                                and content
+                                and content.strip().startswith(("http://", "https://"))
+                            ):
+                                logger.debug(
+                                    "probing bare URL for image reupload: {}", content.strip()[:80]
+                                )
                                 new_url = await self._component.reupload_extensionless_image(
                                     content.strip(),
                                 )
@@ -361,7 +392,9 @@ class XMPPAdapter(AdapterBase):
                             user_jid = f"{escaped}@{self._component._component_jid}"
                             bcast_key = (muc_jid, user_jid)
                             if bcast_key not in self._component._avatar_broadcast_done:
-                                await self._component._broadcast_avatar_presence(user_jid, avatar_hash)
+                                await self._component._broadcast_avatar_presence(
+                                    user_jid, avatar_hash
+                                )
                                 self._component._avatar_broadcast_done[bcast_key] = None
 
                 await asyncio.sleep(0.25)
@@ -503,7 +536,9 @@ class XMPPAdapter(AdapterBase):
         self._bus.register(self)
         self._consumer_task = asyncio.create_task(self._outbound_consumer())
         # Reconnect loop: connect with backoff on failure, retry on disconnect
-        self._component_task = asyncio.create_task(_connect_xmpp_with_backoff(self._component, host=server, port=port))
+        self._component_task = asyncio.create_task(
+            _connect_xmpp_with_backoff(self._component, host=server, port=port)
+        )
         logger.info("component started: {} (reconnect enabled)", component_jid)
 
     async def stop(self) -> None:
