@@ -93,42 +93,42 @@ mappings:
 
 ### Key Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `announce_joins_and_quits` | `true` | Relay join/part/quit to other protocols |
-| `announce_extras` | `false` | Relay topic/mode changes |
-| `content_filter_regex` | `[]` | Messages matching any pattern are not bridged |
-| `identity_cache_ttl_seconds` | 3600 | Portal identity cache TTL |
-| `avatar_cache_ttl_seconds` | 86400 | Avatar URL cache TTL |
-| `irc_puppet_idle_timeout_hours` | 24 | Disconnect idle puppets after N hours |
-| `irc_puppet_ping_interval` | 120 | Keep-alive PING interval (seconds) |
-| `irc_puppet_prejoin_commands` | `[]` | Commands after connect (supports `{nick}`) |
-| `irc_puppet_postfix` | `""` | Suffix for puppet nicks (e.g. `\|d`) |
-| `irc_throttle_limit` | 10 | IRC messages per second |
-| `irc_message_queue` | 30 | Max IRC outbound queue size |
-| `irc_rejoin_delay` | 5 | Seconds before rejoin after KICK/disconnect |
-| `irc_auto_rejoin` | `true` | Auto-rejoin after KICK/disconnect |
-| `irc_use_sasl` | `false` | SASL PLAIN auth |
-| `irc_tls_verify` | `true` | Verify IRC TLS (false for dev self-signed) |
-| `irc_relaymsg_clean_nicks` | `true` | Use RELAYMSG with clean nicks (requires UnrealIRCd third/relaymsg-atl) |
-| `irc_redact_enabled` | `false` | Enable REDACT for message deletion (requires UnrealIRCd third/redact-atl) |
+| Option                          | Default | Description                                                               |
+| ------------------------------- | ------- | ------------------------------------------------------------------------- |
+| `announce_joins_and_quits`      | `true`  | Relay join/part/quit to other protocols                                   |
+| `announce_extras`               | `false` | Relay topic/mode changes                                                  |
+| `content_filter_regex`          | `[]`    | Messages matching any pattern are not bridged                             |
+| `identity_cache_ttl_seconds`    | 3600    | Portal identity cache TTL                                                 |
+| `avatar_cache_ttl_seconds`      | 86400   | Avatar URL cache TTL                                                      |
+| `irc_puppet_idle_timeout_hours` | 24      | Disconnect idle puppets after N hours                                     |
+| `irc_puppet_ping_interval`      | 120     | Keep-alive PING interval (seconds)                                        |
+| `irc_puppet_prejoin_commands`   | `[]`    | Commands after connect (supports `{nick}`)                                |
+| `irc_puppet_postfix`            | `""`    | Suffix for puppet nicks (e.g. `\|d`)                                      |
+| `irc_throttle_limit`            | 10      | IRC messages per second                                                   |
+| `irc_message_queue`             | 30      | Max IRC outbound queue size                                               |
+| `irc_rejoin_delay`              | 5       | Seconds before rejoin after KICK/disconnect                               |
+| `irc_auto_rejoin`               | `true`  | Auto-rejoin after KICK/disconnect                                         |
+| `irc_use_sasl`                  | `false` | SASL PLAIN auth                                                           |
+| `irc_tls_verify`                | `true`  | Verify IRC TLS (false for dev self-signed)                                |
+| `irc_relaymsg_clean_nicks`      | `true`  | Use RELAYMSG with clean nicks (requires UnrealIRCd third/relaymsg-atl)    |
+| `irc_redact_enabled`            | `false` | Enable REDACT for message deletion (requires UnrealIRCd third/redact-atl) |
 
 See `config.example.yaml` for the full schema. In the monorepo, `just init` generates `config.yaml` from `config.template.yaml`.
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BRIDGE_DISCORD_TOKEN` | Yes | Discord bot token |
-| `BRIDGE_PORTAL_BASE_URL` | Yes | Portal API URL |
-| `BRIDGE_PORTAL_TOKEN` | Yes | Portal service token. Must match Portal's `BRIDGE_SERVICE_TOKEN` (same secret, different env var names). |
-| `BRIDGE_XMPP_COMPONENT_JID` | Yes | Component JID (e.g. `bridge.atl.chat`) |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | Yes | Prosody component secret |
-| `BRIDGE_XMPP_COMPONENT_SERVER` | No | Component host (default: `localhost`) |
-| `BRIDGE_XMPP_COMPONENT_PORT` | No | Component port (default: `5347`) |
-| `BRIDGE_IRC_NICK` | No | Main IRC nick (default: `bridge`) |
-| `BRIDGE_IRC_REDACT_ENABLED` | No | Override `irc_redact_enabled` from env (true/false) |
-| `BRIDGE_IRC_TLS_VERIFY` | No | Override `irc_tls_verify` from env (true/false) |
+| Variable                       | Required | Description                                                                                              |
+| ------------------------------ | -------- | -------------------------------------------------------------------------------------------------------- |
+| `BRIDGE_DISCORD_TOKEN`         | Yes      | Discord bot token                                                                                        |
+| `BRIDGE_PORTAL_BASE_URL`       | Yes      | Portal API URL                                                                                           |
+| `BRIDGE_PORTAL_TOKEN`          | Yes      | Portal service token. Must match Portal's `BRIDGE_SERVICE_TOKEN` (same secret, different env var names). |
+| `BRIDGE_XMPP_COMPONENT_JID`    | Yes      | Component JID (e.g. `bridge.atl.chat`)                                                                   |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | Yes      | Prosody component secret                                                                                 |
+| `BRIDGE_XMPP_COMPONENT_SERVER` | No       | Component host (default: `localhost`)                                                                    |
+| `BRIDGE_XMPP_COMPONENT_PORT`   | No       | Component port (default: `5347`)                                                                         |
+| `BRIDGE_IRC_NICK`              | No       | Main IRC nick (default: `bridge`)                                                                        |
+| `BRIDGE_IRC_REDACT_ENABLED`    | No       | Override `irc_redact_enabled` from env (true/false)                                                      |
+| `BRIDGE_IRC_TLS_VERIFY`        | No       | Override `irc_tls_verify` from env (true/false)                                                          |
 
 ## Architecture
 

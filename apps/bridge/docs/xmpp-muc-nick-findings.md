@@ -34,9 +34,9 @@ XMPP MUC client: relay lines whose **body** says “from discord” vs “from h
 
 ## “Multiple kaizens” — what was actually going on
 
-**In one XMPP MUC, you cannot have two different people both using the exact occupant nick `kaizen` at the same time.** XEP-0045 requires nick uniqueness per room; the server rejects or rewrites the second join. So “multiple kaizens” was never *two MUC occupants both named `kaizen`*.
+**In one XMPP MUC, you cannot have two different people both using the exact occupant nick `kaizen` at the same time.** XEP-0045 requires nick uniqueness per room; the server rejects or rewrites the second join. So “multiple kaizens” was never _two MUC occupants both named `kaizen`_.
 
-What people **see** that *feels* like “lots of kaizens”:
+What people **see** that _feels_ like “lots of kaizens”:
 
 1. **Many messages, one occupant** — The timeline repeats the **same** sender label (`kaizen`) on every line because **one** bridge puppet (one Discord user → one resolved MUC nick) sent **many** messages. That is one `kaizen`, not several.
 
@@ -50,4 +50,4 @@ What people **see** that *feels* like “lots of kaizens”:
 
 ---
 
-*Update this file when additional reference review completes.*
+_Update this file when additional reference review completes._

@@ -49,6 +49,9 @@ test = [
 ]
 lint = ["ruff"]
 types = ["types-pyyaml", "types-mock", "annotated-types"]
+dev = [
+    "basedpyright>=1.39.0",
+]
 
 [tool.uv]
 default-groups = ["test", "lint", "types"]
@@ -130,3 +133,9 @@ reportUnknownParameterType = "none"
 reportMissingParameterType = "none"
 reportUnknownMemberType = "none"
 reportUnknownArgumentType = "none"
+
+[tool.ruff]
+extend = "../../ruff.toml"
+
+[tool.ruff.lint.isort]
+known-first-party = ["bridge"]

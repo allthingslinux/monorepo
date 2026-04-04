@@ -1,0 +1,19 @@
+{
+  // Python interpreter — auto-discovered from .venv in this folder
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // ── basedpyright ────────────────────────────────────────────────────────────
+  // Point to the bridge folder so it picks up pyproject.toml [tool.basedpyright]
+  "basedpyright.analysis.configFilePath": "${workspaceFolder}",
+  // Analyse all workspace files, not just open ones
+  "basedpyright.analysis.diagnosticMode": "workspace",
+
+  // ── Pylance / python.analysis ───────────────────────────────────────────────
+  // Scope Pylance to src only (basedpyright handles type checking)
+  "python.analysis.include": ["src"],
+  "python.analysis.exclude": ["tests", ".venv"],
+
+  // ── Ruff ────────────────────────────────────────────────────────────────────
+  // Use pyproject.toml in this folder (extends root ruff.toml)
+  "ruff.configurationPreference": "filesystemFirst"
+}

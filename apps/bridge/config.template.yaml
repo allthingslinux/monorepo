@@ -9,7 +9,7 @@ mappings:
       server: ${IRC_BRIDGE_SERVER}
       port: ${IRC_TLS_PORT}
       tls: true
-      channel: '#general'
+      channel: "#general"
     xmpp:
       muc_jid: general@muc.${PROSODY_DOMAIN}
 # Toggles
@@ -24,7 +24,7 @@ xmpp_avatar_base_url: ${XMPP_AVATAR_BASE_URL}
 # XMPP avatar: public URL that Discord can fetch (e.g. https://xmpp.atl.chat)
 xmpp_avatar_public_url: ${XMPP_AVATAR_PUBLIC_URL}
 irc_puppet_idle_timeout_hours: 24
-irc_puppet_postfix: ''
+irc_puppet_postfix: ""
 
 # IRC flood control and rejoin
 irc_throttle_limit: 10
@@ -44,5 +44,5 @@ irc_redact_enabled: false
 
 # IRC SASL (optional)
 irc_use_sasl: false
-irc_sasl_user: ''
-irc_sasl_password: ''
+irc_sasl_user: ""
+irc_sasl_password: ""
