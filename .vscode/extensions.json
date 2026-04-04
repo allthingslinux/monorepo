@@ -13,6 +13,7 @@
     "lokalise.i18n-ally",
     "ms-azuretools.vscode-containers",
     "ms-python.python",
+    "detachhead.basedpyright",
     "vitest.explorer",
     "hashicorp.terraform",
     "timonwong.shellcheck"
