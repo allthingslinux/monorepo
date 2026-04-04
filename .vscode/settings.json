@@ -1,17 +1,45 @@
 {
+  // ── Editor ──────────────────────────────────────────────────────────────────
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
+  "editor.formatOnType": false,
+  "editor.linkedEditing": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.stickyScroll.enabled": true,
+  "editor.inlayHints.enabled": "onUnlessPressed",
+  "editor.suggest.preview": true,
+  "editor.suggest.localityBonus": true,
+  "editor.acceptSuggestionOnEnter": "smart",
+  "editor.experimental.preferTreeSitter.typescript": true,
+  // ── TypeScript / JavaScript ─────────────────────────────────────────────────
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.quoteStyle": "auto",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.tsserver.enableRegionDiagnostics": true,
+  "typescript.workspaceSymbols.excludeLibrarySymbols": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsserver.log": "off",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.suggest.autoImports": true,
+  // ── Formatters ──────────────────────────────────────────────────────────────
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "[javascriptreact]": {
+  "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "[typescriptreact]": {
+  "[javascriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
@@ -36,26 +64,157 @@
     "editor.wordWrapColumn": 80
   },
   "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    }
   },
   "[github-actions-workflow]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[yaml]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSaveMode": "file",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "mkhl.shfmt"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  // ── Ruff (Python LSP) ───────────────────────────────────────────────────────
+  "ruff.nativeServer": "on",
+  "ruff.configurationPreference": "filesystemFirst",
+  "ruff.configuration": "ruff.toml",
+  // ── Oxfmt ───────────────────────────────────────────────────────────────────
+  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  // ── Code actions ────────────────────────────────────────────────────────────
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "explicit"
   },
+  // ── Performance: file watching ──────────────────────────────────────────────
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/.turbo/**": true,
+    "**/.open-next/**": true,
+    "**/.contentlayer/**": true,
+    "**/.wrangler/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.ruff_cache/**": true,
+    "**/.pytest_cache/**": true,
+    "**/coverage/**": true
+  },
+  // ── Performance: search ─────────────────────────────────────────────────────
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.turbo": true,
+    "**/.contentlayer": true,
+    "**/dist": true,
+    "**/.open-next": true,
+    "**/pnpm-lock.yaml": true,
+    "**/.wrangler": true,
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/coverage": true,
+    "**/.ruff_cache": true
+  },
+  // ── Performance: explorer sidebar ──────────────────────────────────────────
+  "files.exclude": {
+    "**/.turbo": true,
+    "**/.contentlayer": true,
+    "**/__pycache__": true,
+    "**/.ruff_cache": true,
+    "**/.pytest_cache": true,
+    "services/chat/irc-client-obsidian/upstream": true
+  },
+  "files.insertFinalNewline": true,
+  "files.refactoring.autoSave": true,
+  // ── Workbench ───────────────────────────────────────────────────────────────
+  "workbench.editor.highlightModifiedTabs": true,
+  // ── Git ─────────────────────────────────────────────────────────────────────
+  "git.autofetch": true,
+  "git.autofetchPeriod": 300,
+  "git.autorefresh": true,
+  "git.decorations.enabled": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  // ── Tailwind CSS ────────────────────────────────────────────────────────────
+  // classFunctions: native support added in v0.14.10 (March 2025)
+  "tailwindCSS.classFunctions": [
+    "cn",
+    "cva",
+    "clsx",
+    "tw",
+    "twMerge",
+    "twJoin"
+  ],
+  // classRegex for patterns not covered by classFunctions
+  "tailwindCSS.experimental.classRegex": [
+    // cva with variants (handles nested objects)
+    ["cva\\(([^;]*)[\\);]", "`'\"`[`'\"`]"],
+    // tailwind-merge / twJoin
+    ["(?:twMerge|twJoin)\\(([^;]*)[\\);]", "`'\"`[`'\"`]"],
+    // tailwind-variants tv()
+    ["tv\\({([^]*?)}\\)", "\"'`[\"'`]"],
+    // DOM classList.add/remove/toggle
+    [
+      "classList.(?:add|remove|toggle)\\(([^)]*)\\)",
+      "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"
+    ],
+    // Variables ending with Style/ClassName/ClassNames
+    ["\\b\\w*Style\\b\\s*=\\s*\"'`[\"'`]"],
+    ["\\b\\w*ClassName\\b\\s*=\\s*\"'`[\"'`]"],
+    ["\\b\\w*ClassNames\\b\\s*=\\s*\"'`[\"'`]"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescriptreact": "html"
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "apps/bridge/**",
+    "infra/**",
+    "services/**",
+    "scripts/**",
+    "org/**",
+    "packages/tools-manifest/**"
+  ],
+  // ── Emmet ───────────────────────────────────────────────────────────────────
   "emmet.showExpandedAbbreviation": "never",
+  // ── File associations ───────────────────────────────────────────────────────
   "files.associations": {
     ".env": "dotenv",
-    ".env.local": "dotenv",
-    ".env.secrets": "dotenv",
-    ".env.secrets.dev": "dotenv",
-    ".env.secrets.prod": "dotenv",
-    ".dev.vars": "dotenv"
+    ".env.*": "dotenv",
+    ".dev.vars": "dotenv",
+    ".dev.vars.example": "dotenv",
+    "Containerfile": "dockerfile",
+    "Containerfile.*": "dockerfile",
+    "compose.yaml": "dockercompose",
+    "compose.yml": "dockercompose",
+    "compose.*.yaml": "dockercompose"
   },
+  // ── i18n-ally (portal) ──────────────────────────────────────────────────────
   "i18n-ally.localesPaths": ["apps/portal/locale", "apps/portal/src/i18n"],
   "i18n-ally.enabledParsers": ["json"],
   "i18n-ally.namespace": true,

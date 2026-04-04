@@ -1,12 +1,20 @@
 {
   "recommendations": [
     "oxc.oxc-vscode",
-    "bradlc.vscode-tailwindcss",
+    "charliermarsh.ruff",
+    "mkhl.shfmt",
+    "DavidAnson.vscode-markdownlint",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
     "mikestead.dotenv",
     "editorconfig.editorconfig",
     "usernamehw.errorlens",
-    "redhat.vscode-yaml",
+    "bradlc.vscode-tailwindcss",
     "lokalise.i18n-ally",
-    "DavidAnson.vscode-markdownlint"
+    "ms-azuretools.vscode-containers",
+    "ms-python.python",
+    "vitest.explorer",
+    "hashicorp.terraform",
+    "timonwong.shellcheck"
   ]
 }
