@@ -1,11 +1,11 @@
 "use client";
 
-import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
-import { Textarea } from "@atl/ui/components/textarea";
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
+import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
+import { Textarea } from "@atl/ui/components/textarea";
 
 export interface TextareaProps {
   className?: string;
@@ -47,11 +47,11 @@ const TextareaField = memo(function TextareaField({
         <FormItem className={className}>
           <FormLabel
             className={cn(
-              "font-medium text-base",
+              "text-base font-medium",
               required &&
                 "after:ml-0.5 after:font-bold after:text-red-500 after:content-['*']",
               !required &&
-                "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
+                "after:text-muted-foreground after:ml-1.5 after:text-xs after:font-normal after:content-['(optional)']"
             )}
           >
             {label}
@@ -77,7 +77,7 @@ const TextareaField = memo(function TextareaField({
 
           {/* Add direct error display that will always show */}
           {hasError && (
-            <p className="mt-1 font-medium text-red-400 text-sm">
+            <p className="mt-1 text-sm font-medium text-red-400">
               {errorMessage}
             </p>
           )}

@@ -1,6 +1,8 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button";
+import { Info } from "lucide-react";
+
+import { Button } from "@atl/ui/components/button";
 import {
   Dialog,
   DialogContent,
@@ -9,18 +11,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@atl/ui/components/dialog";
-import { Info } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 
 export function FinancialSupportDialog() {
   return (
     <Dialog>
       <DialogTrigger
-        className={cn(
-          buttonVariants({ size: "sm", variant: "ghost" }),
-          "ml-auto"
-        )}
+        className="ml-auto"
+        render={<Button size="sm" variant="ghost" />}
       >
         <Info className="mr-1 h-4 w-4" />
         Learn More
@@ -46,7 +43,7 @@ export function FinancialSupportDialog() {
         </DialogHeader>
         <div className="space-y-4 pt-2">
           <div className="space-y-2">
-            <h4 className="font-semibold text-foreground">Payment Methods:</h4>
+            <h4 className="text-foreground font-semibold">Payment Methods:</h4>
             <ul className="list-inside list-disc space-y-1 text-sm">
               <li>
                 <strong>Stripe:</strong> 2.2% + $0.30, +1% for non-US, +1.3% for

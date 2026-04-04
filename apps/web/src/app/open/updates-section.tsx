@@ -1,8 +1,8 @@
-import { Card, CardContent } from "@atl/ui/components/card";
 import { FileText } from "lucide-react";
 import Link from "next/link";
 
 import { getAllPostsAsPostType } from "@/lib/blog";
+import { Card, CardContent } from "@atl/ui/components/card";
 
 export async function UpdatesSection() {
   // Get the most recent blog posts (news/updates)
@@ -15,7 +15,7 @@ export async function UpdatesSection() {
     return (
       <Card>
         <CardContent className="p-6 text-center">
-          <div className="mb-2 text-lg text-muted-foreground">
+          <div className="text-muted-foreground mb-2 text-lg">
             Community updates coming soon
           </div>
           <div className="text-muted-foreground text-sm">
@@ -39,18 +39,18 @@ export async function UpdatesSection() {
         return (
           <div className="mb-6 last:mb-0" key={post.slug}>
             <Link href={`/blog/${post.categorySlug}/${post.slug}`}>
-              <Card className="cursor-pointer transition-colors hover:bg-accent/50">
+              <Card className="hover:bg-accent/50 cursor-pointer transition-colors">
                 <CardContent className="flex items-center gap-4 p-5">
                   <div className="flex-shrink-0">
-                    <FileText className="h-5 w-5 text-muted-foreground" />
+                    <FileText className="text-muted-foreground h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="font-medium">{monthYear}</div>
-                    <div className="line-clamp-1 text-muted-foreground text-sm">
+                    <div className="text-muted-foreground line-clamp-1 text-sm">
                       {post.title}
                     </div>
                   </div>
-                  <div className="flex-shrink-0 text-muted-foreground text-sm">
+                  <div className="text-muted-foreground flex-shrink-0 text-sm">
                     Read report →
                   </div>
                 </CardContent>

@@ -7,8 +7,9 @@ import {
   OrganizationSchema,
   WebsiteSchema,
 } from "@/components/seo/structured-data";
+import { ThemeProvider } from "@/components/theme-provider";
 
-import { geistMono, geistSans, inter } from "./fonts";
+import { geistMono, inter, lora } from "./fonts";
 import { defaultMetadata, viewport } from "./metadata";
 
 export const metadata = defaultMetadata;
@@ -22,16 +23,27 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} dark`}
+      className={`${inter.variable} ${lora.variable} ${geistMono.variable}`}
       lang="en"
+      suppressHydrationWarning
     >
       <body className="min-h-screen font-sans antialiased">
+        {/* Runs before React hydrates — sets dark/light class to prevent FOUC */}
+        <script
+          // biome-ignore lint/security/noDangerouslyInnerHtmlWithChildren: intentional SSR theme init
+          // oxlint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme')||'dark';if(t==='system')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.classList.toggle('dark',t==='dark')}catch(e){}`,
+          }}
+        />
         <GoogleTagManager gtmId="GTM-KK56FB5V" />
-        <OrganizationSchema />
-        <WebsiteSchema />
-        <Header />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <OrganizationSchema />
+          <WebsiteSchema />
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

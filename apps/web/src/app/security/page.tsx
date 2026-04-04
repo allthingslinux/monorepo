@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function SecurityPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-4">
-      <h1 className="mb-4 font-bold text-4xl">Security at All Things Linux</h1>
+      <h1 className="mb-4 text-4xl font-bold">Security at All Things Linux</h1>
 
       <div className="prose prose-lg dark:prose-invert max-w-none [&_li]:my-1 [&_ol]:space-y-1 [&_ul]:space-y-1">
         <p>
@@ -34,7 +34,7 @@ export default function SecurityPage() {
         <ul>
           <li>
             All our domains including their subdomains:
-            <ul className="mt-1 ml-4 space-y-0.5 text-muted-foreground text-sm">
+            <ul className="text-muted-foreground mt-1 ml-4 space-y-0.5 text-sm">
               <li>allthingslinux.com</li>
               <li>allthingslinux.dev</li>
               <li>allthingslinux.org</li>
@@ -84,8 +84,8 @@ export default function SecurityPage() {
             Any recommendations or patches you may have for resolving the issue
           </li>
         </ol>
-        <div className="rounded-lg border-2 border-primary/20 bg-card p-4 shadow-lg sm:p-5 md:p-6">
-          <h3 className="-mt-2 mb-0 flex items-center font-medium font-mono text-lg text-primary/90 sm:text-xl md:text-2xl">
+        <div className="border-primary/20 bg-card rounded-lg border-2 p-4 shadow-lg sm:p-5 md:p-6">
+          <h3 className="text-primary/90 -mt-2 mb-0 flex items-center font-mono text-lg font-medium sm:text-xl md:text-2xl">
             <span className="mr-2 text-green-500">~/</span>Contact Information
           </h3>
           <p className="-mt-2 mb-0 text-sm leading-relaxed sm:text-base md:text-lg">
@@ -97,7 +97,7 @@ export default function SecurityPage() {
               security@allthingslinux.org
             </a>
           </p>
-          <p className="mt-1 mb-3 ml-4 text-muted-foreground text-sm">
+          <p className="text-muted-foreground mt-1 mb-3 ml-4 text-sm">
             PGP Key:{" "}
             <a
               className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
@@ -106,7 +106,7 @@ export default function SecurityPage() {
               allthingslinux.org/security@allthingslinux.org-pubkey.asc
             </a>
           </p>
-          <p className="mb-0 text-muted-foreground text-sm leading-relaxed sm:text-base md:text-lg">
+          <p className="text-muted-foreground mb-0 text-sm leading-relaxed sm:text-base md:text-lg">
             Alternatively, you may open a ticket in our Discord server at{" "}
             <a
               className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
@@ -146,18 +146,18 @@ export default function SecurityPage() {
           ensure it is known that your actions were conducted in compliance with
           this policy.
         </p>
-        <div className="rounded-lg border-2 border-primary/20 bg-card p-4 shadow-lg sm:p-5 md:p-6">
-          <h3 className="-mt-2 mb-0 flex items-center font-medium font-mono text-lg text-primary/90 sm:text-xl md:text-2xl">
+        <div className="border-primary/20 bg-card rounded-lg border-2 p-4 shadow-lg sm:p-5 md:p-6">
+          <h3 className="text-primary/90 -mt-2 mb-0 flex items-center font-mono text-lg font-medium sm:text-xl md:text-2xl">
             <span className="mr-2 text-yellow-500">~/</span>Recognition
           </h3>
-          <p className="mt-1 mb-0 text-muted-foreground">
+          <p className="text-muted-foreground mt-1 mb-0">
             We appreciate security researchers who help keep our community safe.
             If you would like to be acknowledged for your responsible
             disclosure, please let us know in your report and we&apos;ll be
             happy to recognize your contribution publicly.
           </p>
         </div>
-        <p className="mb-0 text-muted-foreground text-sm">
+        <p className="text-muted-foreground mb-0 text-sm">
           Thank you for helping us keep All Things Linux secure for everyone.
         </p>
       </div>

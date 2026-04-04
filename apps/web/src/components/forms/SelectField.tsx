@@ -1,5 +1,9 @@
 "use client";
 
+import { memo } from "react";
+import { useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
 import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
 import {
   Select,
@@ -8,10 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@atl/ui/components/select";
-import { memo } from "react";
-import { useFormContext } from "react-hook-form";
-
-import { cn } from "@/lib/utils";
 
 interface SelectFieldProps {
   className?: string;
@@ -53,11 +53,11 @@ const SelectField = memo(function SelectField({
     <FormItem className={className}>
       <FormLabel
         className={cn(
-          "font-medium text-base",
+          "text-base font-medium",
           required &&
             "after:ml-0.5 after:font-bold after:text-red-500 after:content-['*']",
           !required &&
-            "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
+            "after:text-muted-foreground after:ml-1.5 after:text-xs after:font-normal after:content-['(optional)']"
         )}
       >
         {label}
@@ -97,7 +97,7 @@ const SelectField = memo(function SelectField({
 
       {/* Add direct error display that will always show */}
       {hasError && (
-        <p className="mt-1 font-medium text-red-400 text-sm">{errorMessage}</p>
+        <p className="mt-1 text-sm font-medium text-red-400">{errorMessage}</p>
       )}
     </FormItem>
   );

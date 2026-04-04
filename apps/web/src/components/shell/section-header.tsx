@@ -26,17 +26,17 @@ export function SectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="mb-3 font-medium text-primary text-xs uppercase tracking-[0.2em]">
+        <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="mb-4 font-bold font-display text-2xl tracking-tight sm:text-3xl md:text-4xl">
+      <h2 className="font-display mb-4 text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
         {title}
       </h2>
       {description ? (
         <p
           className={cn(
-            "text-balance text-muted-foreground text-sm sm:text-base md:text-lg",
+            "text-muted-foreground text-sm text-balance sm:text-base md:text-lg",
             descriptionClassName
           )}
         >

@@ -1,7 +1,46 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  Code2,
+  FileText,
+  Globe,
+  Heart,
+  MenuIcon,
+  MessageCircle,
+  MoonIcon,
+  Newspaper,
+  Server,
+  SunIcon,
+  Terminal,
+  Users,
+  Wrench,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { PiLinuxLogoBold } from "react-icons/pi";
+import { TbBrandDiscord } from "react-icons/tb";
+
+import { useTheme } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@atl/ui/components/accordion";
 import { Button } from "@atl/ui/components/button";
-import { buttonVariants } from "@atl/ui/components/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@atl/ui/components/navigation-menu";
 import {
   Sheet,
   SheetContent,
@@ -9,178 +48,347 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@atl/ui/components/sheet";
-import { MenuIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 
-import { cn } from "@/lib/utils";
+/* ─── Menu data ─────────────────────────────────────────────────────────────── */
 
-// Define navigation items
-const navItems = [
-  { href: "/", name: "Home" },
-  { href: "/about", name: "About" },
-  { href: "/code-of-conduct", name: "CoC" },
-  { href: "/blog", name: "Blog" },
-  { href: "https://atl.wiki", name: "Wiki" },
-  { href: "https://atl.tools", name: "Tools" },
-  { href: "/open", name: "Open" },
-  { href: "/apply", name: "Apply" },
+interface MenuLink {
+  title: string;
+  href: string;
+  description: string;
+  icon:
+    | LucideIcon
+    | React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  color: string;
+  external?: boolean;
+}
+
+interface DropdownMenu {
+  label: string;
+  links: MenuLink[];
+}
+
+const DROPDOWN_MENUS: DropdownMenu[] = [
+  {
+    label: "Projects",
+    links: [
+      {
+        title: ".gg/linux",
+        href: "https://discord.gg/linux",
+        description: "Our Discord community hub",
+        icon: TbBrandDiscord,
+        color: "#5865F2",
+        external: true,
+      },
+      {
+        title: "atl.wiki",
+        href: "https://atl.wiki",
+        description: "Guides & references",
+        icon: BookOpen,
+        color: "#10b981",
+        external: true,
+      },
+      {
+        title: "atl.tools",
+        href: "https://atl.tools",
+        description: "Curated Linux tools",
+        icon: Wrench,
+        color: "#f59e0b",
+        external: true,
+      },
+      {
+        title: "atl.chat",
+        href: "https://atl.chat",
+        description: "IRC & XMPP bridge",
+        icon: MessageCircle,
+        color: "#3b82f6",
+        external: true,
+      },
+      {
+        title: "tux",
+        href: "https://github.com/allthingslinux/tux",
+        description: "Our Discord bot",
+        icon: PiLinuxLogoBold,
+        color: "#f97316",
+        external: true,
+      },
+      {
+        title: "atl.sh",
+        href: "https://atl.sh",
+        description: "Community pubnix",
+        icon: Terminal,
+        color: "#8b5cf6",
+        external: true,
+      },
+      {
+        title: "Portal",
+        href: "https://id.allthingslinux.org",
+        description: "Identity & accounts",
+        icon: Server,
+        color: "#6366f1",
+        external: true,
+      },
+    ],
+  },
+  {
+    label: "Community",
+    links: [
+      {
+        title: "Contribute",
+        href: "/contribute",
+        description: "Support our mission",
+        icon: Heart,
+        color: "#ef4444",
+      },
+      {
+        title: "Apply",
+        href: "/apply",
+        description: "Join the team",
+        icon: Users,
+        color: "#10b981",
+      },
+      {
+        title: "GitHub",
+        href: "https://github.com/allthingslinux",
+        description: "All our repos",
+        icon: Code2,
+        color: "#a78bfa",
+        external: true,
+      },
+      {
+        title: "About",
+        href: "/about",
+        description: "Our story & mission",
+        icon: Globe,
+        color: "#3b82f6",
+      },
+      {
+        title: "Open",
+        href: "/open",
+        description: "Transparency dashboard",
+        icon: FileText,
+        color: "#f59e0b",
+      },
+      {
+        title: "Blog",
+        href: "/blog",
+        description: "News & updates",
+        icon: Newspaper,
+        color: "#f97316",
+      },
+      {
+        title: "Code of Conduct",
+        href: "/code-of-conduct",
+        description: "Community guidelines",
+        icon: BookOpen,
+        color: "#8b5cf6",
+      },
+    ],
+  },
 ];
 
-// Logo component
-const Logo = () => (
-  <Link className="mr-6 flex items-center" href="/">
-    <span className="font-bold text-foreground text-lg tracking-tight sm:text-xl md:text-2xl lg:text-3xl">
-      All Things Linux
-    </span>
-  </Link>
-);
+const PLAIN_LINKS: { label: string; href: string }[] = [];
 
-// Desktop NavLink component
-const NavLink = ({
-  href,
-  children,
+/* ─── Shared sub-link ───────────────────────────────────────────────────────── */
+
+function MenuSubLink({
+  link,
+  onClick,
 }: {
-  href: string;
-  children: React.ReactNode;
-}) => {
-  const pathname = usePathname();
-  const isActive =
-    pathname === href || (href !== "/" && pathname?.startsWith(href));
-  const isExternal = href.startsWith("http");
-
+  link: MenuLink;
+  onClick?: () => void;
+}) {
+  const isExternal = link.external;
   return (
     <Link
-      className={cn(
-        "relative rounded-full px-4 py-2 text-sm transition-all",
-        isActive
-          ? "bg-primary/10 font-medium text-primary"
-          : "font-normal text-foreground/90 hover:bg-background/80 hover:text-foreground"
-      )}
-      href={href}
+      className="hover:bg-muted flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-colors"
+      href={link.href}
+      onClick={onClick}
       rel={isExternal ? "noopener noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
     >
-      {children}
+      <link.icon
+        className="size-[18px] shrink-0"
+        style={{ color: link.color }}
+      />
+      <div className="min-w-0 flex-1">
+        <span className="text-foreground block truncate text-[13px] leading-none font-medium">
+          {link.title}
+        </span>
+        <span className="text-muted-foreground/80 mt-0.5 block truncate text-[11px] leading-tight">
+          {link.description}
+        </span>
+      </div>
+      <ChevronRight className="text-muted-foreground/50 ml-auto size-3.5 shrink-0" />
     </Link>
   );
-};
+}
 
-// Desktop navigation component
-const DesktopNavigation = () => (
-  <div className="hidden items-center rounded-full border border-border/30 bg-card/40 px-1.5 py-1.5 backdrop-blur-sm md:flex">
-    {navItems.map((item) => (
-      <NavLink href={item.href} key={item.name}>
-        {item.name}
-      </NavLink>
-    ))}
-  </div>
-);
+/* ─── Components ────────────────────────────────────────────────────────────── */
 
-// CTA button component
-const CTAButton = ({
-  className,
-  onNavigate,
-}: {
-  className?: string;
-  onNavigate?: () => void;
-}) => (
-  <Link href="/contribute" onClick={onNavigate}>
-    <Button
-      className={cn(
-        "rounded-full bg-primary px-5 py-2.5 font-semibold text-primary-foreground",
-        "transition-all duration-300 hover:scale-105 hover:bg-primary/90",
-        className
-      )}
-      size="default"
-      variant="default"
-    >
-      Contribute & Donate
-    </Button>
-  </Link>
-);
+function Logo() {
+  return (
+    <Link className="flex items-center gap-2" href="/">
+      <span className="font-display text-foreground text-lg font-bold tracking-tight sm:text-xl">
+        All Things Linux
+      </span>
+    </Link>
+  );
+}
 
-// Mobile navigation links
-const MobileNavLinks = ({ onNavigate }: { onNavigate: () => void }) => {
-  const pathname = usePathname();
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div className="size-8" />;
+  }
 
   return (
-    <div className="flex flex-col space-y-2">
-      {navItems.map((item) => {
-        const isActive =
-          pathname === item.href ||
-          (item.href !== "/" && pathname?.startsWith(item.href));
-
-        return (
-          <Link
-            className={cn(
-              "rounded-lg px-4 py-2.5 font-medium transition-colors",
-              isActive
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/90 hover:bg-card/60"
-            )}
-            href={item.href}
-            key={item.name}
-            onClick={onNavigate}
-          >
-            {item.name}
-          </Link>
-        );
-      })}
-    </div>
+    <Button
+      className="text-muted-foreground hover:text-foreground size-8"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      size="sm"
+      variant="ghost"
+    >
+      {resolvedTheme === "dark" ? (
+        <SunIcon className="size-4" />
+      ) : (
+        <MoonIcon className="size-4" />
+      )}
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   );
-};
+}
 
-// Mobile navigation component
-const MobileNavigation = () => {
+/* ─── Desktop Navigation ────────────────────────────────────────────────────── */
+
+function DesktopNavigation() {
+  return (
+    <NavigationMenu className="hidden lg:flex">
+      <NavigationMenuList>
+        {DROPDOWN_MENUS.map((menu) => (
+          <NavigationMenuItem key={menu.label}>
+            <NavigationMenuTrigger className="text-muted-foreground hover:bg-muted! hover:text-foreground! data-popup-open:bg-muted! data-open:bg-muted! bg-transparent px-3 py-1.5 text-sm font-normal">
+              {menu.label}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent className="p-0!">
+              <ul className="grid w-[32rem] grid-cols-2 gap-1 p-2.5">
+                {menu.links.map((link) => (
+                  <li key={link.title}>
+                    <MenuSubLink link={link} />
+                  </li>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
+
+        {PLAIN_LINKS.map((link) => (
+          <NavigationMenuItem key={link.label}>
+            <NavigationMenuLink
+              className={cn(
+                navigationMenuTriggerStyle(),
+                "text-muted-foreground bg-transparent px-3 py-1.5 text-sm font-normal"
+              )}
+              render={<Link href={link.href} />}
+            >
+              {link.label}
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+/* ─── Mobile Navigation ─────────────────────────────────────────────────────── */
+
+function MobileNavigation() {
   const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger
-        className={cn(
-          buttonVariants({ size: "sm", variant: "outline" }),
-          "ml-2 rounded-full border-border/50 md:hidden"
-        )}
+        className="lg:hidden"
+        render={<Button size="icon-sm" variant="ghost" />}
       >
-        <MenuIcon className="h-5 w-5" />
+        <MenuIcon className="size-5" />
         <span className="sr-only">Open menu</span>
       </SheetTrigger>
-      <SheetContent className="w-[280px]" side="right">
-        <SheetHeader className="mb-8 border-b pb-4">
-          <SheetTitle className="text-left">
-            <span className="font-bold text-foreground">All Things Linux</span>
+      <SheetContent
+        className="border-border/40 bg-background w-[300px]"
+        side="right"
+      >
+        <SheetHeader className="border-border/40 mb-4 border-b pb-4">
+          <SheetTitle className="font-display text-left">
+            All Things Linux
           </SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-8">
-          <MobileNavLinks onNavigate={handleClose} />
-          <CTAButton className="w-full" onNavigate={handleClose} />
+        <div className="flex flex-col gap-4">
+          <Accordion>
+            {DROPDOWN_MENUS.map((menu) => (
+              <AccordionItem key={menu.label} value={menu.label}>
+                <AccordionTrigger className="text-muted-foreground py-3 text-sm font-medium hover:no-underline">
+                  {menu.label}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-0.5 pb-2">
+                    {menu.links.map((link) => (
+                      <MenuSubLink
+                        key={link.title}
+                        link={link}
+                        onClick={handleClose}
+                      />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+          <div className="border-border/40 mt-2 border-t pt-4">
+            <Button
+              className="w-full text-sm font-medium"
+              onClick={handleClose}
+              render={<Link href="/contribute" />}
+              size="sm"
+              variant="default"
+            >
+              Contribute
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
   );
-};
+}
 
-// Main Header component
+/* ─── Header ────────────────────────────────────────────────────────────────── */
+
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-background/80 py-3 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+    <header className="pointer-events-none fixed top-0 right-0 left-0 z-50 flex justify-center">
+      <div className="border-border/20 bg-nav pointer-events-auto flex h-14 w-full max-w-4xl items-center justify-between rounded-b-2xl border-x border-b px-5 sm:px-6">
+        <div className="flex items-center gap-8">
           <Logo />
-
-          <div className="flex items-center gap-x-4">
-            <DesktopNavigation />
-            <div className="ml-4 hidden md:block">
-              <CTAButton />
-            </div>
-            <MobileNavigation />
+          <DesktopNavigation />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="hidden lg:block">
+            <Button
+              className="text-sm font-medium"
+              render={<Link href="/contribute" />}
+              size="sm"
+              variant="default"
+            >
+              Contribute
+            </Button>
           </div>
+          <ThemeToggle />
+          <MobileNavigation />
         </div>
       </div>
     </header>

@@ -1,26 +1,23 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button";
-import { Skeleton } from "@atl/ui/components/skeleton";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
+import { Button } from "@atl/ui/components/button";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 export default function BlogPostLoading() {
   return (
     <div className="fade-in animate-in fill-mode-forwards opacity-0 delay-300 duration-500">
-      <article className="container relative max-w-3xl py-6 lg:py-10">
-        <Link
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "absolute top-14 left-[-200px] hidden xl:inline-flex"
-          )}
-          href="/blog"
+      <article className="relative container max-w-3xl py-6 lg:py-10">
+        <Button
+          className="absolute top-14 left-[-200px] hidden xl:inline-flex"
+          render={<Link href="/blog" />}
+          variant="ghost"
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
           See all posts
-        </Link>
+        </Button>
 
         <Skeleton className="mb-2 h-12 w-3/4 rounded-md" />
         <Skeleton className="mb-6 h-6 w-4/5 rounded-md" />
@@ -33,7 +30,6 @@ export default function BlogPostLoading() {
           </div>
         </div>
 
-        {/* Content loading skeleton */}
         <div className="space-y-6">
           {Array.from({ length: 8 }, (_, i) => (
             <div className="space-y-3" key={i}>
@@ -47,10 +43,10 @@ export default function BlogPostLoading() {
 
         <hr className="mt-12" />
         <div className="flex justify-center py-6 lg:py-10">
-          <div className={cn(buttonVariants({ variant: "ghost" }))}>
+          <Button disabled variant="ghost">
             <ChevronLeft className="mr-2 h-4 w-4" />
             See all posts
-          </div>
+          </Button>
         </div>
       </article>
     </div>

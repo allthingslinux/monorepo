@@ -36,16 +36,16 @@ function MetricCard({
       } transition-all hover:shadow-md ${isComingSoon ? "opacity-75" : ""}`}
     >
       <CardContent className="p-6">
-        <div className="mb-1 font-medium text-muted-foreground text-sm">
+        <div className="text-muted-foreground mb-1 text-sm font-medium">
           {label}
         </div>
         {isComingSoon ? (
-          <div className="font-semibold text-2xl text-muted-foreground/60">
+          <div className="text-muted-foreground/60 text-2xl font-semibold">
             Coming soon
           </div>
         ) : (
           <div
-            className={`font-bold text-3xl ${
+            className={`text-3xl font-bold ${
               highlight ? valueClasses[highlight] : ""
             }`}
           >
@@ -53,7 +53,7 @@ function MetricCard({
           </div>
         )}
         {description && (
-          <div className="mt-2 text-muted-foreground text-xs">
+          <div className="text-muted-foreground mt-2 text-xs">
             {description}
           </div>
         )}

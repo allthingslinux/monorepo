@@ -1,7 +1,8 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import { ChevronUp } from "lucide-react";
+
+import { Button } from "@atl/ui/components/button";
 
 export default function ClientScrollToTop() {
   return (

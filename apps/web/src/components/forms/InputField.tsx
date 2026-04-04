@@ -1,11 +1,11 @@
 "use client";
 
-import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
-import { Input } from "@atl/ui/components/input";
 import { memo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
+import { FormDescription, FormItem, FormLabel } from "@atl/ui/components/form";
+import { Input } from "@atl/ui/components/input";
 
 export interface InputProps {
   className?: string;
@@ -48,11 +48,11 @@ const InputField = memo(function InputField({
         <FormItem className={className}>
           <FormLabel
             className={cn(
-              "font-medium text-base",
+              "text-base font-medium",
               required &&
                 "after:ml-0.5 after:font-bold after:text-red-500 after:content-['*']",
               !required &&
-                "after:ml-1.5 after:font-normal after:text-muted-foreground after:text-xs after:content-['(optional)']"
+                "after:text-muted-foreground after:ml-1.5 after:text-xs after:font-normal after:content-['(optional)']"
             )}
           >
             {label}
@@ -63,7 +63,7 @@ const InputField = memo(function InputField({
           <Input
             autoComplete="new-password"
             className={cn(
-              "bg-transparent dark:bg-input/30",
+              "dark:bg-input/30 bg-transparent",
               hasError && "border-red-500 focus:ring-red-500"
             )}
             data-lpignore="true"
@@ -82,7 +82,7 @@ const InputField = memo(function InputField({
 
           {/* Add direct error display that will always show */}
           {hasError && (
-            <p className="mt-1 font-medium text-red-400 text-sm">
+            <p className="mt-1 text-sm font-medium text-red-400">
               {errorMessage}
             </p>
           )}

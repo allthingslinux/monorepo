@@ -1,11 +1,11 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@atl/ui/components/button";
 
 interface BackToAllPostsButtonProps {
   className?: string;
@@ -53,7 +53,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
         <p class="text-neutral-200">Loading posts...</p>
       </div>
     `;
-    document.body.appendChild(overlay);
+    document.body.append(overlay);
 
     // Fade in the overlay
     setTimeout(() => {
@@ -83,18 +83,17 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
   };
 
   return (
-    <button
-      type="button"
+    <Button
       className={cn(
-        buttonVariants({ variant: "ghost" }),
         isNavigating && "pointer-events-none opacity-70",
         className
       )}
       disabled={isNavigating}
       onClick={handleGoBack}
+      variant="ghost"
     >
       <ChevronLeft className="mr-2 h-4 w-4" />
       See all posts
-    </button>
+    </Button>
   );
 }

@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@atl/ui/components/badge";
-import { Button } from "@atl/ui/components/button";
-import { Separator } from "@atl/ui/components/separator";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import type { Post } from "@/types/blog";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Separator } from "@atl/ui/components/separator";
 
 interface BlogPostsProps {
   categories: string[];
@@ -27,10 +27,10 @@ const BlogPostItem = React.memo(
         href={`/blog/${post.categorySlug}/${post.slug}`}
         onClick={onNavigate}
       >
-        <p className="font-semibold text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-sm font-semibold">
           {post.category}
         </p>
-        <h3 className="text-balance font-semibold text-2xl lg:text-3xl">
+        <h3 className="text-2xl font-semibold text-balance lg:text-3xl">
           {post.title}
         </h3>
         {post.description && (
@@ -203,7 +203,7 @@ export default function BlogPosts({
       <div className="container">
         <div className="flex flex-col items-center gap-4 text-center md:gap-6">
           <Badge variant="secondary">Blog</Badge>
-          <h1 className="font-bold text-3xl md:text-5xl lg:text-7xl">
+          <h1 className="text-3xl font-bold md:text-5xl lg:text-7xl">
             Latest Insights & Updates
           </h1>
           <p className="text-balance md:text-lg lg:text-xl">
@@ -232,7 +232,7 @@ export default function BlogPosts({
           >
             {currentContent.posts.length === 0 ? (
               <div className="py-12 text-center">
-                <p className="text-lg text-muted-foreground">
+                <p className="text-muted-foreground text-lg">
                   No posts found in this category.
                 </p>
               </div>
@@ -274,13 +274,13 @@ export default function BlogPosts({
             {/* Fixed overlay that stays in position during loading */}
             {(isNavigating || loadingPosts) && (
               <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm"
+                className="bg-background/70 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
                 style={{
                   opacity: isNavigating || loadingPosts ? 1 : 0,
                   transition: "opacity 0.3s ease",
                 }}
               >
-                <div className="rounded-lg bg-background/40 p-8 shadow-lg backdrop-blur-md">
+                <div className="bg-background/40 rounded-lg p-8 shadow-lg backdrop-blur-md">
                   <div className="flex flex-col items-center">
                     <svg
                       className="mb-4 h-10 w-10 animate-spin text-blue-500"

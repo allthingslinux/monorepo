@@ -1,8 +1,5 @@
 "use client";
 
-import { Badge } from "@atl/ui/components/badge";
-import { Button } from "@atl/ui/components/button";
-import { Card, CardContent } from "@atl/ui/components/card";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
@@ -13,6 +10,9 @@ import StepperForm from "@/components/apply/StepperForm";
 import { generalQuestions } from "@/data/forms/questions/general";
 import { roles } from "@/data/forms/roles";
 import { generateFormSchema } from "@/lib/utils";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Card, CardContent } from "@atl/ui/components/card";
 
 export default function RoleApplicationPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -138,7 +138,7 @@ export default function RoleApplicationPage() {
       <div className="mx-auto py-32">
         <div className="grid grid-cols-1 justify-items-center gap-6">
           <div className="flex w-full max-w-[800px] flex-col items-center justify-center px-4 py-12 text-center">
-            <div className="mb-6 rounded-xl bg-card p-6">
+            <div className="bg-card mb-6 rounded-xl p-6">
               <svg
                 className="mx-auto h-12 w-12 text-green-500"
                 fill="none"
@@ -155,14 +155,14 @@ export default function RoleApplicationPage() {
               </svg>
             </div>
 
-            <h1 className="mb-4 font-bold text-3xl">Application Submitted!</h1>
-            <p className="mb-8 max-w-md text-muted-foreground text-xl">
+            <h1 className="mb-4 text-3xl font-bold">Application Submitted!</h1>
+            <p className="text-muted-foreground mb-8 max-w-md text-xl">
               Thank you for your application. We&apos;ll review it and get back
               to you soon.
             </p>
 
             <Link
-              className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 font-medium text-primary-foreground text-sm shadow-sm hover:bg-green-700"
+              className="text-primary-foreground inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium shadow-sm hover:bg-green-700"
               href="/"
             >
               Return Home
@@ -197,14 +197,14 @@ export default function RoleApplicationPage() {
             <Badge className="mb-4 px-3 py-1 text-xs" variant="outline">
               {role.department}
             </Badge>
-            <h1 className="font-bold text-3xl">Apply for {role.name}</h1>
+            <h1 className="text-3xl font-bold">Apply for {role.name}</h1>
           </div>
 
           {/* Description card with same width as header */}
-          <Card className="w-full border-muted bg-muted/30">
+          <Card className="border-muted bg-muted/30 w-full">
             <CardContent className="pt-6">
               <div className="flex items-start gap-2">
-                <div className="h-full w-1 self-stretch rounded-full bg-primary" />
+                <div className="bg-primary h-full w-1 self-stretch rounded-full" />
                 <p className="text-muted-foreground">{role.description}</p>
               </div>
             </CardContent>
@@ -215,7 +215,7 @@ export default function RoleApplicationPage() {
         <div className="w-full max-w-[800px]">
           {submitError ? (
             <div
-              className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-destructive text-sm"
+              className="border-destructive/50 bg-destructive/10 text-destructive mb-4 rounded-md border px-4 py-3 text-sm"
               role="alert"
             >
               {submitError}

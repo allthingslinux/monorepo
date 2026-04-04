@@ -1,5 +1,3 @@
-import { Card, CardContent } from "@atl/ui/components/card";
-import { Skeleton } from "@atl/ui/components/skeleton";
 import { ArrowRight, Receipt, TrendingDown, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -11,6 +9,8 @@ import {
   getCloudflareEnv,
 } from "@/lib/integrations/quickbooks";
 import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent } from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 import { getPageMetadata } from "../metadata";
 import { MetricsSection } from "./metrics-section";
@@ -29,10 +29,10 @@ export const revalidate = 0;
 function HeroSection() {
   return (
     <div className="mb-16 space-y-6 text-center">
-      <h1 className="font-bold text-4xl tracking-tight sm:text-5xl lg:text-6xl">
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         A transparent organization since 2023
       </h1>
-      <p className="mx-auto max-w-3xl text-lg text-muted-foreground leading-relaxed sm:text-xl">
+      <p className="text-muted-foreground mx-auto max-w-3xl text-lg leading-relaxed sm:text-xl">
         As a 501(c)(3) non-profit, we practice radical transparency. Our
         finances, community growth, and project metrics are open for everyone to
         see.
@@ -66,18 +66,18 @@ function TransactionsSkeleton() {
       <div className="hidden rounded-lg border sm:block">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b bg-muted/50">
+            <thead className="bg-muted/50 border-b">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-sm">
+                <th className="px-4 py-3 text-left text-sm font-medium">
                   Date
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-sm">
+                <th className="px-4 py-3 text-left text-sm font-medium">
                   Vendor
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-sm">
+                <th className="px-4 py-3 text-left text-sm font-medium">
                   Description
                 </th>
-                <th className="px-4 py-3 text-right font-medium text-sm">
+                <th className="px-4 py-3 text-right text-sm font-medium">
                   Amount
                 </th>
               </tr>
@@ -125,34 +125,34 @@ function SummaryStats({ stats }: { stats: TransactionStats }) {
       <Card className="relative overflow-hidden border-2 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
           <div className="mb-4 flex items-start justify-between">
-            <div className="font-medium text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-sm font-medium">
               Total Transactions
             </div>
-            <div className="rounded-lg bg-primary/10 p-2">
-              <Receipt className="h-5 w-5 text-primary" />
+            <div className="bg-primary/10 rounded-lg p-2">
+              <Receipt className="text-primary h-5 w-5" />
             </div>
           </div>
-          <div className="font-bold text-3xl tracking-tight">
+          <div className="text-3xl font-bold tracking-tight">
             {stats.total.toLocaleString()}
           </div>
-          <div className="mt-2 text-muted-foreground text-xs">Recorded</div>
+          <div className="text-muted-foreground mt-2 text-xs">Recorded</div>
         </CardContent>
       </Card>
 
       <Card className="relative overflow-hidden border-2 border-green-500/20 bg-green-500/5 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
           <div className="mb-4 flex items-start justify-between">
-            <div className="font-medium text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-sm font-medium">
               Gross Income
             </div>
             <div className="rounded-lg bg-green-500/20 p-2">
               <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-500" />
             </div>
           </div>
-          <div className="font-bold text-3xl text-green-600 tracking-tight dark:text-green-500">
+          <div className="text-3xl font-bold tracking-tight text-green-600 dark:text-green-500">
             {formatCurrency(stats.income)}
           </div>
-          <div className="mt-2 text-muted-foreground text-xs">
+          <div className="text-muted-foreground mt-2 text-xs">
             Donated by Supporters
           </div>
         </CardContent>
@@ -161,17 +161,17 @@ function SummaryStats({ stats }: { stats: TransactionStats }) {
       <Card className="relative overflow-hidden border-2 border-red-500/20 bg-red-500/5 transition-shadow hover:shadow-lg">
         <CardContent className="p-6">
           <div className="mb-4 flex items-start justify-between">
-            <div className="font-medium text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-sm font-medium">
               Total Expenses
             </div>
             <div className="rounded-lg bg-red-500/20 p-2">
               <TrendingDown className="h-5 w-5 text-red-500 dark:text-red-400" />
             </div>
           </div>
-          <div className="font-bold text-3xl text-red-500 tracking-tight dark:text-red-400">
+          <div className="text-3xl font-bold tracking-tight text-red-500 dark:text-red-400">
             {formatCurrency(stats.expenses)}
           </div>
-          <div className="mt-2 text-muted-foreground text-xs">
+          <div className="text-muted-foreground mt-2 text-xs">
             Spent on our Mission
           </div>
         </CardContent>
@@ -182,7 +182,7 @@ function SummaryStats({ stats }: { stats: TransactionStats }) {
       >
         <CardContent className="p-6">
           <div className="mb-4 flex items-start justify-between">
-            <div className="font-medium text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-sm font-medium">
               Net Income
             </div>
             <div
@@ -194,11 +194,11 @@ function SummaryStats({ stats }: { stats: TransactionStats }) {
             </div>
           </div>
           <div
-            className={`font-bold text-3xl tracking-tight ${netIsPositive ? "text-blue-600 dark:text-blue-500" : "text-orange-600 dark:text-orange-500"}`}
+            className={`text-3xl font-bold tracking-tight ${netIsPositive ? "text-blue-600 dark:text-blue-500" : "text-orange-600 dark:text-orange-500"}`}
           >
             {formatCurrency(stats.netIncome)}
           </div>
-          <div className="mt-2 text-muted-foreground text-xs">In the Bank</div>
+          <div className="text-muted-foreground mt-2 text-xs">In the Bank</div>
         </CardContent>
       </Card>
     </div>
@@ -218,7 +218,7 @@ async function TransactionsContent() {
   if (transactions.length === 0) {
     return (
       <div className="px-4 py-16 text-center">
-        <div className="mb-2 text-lg text-muted-foreground">
+        <div className="text-muted-foreground mb-2 text-lg">
           No transactions found
         </div>
         <div className="text-muted-foreground text-xs">
@@ -276,7 +276,7 @@ function TransactionsSection() {
 
 export default function OpenPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <main className="w-full">
         <section className="py-12 sm:py-16 md:py-24">
           <div className="container mx-auto max-w-7xl px-4">
@@ -286,7 +286,7 @@ export default function OpenPage() {
             <div className="space-y-12">
               {/* Metrics Section */}
               <div>
-                <h2 className="mb-6 font-bold text-2xl tracking-tight">
+                <h2 className="mb-6 text-2xl font-bold tracking-tight">
                   Monthly metrics
                 </h2>
                 <Suspense
@@ -309,7 +309,7 @@ export default function OpenPage() {
 
               {/* Financial Section */}
               <div>
-                <h2 className="mb-6 font-bold text-2xl tracking-tight">
+                <h2 className="mb-6 text-2xl font-bold tracking-tight">
                   Financial transparency
                 </h2>
                 <TransactionsSection />
@@ -319,15 +319,15 @@ export default function OpenPage() {
               <div>
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h2 className="font-bold text-2xl tracking-tight">
+                    <h2 className="text-2xl font-bold tracking-tight">
                       Community updates
                     </h2>
-                    <p className="mt-1 text-muted-foreground text-sm">
+                    <p className="text-muted-foreground mt-1 text-sm">
                       Recent news and milestones from our community
                     </p>
                   </div>
                   <Link
-                    className="flex items-center gap-1 self-start text-muted-foreground text-sm transition-colors hover:text-foreground sm:self-auto"
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-1 self-start text-sm transition-colors sm:self-auto"
                     href="/blog"
                   >
                     View all

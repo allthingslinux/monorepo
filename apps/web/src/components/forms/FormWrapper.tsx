@@ -1,8 +1,5 @@
 "use client";
 
-import { Alert, AlertDescription } from "@atl/ui/components/alert";
-import { Button } from "@atl/ui/components/button";
-import { Form } from "@atl/ui/components/form";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -10,6 +7,9 @@ import { useFormContext } from "react-hook-form";
 
 import { shouldShowQuestion } from "@/components/apply/StepperForm";
 import type { FormQuestion } from "@/types";
+import { Alert, AlertDescription } from "@atl/ui/components/alert";
+import { Button } from "@atl/ui/components/button";
+import { Form } from "@atl/ui/components/form";
 
 import DigitsOnlyField from "./DigitsOnlyField";
 import InputField from "./InputField";
@@ -62,7 +62,7 @@ export default function FormWrapper({
     <Form {...form}>
       <form className={className} onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-2">
-          <h2 className="font-semibold text-2xl">{title}</h2>
+          <h2 className="text-2xl font-semibold">{title}</h2>
           {description && (
             <p className="text-muted-foreground">{description}</p>
           )}

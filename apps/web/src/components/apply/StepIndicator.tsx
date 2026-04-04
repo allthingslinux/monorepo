@@ -55,7 +55,7 @@ function StepItem({
 }) {
   // Helper to determine border styles
   const borderStyles = cn(
-    "group flex cursor-pointer flex-col border-l-4 py-2 pl-4 transition-colors hover:border-primary md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0",
+    "group hover:border-primary flex cursor-pointer flex-col border-l-4 py-2 pl-4 transition-colors md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0",
     {
       "border-border": isUpcoming && !hasError,
       "border-destructive": hasError,
@@ -69,9 +69,9 @@ function StepItem({
     {
       "bg-destructive text-destructive-foreground": hasError,
       "bg-primary text-primary-foreground": isComplete && !hasError,
-      "border border-border text-muted-foreground":
+      "border-border text-muted-foreground border":
         isUpcoming && !isCurrent && !hasError,
-      "border border-primary text-primary":
+      "border-primary text-primary border":
         isCurrent && !isComplete && !hasError,
     }
   );
@@ -99,13 +99,13 @@ function StepItem({
         onClick={onClick}
         type="button"
       >
-        <span className="font-medium text-sm">
+        <span className="text-sm font-medium">
           <span className="flex items-center">
             <span className={indicatorStyles}>{stepGlyph}</span>
             <span className={titleStyles}>
               {step.title}
               {hasError && errorCount > 0 && (
-                <span className="ml-2 inline-flex items-center rounded-full bg-destructive/10 px-2 py-1 font-medium text-destructive text-xs">
+                <span className="bg-destructive/10 text-destructive ml-2 inline-flex items-center rounded-full px-2 py-1 text-xs font-medium">
                   {errorCount} {errorCount === 1 ? "error" : "errors"}
                 </span>
               )}
@@ -113,7 +113,7 @@ function StepItem({
           </span>
         </span>
         {step.description && (
-          <span className="mt-0.5 text-muted-foreground text-sm">
+          <span className="text-muted-foreground mt-0.5 text-sm">
             {step.description}
           </span>
         )}
@@ -134,7 +134,7 @@ export default function StepIndicator({
 
   return (
     <nav aria-label="Form Progress" className="mb-8">
-      <ol className="space-y-4 md:flex md:space-x-8 md:space-y-0" role="list">
+      <ol className="space-y-4 md:flex md:space-y-0 md:space-x-8" role="list">
         {allSteps.map((step, index) => (
           <StepItem
             errorCount={errorCounts[step.id] || 0}

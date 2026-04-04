@@ -110,7 +110,7 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <article className="container relative max-w-4xl py-6 lg:py-10">
+    <article className="relative container max-w-4xl py-6 lg:py-10">
       <ArticleSchema
         authorName={post.author || "All Things Linux"}
         dateModified={post.date}
@@ -124,17 +124,17 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       <div>
-        <h1 className="mt-2 scroll-m-20 text-balance font-bold text-4xl tracking-tight">
+        <h1 className="mt-2 scroll-m-20 text-4xl font-bold tracking-tight text-balance">
           {post.title}
         </h1>
         {post.description && (
-          <p className="my-4 text-balance text-md text-muted-foreground">
+          <p className="text-md text-muted-foreground my-4 text-balance">
             {post.description}
           </p>
         )}
 
         {/* Author and date with card aesthetic */}
-        <div className="mt-4 inline-flex items-center space-x-2 rounded-md bg-card/50 px-3 py-1 text-muted-foreground text-sm">
+        <div className="bg-card/50 text-muted-foreground mt-4 inline-flex items-center space-x-2 rounded-md px-3 py-1 text-sm">
           {post.author && (
             <>
               <div className="font-medium">{post.author}</div>

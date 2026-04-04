@@ -92,7 +92,7 @@ const Blockquote = ({
     return (
       <blockquote
         className={cn(
-          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
+          "[&>*]:text-muted-foreground mt-6 border-l-2 pl-6 italic",
           className
         )}
         {...props}
@@ -114,7 +114,7 @@ const Blockquote = ({
     return (
       <blockquote
         className={cn(
-          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
+          "[&>*]:text-muted-foreground mt-6 border-l-2 pl-6 italic",
           className
         )}
         {...props}
@@ -130,7 +130,7 @@ const Blockquote = ({
     return (
       <blockquote
         className={cn(
-          "mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground",
+          "[&>*]:text-muted-foreground mt-6 border-l-2 pl-6 italic",
           className
         )}
         {...props}
@@ -263,7 +263,7 @@ const TableRow = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableRowElement>) => (
-  <tr className={cn("m-0 border-t p-0 even:bg-muted", className)} {...props} />
+  <tr className={cn("even:bg-muted m-0 border-t p-0", className)} {...props} />
 );
 
 const TableHeader = ({
@@ -310,7 +310,7 @@ const Code = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
   return isInlineCode ? (
     <code
       className={cn(
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm",
         className
       )}
       {...props}
@@ -382,13 +382,13 @@ function ErrorDisplay({ error }: { error: Error | null }) {
 
   return (
     <div className="rounded-md border border-red-500 bg-red-50 p-4 dark:bg-red-900/10">
-      <h3 className="font-medium text-lg text-red-800 dark:text-red-200">
+      <h3 className="text-lg font-medium text-red-800 dark:text-red-200">
         Error rendering MDX content
       </h3>
-      <p className="mt-2 text-red-700 text-sm dark:text-red-300">
+      <p className="mt-2 text-sm text-red-700 dark:text-red-300">
         There was an error rendering this content. Please check the MDX syntax.
       </p>
-      <pre className="mt-4 overflow-auto rounded-md bg-red-100 p-2 text-red-900 text-xs dark:bg-red-950 dark:text-red-200">
+      <pre className="mt-4 overflow-auto rounded-md bg-red-100 p-2 text-xs text-red-900 dark:bg-red-950 dark:text-red-200">
         {error.message}
       </pre>
     </div>
@@ -398,7 +398,7 @@ function ErrorDisplay({ error }: { error: Error | null }) {
 function MissingContentDisplay() {
   return (
     <div className="rounded-md border border-yellow-500 bg-yellow-50 p-4 dark:bg-yellow-900/10">
-      <h3 className="font-medium text-lg text-yellow-800 dark:text-yellow-200">
+      <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-200">
         Missing content
       </h3>
       <p className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
@@ -425,7 +425,7 @@ export function Mdx({ code }: MdxProps) {
   // Use the proper error boundary
   return (
     <MDXErrorBoundary>
-      <div className="mdx prose prose-invert max-w-none prose-code:bg-muted prose-pre:bg-black prose-headings:font-semibold prose-a:text-primary prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-code:before:content-none prose-code:after:content-none">
+      <div className="mdx prose prose-invert prose-code:bg-muted prose-pre:bg-black prose-headings:font-semibold prose-a:text-primary prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-code:before:content-none prose-code:after:content-none max-w-none">
         <Component components={components} />
       </div>
     </MDXErrorBoundary>

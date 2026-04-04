@@ -1,4 +1,3 @@
-import { Separator } from "@atl/ui/components/separator";
 import Link from "next/link";
 import { BsOpencollective } from "react-icons/bs";
 import {
@@ -17,7 +16,6 @@ import {
   Terms,
 } from "@/components/layouts/consent";
 
-// Define footer sections data
 const sections = [
   {
     links: [
@@ -40,13 +38,8 @@ const sections = [
   },
 ];
 
-// Define social media links
 const socialLinks = [
-  {
-    href: "https://discord.gg/linux",
-    icon: FaDiscord,
-    label: "Discord",
-  },
+  { href: "https://discord.gg/linux", icon: FaDiscord, label: "Discord" },
   {
     href: "https://opencollective.com/allthingslinux",
     icon: BsOpencollective,
@@ -74,186 +67,145 @@ const socialLinks = [
   },
 ];
 
-// Legal section component
-const LegalSection = () => (
-  <div>
-    <h3 className="mb-4 font-bold">Legal</h3>
-    <ul className="space-y-4 text-muted-foreground">
-      <li className="font-medium hover:text-primary">
-        <Privacy />
-      </li>
-      <li className="font-medium hover:text-primary">
-        <Cookies />
-      </li>
-      <li className="font-medium hover:text-primary">
-        <Terms />
-      </li>
-      <li className="font-medium hover:text-primary">
-        <Security />
-      </li>
-      <li className="font-medium hover:text-primary">
-        {/* <PrivacyChoices /> */}
-      </li>
-    </ul>
-  </div>
-);
-
-// // Logo component
-// const Logo = () => (
-//   <span className="text-2xl font-medium">All Things Linux</span>
-// );
-
-// Footer link component
-const FooterLink = ({ name, href }: { name: string; href: string }) => {
+function FooterLink({ name, href }: { name: string; href: string }) {
   const isExternal = href.startsWith("http");
   return (
-    <li className="font-medium hover:text-primary">
+    <li>
       {isExternal ? (
-        <a href={href} rel="noopener noreferrer" target="_blank">
+        <a
+          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+          href={href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {name}
         </a>
       ) : (
-        <Link href={href}>{name}</Link>
+        <Link
+          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+          href={href}
+        >
+          {name}
+        </Link>
       )}
     </li>
   );
-};
+}
 
-// Section component
-const FooterSection = ({
+function FooterSection({
   title,
   links,
 }: {
   title: string;
   links: { name: string; href: string }[];
-}) => (
-  <div>
-    <h3 className="mb-4 font-bold">{title}</h3>
-    <ul className="space-y-4 text-muted-foreground">
-      {links.map((link) => (
-        <FooterLink href={link.href} key={link.name} name={link.name} />
-      ))}
-    </ul>
-  </div>
-);
+}) {
+  return (
+    <div>
+      <h3 className="font-display text-foreground mb-3 text-sm font-medium">
+        {title}
+      </h3>
+      <ul className="space-y-2.5">
+        {links.map((link) => (
+          <FooterLink href={link.href} key={link.name} name={link.name} />
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-// Social icon component
-const SocialIcon = ({
-  Icon,
-  href,
-  label,
-}: {
-  Icon: React.ComponentType<{ className?: string }>;
-  href: string;
-  label: string;
-}) => (
-  <li className="font-medium hover:text-primary">
-    <a aria-label={label} href={href}>
-      <Icon className="size-6" />
-    </a>
-  </li>
-);
+function LegalSection() {
+  return (
+    <div>
+      <h3 className="font-display text-foreground mb-3 text-sm font-medium">
+        Legal
+      </h3>
+      <ul className="space-y-2.5">
+        <li>
+          <Privacy />
+        </li>
+        <li>
+          <Cookies />
+        </li>
+        <li>
+          <Terms />
+        </li>
+        <li>
+          <Security />
+        </li>
+      </ul>
+    </div>
+  );
+}
 
-// Social section component
-const SocialSection = () => (
-  <div>
-    <h3 className="mb-4 hidden font-bold md:block">Social</h3>
-    <ul className="flex items-center justify-center space-x-6 text-muted-foreground md:justify-start">
+function SocialIcons() {
+  return (
+    <div className="flex items-center gap-4">
       {socialLinks.map((social) => (
-        <SocialIcon
+        <a
+          aria-label={social.label}
+          className="text-muted-foreground hover:text-foreground transition-colors"
           href={social.href}
-          Icon={social.icon}
           key={social.label}
-          label={social.label}
-        />
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <social.icon className="size-4" />
+        </a>
       ))}
-    </ul>
-    <div className="mt-6 text-center md:text-left">
-      <h4 className="mb-2 hidden font-bold text-sm md:block">Support</h4>
-      <a
-        className="text-muted-foreground text-sm transition-colors hover:text-primary"
-        href="mailto:admin@allthingslinux.org"
-      >
-        admin@allthingslinux.org
-      </a>
     </div>
-    <div className="mt-5 text-center md:text-left">
-      <Link
-        className="font-bold text-muted-foreground text-xl transition-colors hover:text-primary"
-        href="/open"
-      >
-        /open
-      </Link>
-    </div>
-  </div>
-);
-
-// Main sections grid
-const FooterSections = () => (
-  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-    {sections.map((section) => (
-      <FooterSection
-        key={section.title}
-        links={section.links}
-        title={section.title}
-      />
-    ))}
-    <LegalSection />
-    <div className="hidden md:block">
-      <SocialSection />
-    </div>
-  </div>
-);
-
-// Mobile Footer
-const MobileFooter = () => (
-  <div className="flex flex-col items-center space-y-4 md:hidden">
-    <SocialSection />
-    <p className="text-center text-muted-foreground text-sm">
-      All Things Linux • Made with ☕ & 💛
-    </p>
-    <a
-      className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-primary"
-      href="https://github.com/allthingslinux/allthingslinux"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <FaGitAlt className="size-5" />
-      <span>View Source</span>
-    </a>
-  </div>
-);
-
-// Desktop Copyright
-const DesktopCopyright = () => (
-  <div className="hidden items-center justify-between md:flex">
-    <p className="text-muted-foreground text-sm">
-      All Things Linux • Made with ☕ & 💛
-    </p>
-    <a
-      className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-primary"
-      href="https://github.com/allthingslinux/allthingslinux"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <FaGitAlt className="size-5" />
-      <span>View Source</span>
-    </a>
-  </div>
-);
+  );
+}
 
 export default function Footer() {
   return (
-    <section className="py-12 md:py-20 lg:py-32">
-      <div className="container">
-        <footer className="w-full">
-          <Separator className="my-8 md:my-14" />
-          <FooterSections />
-          <Separator className="my-8 md:my-14" />
-          <DesktopCopyright />
-          <MobileFooter />
-        </footer>
+    <footer className="border-border/20 bg-card border-t">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        {/* Top: columns */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {sections.map((section) => (
+            <FooterSection
+              key={section.title}
+              links={section.links}
+              title={section.title}
+            />
+          ))}
+          <LegalSection />
+          <div className="space-y-4">
+            <h3 className="font-display text-foreground mb-3 text-sm font-medium">
+              Connect
+            </h3>
+            <SocialIcons />
+            <a
+              className="text-muted-foreground hover:text-foreground block text-sm transition-colors"
+              href="mailto:admin@allthingslinux.org"
+            >
+              admin@allthingslinux.org
+            </a>
+            <Link
+              className="font-display text-muted-foreground hover:text-foreground block font-medium transition-colors"
+              href="/open"
+            >
+              /open
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-border/20 mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
+          <p className="text-muted-foreground text-xs">
+            All Things Linux · Made with ☕ &amp; 💛
+          </p>
+          <a
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-xs transition-colors"
+            href="https://github.com/allthingslinux/allthingslinux"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <FaGitAlt className="size-3.5" />
+            <span>View Source</span>
+          </a>
+        </div>
       </div>
-    </section>
+    </footer>
   );
 }

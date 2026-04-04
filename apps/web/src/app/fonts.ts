@@ -1,6 +1,6 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Inter, Lora } from "next/font/google";
 
-/** Primary sans — matches portal and `@atl/ui` design tokens (`--font-inter`). */
+/** Primary sans — used for sans, display, and text across all UI. */
 export const inter = Inter({
   display: "swap",
   preload: true,
@@ -8,15 +8,16 @@ export const inter = Inter({
   variable: "--font-inter",
 });
 
-/** Display / alternate sans — `--font-geist-sans` in tokens. */
-export const geistSans = Geist({
+/** Serif — editorial headings, about page, quotes. */
+export const lora = Lora({
   display: "swap",
   preload: true,
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-lora",
+  style: ["normal", "italic"],
 });
 
-/** Monospace — `--font-geist-mono` in tokens. */
+/** Monospace — code blocks, mono UI elements. */
 export const geistMono = Geist_Mono({
   display: "swap",
   preload: true,

@@ -1,8 +1,5 @@
 "use client";
 
-import { Badge } from "@atl/ui/components/badge";
-import { Button } from "@atl/ui/components/button";
-import { Card, CardContent } from "@atl/ui/components/card";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -13,6 +10,9 @@ import { useState } from "react";
 
 import type { QuickBooksTransaction } from "@/lib/integrations/quickbooks";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
+import { Card, CardContent } from "@atl/ui/components/card";
 
 const INITIAL_DISPLAY_COUNT = 20;
 
@@ -33,7 +33,7 @@ function TransactionCard({
     <Card className="sm:hidden">
       <CardContent className="p-4">
         <div className="mb-2 flex items-start justify-between">
-          <div className="font-medium text-sm">
+          <div className="text-sm font-medium">
             {formatDate(transaction.txnDate)}
           </div>
           <Badge
@@ -44,9 +44,9 @@ function TransactionCard({
           </Badge>
         </div>
         <div className="space-y-1">
-          <div className="font-medium text-sm">{vendorName}</div>
+          <div className="text-sm font-medium">{vendorName}</div>
           {transaction.description && (
-            <div className="line-clamp-2 text-muted-foreground text-xs">
+            <div className="text-muted-foreground line-clamp-2 text-xs">
               {transaction.description}
             </div>
           )}
@@ -66,9 +66,9 @@ function TransactionRow({
   const transactionType = transaction.type;
 
   return (
-    <tr className="group border-b transition-colors last:border-0 hover:bg-muted/30">
+    <tr className="group hover:bg-muted/30 border-b transition-colors last:border-0">
       <td className="px-6 py-4">
-        <div className="font-medium text-sm">
+        <div className="text-sm font-medium">
           {formatDate(transaction.txnDate)}
         </div>
       </td>
@@ -80,22 +80,22 @@ function TransactionRow({
             <ArrowDownRight className="h-4 w-4 flex-shrink-0 text-red-500" />
           )}
           <div>
-            <div className="font-medium text-sm">{vendorName}</div>
-            <div className="mt-0.5 text-muted-foreground text-xs">
+            <div className="text-sm font-medium">{vendorName}</div>
+            <div className="text-muted-foreground mt-0.5 text-xs">
               {transactionType}
             </div>
           </div>
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="max-w-md text-muted-foreground text-sm">
+        <div className="text-muted-foreground max-w-md text-sm">
           {transaction.description || "-"}
         </div>
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center justify-end gap-2">
           <div
-            className={`font-semibold text-sm ${
+            className={`text-sm font-semibold ${
               isPositive
                 ? "text-green-600 dark:text-green-500"
                 : "text-red-500 dark:text-red-400"
@@ -130,26 +130,26 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
       </div>
 
       {/* Desktop table layout */}
-      <div className="hidden overflow-hidden rounded-lg border-2 bg-card sm:block">
+      <div className="bg-card hidden overflow-hidden rounded-lg border-2 sm:block">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b bg-muted/30">
+            <thead className="bg-muted/30 border-b">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+                <th className="text-muted-foreground px-6 py-4 text-left text-xs font-semibold tracking-wider uppercase">
                   Date
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+                <th className="text-muted-foreground px-6 py-4 text-left text-xs font-semibold tracking-wider uppercase">
                   Vendor / Donor
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+                <th className="text-muted-foreground px-6 py-4 text-left text-xs font-semibold tracking-wider uppercase">
                   Category
                 </th>
-                <th className="px-6 py-4 text-right font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+                <th className="text-muted-foreground px-6 py-4 text-right text-xs font-semibold tracking-wider uppercase">
                   Amount
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-border divide-y">
               {displayedTransactions.map((transaction) => (
                 <TransactionRow
                   key={`${transaction.type}-${transaction.id}`}

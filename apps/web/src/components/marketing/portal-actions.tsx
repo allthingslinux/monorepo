@@ -1,8 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button";
-
-import { cn } from "@/lib/utils";
+import { Button } from "@atl/ui/components/button";
 
 export function PortalActions({
   signInUrl,
@@ -13,23 +11,21 @@ export function PortalActions({
 }) {
   return (
     <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
-      <a
-        className={cn(buttonVariants({ size: "default" }), "w-full sm:w-auto")}
-        href={signUpUrl}
-        rel="noopener noreferrer"
+      <Button
+        className="w-full sm:w-auto"
+        render={<a href={signUpUrl} rel="noopener noreferrer" />}
+        size="default"
       >
         Create account
-      </a>
-      <a
-        className={cn(
-          buttonVariants({ size: "default", variant: "outline" }),
-          "w-full border-border/60 sm:w-auto"
-        )}
-        href={signInUrl}
-        rel="noopener noreferrer"
+      </Button>
+      <Button
+        className="border-border/60 w-full sm:w-auto"
+        render={<a href={signInUrl} rel="noopener noreferrer" />}
+        size="default"
+        variant="outline"
       >
         Sign in
-      </a>
+      </Button>
     </div>
   );
 }

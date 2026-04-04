@@ -1,46 +1,31 @@
 "use client";
 
-import { buttonVariants } from "@atl/ui/components/button";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
+import { Button } from "@atl/ui/components/button";
 
 const DISCORD = "https://discord.gg/linux";
 
 export function HomeActions({ className }: { className?: string }) {
   return (
     <div
-      className={cn(
-        "mt-8 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:flex-wrap sm:gap-3",
-        className
-      )}
+      className={`mt-8 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:flex-wrap sm:gap-3 ${className ?? ""}`}
     >
-      <a
-        className={cn(buttonVariants({ size: "default" }), "w-full sm:w-auto")}
-        href={DISCORD}
-        rel="noopener noreferrer"
-        target="_blank"
+      <Button
+        className="w-full sm:w-auto"
+        render={<a href={DISCORD} rel="noopener noreferrer" target="_blank" />}
+        size="lg"
       >
         Join Discord
-      </a>
-      <Link
-        className={cn(
-          buttonVariants({ size: "default", variant: "outline" }),
-          "w-full border-border/60 bg-transparent sm:w-auto"
-        )}
-        href="#portal"
+      </Button>
+      <Button
+        className="border-border/60 w-full bg-transparent sm:w-auto"
+        render={<Link href="#portal" />}
+        size="lg"
+        variant="outline"
       >
-        Portal
-      </Link>
-      <Link
-        className={cn(
-          buttonVariants({ size: "default", variant: "ghost" }),
-          "w-full text-muted-foreground sm:w-auto"
-        )}
-        href="#ecosystem"
-      >
-        Explore projects
-      </Link>
+        Create Account
+      </Button>
     </div>
   );
 }

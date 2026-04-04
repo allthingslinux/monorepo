@@ -1,92 +1,132 @@
-import { Badge } from "@atl/ui/components/badge";
+"use client";
+
 import Image from "next/image";
 
 import { Container, Section } from "@/components/shell";
+import { OrbitingCircles } from "@atl/ui/components/orbiting-circles";
 
 import { HomeActions } from "./home-actions";
 
-const SHOWCASE = [
+const inner = [
   { alt: "Arch Linux", src: "/images/hero/arch.webp" },
-  { alt: "Debian", src: "/images/hero/debian.webp" },
   { alt: "Fedora", src: "/images/hero/fedora.webp" },
+  { alt: "Debian", src: "/images/hero/debian.webp" },
   { alt: "NixOS", src: "/images/hero/nixos.webp" },
+];
+
+const midInner = [
   { alt: "Ubuntu", src: "/images/hero/ubuntu.webp" },
+  { alt: "Gentoo", src: "/images/hero/gentoo.webp" },
+  { alt: "Mint", src: "/images/hero/mint.webp" },
   { alt: "openSUSE", src: "/images/hero/opensuse.webp" },
-] as const;
+  { alt: "Void", src: "/images/hero/void.webp" },
+];
+
+const midOuter = [
+  { alt: "Pop!_OS", src: "/images/hero/popos.webp" },
+  { alt: "Red Hat", src: "/images/hero/redhat.webp" },
+  { alt: "Slackware", src: "/images/hero/slackware.webp" },
+  { alt: "CachyOS", src: "/images/hero/cachy.webp" },
+  { alt: "Artix", src: "/images/hero/artix.webp" },
+  { alt: "Asahi", src: "/images/hero/asahi.webp" },
+];
+
+const outer = [
+  { alt: "Bazzite", src: "/images/hero/bazzite.webp" },
+  { alt: "Bedrock", src: "/images/hero/bedrock.webp" },
+  { alt: "Fedora", src: "/images/hero/fedora.webp" },
+  { alt: "Debian", src: "/images/hero/debian.webp" },
+  { alt: "NixOS", src: "/images/hero/nixos.webp" },
+  { alt: "Gentoo", src: "/images/hero/gentoo.webp" },
+  { alt: "CachyOS", src: "/images/hero/cachy.webp" },
+];
 
 export function HeroSection() {
   return (
     <Section
       bleed
-      className="overflow-hidden border-b border-border/25"
-      size="hero"
-      variant="brand"
+      className="bg-card min-h-screen overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-1 before:bg-[url('/images/noise.png')] before:opacity-50 before:content-['']"
+      size="spacious"
+      variant="grid"
     >
       <Container>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-20 -top-28 size-[min(100vw,480px)] rounded-full bg-primary/12 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 left-1/3 size-[min(90vw,400px)] rounded-full bg-chart-2/8 blur-3xl"
-        />
+        {/* Text content */}
+        <div className="flex flex-col items-center pt-6 text-center md:pt-10">
+          <h1 className="font-display max-w-3xl text-[clamp(2.25rem,5.5vw,4rem)] leading-[1.05] font-bold tracking-tight">
+            <span className="text-foreground">
+              Let&apos;s build the future of Linux together
+            </span>
+          </h1>
 
-        <div className="relative grid gap-10 lg:grid-cols-[1fr_min(380px,38%)] lg:items-start lg:gap-14 xl:gap-20">
-          <div className="text-center lg:text-left">
-            <Badge
-              className="mb-5 border-primary/30 bg-primary/8 px-2.5 py-0.5 font-medium text-[10px] text-primary uppercase tracking-[0.16em]"
-              variant="outline"
-            >
-              501(c)(3) nonprofit
-            </Badge>
+          <p className="text-muted-foreground mt-5 max-w-2xl text-lg text-balance sm:text-xl">
+            All Things Linux is a non-profit organization with a mission to
+            empower the Linux ecosystem through education, collaboration, and
+            support.
+          </p>
 
-            <h1 className="font-bold font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] tracking-tight">
-              <span className="text-foreground">All Things </span>
-              <span className="bg-linear-to-r from-primary to-chart-2 bg-clip-text text-transparent">
-                Linux
-              </span>
-            </h1>
-
-            <p className="mt-4 max-w-xl text-balance text-lg text-foreground/90 sm:text-xl lg:max-w-none">
-              Education, tools, and community for the Linux ecosystem.
-            </p>
-            <p className="mx-auto mt-4 max-w-prose text-balance text-center text-sm leading-relaxed text-muted-foreground sm:text-[15px] lg:mx-0 lg:text-left">
-              We help people learn, build, and connect around Linux and free
-              software — guides, chat, services, and projects you can use and
-              contribute to.
-            </p>
-
-            <HomeActions className="justify-center lg:justify-start" />
-          </div>
-
-          <aside className="mx-auto w-full max-w-sm pt-2 lg:mx-0 lg:max-w-none lg:pt-1">
-            <p className="mb-3 text-center font-medium text-[10px] text-muted-foreground uppercase tracking-[0.18em] lg:text-left">
-              Distros &amp; desktops in our community
-            </p>
-            <div className="rounded-2xl border border-border/50 bg-card/60 p-4 shadow-sm ring-1 ring-border/20 backdrop-blur-sm sm:p-5">
-              <ul
-                aria-label="Linux distributions represented in our community"
-                className="grid grid-cols-3 gap-3"
-              >
-                {SHOWCASE.map(({ alt, src }) => (
-                  <li key={src}>
-                    <div className="flex aspect-square items-center justify-center rounded-xl bg-background/80 ring-1 ring-border/40 transition-colors hover:bg-background hover:ring-border/60">
-                      <Image
-                        alt={alt}
-                        className="size-[70%] max-h-10 object-contain"
-                        height={40}
-                        src={src}
-                        width={40}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
+          <HomeActions className="justify-center" />
         </div>
       </Container>
+
+      {/* Orbiting circles below text — only top half visible */}
+      <div className="relative h-[200px] md:h-[260px]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
+          <div className="relative flex size-[1200px] items-center justify-center">
+            <OrbitingCircles iconSize={56} radius={240} speed={1.8}>
+              {inner.map((d) => (
+                <div className="size-14 rounded-full p-1" key={d.alt}>
+                  <Image
+                    alt={d.alt}
+                    className="size-full object-contain"
+                    src={d.src}
+                    width={56}
+                    height={56}
+                  />
+                </div>
+              ))}
+            </OrbitingCircles>
+            <OrbitingCircles iconSize={52} radius={340} reverse speed={1.4}>
+              {midInner.map((d) => (
+                <div className="size-13 rounded-full p-1" key={d.alt}>
+                  <Image
+                    alt={d.alt}
+                    className="size-full object-contain"
+                    src={d.src}
+                    width={52}
+                    height={52}
+                  />
+                </div>
+              ))}
+            </OrbitingCircles>
+            <OrbitingCircles iconSize={48} radius={440} speed={1}>
+              {midOuter.map((d) => (
+                <div className="size-12 rounded-full p-1" key={d.alt}>
+                  <Image
+                    alt={d.alt}
+                    className="size-full object-contain"
+                    src={d.src}
+                    width={48}
+                    height={48}
+                  />
+                </div>
+              ))}
+            </OrbitingCircles>
+            <OrbitingCircles iconSize={44} radius={540} reverse speed={0.8}>
+              {outer.map((d) => (
+                <div className="size-11 rounded-full p-1" key={d.alt}>
+                  <Image
+                    alt={d.alt}
+                    className="size-full object-contain"
+                    src={d.src}
+                    width={44}
+                    height={44}
+                  />
+                </div>
+              ))}
+            </OrbitingCircles>
+          </div>
+        </div>
+      </div>
     </Section>
   );
 }

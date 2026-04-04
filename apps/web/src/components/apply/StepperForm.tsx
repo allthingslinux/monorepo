@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import { defineStepper } from "@stepperize/react";
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
@@ -9,6 +8,7 @@ import { z } from "zod";
 import FormWrapper from "@/components/forms/FormWrapper";
 import { generateFormSchema } from "@/lib/utils";
 import type { FormQuestion, Role } from "@/types";
+import { Button } from "@atl/ui/components/button";
 
 import type { StepId } from "./StepIndicator";
 import StepIndicator from "./StepIndicator";
@@ -298,10 +298,10 @@ function StepperFormContent({
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="font-medium text-red-800 text-sm">
+              <h3 className="text-sm font-medium text-red-800">
                 Submission Error
               </h3>
-              <div className="mt-2 text-red-700 text-sm">
+              <div className="mt-2 text-sm text-red-700">
                 <p>{submissionError}</p>
               </div>
             </div>

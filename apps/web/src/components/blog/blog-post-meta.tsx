@@ -1,10 +1,11 @@
 "use client";
 
+import { Calendar, Tag } from "lucide-react";
+import Link from "next/link";
+
 import { Avatar, AvatarFallback } from "@atl/ui/components/avatar";
 import { Badge } from "@atl/ui/components/badge";
 import { Card, CardContent } from "@atl/ui/components/card";
-import { Calendar, Tag } from "lucide-react";
-import Link from "next/link";
 
 interface BlogPostMetaProps {
   author: string;
@@ -30,22 +31,22 @@ export function BlogPostMeta({
     .slice(0, 2);
 
   return (
-    <Card className="mb-8 overflow-hidden border bg-card/50 backdrop-blur-sm">
+    <Card className="bg-card/50 mb-8 overflow-hidden border backdrop-blur-sm">
       <CardContent className="p-4 md:p-6">
         <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-6">
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 border border-border/50">
+            <Avatar className="border-border/50 h-10 w-10 border">
               <AvatarFallback className="bg-primary/10 text-primary">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-foreground">{author}</p>
+              <p className="text-foreground font-medium">{author}</p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-3 md:ml-auto">
-            <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
+            <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
               <Calendar className="h-4 w-4" />
               <time dateTime={date}>{formattedDate}</time>
             </div>
@@ -56,7 +57,7 @@ export function BlogPostMeta({
               }
             >
               <Badge
-                className="flex items-center gap-1 transition-colors hover:bg-secondary/90"
+                className="hover:bg-secondary/90 flex items-center gap-1 transition-colors"
                 variant="secondary"
               >
                 <Tag className="h-3 w-3" />

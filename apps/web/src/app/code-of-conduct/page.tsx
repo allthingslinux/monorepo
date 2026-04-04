@@ -1,6 +1,7 @@
-import { LoadingSpinner } from "@atl/ui/components/loading-spinner";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+
+import { LoadingSpinner } from "@atl/ui/components/loading-spinner";
 
 import { getPageMetadata } from "../metadata";
 import { getCodeOfConductContent, getLastUpdated } from "./actions";

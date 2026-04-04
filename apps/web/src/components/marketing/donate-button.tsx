@@ -1,12 +1,13 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import Link from "next/link";
+
+import { Button } from "@atl/ui/components/button";
 
 export function DonateButton() {
   return (
     <Button
-      className="shadow-md hover:bg-primary"
+      className="hover:bg-primary shadow-md"
       nativeButton={false}
       render={<Link href="/contribute">How to contribute</Link>}
       size="lg"

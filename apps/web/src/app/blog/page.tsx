@@ -1,9 +1,9 @@
-import { Badge } from "@atl/ui/components/badge";
-import { Button } from "@atl/ui/components/button";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getAllCategories, getAllPosts } from "@/lib/blog";
+import { Badge } from "@atl/ui/components/badge";
+import { Button } from "@atl/ui/components/button";
 
 import { getPageMetadata } from "../metadata";
 
@@ -45,10 +45,10 @@ export default async function BlogPage() {
           <Badge className="px-3 py-1" variant="secondary">
             Blog
           </Badge>
-          <h1 className="font-bold text-3xl md:text-5xl lg:text-6xl">
+          <h1 className="text-3xl font-bold md:text-5xl lg:text-6xl">
             Latest Insights & Updates
           </h1>
-          <p className="max-w-3xl text-balance text-muted-foreground md:text-lg lg:text-xl">
+          <p className="text-muted-foreground max-w-3xl text-balance md:text-lg lg:text-xl">
             Stay up to date with the latest news, tutorials, and updates from
             the All Things Linux community. Our contributors share their
             knowledge to help you master Linux and open source.
@@ -83,13 +83,13 @@ export default async function BlogPage() {
         {/* Posts grid */}
         {posts.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-lg text-muted-foreground">No posts found.</p>
+            <p className="text-muted-foreground text-lg">No posts found.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {posts.map((post) => (
               <Link
-                className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md"
+                className="group bg-card flex flex-col overflow-hidden rounded-lg border shadow-sm transition-all hover:shadow-md"
                 href={`/blog/${post.categorySlug}/${post.slug}`}
                 key={post.slug}
               >
@@ -106,11 +106,11 @@ export default async function BlogPage() {
                   <Badge className="mb-2 w-fit" variant="outline">
                     {post.category}
                   </Badge>
-                  <h3 className="mb-2 font-semibold text-xl transition-colors group-hover:text-primary">
+                  <h3 className="group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
                     {post.title}
                   </h3>
                   {post.description && (
-                    <p className="mb-4 line-clamp-3 text-base text-muted-foreground">
+                    <p className="text-muted-foreground mb-4 line-clamp-3 text-base">
                       {post.description}
                     </p>
                   )}
