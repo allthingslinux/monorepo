@@ -1,22 +1,22 @@
-"use strict";
+import type { UserConfig } from "@commitlint/types";
+import { RuleConfigSeverity } from "@commitlint/types";
 
 const RELEASE_HEADER_RE = /^chore\(release\):/i;
 
-/** @type {import('@commitlint/types').UserConfig} */
-module.exports = {
+const config: UserConfig = {
   extends: ["@commitlint/config-conventional"],
   // semantic-release/@semantic-release/git: release commits can include a long changelog in the body
   ignores: [
-    (message) => {
+    (message: string) => {
       const header = message.split("\n")[0]?.trim() ?? "";
       return RELEASE_HEADER_RE.test(header) || header.includes("[skip ci]");
     },
   ],
   rules: {
-    "body-max-length": [2, "always", 1000],
-    "body-max-line-length": [2, "always", 200],
+    "body-max-length": [RuleConfigSeverity.Error, "always", 1000],
+    "body-max-line-length": [RuleConfigSeverity.Error, "always", 200],
     "scope-enum": [
-      2,
+      RuleConfigSeverity.Error,
       "always",
       [
         // Apps & packages
@@ -27,6 +27,7 @@ module.exports = {
         "tools",
         "docs",
         "ui",
+        "fibery",
         // Infrastructure & ops
         "infra",
         "pubnix",
@@ -36,11 +37,16 @@ module.exports = {
         "tests",
         "config",
         "ci",
+        "agents",
       ],
     ],
-    "subject-case": [2, "never", ["start-case", "pascal-case", "upper-case"]],
+    "subject-case": [
+      RuleConfigSeverity.Error,
+      "never",
+      ["start-case", "pascal-case", "upper-case"],
+    ],
     "type-enum": [
-      2,
+      RuleConfigSeverity.Error,
       "always",
       [
         "feat",
@@ -58,3 +64,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;
