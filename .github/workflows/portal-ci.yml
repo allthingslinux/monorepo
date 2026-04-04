@@ -108,7 +108,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Run lint
-        run: pnpm check
+        run: pnpm ts:lint
 
   type-check:
     name: Type Check
