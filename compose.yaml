@@ -37,7 +37,7 @@ services:
     image: amir20/dozzle:v8
     container_name: dozzle
     restart: unless-stopped
-    profiles: [ "dev" ]
+    profiles: ["dev"]
     ports:
       - "${DOZZLE_PORT:-8082}:8080"
     volumes:
