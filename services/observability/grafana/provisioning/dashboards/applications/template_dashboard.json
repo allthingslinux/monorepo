@@ -2,10 +2,7 @@
   "dashboard": {
     "title": "Application Template",
     "uid": "app-template",
-    "tags": [
-      "template",
-      "application"
-    ],
+    "tags": ["template", "application"],
     "timezone": "browser",
     "editable": true,
     "graphTooltip": 1,

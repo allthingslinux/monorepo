@@ -6,7 +6,7 @@ groups:
       - alert: InstanceDown
         expr: up == 0
         for: 5m
-        keep_firing_for: 5m  # Prevent flapping
+        keep_firing_for: 5m # Prevent flapping
         labels:
           severity: critical
           team: infrastructure
@@ -47,7 +47,7 @@ groups:
         annotations:
           summary: "Disk space critical on {{ $labels.instance }}"
           description: "Disk usage is {{ $value | humanize }}% on {{ $labels.instance }} ({{ $labels.mountpoint }})"
-      
+
       # Watchdog (ensure monitoring is working)
       - alert: Watchdog
         expr: vector(1)

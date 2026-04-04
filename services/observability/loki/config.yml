@@ -26,9 +26,9 @@ common:
 schema_config:
   configs:
     - from: 2024-01-01
-      store: tsdb          # NOT boltdb-shipper (deprecated)
+      store: tsdb # NOT boltdb-shipper (deprecated)
       object_store: filesystem
-      schema: v13          # Latest schema version
+      schema: v13 # Latest schema version
       index:
         prefix: loki_index_
         period: 24h
@@ -39,7 +39,7 @@ storage_config:
     cache_location: /loki/tsdb-cache
     # Build index once per 15 minutes
     index_gateway_client:
-      server_address: ""  # Empty for monolithic mode
+      server_address: "" # Empty for monolithic mode
   filesystem:
     directory: /loki/chunks
 
@@ -49,15 +49,15 @@ ingester:
   lifecycler:
     ring:
       replication_factor: 1
-  
+
   # Chunk settings
-  chunk_encoding: snappy        # NOT gzip (too slow)
-  chunk_target_size: 1572864    # ~1.5MB compressed
-  chunk_block_size: 262144      # 256KB uncompressed
-  max_chunk_age: 2h             # Limits memory usage
-  chunk_idle_period: 30m        # Flush inactive streams
-  chunk_retain_period: 15s      # Keep chunks in memory after flushing
-  
+  chunk_encoding: snappy # NOT gzip (too slow)
+  chunk_target_size: 1572864 # ~1.5MB compressed
+  chunk_block_size: 262144 # 256KB uncompressed
+  max_chunk_age: 2h # Limits memory usage
+  chunk_idle_period: 30m # Flush inactive streams
+  chunk_retain_period: 15s # Keep chunks in memory after flushing
+
   # WAL (Write-Ahead Log) settings
   wal:
     enabled: true
@@ -69,16 +69,16 @@ ingester:
 # Query limits and performance tuning
 limits_config:
   # Retention
-  retention_period: 744h  # 31 days (recommended for logs)
-  
+  retention_period: 744h # 31 days (recommended for logs)
+
   # Ingestion limits
   ingestion_rate_mb: 16
   ingestion_burst_size_mb: 32
   max_line_size: 256KB
-  max_line_size_truncate: true  # Truncate instead of rejecting
-  
+  max_line_size_truncate: true # Truncate instead of rejecting
+
   # Query limits
-  max_query_length: 721h  # 30 days max query range
-  max_query_lookback: 0   # No limit (use retention_period)
+  max_query_length: 721h # 30 days max query range
+  max_query_lookback: 0 # No limit (use retention_period)
   max_query_parallelism: 32
   max_query_series: 500

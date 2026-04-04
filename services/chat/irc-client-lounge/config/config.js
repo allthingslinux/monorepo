@@ -36,6 +36,6 @@ module.exports = {
   // Core logs "Unknown key" warning — expected and harmless.
   deleteUploadsAfter: parseInt(
     process.env.THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES || "1440",
-    10,
+    10
   ),
 };

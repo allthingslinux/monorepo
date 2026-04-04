@@ -8,7 +8,7 @@ datasources:
     uid: mimir
     isDefault: true
     editable: false
-  
+
   - name: Loki
     type: loki
     access: proxy
@@ -17,7 +17,7 @@ datasources:
       manageAlerts: true
       maxLines: 1000
     editable: false
-  
+
   - name: InfluxDB
     type: influxdb
     access: proxy

@@ -69,10 +69,7 @@
     "certificate_key_file": "",
     "min_tls_version": 12,
     "tls_cipher_suites": [],
-    "tls_protocols": [
-      "http/1.1",
-      "h2"
-    ]
+    "tls_protocols": ["http/1.1", "h2"]
   },
   "defender": {
     "enabled": true,

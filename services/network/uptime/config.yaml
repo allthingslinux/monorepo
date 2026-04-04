@@ -8,7 +8,7 @@ endpoints:
 
   - name: "DNS reachability"
     group: "External"
-    url: "<DNS_CHECK_URL>"  # e.g. Tailscale DNS or your preferred check target
+    url: "<DNS_CHECK_URL>" # e.g. Tailscale DNS or your preferred check target
     interval: 30s
     conditions:
       - "[CONNECTED] == true"

@@ -1,18 +1,18 @@
 apiVersion: 1
 
 providers:
-  - name: 'infrastructure'
+  - name: "infrastructure"
     orgId: 1
-    folder: 'Infrastructure'
+    folder: "Infrastructure"
     type: file
     disableDeletion: true
     allowUiUpdates: false
     options:
       path: /etc/grafana/provisioning/dashboards/infrastructure
 
-  - name: 'applications'
+  - name: "applications"
     orgId: 1
-    folder: 'Applications'
+    folder: "Applications"
     type: file
     disableDeletion: true
     allowUiUpdates: false
