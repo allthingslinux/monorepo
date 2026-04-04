@@ -112,3 +112,20 @@ infra/sh/terraform/terraform.tfstate.backup
 infra/sh/terraform/terraform.tfstate.lock.info
 infra/sh/terraform/terraform.tfvars
 infra/sh/terraform/.terraform.lock.hcl
+
+.kiro/specs
+.playwright-mcp/
+
+
+# START Ruler Generated Files
+/.cursor/mcp.json
+/.cursor/mcp.json.bak
+/.mcp.json
+/.mcp.json.bak
+/.vscode/mcp.json
+/.vscode/mcp.json.bak
+/AGENTS.md
+/AGENTS.md.bak
+/CLAUDE.md
+/CLAUDE.md.bak
+# END Ruler Generated Files
