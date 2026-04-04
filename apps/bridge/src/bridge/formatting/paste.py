@@ -103,7 +103,9 @@ def _create_paste_sync(content: str, lang: str, server: str) -> str:
             "User-Agent": "atl-bridge/1.0",
         }
     ) as client:
-        resp = client.post(server, content=json.dumps(payload), headers={"Content-Type": "application/json"})
+        resp = client.post(
+            server, content=json.dumps(payload), headers={"Content-Type": "application/json"}
+        )
         resp.raise_for_status()
         result = resp.json()
 

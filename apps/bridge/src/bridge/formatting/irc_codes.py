@@ -23,7 +23,9 @@ STRIKETHROUGH = "\x1e"
 UNDERLINE = "\x1f"
 
 # Set of all recognised control characters (for fast membership checks)
-_CONTROL_CHARS = frozenset({BOLD, COLOR, RESET, MONOSPACE, REVERSE, ITALIC, STRIKETHROUGH, UNDERLINE})
+_CONTROL_CHARS = frozenset(
+    {BOLD, COLOR, RESET, MONOSPACE, REVERSE, ITALIC, STRIKETHROUGH, UNDERLINE}
+)
 
 # Map toggle control codes → Style flag.
 # REVERSE (0x16) is mapped to ITALIC per design decision D1: IRC's "reverse video"

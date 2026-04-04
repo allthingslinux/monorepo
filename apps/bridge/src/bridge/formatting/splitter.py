@@ -122,7 +122,8 @@ def split_irc_message(text: str, max_bytes: int = 450) -> list[str]:
             chunks.append(encoded[pos:end].decode("utf-8"))
         except UnicodeDecodeError:
             logger.debug(
-                "UTF-8 boundary heuristic produced invalid slice at pos={}; falling back to errors=ignore", pos
+                "UTF-8 boundary heuristic produced invalid slice at pos={}; falling back to errors=ignore",
+                pos,
             )
             chunks.append(encoded[pos:end].decode("utf-8", errors="ignore"))
         pos = end
