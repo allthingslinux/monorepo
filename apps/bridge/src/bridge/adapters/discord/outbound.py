@@ -54,10 +54,14 @@ async def handle_reaction_out(bot: commands.Bot | None, evt: ReactionOut) -> Non
         msg = await channel.fetch_message(int(evt.message_id))
         if is_remove:
             await msg.remove_reaction(evt.emoji, bot.user)
-            logger.info("removed reaction {} from message {} (from IRC/XMPP)", evt.emoji, evt.message_id)
+            logger.info(
+                "removed reaction {} from message {} (from IRC/XMPP)", evt.emoji, evt.message_id
+            )
         else:
             await msg.add_reaction(evt.emoji)
-            logger.info("added reaction {} to message {} (from IRC/XMPP)", evt.emoji, evt.message_id)
+            logger.info(
+                "added reaction {} to message {} (from IRC/XMPP)", evt.emoji, evt.message_id
+            )
     except Exception as exc:
         logger.debug(
             "Could not {} reaction on {}: {}",

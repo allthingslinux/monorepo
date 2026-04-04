@@ -194,7 +194,9 @@ class DiscordAdapter(AdapterBase):
                     url = await self._identity.avatar_for_irc(evt.author_id)
                 elif origin == "xmpp":
                     real_jid = (evt.raw or {}).get("real_jid")
-                    url = await self._identity.avatar_for_xmpp(real_jid if isinstance(real_jid, str) else evt.author_id)
+                    url = await self._identity.avatar_for_xmpp(
+                        real_jid if isinstance(real_jid, str) else evt.author_id
+                    )
                 else:
                     url = await self._identity.avatar_for_discord(evt.author_id)
                 if url:
@@ -254,7 +256,9 @@ class DiscordAdapter(AdapterBase):
             return self._msgid_resolver.get_discord_id(origin, replace_id)
         return None
 
-    async def _fetch_reply_context(self, channel_id: str, reply_to_id: str) -> tuple[str, str | None]:
+    async def _fetch_reply_context(
+        self, channel_id: str, reply_to_id: str
+    ) -> tuple[str, str | None]:
         if not self._bot:
             return ("Unknown", None)
         channel = self._bot.get_channel(int(channel_id))
@@ -320,10 +324,16 @@ class DiscordAdapter(AdapterBase):
                             if guild:
                                 edit_content = resolve_mentions(edit_content, guild)
                         async with self._get_channel_lock(evt.channel_id):
-                            edited = await self._webhook_edit(evt.channel_id, int(resolved), edit_content)
+                            edited = await self._webhook_edit(
+                                evt.channel_id, int(resolved), edit_content
+                            )
                         if edited:
                             discord_msg_id = int(resolved)
-                            logger.info("edited message {} via webhook (replace_id={})", resolved, replace_id)
+                            logger.info(
+                                "edited message {} via webhook (replace_id={})",
+                                resolved,
+                                replace_id,
+                            )
                         else:
                             logger.warning("webhook edit failed for message {}", resolved)
 
@@ -408,7 +418,9 @@ class DiscordAdapter(AdapterBase):
                             discord_msg_id,
                         )
                     # Link Discord ID to IRC msgid so IRC reactions work (IRC echo stored xmpp_id)
-                    if self._msgid_resolver.add_irc_discord_id_alias(str(discord_msg_id), evt.message_id):
+                    if self._msgid_resolver.add_irc_discord_id_alias(
+                        str(discord_msg_id), evt.message_id
+                    ):
                         logger.debug(
                             "Linked Discord ID to IRC tracker: discord_id={} -> xmpp_id={} (IRC reactions now work)",
                             discord_msg_id,
@@ -418,7 +430,9 @@ class DiscordAdapter(AdapterBase):
                 if discord_msg_id and evt.raw.get("origin") == "irc" and self._msgid_resolver:
                     self._msgid_resolver.store_irc(evt.message_id, str(discord_msg_id))
                     irc_msgid = evt.message_id
-                    if self._msgid_resolver.resolve_irc_xmpp_pending(irc_msgid, str(discord_msg_id)):
+                    if self._msgid_resolver.resolve_irc_xmpp_pending(
+                        irc_msgid, str(discord_msg_id)
+                    ):
                         logger.debug(
                             "Resolved IRC→XMPP pending: irc_msgid={} -> discord_id={} (XMPP reactions now work)",
                             irc_msgid,

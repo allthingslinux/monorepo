@@ -111,7 +111,9 @@ async def get_or_create_webhook(
             try:
                 channel = await bot.fetch_channel(int(channel_id))
             except Exception as exc:
-                logger.warning("channel {} not found (get_channel and fetch_channel): {}", channel_id, exc)
+                logger.warning(
+                    "channel {} not found (get_channel and fetch_channel): {}", channel_id, exc
+                )
                 return None
         if not channel or not isinstance(channel, TextChannel):
             logger.warning("channel {} not found or not a text channel", channel_id)
@@ -136,10 +138,15 @@ async def get_or_create_webhook(
                     for wh in webhooks:
                         if str(getattr(wh, "application_id", None) or "") == app_id:
                             webhook = wh
-                            logger.info("Reusing app-owned webhook for channel {} (limit reached)", channel_id)
+                            logger.info(
+                                "Reusing app-owned webhook for channel {} (limit reached)",
+                                channel_id,
+                            )
                             break
                 if not webhook and len(webhooks) < DISCORD_WEBHOOKS_PER_CHANNEL:
-                    webhook = await channel.create_webhook(name=WEBHOOK_NAME, reason="ATL Bridge relay")
+                    webhook = await channel.create_webhook(
+                        name=WEBHOOK_NAME, reason="ATL Bridge relay"
+                    )
                 if webhook:
                     webhook_cache[channel_id] = webhook
             except Exception as exc:
@@ -189,7 +196,9 @@ async def webhook_send(
             channel = bot.get_channel(int(channel_id))
             if channel and isinstance(channel, TextChannel) and channel.guild:
                 guild_id = str(channel.guild.id)
-        reply_line = _build_reply_line(reply_to_id, channel_id, guild_id, reply_author, reply_content)
+        reply_line = _build_reply_line(
+            reply_to_id, channel_id, guild_id, reply_author, reply_content
+        )
         content = reply_line + (content or "")
 
     send_kw: dict = {

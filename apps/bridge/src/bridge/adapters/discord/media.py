@@ -122,7 +122,9 @@ async def fetch_media_to_temp(session: aiohttp.ClientSession | None, url: str) -
         # network request or file open raises before we return.
         try:
             total = 0
-            async with session.get(fetch_url, timeout=aiohttp.ClientTimeout(total=MEDIA_FETCH_TIMEOUT)) as resp:
+            async with session.get(
+                fetch_url, timeout=aiohttp.ClientTimeout(total=MEDIA_FETCH_TIMEOUT)
+            ) as resp:
                 if resp.status != 200:
                     logger.debug("media fetch failed: {} status={}", url[:80], resp.status)
                     os.unlink(path)
@@ -133,7 +135,11 @@ async def fetch_media_to_temp(session: aiohttp.ClientSession | None, url: str) -
                         total += len(chunk)
                         if total > MEDIA_SIZE_LIMIT:
                             # Break immediately on size exceeded — do not write this chunk.
-                            logger.debug("media fetch truncated: {} exceeded {} bytes", url[:80], MEDIA_SIZE_LIMIT)
+                            logger.debug(
+                                "media fetch truncated: {} exceeded {} bytes",
+                                url[:80],
+                                MEDIA_SIZE_LIMIT,
+                            )
                             break
                         f.write(chunk)
             if total > MEDIA_SIZE_LIMIT:
@@ -152,7 +158,9 @@ async def fetch_media_to_temp(session: aiohttp.ClientSession | None, url: str) -
         return None
 
 
-async def prepare_media(session: aiohttp.ClientSession | None, content: str) -> tuple[str, File | None, str | None]:
+async def prepare_media(
+    session: aiohttp.ClientSession | None, content: str
+) -> tuple[str, File | None, str | None]:
     """Probe URL and fetch media if applicable. Returns (content, file, temp_path).
 
     - Non-media URL: ``(content, None, None)``
@@ -173,7 +181,9 @@ async def prepare_media(session: aiohttp.ClientSession | None, content: str) -> 
     return (content, None, None)
 
 
-async def upload_file(bot: commands.Bot | None, channel_id: str, data: bytes, filename: str) -> None:
+async def upload_file(
+    bot: commands.Bot | None, channel_id: str, data: bytes, filename: str
+) -> None:
     """Upload file to Discord channel."""
     if not bot:
         return

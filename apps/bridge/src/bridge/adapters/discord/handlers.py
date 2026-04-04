@@ -6,7 +6,13 @@ import contextlib
 import time
 from typing import TYPE_CHECKING
 
-from discord import Message, MessageType, RawBulkMessageDeleteEvent, RawMessageDeleteEvent, TextChannel
+from discord import (
+    Message,
+    MessageType,
+    RawBulkMessageDeleteEvent,
+    RawMessageDeleteEvent,
+    TextChannel,
+)
 from discord.enums import ReactionType
 from loguru import logger
 
@@ -112,12 +118,16 @@ async def on_message(adapter: DiscordAdapter, message: Message) -> None:
     canonical_username: str | None = None
     if adapter._identity:
         with contextlib.suppress(Exception):
-            canonical_username = await adapter._identity.username_for_discord(str(message.author.id))
+            canonical_username = await adapter._identity.username_for_discord(
+                str(message.author.id)
+            )
     author_display = relay_author_display(canonical_username, message.author)
 
     # Voice messages: relay the audio attachment URL or a placeholder.
     if _is_voice_message(message):
-        avatar_url = str(message.author.display_avatar.url) if message.author.display_avatar else None
+        avatar_url = (
+            str(message.author.display_avatar.url) if message.author.display_avatar else None
+        )
         voice_content = (
             (getattr(message.attachments[0], "proxy_url", None) or message.attachments[0].url)
             if message.attachments
@@ -214,7 +224,9 @@ async def on_message(adapter: DiscordAdapter, message: Message) -> None:
         author_display=author_display,
         content=content,
         message_id=str(message.id),
-        reply_to_id=str(message.reference.message_id) if message.reference and message.reference.message_id else None,
+        reply_to_id=str(message.reference.message_id)
+        if message.reference and message.reference.message_id
+        else None,
         is_edit=False,
         is_action=is_action,
         avatar_url=avatar_url,
@@ -270,7 +282,9 @@ async def on_raw_message_edit(adapter: DiscordAdapter, payload) -> None:
     canonical_username: str | None = None
     if adapter._identity:
         with contextlib.suppress(Exception):
-            canonical_username = await adapter._identity.username_for_discord(str(message.author.id))
+            canonical_username = await adapter._identity.username_for_discord(
+                str(message.author.id)
+            )
     author_display = relay_author_display(canonical_username, message.author)
 
     avatar_url = str(message.author.display_avatar.url) if message.author.display_avatar else None
@@ -284,7 +298,9 @@ async def on_raw_message_edit(adapter: DiscordAdapter, payload) -> None:
         author_display=author_display,
         content=content,
         message_id=msg_id,
-        reply_to_id=str(message.reference.message_id) if message.reference and message.reference.message_id else None,
+        reply_to_id=str(message.reference.message_id)
+        if message.reference and message.reference.message_id
+        else None,
         is_edit=True,
         is_action=False,
         avatar_url=avatar_url,
@@ -319,7 +335,9 @@ async def on_reaction_add(adapter: DiscordAdapter, payload) -> None:
     if adapter._identity and user:
         with contextlib.suppress(Exception):
             canonical_username = await adapter._identity.username_for_discord(str(payload.user_id))
-    author_display = relay_author_display(canonical_username, user) if user else str(payload.user_id)
+    author_display = (
+        relay_author_display(canonical_username, user) if user else str(payload.user_id)
+    )
 
     from bridge.events import reaction_in
 
@@ -331,7 +349,12 @@ async def on_reaction_add(adapter: DiscordAdapter, payload) -> None:
         author_id=str(payload.user_id),
         author_display=author_display,
     )
-    logger.info("reaction bridged: channel={} author={} emoji={}", channel_id, author_display, str(payload.emoji))
+    logger.info(
+        "reaction bridged: channel={} author={} emoji={}",
+        channel_id,
+        author_display,
+        str(payload.emoji),
+    )
     adapter._bus.publish("discord", evt)
 
 
@@ -367,7 +390,9 @@ async def on_reaction_remove(adapter: DiscordAdapter, payload) -> None:
     if adapter._identity and user:
         with contextlib.suppress(Exception):
             canonical_username = await adapter._identity.username_for_discord(str(payload.user_id))
-    author_display = relay_author_display(canonical_username, user) if user else str(payload.user_id)
+    author_display = (
+        relay_author_display(canonical_username, user) if user else str(payload.user_id)
+    )
 
     from bridge.events import reaction_in
 
@@ -443,7 +468,9 @@ async def on_raw_message_delete(adapter: DiscordAdapter, payload: RawMessageDele
     adapter._bus.publish("discord", evt)
 
 
-async def on_raw_bulk_message_delete(adapter: DiscordAdapter, payload: RawBulkMessageDeleteEvent) -> None:
+async def on_raw_bulk_message_delete(
+    adapter: DiscordAdapter, payload: RawBulkMessageDeleteEvent
+) -> None:
     """Handle Discord bulk message deletes (e.g. moderator purge)."""
     channel_id = str(payload.channel_id)
     if not adapter._is_bridged_channel(channel_id):
