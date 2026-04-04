@@ -14,6 +14,7 @@
     "destroy": "alchemy destroy --app chat-web"
   },
   "dependencies": {
+    "@atl/ui": "workspace:*",
     "@opennextjs/cloudflare": "catalog:",
     "@radix-ui/react-slot": "catalog:",
     "alchemy": "catalog:",
@@ -23,11 +24,12 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "tailwind-merge": "catalog:"
+    "tailwind-merge": "catalog:",
+    "tw-animate-css": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260317.1",
-    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
