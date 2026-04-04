@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@atl/ui/lib/utils";
 import { mergeProps } from "@base-ui/react/merge-props";
 import * as React from "react";
 import {
@@ -10,6 +9,8 @@ import {
   useFormState,
 } from "react-hook-form";
 import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+
+import { cn } from "@atl/ui/lib/utils";
 
 import { Label } from "./label";
 

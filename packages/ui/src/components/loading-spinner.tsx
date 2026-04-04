@@ -1,5 +1,6 @@
-import { cn } from "@atl/ui/lib/utils";
 import type React from "react";
+
+import { cn } from "@atl/ui/lib/utils";
 
 export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;

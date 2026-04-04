@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "../../apps/portal/src/styles/globals.css",
+    "css": "src/styles/design-tokens.css",
     "baseColor": "gray",
     "cssVariables": true,
     "prefix": ""
