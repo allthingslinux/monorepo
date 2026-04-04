@@ -76,7 +76,9 @@ class DefaultMessageIDResolver:
         # Pending irc_msgid → (xmpp_id, muc_jid) for IRC-origin messages relayed to XMPP.
         # Resolved when the Discord adapter gets the webhook discord_id.
         # TTLCache prevents unbounded growth if the Discord webhook never fires.
-        self._irc_xmpp_pending: TTLCache[str, tuple[str, str]] = TTLCache(maxsize=_IRC_XMPP_PENDING_MAXSIZE, ttl=3600)
+        self._irc_xmpp_pending: TTLCache[str, tuple[str, str]] = TTLCache(
+            maxsize=_IRC_XMPP_PENDING_MAXSIZE, ttl=3600
+        )
 
     def register_irc(self, tracker: MessageIDTracker) -> None:
         """Register IRC message ID tracker (called by IRCAdapter)."""
@@ -90,7 +92,9 @@ class DefaultMessageIDResolver:
 
     def get_discord_id(self, source: str, source_id: str) -> str | None:
         if source not in _VALID_PROTOCOLS:
-            raise ValueError(f"Unknown protocol {source!r}; expected one of {sorted(_VALID_PROTOCOLS)}")
+            raise ValueError(
+                f"Unknown protocol {source!r}; expected one of {sorted(_VALID_PROTOCOLS)}"
+            )
         if source == "irc" and self._irc_tracker:
             return self._irc_tracker.get_discord_id(source_id)
         if source == "xmpp" and self._xmpp_component:

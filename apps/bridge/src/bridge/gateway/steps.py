@@ -196,7 +196,11 @@ def add_reply_fallback(content: str, ctx: TransformContext) -> str:
         quoted_clean = "> " + quoted_clean
     quoted_line = " ".join(quoted_clean.splitlines())
     reply_part = f"{quoted_line} | {content}"
-    content = f"{ctx.raw['reply_quoted_author']}: {reply_part}" if ctx.raw.get("reply_quoted_author") else reply_part
+    content = (
+        f"{ctx.raw['reply_quoted_author']}: {reply_part}"
+        if ctx.raw.get("reply_quoted_author")
+        else reply_part
+    )
     ctx.raw["reply_fallback_added"] = True
     return content
 

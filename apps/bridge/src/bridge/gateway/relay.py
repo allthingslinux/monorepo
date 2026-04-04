@@ -288,7 +288,13 @@ class Relay:
             return
 
         def emit(target: str) -> object:
-            logger.debug("reaction {} -> {} emoji={} author={}", evt.origin, target, evt.emoji, evt.author_display)
+            logger.debug(
+                "reaction {} -> {} emoji={} author={}",
+                evt.origin,
+                target,
+                evt.emoji,
+                evt.author_display,
+            )
             _, out_evt = reaction_out(
                 target_origin=target,
                 channel_id=mapping.discord_channel_id,
@@ -309,7 +315,9 @@ class Relay:
             return
 
         def emit(target: str) -> object:
-            _, out_evt = typing_out(target_origin=target, channel_id=mapping.discord_channel_id, state=evt.state)
+            _, out_evt = typing_out(
+                target_origin=target, channel_id=mapping.discord_channel_id, state=evt.state
+            )
             return out_evt
 
         self._emit_targets(mapping, evt.origin, emit)
@@ -326,7 +334,9 @@ class Relay:
         def emit(target: str) -> object:
             if target == "xmpp" and evt.raw.get("skip_xmpp"):
                 return None  # XMPP-origin retraction already sent; avoid duplicate notice
-            logger.debug("emitting MessageDeleteOut target={} message_id={}", target, evt.message_id)
+            logger.debug(
+                "emitting MessageDeleteOut target={} message_id={}", target, evt.message_id
+            )
             _, out_evt = message_delete_out(
                 target_origin=target,
                 channel_id=mapping.discord_channel_id,
