@@ -6,10 +6,10 @@ Cross-protocol message correlation. Maps message IDs between Discord, IRC, and X
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `base.py` | `BidirectionalTTLMap` -- generic bidirectional TTL cache; entries expire after a configurable TTL; supports forward and reverse lookup |
-| `message_ids.py` | `MessageIDResolver` -- per-protocol-pair ID mapping built on `BidirectionalTTLMap`; resolves e.g. Discord message ID → XMPP stanza ID |
+| File             | Purpose                                                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `base.py`        | `BidirectionalTTLMap` -- generic bidirectional TTL cache; entries expire after a configurable TTL; supports forward and reverse lookup |
+| `message_ids.py` | `MessageIDResolver` -- per-protocol-pair ID mapping built on `BidirectionalTTLMap`; resolves e.g. Discord message ID → XMPP stanza ID  |
 
 ## BidirectionalTTLMap (`base.py`)
 

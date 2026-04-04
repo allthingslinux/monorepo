@@ -13,7 +13,8 @@
         "better-auth-ui:https://better-auth-ui.com/llms.txt",
         "--transport",
         "stdio"
-      ]
+      ],
+      "type": "stdio"
     },
     "shadcn-web": {
       "command": "npx",
@@ -27,18 +28,22 @@
     },
     "betterauth": {
       "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp",
-      "headers": {}
+      "headers": {},
+      "type": "remote"
     },
     "ultracite": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://www.ultracite.ai/api/mcp/mcp"]
+      "args": ["-y", "mcp-remote", "https://www.ultracite.ai/api/mcp/mcp"],
+      "type": "stdio"
     },
     "next-devtools": {
       "command": "npx",
-      "args": ["-y", "next-devtools-mcp@latest"]
+      "args": ["-y", "next-devtools-mcp@latest"],
+      "type": "stdio"
     },
     "sentry": {
-      "url": "https://mcp.sentry.dev/mcp/allthingslinux/portal"
+      "url": "https://mcp.sentry.dev/mcp/allthingslinux/portal",
+      "type": "remote"
     }
   }
 }

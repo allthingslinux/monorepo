@@ -12,11 +12,11 @@
 
 ## Infrastructure
 
-| File | Purpose |
-|------|---------|
-| `harness.py` | `BridgeTestHarness` -- wires real Bus + Relay + mock adapters; `simulate_discord_message`, `simulate_irc_message`, `simulate_xmpp_message` helpers |
-| `mocks.py` | `MockAdapter`, `MockDiscordAdapter`, `MockIRCAdapter`, `MockXMPPAdapter` -- capture received events for assertion |
-| `conftest.py` | Shared pytest fixtures |
+| File          | Purpose                                                                                                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `harness.py`  | `BridgeTestHarness` -- wires real Bus + Relay + mock adapters; `simulate_discord_message`, `simulate_irc_message`, `simulate_xmpp_message` helpers |
+| `mocks.py`    | `MockAdapter`, `MockDiscordAdapter`, `MockIRCAdapter`, `MockXMPPAdapter` -- capture received events for assertion                                  |
+| `conftest.py` | Shared pytest fixtures                                                                                                                             |
 
 ## Test Organization
 

@@ -1,0 +1,68 @@
+# Ruler configuration — single source of truth for AI agent instructions + MCP servers.
+# Run `pnpm ruler:apply` to distribute to all configured agents.
+# See https://github.com/intellectronica/ruler for docs.
+
+# Agents to target when --agents is not specified.
+default_agents = ["claude", "copilot", "cursor", "amp"]
+
+# --- MCP Server Configuration ---
+[mcp]
+enabled = true
+merge_strategy = "merge"
+
+# Documentation via mcpdoc (llms.txt files for key libraries)
+[mcp_servers."llms.txt"]
+command = "uvx"
+args = [
+  "--from",
+  "mcpdoc",
+  "mcpdoc",
+  "--urls",
+  "shadcn:https://ui.shadcn.com/llms.txt",
+  "drizzle:https://orm.drizzle.team/llms.txt",
+  "better-auth:https://www.better-auth.com/llms.txt",
+  "better-auth-ui:https://better-auth-ui.com/llms.txt",
+  "--transport",
+  "stdio",
+]
+
+# BetterAuth remote MCP
+[mcp_servers.betterauth]
+url = "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+
+[mcp_servers.betterauth.headers]
+
+# Ultracite linting/formatting guidance
+[mcp_servers.ultracite]
+command = "npx"
+args = ["-y", "mcp-remote", "https://www.ultracite.ai/api/mcp/mcp"]
+
+# Next.js DevTools
+[mcp_servers.next-devtools]
+command = "npx"
+args = ["-y", "next-devtools-mcp@latest"]
+
+# Sentry (allthingslinux/portal project)
+[mcp_servers.sentry]
+url = "https://mcp.sentry.dev/mcp/allthingslinux/portal"
+
+# --- Skills ---
+[skills]
+enabled = true
+
+# --- .gitignore ---
+[gitignore]
+enabled = true
+
+# --- Agent-specific overrides ---
+[agents.claude]
+enabled = true
+
+[agents.copilot]
+enabled = true
+
+[agents.cursor]
+enabled = true
+
+[agents.amp]
+enabled = true

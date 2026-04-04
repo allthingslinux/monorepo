@@ -28,12 +28,12 @@ lib/
 
 All commands from monorepo root:
 
-| Command | Purpose |
-|---------|---------|
-| `pnpm dev` | Start all apps via Turbo (includes chat-web) |
-| `pnpm build` | Build all apps |
-| `pnpm check` | Ultracite lint check (Oxlint + Oxfmt) |
-| `pnpm fix` | Ultracite lint fix |
+| Command      | Purpose                                      |
+| ------------ | -------------------------------------------- |
+| `pnpm dev`   | Start all apps via Turbo (includes chat-web) |
+| `pnpm build` | Build all apps                               |
+| `pnpm check` | Ultracite lint check (Oxlint + Oxfmt)        |
+| `pnpm fix`   | Ultracite lint fix                           |
 
 ## Related
 

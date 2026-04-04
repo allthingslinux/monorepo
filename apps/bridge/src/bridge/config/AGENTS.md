@@ -6,10 +6,10 @@ YAML configuration loading with environment variable overlay and hot-reload supp
 
 ## Files
 
-| File | Purpose |
-|------|---------|
+| File        | Purpose                                                                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `loader.py` | `load_config(path)` -- loads YAML file; `load_config_with_env(path)` -- loads YAML + dotenv overlay; `validate_config(data)` -- schema validation |
-| `schema.py` | `Config` class (all bridge settings as properties); `cfg` module-level singleton; `Config.reload(data)` for SIGHUP hot-swap |
+| `schema.py` | `Config` class (all bridge settings as properties); `cfg` module-level singleton; `Config.reload(data)` for SIGHUP hot-swap                       |
 
 ## Config Singleton
 
