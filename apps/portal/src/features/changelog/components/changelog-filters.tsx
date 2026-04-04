@@ -56,16 +56,16 @@ export function ChangelogFilters({
     selectedCommitTypes.size > 0;
 
   return (
-    <div className="rounded-xl border border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30">
+    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border">
       {/* Top row: entry type tabs + count + reset */}
-      <div className="flex items-center justify-between border-border/60 border-b px-4 py-3 dark:border-border/40">
+      <div className="border-border/60 dark:border-border/40 flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-1.5">
           <button
             className={cn(
-              "rounded-md border px-2.5 py-1 font-medium text-xs transition-colors",
+              "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
               entryType === "all"
                 ? "border-primary bg-primary/10 text-primary dark:bg-primary/20"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
             )}
             onClick={() => onEntryTypeChange("all")}
             type="button"
@@ -77,10 +77,10 @@ export function ChangelogFilters({
             return (
               <button
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-medium text-xs transition-colors",
+                  "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors",
                   active
                     ? "border-primary bg-primary/10 text-primary dark:bg-primary/20"
-                    : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                    : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
                 )}
                 key={opt.value}
                 onClick={() => onEntryTypeChange(opt.value)}
@@ -95,7 +95,7 @@ export function ChangelogFilters({
         <div className="flex items-center gap-3">
           {hasActiveFilters ? (
             <button
-              className="inline-flex items-center gap-1 rounded-md border border-border/50 px-2 py-0.5 text-muted-foreground text-xs transition-colors hover:border-border hover:text-foreground dark:border-border/40"
+              className="border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors"
               onClick={onReset}
               type="button"
             >
@@ -106,16 +106,16 @@ export function ChangelogFilters({
         </div>
       </div>
       {/* Middle row: repos */}
-      <div className="grid grid-cols-5 gap-1.5 border-border/60 border-b px-4 py-3 dark:border-border/40">
+      <div className="border-border/60 dark:border-border/40 grid grid-cols-5 gap-1.5 border-b px-4 py-3">
         {repos.map((repo) => {
           const active = selectedRepos.has(repo.repoId);
           return (
             <button
               className={cn(
-                "inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 font-medium text-sm transition-colors",
+                "inline-flex items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors",
                 active
                   ? "border-primary bg-primary/10 text-primary dark:bg-primary/20"
-                  : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                  : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
               )}
               key={repo.repoId}
               onClick={() => onRepoToggle(repo.repoId)}
@@ -134,10 +134,10 @@ export function ChangelogFilters({
           return (
             <button
               className={cn(
-                "rounded-full px-3 py-1 font-medium text-sm transition-colors",
+                "rounded-full px-3 py-1 text-sm font-medium transition-colors",
                 active
                   ? COMMIT_TYPE_COLORS[ct]
-                  : "border border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                  : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 border bg-transparent"
               )}
               key={ct}
               onClick={() => onCommitTypeToggle(ct)}

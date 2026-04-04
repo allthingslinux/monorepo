@@ -18,7 +18,6 @@
     "@portal/types": "workspace:*"
   },
   "devDependencies": {
-    "@portal/typescript-config": "workspace:*",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   }
 }

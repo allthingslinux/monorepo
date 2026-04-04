@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@atl/ui/components/card";
-import { Skeleton } from "@atl/ui/components/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen } from "lucide-react";
 
@@ -14,6 +7,13 @@ import type {
   UserContrib,
   UserInfo,
 } from "@/features/integrations/lib/mediawiki/types";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 interface WikiUserStatsResponse {
   contribs: UserContrib[];
@@ -57,8 +57,8 @@ export function WikiUserStatsCard() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="font-medium text-sm">Wiki Activity</CardTitle>
-        <BookOpen className="size-4 text-muted-foreground" />
+        <CardTitle className="text-sm font-medium">Wiki Activity</CardTitle>
+        <BookOpen className="text-muted-foreground size-4" />
       </CardHeader>
       <CardContent>
         {isLoading && <WikiUserStatsSkeleton />}
@@ -93,7 +93,7 @@ function WikiUserStatsContent({ data }: { data: WikiUserStatsResponse }) {
   return (
     <div className="space-y-3">
       <div className="flex items-baseline justify-between">
-        <div className="font-bold text-2xl tabular-nums">
+        <div className="text-2xl font-bold tabular-nums">
           {userInfo.editCount.toLocaleString()}
         </div>
         <p className="text-muted-foreground text-xs">total edits</p>

@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@atl/ui/components/command";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +9,15 @@ import { createRouteTranslationResolver } from "@/features/routing/lib/i18n";
 import { getNavigationItems } from "@/features/routing/lib/permissions";
 import { useIsClient } from "@/hooks/use-is-client";
 import { usePermissions } from "@/hooks/use-permissions";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@atl/ui/components/command";
 
 /**
  * Global command menu component (Cmd+K / Ctrl+K)

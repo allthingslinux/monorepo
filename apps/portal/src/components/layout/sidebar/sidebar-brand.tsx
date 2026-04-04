@@ -1,14 +1,14 @@
 "use client";
 
+import { LayoutDashboard } from "lucide-react";
+import Link from "next/link";
+
+import { APP_NAME } from "@/shared/config/app";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@atl/ui/components/sidebar";
-import { LayoutDashboard } from "lucide-react";
-import Link from "next/link";
-
-import { APP_NAME } from "@/shared/config/app";
 
 export function SidebarBrand() {
   return (
@@ -17,7 +17,7 @@ export function SidebarBrand() {
         <SidebarMenuButton
           render={(props) => (
             <Link {...props} className={`${props.className} gap-2`} href="/app">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <LayoutDashboard className="size-4" />
               </div>
               <span className="truncate font-semibold">{APP_NAME}</span>

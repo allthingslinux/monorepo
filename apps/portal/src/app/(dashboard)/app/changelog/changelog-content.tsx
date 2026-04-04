@@ -101,12 +101,12 @@ export function ChangelogContent({
 
   if (entries.length === 0 && errors.length > 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/30 bg-destructive/5 py-16">
-        <AlertTriangle className="mb-3 size-8 text-destructive/60" />
-        <p className="font-medium text-foreground">
+      <div className="border-destructive/30 bg-destructive/5 flex flex-col items-center justify-center rounded-xl border py-16">
+        <AlertTriangle className="text-destructive/60 mb-3 size-8" />
+        <p className="text-foreground font-medium">
           Changelog data is temporarily unavailable
         </p>
-        <p className="mt-1 text-muted-foreground text-sm">
+        <p className="text-muted-foreground mt-1 text-sm">
           Please try again later.
         </p>
       </div>

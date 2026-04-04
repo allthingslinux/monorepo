@@ -1,4 +1,5 @@
 import {
+  Calendar,
   DollarSign,
   Globe,
   HelpCircle,
@@ -86,6 +87,19 @@ export const routeConfig = {
         order: 3,
       },
       path: "/app/connect",
+    },
+    {
+      breadcrumb: {},
+      icon: Calendar,
+      id: "events",
+      metadata: {
+        robots: { follow: false, index: false },
+      },
+      navigation: {
+        group: "platform",
+        order: 4,
+      },
+      path: "/app/events",
     },
     {
       icon: Settings2,

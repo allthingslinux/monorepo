@@ -1,3 +1,7 @@
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { connection } from "next/server";
+
 import { Button } from "@atl/ui/components/button";
 import {
   Card,
@@ -7,9 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@atl/ui/components/card";
-import { getTranslations } from "next-intl/server";
-import Link from "next/link";
-import { connection } from "next/server";
 
 export default async function AppNotFound() {
   await connection();
@@ -21,7 +22,7 @@ export default async function AppNotFound() {
     <div className="flex flex-1 flex-col items-center justify-center p-4">
       <Card className="w-full max-w-md text-center">
         <CardHeader>
-          <CardTitle className="font-bold text-6xl">404</CardTitle>
+          <CardTitle className="text-6xl font-bold">404</CardTitle>
           <CardDescription className="text-lg">
             {t("error.notFound.title")}
           </CardDescription>

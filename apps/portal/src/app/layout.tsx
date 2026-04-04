@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 import { DevTools } from "@/components/dev-tools";
 
-import { geistMono, geistSans, inter } from "./fonts";
+import { geistMono, inter } from "./fonts";
 
 import "@/styles/globals.css";
 import { Providers } from "./providers";
@@ -42,7 +42,7 @@ async function RootLayoutContent({
 /** Shown while RootLayoutContent (connection + i18n) resolves. */
 function RootLayoutFallback() {
   return (
-    <div className="flex min-h-svh items-center justify-center bg-background">
+    <div className="bg-background flex min-h-svh items-center justify-center">
       <span className="text-muted-foreground text-sm">Loading…</span>
     </div>
   );
@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`dark ${inter.variable} ${geistSans.variable} ${geistMono.variable}`}
+      className={`dark ${inter.variable} ${geistMono.variable}`}
       lang={DEFAULT_LANG}
       suppressHydrationWarning
     >

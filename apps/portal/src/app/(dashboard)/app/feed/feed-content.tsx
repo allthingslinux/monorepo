@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
-import { Input } from "@atl/ui/components/input";
-import { Separator } from "@atl/ui/components/separator";
 import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -10,6 +7,9 @@ import { useMemo, useState } from "react";
 import type { FeedCategory, FeedSource } from "@/config/feed";
 import { FEED_CATEGORY_LABELS } from "@/config/feed";
 import type { FeedArticle, FeedSourceResult } from "@/shared/feed";
+import { Button } from "@atl/ui/components/button";
+import { Input } from "@atl/ui/components/input";
+import { Separator } from "@atl/ui/components/separator";
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
@@ -65,7 +65,7 @@ function SourceFavicon({
   const url = useMemo(() => getFaviconUrl(siteUrl), [siteUrl]);
 
   if (!url || failed) {
-    return <Globe className={`${className} shrink-0 text-muted-foreground`} />;
+    return <Globe className={`${className} text-muted-foreground shrink-0`} />;
   }
 
   return (
@@ -107,7 +107,7 @@ function FilterRow({
 }) {
   return (
     <div className="flex items-start gap-4 px-4 py-3">
-      <span className="w-24 shrink-0 pt-0.5 font-medium text-muted-foreground text-xs uppercase tracking-wider">
+      <span className="text-muted-foreground w-24 shrink-0 pt-0.5 text-xs font-medium tracking-wider uppercase">
         {label}
       </span>
       <div className="flex flex-1 flex-wrap gap-1.5">{children}</div>
@@ -128,10 +128,10 @@ function FilterPill({
 }) {
   return (
     <button
-      className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-medium text-xs transition-colors ${
+      className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
         active
           ? "border-primary bg-primary/10 text-primary dark:bg-primary/20"
-          : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+          : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
       }`}
       onClick={onClick}
       title={title}
@@ -155,10 +155,10 @@ function FilterPanel({
   onClear,
 }: FilterPanelProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30">
+    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 overflow-hidden rounded-xl border">
       {/* Search */}
       <div className="relative">
-        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute top-1/2 left-4 size-4 -translate-y-1/2" />
         <Input
           className="rounded-none border-0 bg-transparent pl-11 shadow-none focus-visible:ring-0"
           onChange={(e) => onSearchChange(e.target.value)}
@@ -200,7 +200,7 @@ function FilterPanel({
 
         {hasActiveFilters && (
           <button
-            className="ml-auto flex items-center gap-1 rounded-md px-2 py-1 text-muted-foreground text-xs transition-colors hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground ml-auto flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors"
             onClick={onClear}
             type="button"
           >
@@ -218,19 +218,19 @@ function ArticleCard({ article }: { article: FeedArticle }) {
 
   return (
     <a
-      className="group flex flex-col overflow-hidden rounded-xl border border-border/60 bg-card/50 transition-all duration-150 hover:border-primary/40 hover:shadow-md dark:border-border/40 dark:bg-card/30 dark:hover:border-primary/30"
+      className="group border-border/60 bg-card/50 hover:border-primary/40 dark:border-border/40 dark:bg-card/30 dark:hover:border-primary/30 flex flex-col overflow-hidden rounded-xl border transition-all duration-150 hover:shadow-md"
       href={article.link}
       rel="noopener noreferrer"
       target="_blank"
     >
       {/* Source row */}
-      <div className="flex items-center gap-2 border-border/40 border-b px-4 py-2.5 dark:border-border/30">
+      <div className="border-border/40 dark:border-border/30 flex items-center gap-2 border-b px-4 py-2.5">
         <SourceFavicon siteUrl={article.siteUrl} />
-        <span className="font-medium text-muted-foreground text-xs">
+        <span className="text-muted-foreground text-xs font-medium">
           {article.sourceName}
         </span>
         {relDate && (
-          <span className="ml-auto text-muted-foreground/70 text-xs">
+          <span className="text-muted-foreground/70 ml-auto text-xs">
             {relDate}
           </span>
         )}
@@ -238,11 +238,11 @@ function ArticleCard({ article }: { article: FeedArticle }) {
 
       {/* Body */}
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="line-clamp-2 font-semibold text-foreground text-sm leading-snug transition-colors group-hover:text-primary">
+        <p className="text-foreground group-hover:text-primary line-clamp-2 text-sm leading-snug font-semibold transition-colors">
           {article.title}
         </p>
         {article.summary && (
-          <p className="line-clamp-3 text-muted-foreground text-xs leading-relaxed">
+          <p className="text-muted-foreground line-clamp-3 text-xs leading-relaxed">
             {article.summary}
           </p>
         )}
@@ -252,13 +252,13 @@ function ArticleCard({ article }: { article: FeedArticle }) {
       <div className="flex flex-wrap items-center gap-1.5 px-4 pt-1 pb-3">
         {article.categories.slice(0, 3).map((cat) => (
           <span
-            className="rounded-full border border-border/50 px-2 py-0.5 text-muted-foreground text-xs dark:border-border/40"
+            className="border-border/50 text-muted-foreground dark:border-border/40 rounded-full border px-2 py-0.5 text-xs"
             key={cat}
           >
             {cat}
           </span>
         ))}
-        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+        <ArrowUpRight className="text-muted-foreground ml-auto size-3.5 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
       </div>
     </a>
   );
@@ -378,7 +378,7 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
 
       {erroredSources.length > 0 && (
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 px-4 py-2.5">
-          <p className="text-amber-600 text-xs dark:text-amber-400">
+          <p className="text-xs text-amber-600 dark:text-amber-400">
             Could not load: {erroredSources.map((r) => r.sourceName).join(", ")}
             . These feeds may be temporarily unavailable.
           </p>
@@ -398,10 +398,10 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-border/60 bg-card/50 py-16 dark:border-border/40 dark:bg-card/30">
-          <Rss className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="font-medium text-foreground">No articles found</p>
-          <p className="mt-1 text-muted-foreground text-sm">
+        <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 flex flex-col items-center justify-center rounded-xl border py-16">
+          <Rss className="text-muted-foreground/40 mb-3 size-8" />
+          <p className="text-foreground font-medium">No articles found</p>
+          <p className="text-muted-foreground mt-1 text-sm">
             Try adjusting your filters or search query.
           </p>
           {hasActiveFilters && (

@@ -1,28 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@atl/ui/components/alert-dialog";
-import { Button } from "@atl/ui/components/button";
-import { Card } from "@atl/ui/components/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@atl/ui/components/dialog";
-import { Input } from "@atl/ui/components/input";
-import { Label } from "@atl/ui/components/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@portal/utils/utils";
 import * as Sentry from "@sentry/nextjs";
@@ -49,6 +26,29 @@ import {
   useDeleteIntegrationAccount,
   useIntegrationAccount,
 } from "@/features/integrations/hooks/use-integration";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@atl/ui/components/alert-dialog";
+import { Button } from "@atl/ui/components/button";
+import { Card } from "@atl/ui/components/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@atl/ui/components/dialog";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 
 // ---------------------------------------------------------------------------
 // Protocol icon defaults — keyed by integrationId, overridable via prop
@@ -109,7 +109,7 @@ function EmptyCard({
   const colorClass = getIntegrationColor(integrationId);
   const tintClass = getIntegrationTint(integrationId);
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-dashed bg-card text-card-foreground text-sm shadow-xs">
+    <div className="bg-card text-card-foreground flex flex-col overflow-hidden rounded-xl border border-dashed text-sm shadow-xs">
       {/* Tinted header */}
       <div
         className={cn("flex items-center justify-between px-6 py-5", tintClass)}
@@ -122,14 +122,14 @@ function EmptyCard({
         >
           <Icon className="h-6 w-6 text-white" />
         </div>
-        <span className="rounded-full border border-muted-foreground/30 bg-muted-foreground/10 px-3 py-1 font-semibold text-muted-foreground text-xs uppercase tracking-widest">
+        <span className="border-muted-foreground/30 bg-muted-foreground/10 text-muted-foreground rounded-full border px-3 py-1 text-xs font-semibold tracking-widest uppercase">
           Not Connected
         </span>
       </div>
       {/* Body */}
       <div className="flex-1 px-6 py-5">
-        <p className="font-bold text-xl leading-tight">{title}</p>
-        <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+        <p className="text-xl leading-tight font-bold">{title}</p>
+        <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
           {description}
         </p>
       </div>
@@ -190,7 +190,7 @@ function AccountCard<TAccount extends { id: string }>({
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground text-sm shadow-xs ring-1 ring-foreground/10">
+    <div className="bg-card text-card-foreground ring-foreground/10 flex flex-col overflow-hidden rounded-xl text-sm shadow-xs ring-1">
       {/* Tinted header */}
       <div
         className={cn("flex items-center justify-between px-6 py-5", tintClass)}
@@ -205,7 +205,7 @@ function AccountCard<TAccount extends { id: string }>({
         </div>
         <span
           className={cn(
-            "rounded-full border px-3 py-1 font-semibold text-xs uppercase tracking-widest",
+            "rounded-full border px-3 py-1 text-xs font-semibold tracking-widest uppercase",
             isActive
               ? "border-green-500/40 bg-green-500/10 text-green-400"
               : "border-muted-foreground/30 bg-muted-foreground/10 text-muted-foreground"
@@ -217,9 +217,9 @@ function AccountCard<TAccount extends { id: string }>({
 
       {/* Title + description */}
       <div className="px-6 py-5">
-        <p className="font-bold text-xl leading-tight">{title}</p>
+        <p className="text-xl leading-tight font-bold">{title}</p>
         {description && (
-          <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+          <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
             {description}
           </p>
         )}
@@ -233,7 +233,7 @@ function AccountCard<TAccount extends { id: string }>({
       )}
 
       {/* Footer actions */}
-      <div className="mt-auto flex flex-row gap-2 border-border/40 border-t px-6 pt-4 pb-5">
+      <div className="border-border/40 mt-auto flex flex-row gap-2 border-t px-6 pt-4 pb-5">
         {renderActions && (
           <div className="flex-1">{renderActions(account)}</div>
         )}
@@ -362,7 +362,7 @@ export function IntegrationManagement<TAccount extends { id: string }>({
   if (isPending) {
     return (
       <Card className="flex min-h-[120px] items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Loader2 className="text-muted-foreground h-5 w-5 animate-spin" />
       </Card>
     );
   }
@@ -370,7 +370,7 @@ export function IntegrationManagement<TAccount extends { id: string }>({
   if (error) {
     return (
       <Card className="p-5">
-        <div className="flex items-center gap-2 text-destructive">
+        <div className="text-destructive flex items-center gap-2">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <p className="text-sm">Failed to load integration info.</p>
         </div>
@@ -480,7 +480,7 @@ function SetupDialogDefaultFields({
           />
           {errors[createInputName]?.message && (
             <p
-              className="font-medium text-destructive text-sm"
+              className="text-destructive text-sm font-medium"
               id={`${integrationId}-${createInputName}-error`}
               role="alert"
             >
@@ -512,7 +512,7 @@ function SetupDialogDefaultFields({
           />
           {errors[createSecondInputName]?.message && (
             <p
-              className="font-medium text-destructive text-sm"
+              className="text-destructive text-sm font-medium"
               id={`${integrationId}-${createSecondInputName}-error`}
               role="alert"
             >
@@ -660,7 +660,7 @@ function SetupDialog<TAccount extends { id: string }>({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-muted/60">
+              <div className="border-border bg-muted/60 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border">
                 <Icon className="h-3.5 w-3.5" />
               </div>
               Set up {title}
@@ -692,7 +692,7 @@ function SetupDialog<TAccount extends { id: string }>({
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-muted/60">
+              <div className="border-border bg-muted/60 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border">
                 <Icon className="h-3.5 w-3.5" />
               </div>
               Set up {title}

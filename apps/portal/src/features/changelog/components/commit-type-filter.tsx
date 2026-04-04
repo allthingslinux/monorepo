@@ -32,10 +32,10 @@ export function CommitTypeFilter({
         return (
           <button
             className={cn(
-              "rounded-full border px-2.5 py-0.5 font-medium text-xs transition-colors",
+              "rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
               active
                 ? COMMIT_TYPE_COLORS[option.value]
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
             )}
             key={option.value}
             onClick={() => onToggle(option.value)}

@@ -1,15 +1,5 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@atl/ui/components/card";
-import { DialogFooter } from "@atl/ui/components/dialog";
-import { Input } from "@atl/ui/components/input";
-import { Label } from "@atl/ui/components/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateMailboxRequestSchema } from "@portal/schemas/integrations/mailcow";
 import { captureException } from "@sentry/nextjs";
@@ -23,6 +13,16 @@ import {
   useIntegrationAccount,
 } from "@/features/integrations/hooks/use-integration";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
+import { Button } from "@atl/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@atl/ui/components/card";
+import { DialogFooter } from "@atl/ui/components/dialog";
+import { Input } from "@atl/ui/components/input";
+import { Label } from "@atl/ui/components/label";
 
 type FormValues = z.infer<typeof CreateMailboxRequestSchema>;
 
@@ -92,7 +92,7 @@ export function MailcowDialogCreateFields({
           />
           {errors.local_part?.message && (
             <p
-              className="font-medium text-destructive text-sm"
+              className="text-destructive text-sm font-medium"
               id={`${integrationId}-local_part-error`}
               role="alert"
             >
@@ -119,7 +119,7 @@ export function MailcowDialogCreateFields({
           />
           {errors.password?.message && (
             <p
-              className="font-medium text-destructive text-sm"
+              className="text-destructive text-sm font-medium"
               id={`${integrationId}-password-error`}
               role="alert"
             >
@@ -143,7 +143,7 @@ export function MailcowDialogCreateFields({
           />
           {errors.password2?.message && (
             <p
-              className="font-medium text-destructive text-sm"
+              className="text-destructive text-sm font-medium"
               id={`${integrationId}-password2-error`}
               role="alert"
             >
@@ -227,7 +227,7 @@ export function MailcowCreateForm({
   return (
     <Card>
       <CardHeader>
-        <div className="font-semibold text-lg">{title}</div>
+        <div className="text-lg font-semibold">{title}</div>
         <p className="text-muted-foreground text-sm">{description}</p>
       </CardHeader>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
@@ -251,7 +251,7 @@ export function MailcowCreateForm({
             />
             {errors.local_part?.message && (
               <p
-                className="font-medium text-destructive text-sm"
+                className="text-destructive text-sm font-medium"
                 id={`${integrationId}-local_part-error`}
                 role="alert"
               >
@@ -283,7 +283,7 @@ export function MailcowCreateForm({
             </p>
             {errors.password?.message && (
               <p
-                className="font-medium text-destructive text-sm"
+                className="text-destructive text-sm font-medium"
                 id={`${integrationId}-password-error`}
                 role="alert"
               >
@@ -312,7 +312,7 @@ export function MailcowCreateForm({
             />
             {errors.password2?.message && (
               <p
-                className="font-medium text-destructive text-sm"
+                className="text-destructive text-sm font-medium"
                 id={`${integrationId}-password2-error`}
                 role="alert"
               >

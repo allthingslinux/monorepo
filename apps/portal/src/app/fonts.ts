@@ -1,19 +1,13 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 
-// Inter - Primary sans-serif font
+/** Primary sans — used for sans, display, and text across all UI. */
 export const inter = Inter({
   display: "swap",
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-// Geist - Alternative sans-serif font
-export const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
-// Geist Mono - Monospace font
+/** Monospace — code blocks, mono UI elements. */
 export const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",

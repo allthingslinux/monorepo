@@ -8,6 +8,9 @@
 // Tab (account / security / api-keys) is synced to URL via nuqs so deep links
 // and back/forward work.
 
+import dynamic from "next/dynamic";
+
+import { useSession } from "@/auth/session-context";
 import { Card } from "@atl/ui/components/card";
 import {
   Tabs,
@@ -15,9 +18,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@atl/ui/components/tabs";
-import dynamic from "next/dynamic";
-
-import { useSession } from "@/auth/session-context";
 
 import type { SettingsTabUrlState } from "./settings-search-params";
 import { useSettingsSearchParams } from "./use-settings-search-params";

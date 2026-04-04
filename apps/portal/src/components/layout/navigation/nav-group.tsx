@@ -1,15 +1,14 @@
 "use client";
 
+import type {
+  NavigationGroup,
+  ProtectedRoute,
+} from "@/features/routing/lib/types";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
 } from "@atl/ui/components/sidebar";
-
-import type {
-  NavigationGroup,
-  ProtectedRoute,
-} from "@/features/routing/lib/types";
 
 import { NavCollapsible } from "./nav-collapsible";
 import { NavItem } from "./nav-item";

@@ -20,11 +20,11 @@ export function CommitRow({ entry }: CommitRowProps) {
   });
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-border/60 px-3 py-2 dark:border-border/40">
+    <div className="border-border/60 dark:border-border/40 flex items-center gap-2 rounded-lg border px-3 py-2">
       {/* 1. Repo */}
-      <span className="mr-2 inline-flex w-32 shrink-0 items-center gap-1.5 border-border/60 border-r pr-3 dark:border-border/40">
+      <span className="border-border/60 dark:border-border/40 mr-2 inline-flex w-32 shrink-0 items-center gap-1.5 border-r pr-3">
         <RepoIcon repoId={entry.repoId} />
-        <span className="truncate font-mono text-foreground text-xs">
+        <span className="text-foreground truncate font-mono text-xs">
           {entry.repoDisplayName}
         </span>
       </span>
@@ -35,12 +35,12 @@ export function CommitRow({ entry }: CommitRowProps) {
       ) : null}
 
       {/* 4. Commit description (flexible, takes remaining space) */}
-      <span className="min-w-0 flex-1 truncate text-foreground text-sm">
+      <span className="text-foreground min-w-0 flex-1 truncate text-sm">
         {parsed.type ? parsed.description : parsed.description}
       </span>
 
       {/* 5. SHA */}
-      <span className="shrink-0 font-mono text-muted-foreground text-xs">
+      <span className="text-muted-foreground shrink-0 font-mono text-xs">
         {entry.shortSha}
       </span>
 
@@ -52,16 +52,16 @@ export function CommitRow({ entry }: CommitRowProps) {
         src={entry.authorAvatarUrl}
         width={20}
       />
-      <span className="shrink-0 text-muted-foreground text-xs">
+      <span className="text-muted-foreground shrink-0 text-xs">
         {entry.authorName}
       </span>
 
       {/* 7. Timestamp */}
-      <span className="shrink-0 text-muted-foreground text-xs">
+      <span className="text-muted-foreground shrink-0 text-xs">
         {formattedDate}
       </span>
       <a
-        className="inline-flex shrink-0 items-center rounded-md px-1 py-1 text-muted-foreground text-xs transition-colors hover:bg-muted hover:text-foreground"
+        className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex shrink-0 items-center rounded-md px-1 py-1 text-xs transition-colors"
         href={entry.url}
         rel="noopener noreferrer"
         target="_blank"

@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import { captureException, startSpan } from "@sentry/nextjs";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
 import type { IrcAccount } from "@/features/integrations/lib/irc/types";
+import { Button } from "@atl/ui/components/button";
 
 interface IrcAccountDetailsProps {
   account: IrcAccount;

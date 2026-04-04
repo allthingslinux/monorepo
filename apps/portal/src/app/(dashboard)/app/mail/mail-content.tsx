@@ -1,25 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@atl/ui/components/alert-dialog";
-import { Button, buttonVariants } from "@atl/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@atl/ui/components/card";
-import { Separator } from "@atl/ui/components/separator";
 import { captureException } from "@sentry/nextjs";
 import {
   AlertCircle,
@@ -44,6 +24,26 @@ import {
   useIntegrations,
 } from "@/features/integrations/hooks/use-integration";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@atl/ui/components/alert-dialog";
+import { Button, buttonVariants } from "@atl/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
+import { Separator } from "@atl/ui/components/separator";
 
 const MAIL_INTEGRATION_ID = "mailcow";
 
@@ -70,7 +70,7 @@ export function MailContent({ webmailUrl }: MailContentProps) {
   if (integrationsPending || accountPending) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ export function MailContent({ webmailUrl }: MailContentProps) {
   if (accountError) {
     return (
       <Card>
-        <CardContent className="flex items-center gap-2 py-8 text-destructive">
+        <CardContent className="text-destructive flex items-center gap-2 py-8">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <p>Failed to load your email account. Please try again.</p>
         </CardContent>
@@ -180,8 +180,8 @@ export function MailContent({ webmailUrl }: MailContentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="rounded-lg bg-muted p-4">
-            <h4 className="mb-2 flex items-center gap-2 font-semibold text-sm">
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold">
               <Info className="h-4 w-4" />
               Connection Settings
             </h4>
@@ -205,7 +205,7 @@ export function MailContent({ webmailUrl }: MailContentProps) {
                 </p>
               </div>
             </div>
-            <p className="mt-3 text-muted-foreground text-xs italic">
+            <p className="text-muted-foreground mt-3 text-xs italic">
               Use your full email as the username. Use an App Password
               (generated below) as the password.
             </p>

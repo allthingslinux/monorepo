@@ -1,4 +1,3 @@
-import { Skeleton } from "@atl/ui/components/skeleton";
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
 import { createPageMetadata } from "@portal/seo/metadata";
@@ -8,6 +7,8 @@ import { getMessages, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
+
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 // ============================================================================
 // Metadata Generation
@@ -73,13 +74,13 @@ function shouldShowDisclaimer(path: string): boolean {
 /** Static fallback shown while AuthPageContent (connection + i18n) resolves. */
 function AuthPageSkeleton() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex items-center gap-2 self-center font-medium">
           <Skeleton className="size-6 rounded-md" />
           <Skeleton className="h-5 w-24" />
         </div>
-        <div className="flex flex-col gap-4 rounded-lg border bg-card p-6">
+        <div className="bg-card flex flex-col gap-4 rounded-lg border p-6">
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-10 w-full" />
@@ -94,7 +95,7 @@ async function BrandLink() {
   const t = await getTranslations();
   return (
     <Link className="flex items-center gap-2 self-center font-medium" href="/">
-      <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+      <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
         <GalleryVerticalEnd className="size-4" />
       </div>
       {t("auth.brandName")}
@@ -137,7 +138,7 @@ async function TermsDisclaimer() {
   const parts = disclaimer.split(PLACEHOLDER_REGEX);
 
   return (
-    <p className="px-6 text-center font-normal text-muted-foreground text-sm leading-normal [&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4">
+    <p className="text-muted-foreground [&>a:hover]:text-primary px-6 text-center text-sm leading-normal font-normal [&>a]:underline [&>a]:underline-offset-4">
       {parts.map((part, index) => {
         const key = `${part}-${index}`;
         if (part === "{terms}") {
@@ -196,7 +197,7 @@ export default function AuthPage({
   params: Promise<{ path: string }>;
 }) {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Suspense fallback={<AuthPageSkeleton />}>
           <AuthPageContent params={params} />

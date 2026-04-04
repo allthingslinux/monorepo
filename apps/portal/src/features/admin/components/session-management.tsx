@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@atl/ui/components/card";
 import type { Session } from "@portal/api/types";
 import type { SessionListResponse } from "@portal/types/api";
 import { memo, useMemo } from "react";
@@ -15,6 +8,13 @@ import {
   useDeleteSession,
   useSessions,
 } from "@/features/admin/hooks/use-admin";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
 
 import { DataTable } from "./data-table";
 import { createSessionColumns } from "./session-columns";
@@ -48,7 +48,7 @@ function SessionManagementInner() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-destructive">
+          <div className="text-destructive text-center">
             Failed to load sessions: {error.message}
           </div>
         </CardContent>

@@ -60,8 +60,8 @@ export default async function AppPage() {
           {/* Account info — top right */}
           <div className="flex flex-wrap items-center gap-3">
             {user.createdAt && (
-              <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-primary/10 px-4 py-2.5 dark:bg-primary/20">
-                <Calendar className="size-4 text-primary" />
+              <div className="border-border/60 bg-primary/10 dark:bg-primary/20 flex items-center gap-2 rounded-lg border px-4 py-2.5">
+                <Calendar className="text-primary size-4" />
                 <span className="text-sm">
                   Member since{" "}
                   {new Date(user.createdAt).toLocaleDateString(undefined, {
@@ -77,7 +77,7 @@ export default async function AppPage() {
         <div className="space-y-8">
           {/* Stats row — 4 cards */}
           <section>
-            <h2 className="mb-3 font-medium text-muted-foreground text-sm uppercase tracking-wider">
+            <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wider uppercase">
               Community stats
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -96,13 +96,13 @@ export default async function AppPage() {
 
           {/* Quick links — compact strip */}
           <section>
-            <h2 className="mb-3 font-medium text-muted-foreground text-sm uppercase tracking-wider">
+            <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wider uppercase">
               Quick links
             </h2>
             <div className="flex flex-wrap gap-2">
               {MOCK_QUICK_LINKS.map((link) => (
                 <a
-                  className="rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-medium text-primary text-sm transition-colors hover:border-primary/50 hover:bg-primary/20 dark:border-primary/40 dark:bg-primary/15 dark:hover:bg-primary/25"
+                  className="border-primary/30 bg-primary/10 text-primary hover:border-primary/50 hover:bg-primary/20 dark:border-primary/40 dark:bg-primary/15 dark:hover:bg-primary/25 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
                   href={link.href}
                   key={link.href}
                   rel="noopener noreferrer"

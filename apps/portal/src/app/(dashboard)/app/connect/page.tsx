@@ -95,19 +95,19 @@ function ExternalLinkTile({
       target={external ? "_blank" : undefined}
     >
       <div
-        className={`flex shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary ${sizeClasses[v]}`}
+        className={`bg-primary/10 text-primary flex shrink-0 items-center justify-center rounded-md ${sizeClasses[v]}`}
       >
         <Icon className={iconSizes[v]} />
       </div>
       <div className="min-w-0 flex-1">
-        <span className="block font-medium text-foreground">{name}</span>
+        <span className="text-foreground block font-medium">{name}</span>
         {(v === "hero" || v === "tile") && (
-          <span className="mt-0.5 block text-muted-foreground text-sm">
+          <span className="text-muted-foreground mt-0.5 block text-sm">
             {description}
           </span>
         )}
       </div>
-      <ArrowUpRight className="size-4 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+      <ArrowUpRight className="text-muted-foreground size-4 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
     </a>
   );
 }
@@ -133,7 +133,7 @@ export default async function ConnectPage() {
       <div className="space-y-10">
         {/* Community — Discord hero + chat pills */}
         <section>
-          <h2 className="mb-3 font-medium text-muted-foreground text-sm uppercase tracking-wider">
+          <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wider uppercase">
             Community
           </h2>
 
@@ -198,7 +198,7 @@ export default async function ConnectPage() {
 
         {/* Social — YouTube hero + others as pills */}
         <section>
-          <h2 className="mb-3 font-medium text-muted-foreground text-sm uppercase tracking-wider">
+          <h2 className="text-muted-foreground mb-3 text-sm font-medium tracking-wider uppercase">
             Social Media
           </h2>
 

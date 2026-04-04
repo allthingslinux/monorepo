@@ -1,13 +1,5 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@atl/ui/components/card";
 import { BarChart3, BookOpen, Code, MessageSquare, Users } from "lucide-react";
 import Link from "next/link";
 import {
@@ -19,6 +11,14 @@ import {
 } from "react-icons/si";
 
 import { DONATION_OPTIONS } from "@/config/donate";
+import { Button } from "@atl/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@atl/ui/components/card";
 
 const DONATION_ICON_MAP: Record<
   string,

@@ -15,9 +15,10 @@ import { auth } from "@/auth";
 // See: https://openid.net/specs/openid-connect-discovery-1_0.html
 
 const handler = oauthProviderOpenIdConfigMetadata(
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   auth as unknown as Parameters<typeof oauthProviderOpenIdConfigMetadata>[0]
 );
 
 export async function GET(request: NextRequest) {
-  return await handler(request);
+  return handler(request);
 }

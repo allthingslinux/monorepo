@@ -1,5 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useEffect } from "react";
+
 import { Button } from "@atl/ui/components/button";
 import {
   Card,
@@ -9,9 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@atl/ui/components/card";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { useEffect } from "react";
 
 /**
  * Dashboard app-segment error boundary content. Rendered lazily via app/(dashboard)/app/error.tsx.
@@ -39,7 +40,7 @@ export default function AppError({
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <p className="font-mono text-muted-foreground text-sm">
+            <p className="text-muted-foreground font-mono text-sm">
               {error.message || t("unknownError")}
             </p>
             {error.digest && (
@@ -49,10 +50,10 @@ export default function AppError({
             )}
             {process.env.NODE_ENV === "development" && error.stack && (
               <details className="mt-4">
-                <summary className="cursor-pointer text-muted-foreground text-sm">
+                <summary className="text-muted-foreground cursor-pointer text-sm">
                   {t("stackTrace")}
                 </summary>
-                <pre className="mt-2 max-h-48 overflow-auto rounded bg-muted p-4 text-xs">
+                <pre className="bg-muted mt-2 max-h-48 overflow-auto rounded p-4 text-xs">
                   {error.stack}
                 </pre>
               </details>

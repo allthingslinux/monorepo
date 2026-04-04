@@ -1,5 +1,8 @@
 "use client";
 
+import type { BreadcrumbItem as BreadcrumbItemType } from "@portal/types/routes";
+import { Fragment } from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,8 +11,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@atl/ui/components/breadcrumb";
-import type { BreadcrumbItem as BreadcrumbItemType } from "@portal/types/routes";
-import { Fragment } from "react";
 
 interface BreadcrumbTrailProps {
   items: BreadcrumbItemType[];

@@ -1,5 +1,9 @@
 "use client";
 
+import { captureException, startSpan } from "@sentry/nextjs";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@atl/ui/components/button";
 import {
   Dialog,
@@ -10,9 +14,6 @@ import {
   DialogTitle,
 } from "@atl/ui/components/dialog";
 import { Label } from "@atl/ui/components/label";
-import { captureException, startSpan } from "@sentry/nextjs";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
 
 export interface XmppPasswordDialogData {
   jid: string;
@@ -41,14 +42,14 @@ export function XmppPasswordDialog({ data, onClose }: XmppPasswordDialogProps) {
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <Label>JID</Label>
-            <code className="block rounded-md bg-muted px-2 py-2 font-mono text-sm">
+            <code className="bg-muted block rounded-md px-2 py-2 font-mono text-sm">
               {data.jid}
             </code>
           </div>
           <div className="space-y-2">
             <Label>Password</Label>
             <div className="flex items-center gap-2">
-              <code className="flex-1 break-all rounded-md bg-muted px-2 py-2 font-mono text-sm">
+              <code className="bg-muted flex-1 rounded-md px-2 py-2 font-mono text-sm break-all">
                 {data.temporaryPassword}
               </code>
               <Button

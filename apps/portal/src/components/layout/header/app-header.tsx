@@ -1,7 +1,5 @@
 "use client";
 
-import { Separator } from "@atl/ui/components/separator";
-import { SidebarTrigger } from "@atl/ui/components/sidebar";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 
@@ -10,6 +8,8 @@ import {
   generateBreadcrumbs,
   routeConfig,
 } from "@/features/routing/lib";
+import { Separator } from "@atl/ui/components/separator";
+import { SidebarTrigger } from "@atl/ui/components/sidebar";
 
 import { BreadcrumbTrail } from "./breadcrumb-trail";
 
@@ -20,7 +20,7 @@ export function AppHeader() {
   const breadcrumbs = generateBreadcrumbs(pathname, routeConfig, resolver);
 
   return (
-    <header className="flex h-10 shrink-0 items-center gap-2 border-border border-b bg-sidebar px-3 text-sidebar-foreground transition-[width] ease-linear lg:border-b lg:px-4">
+    <header className="border-border bg-sidebar text-sidebar-foreground flex h-10 shrink-0 items-center gap-2 border-b px-3 transition-[width] ease-linear lg:border-b lg:px-4">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <div className="flex h-full items-center">

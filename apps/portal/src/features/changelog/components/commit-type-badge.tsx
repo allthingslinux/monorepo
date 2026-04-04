@@ -13,14 +13,14 @@ export function CommitTypeBadge({ type, scope }: CommitTypeBadgeProps) {
     <span className="inline-flex items-center gap-1">
       <span
         className={cn(
-          "rounded-full px-2 py-0.5 font-medium text-xs",
+          "rounded-full px-2 py-0.5 text-xs font-medium",
           COMMIT_TYPE_COLORS[type]
         )}
       >
         {type}
       </span>
       {scope ? (
-        <span className="rounded-full border border-border/50 px-1.5 py-0.5 text-muted-foreground text-xs dark:border-border/40">
+        <span className="border-border/50 text-muted-foreground dark:border-border/40 rounded-full border px-1.5 py-0.5 text-xs">
           {scope}
         </span>
       ) : null}

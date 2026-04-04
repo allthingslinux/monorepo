@@ -46,5 +46,5 @@ interface RepoIconProps {
  */
 export function RepoIcon({ repoId, className }: RepoIconProps) {
   const Icon = REPO_ICONS[repoId] ?? GitFork;
-  return <Icon className={cn("size-3.5 text-muted-foreground", className)} />;
+  return <Icon className={cn("text-muted-foreground size-3.5", className)} />;
 }

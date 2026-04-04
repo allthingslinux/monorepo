@@ -1,5 +1,18 @@
 "use client";
 
+import type { UserWithIntegrations } from "@portal/api/types";
+import type { UserListWithIntegrationsResponse } from "@portal/types/api";
+import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo, useState } from "react";
+
+import { useUsers } from "@/features/admin/hooks/use-admin";
+import {
+  useBanUser,
+  useSetUserRole,
+  useUnbanUser,
+} from "@/features/admin/hooks/use-admin-actions";
+import { useUsersListSearchParams } from "@/features/admin/hooks/use-users-list-search-params";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import {
   Card,
   CardContent,
@@ -16,19 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@atl/ui/components/select";
-import type { UserWithIntegrations } from "@portal/api/types";
-import type { UserListWithIntegrationsResponse } from "@portal/types/api";
-import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
-
-import { useUsers } from "@/features/admin/hooks/use-admin";
-import {
-  useBanUser,
-  useSetUserRole,
-  useUnbanUser,
-} from "@/features/admin/hooks/use-admin-actions";
-import { useUsersListSearchParams } from "@/features/admin/hooks/use-users-list-search-params";
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 import { DataTable } from "./data-table";
 import { createUnifiedUserColumns } from "./unified-user-columns";
@@ -112,7 +112,7 @@ function UnifiedUserManagementInner() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-destructive">
+          <div className="text-destructive text-center">
             Failed to load users: {error.message}
           </div>
         </CardContent>
@@ -131,7 +131,7 @@ function UnifiedUserManagementInner() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-muted-foreground">
+          <div className="text-muted-foreground text-center">
             Loading users…
           </div>
         </CardContent>

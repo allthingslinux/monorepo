@@ -1,3 +1,9 @@
+import { getRouteMetadata } from "@portal/seo/metadata";
+import type { Metadata } from "next";
+
+import { verifySession } from "@/auth/dal";
+import { PageContent, PageHeader } from "@/components/layout/page";
+import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import {
   Card,
   CardContent,
@@ -5,12 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@atl/ui/components/card";
-import { getRouteMetadata } from "@portal/seo/metadata";
-import type { Metadata } from "next";
-
-import { verifySession } from "@/auth/dal";
-import { PageContent, PageHeader } from "@/components/layout/page";
-import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 
 import { DonateCtaSections } from "./donate-cta-sections";
 
@@ -29,7 +29,7 @@ export default async function DonatePage() {
 
       <div className="space-y-8">
         {/* Hero */}
-        <div className="relative overflow-hidden rounded-xl border border-primary/10">
+        <div className="border-primary/10 relative overflow-hidden rounded-xl border">
           <div
             className="absolute inset-0 opacity-20 dark:opacity-10"
             style={{
@@ -40,7 +40,7 @@ export default async function DonatePage() {
           />
           <div className="relative px-4 py-6 sm:px-6 sm:py-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="mb-3 font-semibold text-foreground text-xl sm:text-2xl">
+              <h2 className="text-foreground mb-3 text-xl font-semibold sm:text-2xl">
                 Support All Things Linux
               </h2>
               <p className="text-muted-foreground leading-relaxed">
@@ -67,19 +67,19 @@ export default async function DonatePage() {
           <CardContent>
             <div className="flex flex-wrap justify-center gap-4">
               <div className="text-center">
-                <div className="font-bold text-2xl text-primary">20+</div>
+                <div className="text-primary text-2xl font-bold">20+</div>
                 <p className="text-muted-foreground text-sm">
                   Dedicated volunteers
                 </p>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-primary">100%</div>
+                <div className="text-primary text-2xl font-bold">100%</div>
                 <p className="text-muted-foreground text-sm">
                   Open source and non-profit
                 </p>
               </div>
               <div className="text-center">
-                <div className="font-bold text-2xl text-primary">24/7</div>
+                <div className="text-primary text-2xl font-bold">24/7</div>
                 <p className="text-muted-foreground text-sm">
                   Community support
                 </p>

@@ -25,12 +25,12 @@ export async function LatestUpdatesCard() {
 
   if (posts.length === 0) {
     return (
-      <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
-          <Newspaper className="size-4 text-muted-foreground" />
-          <h3 className="font-medium text-foreground">Latest Blog Posts</h3>
+          <Newspaper className="text-muted-foreground size-4" />
+          <h3 className="text-foreground font-medium">Latest Blog Posts</h3>
         </div>
-        <p className="mt-3 text-muted-foreground text-sm">
+        <p className="text-muted-foreground mt-3 text-sm">
           No posts available right now. Check back later.
         </p>
       </div>
@@ -38,14 +38,14 @@ export async function LatestUpdatesCard() {
   }
 
   return (
-    <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Newspaper className="size-4 text-muted-foreground" />
-          <h3 className="font-medium text-foreground">Latest Blog Posts</h3>
+          <Newspaper className="text-muted-foreground size-4" />
+          <h3 className="text-foreground font-medium">Latest Blog Posts</h3>
         </div>
         <a
-          className="font-medium text-primary text-xs hover:underline"
+          className="text-primary text-xs font-medium hover:underline"
           href="https://allthingslinux.org/blog"
           rel="noopener noreferrer"
           target="_blank"
@@ -57,16 +57,16 @@ export async function LatestUpdatesCard() {
         {posts.map((post) => (
           <li key={post.link}>
             <a
-              className="group flex flex-col gap-0.5 rounded-lg border border-border/60 px-3 py-2 transition-colors hover:bg-muted/50 dark:border-border/40"
+              className="group border-border/60 hover:bg-muted/50 dark:border-border/40 flex flex-col gap-0.5 rounded-lg border px-3 py-2 transition-colors"
               href={post.link}
               rel="noopener noreferrer"
               target="_blank"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="line-clamp-2 font-medium text-foreground text-sm group-hover:text-primary">
+                <span className="text-foreground group-hover:text-primary line-clamp-2 text-sm font-medium">
                   {post.title}
                 </span>
-                <ArrowUpRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                <ArrowUpRight className="text-muted-foreground mt-0.5 size-3.5 shrink-0 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
               </div>
               {formatDate(post.isoDate, post.pubDate) && (
                 <span className="text-muted-foreground text-xs">

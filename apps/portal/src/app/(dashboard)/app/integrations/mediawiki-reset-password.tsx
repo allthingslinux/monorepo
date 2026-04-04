@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import { captureException } from "@sentry/nextjs";
 import { KeyRound, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useResetIntegrationPassword } from "@/features/integrations/hooks/use-integration";
+import { Button } from "@atl/ui/components/button";
 
 export function MediaWikiResetPassword({ accountId }: { accountId: string }) {
   const resetMutation = useResetIntegrationPassword("mediawiki");

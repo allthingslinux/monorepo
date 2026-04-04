@@ -1,5 +1,11 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { Copy, KeyRound, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { useResetIntegrationPassword } from "@/features/integrations/hooks/use-integration";
 import { Button } from "@atl/ui/components/button";
 import {
   Dialog,
@@ -12,12 +18,6 @@ import {
 } from "@atl/ui/components/dialog";
 import { Input } from "@atl/ui/components/input";
 import { Label } from "@atl/ui/components/label";
-import * as Sentry from "@sentry/nextjs";
-import { Copy, KeyRound, Loader2 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-
-import { useResetIntegrationPassword } from "@/features/integrations/hooks/use-integration";
 
 interface ResetPasswordDialogProps {
   accountId: string;
@@ -169,7 +169,7 @@ export function ResetPasswordDialog({
           </DialogHeader>
           <div className="py-4">
             <div className="flex items-center gap-2">
-              <code className="flex-1 break-all rounded-md bg-muted px-3 py-2 font-mono text-sm">
+              <code className="bg-muted flex-1 rounded-md px-3 py-2 font-mono text-sm break-all">
                 {generatedPassword}
               </code>
               <Button

@@ -20,10 +20,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@portal/typescript-config": "workspace:*",
-    "@types/node": "^25.5.0",
-    "next": "16.2.1",
+    "@types/node": "catalog:",
+    "next": "catalog:",
     "server-only": "^0.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   }
 }

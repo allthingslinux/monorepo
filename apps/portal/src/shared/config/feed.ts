@@ -199,6 +199,15 @@ export const LINUX_FEED_SOURCES: FeedSource[] = [
     siteUrl: "https://archlinux.org",
   },
   {
+    categories: ["distro", "news"],
+    description: "Official Debian project news and announcements",
+    enabled: true,
+    feedUrl: "https://www.debian.org/News/news",
+    id: "debian-news",
+    name: "Debian",
+    siteUrl: "https://www.debian.org",
+  },
+  {
     categories: ["development", "community"],
     description:
       "Official KDE community blog covering Plasma, apps, and development",

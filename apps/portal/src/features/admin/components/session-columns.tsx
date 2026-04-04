@@ -1,12 +1,13 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import type { Session } from "@portal/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+
+import { Button } from "@atl/ui/components/button";
 
 function getSortIcon(sorted: false | "asc" | "desc") {
   if (sorted === "asc") {
@@ -66,7 +67,7 @@ export function createSessionColumns(
       cell: ({ getValue }) => {
         const userAgent = getValue();
         return (
-          <div className="wrap-break-word min-w-0">
+          <div className="min-w-0 wrap-break-word">
             {userAgent || "Unknown"}
           </div>
         );

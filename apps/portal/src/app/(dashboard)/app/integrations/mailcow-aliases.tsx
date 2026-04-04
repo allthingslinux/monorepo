@@ -1,5 +1,15 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Globe, Loader2, Mail, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import {
+  createAlias,
+  deleteAlias,
+  getAliases,
+} from "@/features/integrations/lib/mailcow/actions";
 import { Badge } from "@atl/ui/components/badge";
 import { Button } from "@atl/ui/components/button";
 import {
@@ -12,16 +22,6 @@ import {
   DialogTrigger,
 } from "@atl/ui/components/dialog";
 import { Input } from "@atl/ui/components/input";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Globe, Loader2, Mail, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-
-import {
-  createAlias,
-  deleteAlias,
-  getAliases,
-} from "@/features/integrations/lib/mailcow/actions";
 
 interface AliasManagerProps {
   accountId: string;
@@ -87,7 +87,7 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium text-lg">Email Aliases</h3>
+        <h3 className="text-lg font-medium">Email Aliases</h3>
         <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
           <DialogTrigger
             render={
@@ -107,7 +107,7 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <label className="font-medium text-sm" htmlFor="alias-address">
+                <label className="text-sm font-medium" htmlFor="alias-address">
                   Alias Address
                 </label>
                 <Input
@@ -118,7 +118,7 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
                 />
               </div>
               <div className="space-y-2">
-                <label className="font-medium text-sm" htmlFor="alias-goto">
+                <label className="text-sm font-medium" htmlFor="alias-goto">
                   Forward To
                 </label>
                 <Input
@@ -129,7 +129,7 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
                 />
               </div>
               <div className="space-y-2">
-                <label className="font-medium text-sm" htmlFor="alias-comment">
+                <label className="text-sm font-medium" htmlFor="alias-comment">
                   Public Comment (Optional)
                 </label>
                 <Input
@@ -156,33 +156,33 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-8 text-muted-foreground">
+        <div className="text-muted-foreground flex justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       ) : (
         <div className="grid gap-3">
           {aliases.length === 0 ? (
-            <p className="rounded-lg border border-dashed py-4 text-center text-muted-foreground text-sm">
+            <p className="text-muted-foreground rounded-lg border border-dashed py-4 text-center text-sm">
               No aliases created yet.
             </p>
           ) : (
             aliases.map((alias) => (
               <div
-                className="flex items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent/50"
+                className="hover:bg-accent/50 flex items-center justify-between rounded-lg border p-3 transition-colors"
                 key={alias.id}
               >
                 <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <Mail className="h-4 w-4 text-primary" />
+                  <div className="bg-primary/10 rounded-full p-2">
+                    <Mail className="text-primary h-4 w-4" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{alias.address}</p>
-                    <div className="flex items-center gap-1 text-muted-foreground text-xs">
+                    <p className="text-sm font-medium">{alias.address}</p>
+                    <div className="text-muted-foreground flex items-center gap-1 text-xs">
                       <Globe className="h-3 w-3" />
                       <span>{alias.goto}</span>
                     </div>
                     {alias.public_comment && (
-                      <p className="mt-1 text-muted-foreground text-xs italic">
+                      <p className="text-muted-foreground mt-1 text-xs italic">
                         &quot;{alias.public_comment}&quot;
                       </p>
                     )}

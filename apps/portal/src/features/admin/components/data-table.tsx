@@ -1,6 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- module augmentation: type params must match upstream */
 "use client";
 
+import { cn } from "@portal/utils/utils";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+import React from "react";
+
 import { Button } from "@atl/ui/components/button";
 import {
   DropdownMenu,
@@ -25,22 +42,6 @@ import {
   TableHeader,
   TableRow,
 } from "@atl/ui/components/table";
-import { cn } from "@portal/utils/utils";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-} from "@tanstack/react-table";
-import React from "react";
 
 // Type augmentation for TanStack Table column meta
 declare module "@tanstack/react-table" {
@@ -266,7 +267,7 @@ function DataTableInner<TData, TValue>({
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <p className="font-medium text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm font-medium">
             {table.getFilteredRowModel().rows.length} of{" "}
             {table.getCoreRowModel().rows.length} row(s)
           </p>
@@ -289,7 +290,7 @@ function DataTableInner<TData, TValue>({
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 font-medium text-muted-foreground text-sm">
+          <div className="text-muted-foreground flex items-center gap-1 text-sm font-medium">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </div>

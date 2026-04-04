@@ -7,9 +7,11 @@ import { BASE_URL } from "@/config/app";
 // connection() defers this handler to request time (auth/server context required).
 export async function GET(): Promise<NextResponse> {
   await connection();
+  // oxlint-disable-next-line typescript/no-unsafe-assignment, typescript/no-unsafe-call, typescript/no-unsafe-member-access
   const metadata = await serverClient.getProtectedResourceMetadata({
     authorization_servers: [BASE_URL],
     bearer_methods_supported: ["header"],
+    // oxlint-disable-next-line typescript/no-unsafe-assignment
     resource: BASE_URL,
     resource_documentation: `${BASE_URL}/docs`,
     scopes_supported: ["openid", "profile", "email", "offline_access"],

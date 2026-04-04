@@ -1,27 +1,27 @@
-import { Skeleton } from "@atl/ui/components/skeleton";
 import { Users } from "lucide-react";
 import { Suspense } from "react";
 
 import { env } from "@/env";
 import { discord } from "@/features/integrations/lib/discord/client";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 async function DiscordMemberStatContent() {
   if (!env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
     return (
-      <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Users className="size-4 text-primary" />
+          <div className="bg-primary/10 flex size-9 shrink-0 items-center justify-center rounded-lg">
+            <Users className="text-primary size-4" />
           </div>
-          <span className="font-medium text-muted-foreground text-sm">
+          <span className="text-muted-foreground text-sm font-medium">
             Discord Members
           </span>
         </div>
         <div className="mt-3">
-          <div className="font-bold text-2xl text-foreground tabular-nums">
+          <div className="text-foreground text-2xl font-bold tabular-nums">
             —
           </div>
-          <p className="mt-0.5 text-muted-foreground text-xs">Not configured</p>
+          <p className="text-muted-foreground mt-0.5 text-xs">Not configured</p>
         </div>
       </div>
     );
@@ -36,20 +36,20 @@ async function DiscordMemberStatContent() {
     const online = guild.approximate_presence_count ?? 0;
 
     return (
-      <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Users className="size-4 text-primary" />
+          <div className="bg-primary/10 flex size-9 shrink-0 items-center justify-center rounded-lg">
+            <Users className="text-primary size-4" />
           </div>
-          <span className="font-medium text-muted-foreground text-sm">
+          <span className="text-muted-foreground text-sm font-medium">
             Discord Members
           </span>
         </div>
         <div className="mt-3">
-          <div className="font-bold text-2xl text-foreground tabular-nums">
+          <div className="text-foreground text-2xl font-bold tabular-nums">
             {total.toLocaleString()}
           </div>
-          <p className="mt-0.5 text-muted-foreground text-xs">
+          <p className="text-muted-foreground mt-0.5 text-xs">
             {online.toLocaleString()} online
           </p>
         </div>
@@ -57,20 +57,20 @@ async function DiscordMemberStatContent() {
     );
   } catch {
     return (
-      <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Users className="size-4 text-primary" />
+          <div className="bg-primary/10 flex size-9 shrink-0 items-center justify-center rounded-lg">
+            <Users className="text-primary size-4" />
           </div>
-          <span className="font-medium text-muted-foreground text-sm">
+          <span className="text-muted-foreground text-sm font-medium">
             Discord Members
           </span>
         </div>
         <div className="mt-3">
-          <div className="font-bold text-2xl text-foreground tabular-nums">
+          <div className="text-foreground text-2xl font-bold tabular-nums">
             —
           </div>
-          <p className="mt-0.5 text-destructive text-xs">Failed to load</p>
+          <p className="text-destructive mt-0.5 text-xs">Failed to load</p>
         </div>
       </div>
     );
@@ -81,7 +81,7 @@ export function DiscordMemberStat() {
   return (
     <Suspense
       fallback={
-        <div className="rounded-xl border border-border/60 bg-card/50 p-4 dark:border-border/40 dark:bg-card/30">
+        <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
           <div className="flex items-center gap-2">
             <Skeleton className="size-9 rounded-lg" />
             <Skeleton className="h-4 w-24" />

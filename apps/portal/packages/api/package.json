@@ -25,9 +25,8 @@
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
-    "@portal/typescript-config": "workspace:*",
-    "next": "16.2.1",
+    "next": "catalog:",
     "server-only": "^0.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   }
 }

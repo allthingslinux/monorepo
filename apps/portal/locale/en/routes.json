@@ -62,6 +62,20 @@
       "label": "Connect"
     }
   },
+  "events": {
+    "label": "Events",
+    "metadata": {
+      "title": "Events",
+      "description": "Community calendar: ATL events and subscribed org calendars"
+    },
+    "ui": {
+      "title": "Events",
+      "description": "Browse upcoming community events. Sources include All Things Linux and optional subscribed calendars."
+    },
+    "breadcrumb": {
+      "label": "Events"
+    }
+  },
   "mail": {
     "label": "Mail",
     "metadata": {

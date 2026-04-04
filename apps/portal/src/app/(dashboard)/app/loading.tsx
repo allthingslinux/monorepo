@@ -1,6 +1,5 @@
-import { Skeleton } from "@atl/ui/components/skeleton";
-
 import { PageContent } from "@/components/layout/page";
+import { Skeleton } from "@atl/ui/components/skeleton";
 
 /**
  * Loading UI for the dashboard segment.

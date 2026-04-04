@@ -1,3 +1,8 @@
+import Image from "next/image";
+import { Suspense } from "react";
+
+import { env } from "@/env";
+import { discord } from "@/features/integrations/lib/discord/client";
 import {
   Card,
   CardContent,
@@ -5,11 +10,6 @@ import {
   CardTitle,
 } from "@atl/ui/components/card";
 import { Skeleton } from "@atl/ui/components/skeleton";
-import Image from "next/image";
-import { Suspense } from "react";
-
-import { env } from "@/env";
-import { discord } from "@/features/integrations/lib/discord/client";
 
 async function DiscordStatsCardContent() {
   if (!env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
@@ -41,16 +41,16 @@ async function DiscordStatsCardContent() {
             />
           )}
           <div>
-            <div className="font-bold text-2xl">
+            <div className="text-2xl font-bold">
               {guild.approximate_presence_count || 0}
             </div>
             <p className="text-muted-foreground text-xs">Members Online</p>
           </div>
           <div className="ml-auto">
-            <div className="font-bold text-2xl text-muted-foreground/50">
+            <div className="text-muted-foreground/50 text-2xl font-bold">
               {guild.approximate_member_count || 0}
             </div>
-            <p className="text-right text-muted-foreground text-xs">Total</p>
+            <p className="text-muted-foreground text-right text-xs">Total</p>
           </div>
         </div>
       </CardContent>
@@ -70,7 +70,7 @@ export function DiscordStatsCard() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="font-medium text-sm">Discord Server</CardTitle>
+        <CardTitle className="text-sm font-medium">Discord Server</CardTitle>
       </CardHeader>
       <Suspense
         fallback={

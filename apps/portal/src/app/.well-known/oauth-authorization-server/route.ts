@@ -9,9 +9,10 @@ import { auth } from "@/auth";
 // The oauthProvider plugin is configured, so this will work at runtime
 // Wrap in async function to prevent execution during build
 const handler = oauthProviderAuthServerMetadata(
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   auth as unknown as Parameters<typeof oauthProviderAuthServerMetadata>[0]
 );
 
 export async function GET(request: NextRequest) {
-  return await handler(request);
+  return handler(request);
 }

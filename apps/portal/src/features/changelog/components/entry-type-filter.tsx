@@ -18,10 +18,10 @@ export function EntryTypeFilter({ value, onChange }: EntryTypeFilterProps) {
         const active = value === option.value;
         return (
           <button
-            className={`rounded-md border px-2.5 py-1 font-medium text-xs transition-colors ${
+            className={`rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
               active
                 ? "border-primary bg-primary/10 text-primary dark:bg-primary/20"
-                : "border-border/50 bg-transparent text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40"
+                : "border-border/50 text-muted-foreground hover:border-border hover:text-foreground dark:border-border/40 bg-transparent"
             }`}
             key={option.value}
             onClick={() => onChange(option.value)}

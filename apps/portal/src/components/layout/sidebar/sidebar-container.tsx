@@ -1,19 +1,17 @@
 "use client";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@atl/ui/components/sidebar";
-
 import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 import {
   getFooterActions,
   getNavigationItems,
 } from "@/features/routing/lib/permissions";
 import { usePermissions } from "@/hooks/use-permissions";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+} from "@atl/ui/components/sidebar";
 
 import { SidebarBrand } from "./sidebar-brand";
 import { SidebarNavigation } from "./sidebar-navigation";
@@ -45,7 +43,6 @@ export function SidebarContainer({ canViewAdmin }: SidebarContainerProps) {
       <SidebarFooter>
         <SidebarUserSection actions={footerActions} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }

@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@atl/ui/components/sidebar";
 import { UserAvatar } from "@daveyplate/better-auth-ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +7,12 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/auth/client";
 import { useSession } from "@/auth/session-context";
 import type { FooterAction } from "@/features/routing/lib/types";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@atl/ui/components/sidebar";
 
 interface SidebarUserSectionProps {
   actions: FooterAction[];
@@ -53,7 +53,7 @@ export function SidebarUserSection({ actions }: SidebarUserSectionProps) {
           {state === "expanded" && (
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-sidebar-foreground/70 text-xs">
+              <span className="text-sidebar-foreground/70 truncate text-xs">
                 {user.email}
               </span>
             </div>

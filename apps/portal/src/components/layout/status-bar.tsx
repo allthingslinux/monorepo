@@ -28,7 +28,7 @@ export function StatusBar() {
   return (
     <footer
       aria-live="polite"
-      className="flex h-6 w-full shrink-0 items-center justify-between gap-3 border-border border-t bg-sidebar px-3 font-mono text-[10px] text-sidebar-foreground"
+      className="border-border bg-sidebar text-sidebar-foreground flex h-6 w-full shrink-0 items-center justify-between gap-3 border-t px-3 font-mono text-[10px]"
     >
       <div className="flex items-center gap-3">
         {isDev && (
@@ -36,11 +36,11 @@ export function StatusBar() {
             dev
           </span>
         )}
-        <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
+        <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-medium">
           v{APP_VERSION}
         </span>
       </div>
-      <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary tabular-nums">
+      <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 font-medium tabular-nums">
         {time}
       </span>
     </footer>

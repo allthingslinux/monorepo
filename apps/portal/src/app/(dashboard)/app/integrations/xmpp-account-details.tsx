@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@atl/ui/components/button";
 import { captureException, startSpan } from "@sentry/nextjs";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
 import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
+import { Button } from "@atl/ui/components/button";
 
 interface XmppAccountDetailsProps {
   account: XmppAccount;

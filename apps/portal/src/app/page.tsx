@@ -1,10 +1,11 @@
-import { Button } from "@atl/ui/components/button";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { createPageMetadata } from "@portal/seo/metadata";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { connection } from "next/server";
+
+import { Button } from "@atl/ui/components/button";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
@@ -42,7 +43,7 @@ export default async function Page() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-8">
       <div className="space-y-4 text-center">
-        <h1 className="font-bold text-4xl">{t("marketing.homePage.title")}</h1>
+        <h1 className="text-4xl font-bold">{t("marketing.homePage.title")}</h1>
         <p className="text-muted-foreground text-xl">
           {t("marketing.homePage.description")}
         </p>

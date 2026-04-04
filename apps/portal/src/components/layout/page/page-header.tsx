@@ -29,7 +29,7 @@ export function PageHeader({
   return (
     <div className="space-y-2">
       {displayTitle && (
-        <h1 className="font-semibold text-2xl">{displayTitle}</h1>
+        <h1 className="text-2xl font-semibold">{displayTitle}</h1>
       )}
       {displayDescription && (
         <p className="text-muted-foreground">{displayDescription}</p>

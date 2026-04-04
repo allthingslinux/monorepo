@@ -1,5 +1,13 @@
 "use client";
 
+import type { MediawikiAccountWithUser } from "@portal/api/types";
+import { formatDate } from "@portal/utils/date";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { memo, useMemo, useState } from "react";
+
+import { useAdminMediawikiAccounts } from "@/features/admin/hooks/use-admin";
+import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
 import { Badge } from "@atl/ui/components/badge";
 import {
   Card,
@@ -15,14 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@atl/ui/components/select";
-import type { MediawikiAccountWithUser } from "@portal/api/types";
-import { formatDate } from "@portal/utils/date";
-import { createColumnHelper } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useMemo, useState } from "react";
-
-import { useAdminMediawikiAccounts } from "@/features/admin/hooks/use-admin";
-import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
 
 import { DataTable } from "./data-table";
 
@@ -35,7 +35,7 @@ function createMediawikiAccountColumns() {
         const { user } = row.original;
         if (!user) {
           return (
-            <span className="font-mono text-muted-foreground text-sm">
+            <span className="text-muted-foreground font-mono text-sm">
               {row.original.userId.slice(0, 8)}…
             </span>
           );
@@ -103,7 +103,7 @@ function MediawikiAccountsManagementInner() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-destructive">
+          <div className="text-destructive text-center">
             Failed to load MediaWiki accounts: {error.message}
           </div>
         </CardContent>
@@ -121,7 +121,7 @@ function MediawikiAccountsManagementInner() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-muted-foreground">
+          <div className="text-muted-foreground text-center">
             Loading MediaWiki accounts…
           </div>
         </CardContent>

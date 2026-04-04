@@ -1,7 +1,21 @@
 {
-  "extends": "@portal/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "ESNext",
+    "lib": ["ESNext", "dom"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "noUncheckedSideEffectImports": false,
+    "incremental": true,
+    "plugins": [{ "name": "next" }],
     "allowJs": true,
     "paths": {
       "@/auth": ["./src/features/auth/lib"],

@@ -1,5 +1,8 @@
 "use client";
 
+import { captureException } from "@sentry/nextjs";
+import { useEffect } from "react";
+
 import { Button } from "@atl/ui/components/button";
 import {
   Card,
@@ -9,8 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@atl/ui/components/card";
-import { captureException } from "@sentry/nextjs";
-import { useEffect } from "react";
 
 import { geistMono, geistSans, inter } from "./fonts";
 
@@ -52,7 +53,7 @@ export default function GlobalError({
       suppressHydrationWarning
     >
       <body>
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+        <div className="bg-background flex min-h-screen flex-col items-center justify-center p-4">
           <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle>Something went wrong</CardTitle>
@@ -62,7 +63,7 @@ export default function GlobalError({
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="font-mono text-muted-foreground text-sm">
+                <p className="text-muted-foreground font-mono text-sm">
                   {error.message || "An unknown error occurred"}
                 </p>
                 {error.digest && (
@@ -72,10 +73,10 @@ export default function GlobalError({
                 )}
                 {process.env.NODE_ENV === "development" && error.stack && (
                   <details className="mt-4">
-                    <summary className="cursor-pointer text-muted-foreground text-sm">
+                    <summary className="text-muted-foreground cursor-pointer text-sm">
                       Stack trace (development only)
                     </summary>
-                    <pre className="mt-2 max-h-48 overflow-auto rounded bg-muted p-4 text-xs">
+                    <pre className="bg-muted mt-2 max-h-48 overflow-auto rounded p-4 text-xs">
                       {error.stack}
                     </pre>
                   </details>

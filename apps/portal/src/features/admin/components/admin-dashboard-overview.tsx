@@ -1,16 +1,16 @@
 "use client";
 
+import { UserCheck, Users } from "lucide-react";
+import Link from "next/link";
+
+import { PageHeader } from "@/components/layout/page/page-header";
+import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@atl/ui/components/card";
-import { UserCheck, Users } from "lucide-react";
-import Link from "next/link";
-
-import { PageHeader } from "@/components/layout/page/page-header";
-import { useTranslatedRoutes } from "@/features/routing/hooks/use-translated-routes";
 
 import { AdminStats } from "./admin-stats";
 
@@ -55,12 +55,12 @@ export function AdminDashboardOverview() {
           const Icon = link.icon;
           return (
             <Link href={link.href} key={link.href}>
-              <Card className="h-full transition-colors hover:bg-muted/50">
+              <Card className="hover:bg-muted/50 h-full transition-colors">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-medium text-sm">
+                  <CardTitle className="text-sm font-medium">
                     {link.label}
                   </CardTitle>
-                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <Icon className="text-muted-foreground h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">

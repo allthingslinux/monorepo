@@ -40,10 +40,10 @@ export function TimelineView({
 
   if (entries.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-border/60 bg-card/50 py-16 dark:border-border/40 dark:bg-card/30">
-        <History className="mb-3 size-8 text-muted-foreground/40" />
-        <p className="font-medium text-foreground">No activity found</p>
-        <p className="mt-1 text-muted-foreground text-sm">
+      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 flex flex-col items-center justify-center rounded-xl border py-16">
+        <History className="text-muted-foreground/40 mb-3 size-8" />
+        <p className="text-foreground font-medium">No activity found</p>
+        <p className="text-muted-foreground mt-1 text-sm">
           Try adjusting your filters.
         </p>
       </div>
@@ -65,7 +65,7 @@ export function TimelineView({
       {hasMore ? (
         <div className="h-px" ref={sentinelRef} />
       ) : (
-        <p className="pt-2 text-center text-muted-foreground text-sm">
+        <p className="text-muted-foreground pt-2 text-center text-sm">
           No more entries
         </p>
       )}

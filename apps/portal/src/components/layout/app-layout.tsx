@@ -20,10 +20,10 @@ export function AppLayout({
     <TooltipProvider delay={100}>
       <SidebarProvider className="bg-sidebar" defaultOpen={defaultSidebarOpen}>
         <SidebarContainer canViewAdmin={canViewAdmin} />
-        <div className="flex h-svh w-full min-w-0 flex-1 flex-col overflow-hidden bg-canvas">
+        <div className="bg-canvas flex h-svh w-full min-w-0 flex-1 flex-col overflow-hidden">
           <SidebarInset className="min-h-0">
             <AppHeader />
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-background">
+            <div className="bg-background flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className="min-h-0 flex-1 overflow-auto">{children}</div>
               <StatusBar />
             </div>

@@ -16,12 +16,11 @@
   },
   "dependencies": {
     "@portal/types": "workspace:*",
-    "clsx": "^2.1.1",
+    "clsx": "catalog:",
     "date-fns": "^4.1.0",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "catalog:"
   },
   "devDependencies": {
-    "@portal/typescript-config": "workspace:*",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   }
 }

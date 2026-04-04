@@ -29,7 +29,7 @@ export function MailboxQuota({ accountId }: MailboxQuotaProps) {
 
   if (isLoading) {
     return (
-      <div className="flex animate-pulse items-center gap-2 text-muted-foreground text-sm">
+      <div className="text-muted-foreground flex animate-pulse items-center gap-2 text-sm">
         <HardDrive className="h-4 w-4 animate-spin" />
         <span className="text-xs">Loading storage...</span>
       </div>
@@ -65,13 +65,13 @@ export function MailboxQuota({ accountId }: MailboxQuotaProps) {
         </div>
         <span className={textColor}>{percentage}% full</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
         <div
           className={cn("h-full transition-all duration-500", indicatorColor)}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="flex justify-between font-semibold text-[10px] text-muted-foreground uppercase tracking-wider">
+      <div className="text-muted-foreground flex justify-between text-[10px] font-semibold tracking-wider uppercase">
         <span>{formatBytes(usage.quota_used)} used</span>
         <span>{formatBytes(usage.quota)} total</span>
       </div>

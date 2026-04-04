@@ -1,5 +1,19 @@
 "use client";
 
+import type { UserWithIntegrations } from "@portal/api/types";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Ban,
+  MoreHorizontal,
+  UserCircle,
+} from "lucide-react";
+import { useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,19 +40,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@atl/ui/components/select";
-import type { UserWithIntegrations } from "@portal/api/types";
-import type { UseMutationResult } from "@tanstack/react-query";
-import { createColumnHelper } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Ban,
-  MoreHorizontal,
-  UserCircle,
-} from "lucide-react";
-import { useState } from "react";
 
 function getSortIcon(sorted: false | "asc" | "desc") {
   if (sorted === "asc") {

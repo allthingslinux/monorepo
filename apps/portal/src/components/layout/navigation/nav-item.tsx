@@ -1,10 +1,10 @@
 "use client";
 
-import { SidebarMenuButton, SidebarMenuItem } from "@atl/ui/components/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import type { ProtectedRoute } from "@/features/routing/lib/types";
+import { SidebarMenuButton, SidebarMenuItem } from "@atl/ui/components/sidebar";
 
 interface NavItemProps {
   route: ProtectedRoute;
@@ -36,7 +36,7 @@ export function NavItem({ route }: NavItemProps) {
             {Icon && <Icon />}
             <span>{route.label}</span>
             {route.navigation?.badge && (
-              <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-xs">
+              <span className="bg-primary ml-auto rounded-full px-2 py-0.5 text-xs">
                 {route.navigation.badge}
               </span>
             )}

@@ -1,5 +1,10 @@
 "use client";
 
+import type { AdminUserDetailResponse } from "@portal/api/types";
+import { formatDate } from "@portal/utils/date";
+
+import { useUser } from "@/features/admin/hooks/use-admin";
+import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
 import { Badge } from "@atl/ui/components/badge";
 import { Separator } from "@atl/ui/components/separator";
 import {
@@ -9,11 +14,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@atl/ui/components/sheet";
-import type { AdminUserDetailResponse } from "@portal/api/types";
-import { formatDate } from "@portal/utils/date";
-
-import { useUser } from "@/features/admin/hooks/use-admin";
-import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
 
 interface UserDetailSheetProps {
   onOpenChange: (open: boolean) => void;
@@ -49,13 +49,13 @@ export function UserDetailSheet({
         <Separator className="mb-6" />
 
         {isPending && (
-          <div className="py-6 text-muted-foreground text-sm">
+          <div className="text-muted-foreground py-6 text-sm">
             Loading user…
           </div>
         )}
 
         {error && (
-          <div className="py-6 text-destructive text-sm">
+          <div className="text-destructive py-6 text-sm">
             Failed to load user: {error.message}
           </div>
         )}
@@ -82,7 +82,7 @@ function UserDetailContent({
   return (
     <div className="flex flex-col gap-8">
       <section className="space-y-5">
-        <h3 className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
+        <h3 className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
           Profile
         </h3>
         <dl className="space-y-4 text-sm">
@@ -122,7 +122,7 @@ function UserDetailContent({
       <Separator />
 
       <section className="space-y-5">
-        <h3 className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
+        <h3 className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
           Integrations
         </h3>
         <div className="space-y-5">
@@ -153,7 +153,7 @@ function UserDetailContent({
               </dl>
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed p-4 text-muted-foreground text-sm">
+            <div className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
               No IRC account
             </div>
           )}
@@ -183,7 +183,7 @@ function UserDetailContent({
               </dl>
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed p-4 text-muted-foreground text-sm">
+            <div className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
               No XMPP account
             </div>
           )}
@@ -213,7 +213,7 @@ function UserDetailContent({
               </dl>
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed p-4 text-muted-foreground text-sm">
+            <div className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
               No Mailcow account
             </div>
           )}
@@ -239,7 +239,7 @@ function UserDetailContent({
               </dl>
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed p-4 text-muted-foreground text-sm">
+            <div className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
               No MediaWiki account
             </div>
           )}
