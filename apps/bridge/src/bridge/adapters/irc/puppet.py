@@ -126,7 +126,9 @@ class IRCPuppetManager:
         self._puppets: dict[str, IRCPuppet] = {}
         # TTLCache prevents unbounded growth; TTL matches puppet idle timeout so locks
         # for long-absent users are automatically evicted.
-        self._puppet_locks: TTLCache[str, asyncio.Lock] = TTLCache(maxsize=1024, ttl=self._idle_timeout)
+        self._puppet_locks: TTLCache[str, asyncio.Lock] = TTLCache(
+            maxsize=1024, ttl=self._idle_timeout
+        )
         self._cleanup_task: asyncio.Task | None = None
 
     async def get_or_create_puppet(self, discord_id: str) -> IRCPuppet | None:

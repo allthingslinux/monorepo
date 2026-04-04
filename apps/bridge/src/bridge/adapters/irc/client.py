@@ -29,7 +29,9 @@ _IRC_NICK_COLORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 def _nick_color(nick: str) -> str:
     """Wrap nick in a deterministic IRC color based on a hash of the nick."""
-    idx = int(hashlib.md5(nick.encode(), usedforsecurity=False).hexdigest(), 16) % len(_IRC_NICK_COLORS)
+    idx = int(hashlib.md5(nick.encode(), usedforsecurity=False).hexdigest(), 16) % len(
+        _IRC_NICK_COLORS
+    )
     code = _IRC_NICK_COLORS[idx]
     return f"\x03{code:02d}{nick}\x03"
 
@@ -140,16 +142,24 @@ class IRCClient(pydle.Client):
         self._auto_rejoin = auto_rejoin
         self._ready = False
         self._pending_sends: asyncio.Queue[str] = asyncio.Queue()  # discord_id for echo correlation
-        self._message_tags: dict[str, str | bool | None] = {}  # set in on_raw_privmsg from message.tags
-        self._puppet_nick_check: Callable[[str], bool] | None = None  # set by adapter for echo detection
+        self._message_tags: dict[
+            str, str | bool | None
+        ] = {}  # set in on_raw_privmsg from message.tags
+        self._puppet_nick_check: Callable[[str], bool] | None = (
+            None  # set by adapter for echo detection
+        )
         # Fallback echo detection when relaymsg tag missing (e.g. via irc-services)
-        self._recent_relaymsg_sends: TTLCache[tuple[str, str, str], None] = TTLCache(maxsize=100, ttl=5)
+        self._recent_relaymsg_sends: TTLCache[tuple[str, str, str], None] = TTLCache(
+            maxsize=100, ttl=5
+        )
         # labeled-response: label counter and pending label→discord_id mapping for echo correlation.
         # When we send a RELAYMSG/PRIVMSG with a label tag, the server echoes it back with the
         # same label. We match the echo's label to the discord_id we stored, enabling reliable
         # msgid→discord_id correlation even when multiple messages are in flight.
         self._label_counter: int = 0
-        self._pending_labels: TTLCache[str, str] = TTLCache(maxsize=200, ttl=120)  # label -> discord_id
+        self._pending_labels: TTLCache[str, str] = TTLCache(
+            maxsize=200, ttl=120
+        )  # label -> discord_id
         # ISUPPORT values (Requirement 11.7, 11.8)
         self._server_nicklen: int = 23  # effective limit: min(server_nicklen, 23)
         self._server_casemapping: str = "rfc1459"  # default per IRC spec
@@ -235,7 +245,9 @@ class IRCClient(pydle.Client):
                 try:
                     server_nicklen = int(token_str.split("=", 1)[1])
                     self._server_nicklen = min(server_nicklen, 23)
-                    logger.debug("ISUPPORT: NICKLEN={} (effective={})", server_nicklen, self._server_nicklen)
+                    logger.debug(
+                        "ISUPPORT: NICKLEN={} (effective={})", server_nicklen, self._server_nicklen
+                    )
                 except (ValueError, IndexError):
                     pass
             elif token_str.startswith("CASEMAPPING="):
@@ -368,7 +380,9 @@ class IRCClient(pydle.Client):
         await super().on_raw_cap_ls(params)
         # Ensure we request message-tags; UnrealIRCd may send it in a later batch but we need it for msgid.
         caps = getattr(self, "_capabilities", {})
-        if caps.get("message-tags") is None and "message-tags" not in getattr(self, "_capabilities_requested", set()):
+        if caps.get("message-tags") is None and "message-tags" not in getattr(
+            self, "_capabilities_requested", set()
+        ):
             logger.debug("explicitly requesting message-tags (required for msgid)")
             self._capabilities_requested.add("message-tags")
             await self.rawmsg("CAP", "REQ", "message-tags")

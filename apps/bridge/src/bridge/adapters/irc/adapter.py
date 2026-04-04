@@ -242,7 +242,11 @@ class IRCAdapter(AdapterBase):
         try:
             has_irc = await self._identity.has_irc(evt.author_id)
         except Exception as exc:
-            logger.warning("Identity lookup failed for {}: {}; falling back to main connection", evt.author_id, exc)
+            logger.warning(
+                "Identity lookup failed for {}: {}; falling back to main connection",
+                evt.author_id,
+                exc,
+            )
             if self._client:
                 self._client.queue_message(evt)
             return

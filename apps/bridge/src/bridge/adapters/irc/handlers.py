@@ -140,7 +140,9 @@ async def handle_message(client: IRCClient, target: str, source: str, message: s
     # server-time timestamps significantly in the past (>30s).
     # Exception: messages in a chathistory batch are intentionally replayed
     # and should NOT be suppressed.
-    in_chathistory = tags.get("batch") in client._chathistory_batches if tags.get("batch") else False
+    in_chathistory = (
+        tags.get("batch") in client._chathistory_batches if tags.get("batch") else False
+    )
     if not in_chathistory and is_history_replay(tags):
         logger.debug("discarding history replay message from {} in {}", source, target)
         return
@@ -168,7 +170,9 @@ async def handle_message(client: IRCClient, target: str, source: str, message: s
         if discord_id is not None:
             if msgid:
                 client._msgid_tracker.store(msgid, discord_id)
-                logger.debug("label={} correlated msgid {} -> {} for REDACT/edit", label, msgid, discord_id)
+                logger.debug(
+                    "label={} correlated msgid {} -> {} for REDACT/edit", label, msgid, discord_id
+                )
             else:
                 logger.debug("label={} matched but no msgid tag on echo", label)
         elif msgid:
@@ -181,7 +185,9 @@ async def handle_message(client: IRCClient, target: str, source: str, message: s
                     "RELAYMSG echo had msgid {} but no pending_send (queue empty); cannot correlate",
                     msgid,
                 )
-        elif is_relaymsg_echo(client, client._server, target, source, tags) or _is_relayed_by_us(client, tags):
+        elif is_relaymsg_echo(client, client._server, target, source, tags) or _is_relayed_by_us(
+            client, tags
+        ):
             logger.info(
                 "RELAYMSG echo received for {} in {} but no msgid tag (UnrealIRCd message-ids may not add msgid to relaymsg)",
                 source,
@@ -267,7 +273,9 @@ async def handle_ctcp_action(client: IRCClient, by: str, target: str, message: s
 
 async def handle_ctcp_version(client: IRCClient, by: str, target: str, contents: str) -> None:
     """Respond to CTCP VERSION queries with bridge info."""
-    await client.ctcp_reply(by, "VERSION", "ATL Bridge (Discord\u2194IRC\u2194XMPP) https://atl.chat")
+    await client.ctcp_reply(
+        by, "VERSION", "ATL Bridge (Discord\u2194IRC\u2194XMPP) https://atl.chat"
+    )
 
 
 async def handle_ctcp_source(client: IRCClient, by: str, target: str, contents: str) -> None:
@@ -358,7 +366,9 @@ async def handle_tagmsg(client: IRCClient, message: object) -> None:
                     canonical = await identity.username_for_irc(nick, client._server)
                     if canonical:
                         evt.author_display = canonical
-            logger.info("reaction removal bridged: channel={} author={} emoji={}", target, nick, unreact)
+            logger.info(
+                "reaction removal bridged: channel={} author={} emoji={}", target, nick, unreact
+            )
             client._bus.publish("irc", evt)
     elif typing_val in ("active", "done"):
         from bridge.events import typing_in
@@ -446,7 +456,9 @@ async def handle_redact(client: IRCClient, message: object) -> None:
     client._bus.publish("irc", evt)
 
 
-async def handle_kick(client: IRCClient, channel: str, target: str, by: str, reason: str | None = None) -> None:
+async def handle_kick(
+    client: IRCClient, channel: str, target: str, by: str, reason: str | None = None
+) -> None:
     """Handle KICK; rejoin if we were kicked and not banned."""
     if not client._auto_rejoin:
         return
@@ -557,7 +569,9 @@ async def handle_nick_collision(client: IRCClient, message: object, *, error_cod
         # ERR_ERRONEUSNICKNAME: re-sanitize and retry
         sanitized = _sanitize_nick_for_retry(attempted_nick)
         if sanitized != attempted_nick:
-            logger.warning("ERR_ERRONEUSNICKNAME for '{}'; retrying with '{}'", attempted_nick, sanitized)
+            logger.warning(
+                "ERR_ERRONEUSNICKNAME for '{}'; retrying with '{}'", attempted_nick, sanitized
+            )
             try:
                 await client.set_nick(sanitized)
             except Exception as exc:

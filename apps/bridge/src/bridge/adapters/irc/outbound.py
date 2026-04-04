@@ -40,7 +40,9 @@ async def consume_outbound(client: IRCClient) -> None:
     while True:
         try:
             evt = await client._outbound.get()
-            logger.debug("dequeued message discord_id={} channel={}", evt.message_id, evt.channel_id)
+            logger.debug(
+                "dequeued message discord_id={} channel={}", evt.message_id, evt.channel_id
+            )
             # Wait for token before sending (flood control)
             wait = client._throttle.acquire()
             if wait > 0:
@@ -118,7 +120,9 @@ async def send_message(client: IRCClient, evt: MessageOut) -> None:
 
     use_relaymsg = client._has_relaymsg()
     is_action = getattr(evt, "is_action", False)
-    logger.debug("use_relaymsg={} spoofed_nick={} is_action={}", use_relaymsg, spoofed_nick, is_action)
+    logger.debug(
+        "use_relaymsg={} spoofed_nick={} is_action={}", use_relaymsg, spoofed_nick, is_action
+    )
 
     # --- Multiline batch: wrap multiple chunks in a BATCH when draft/multiline is available ---
     use_multiline = len(chunks) > 1 and not is_action and client._has_multiline()
@@ -130,7 +134,9 @@ async def send_message(client: IRCClient, evt: MessageOut) -> None:
 
     try:
         for i, chunk in enumerate(chunks):
-            logger.debug("sending chunk {}/{} to {} -> {!r}", i + 1, len(chunks), target, chunk[:80])
+            logger.debug(
+                "sending chunk {}/{} to {} -> {!r}", i + 1, len(chunks), target, chunk[:80]
+            )
 
             # Generate labeled-response tag for first chunk (echo correlation, Req 11.5)
             label_tag: dict[str, str] | None = None
@@ -138,7 +144,9 @@ async def send_message(client: IRCClient, evt: MessageOut) -> None:
                 label = client._next_label()
                 label_tag = {"label": label}
                 client._pending_labels[label] = evt.message_id
-                logger.debug("attached label={} for echo correlation (discord_id={})", label, evt.message_id)
+                logger.debug(
+                    "attached label={} for echo correlation (discord_id={})", label, evt.message_id
+                )
 
             # Merge reply tags, label tag, and batch tag for first chunk
             first_chunk_tags: dict[str, str] | None = None
