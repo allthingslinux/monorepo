@@ -7,16 +7,16 @@ The atl.chat test suite uses pytest across two test roots: `tests/` at the monor
 
 ## Quick reference
 
-| Command | What it runs | Docker needed? |
-|---|---|---|
-| `just test` | Root pytest suite (`tests/`) | Integration and e2e tests build images |
-| `just test-all` | Root suite + bridge tests | Same as above |
-| `just bridge test` | Bridge tests only (`apps/bridge/tests/`) | No |
-| `uv run pytest tests/unit/` | Unit tests only | No |
-| `uv run pytest tests/integration/` | Integration tests | Yes (builds images) |
-| `uv run pytest tests/e2e/` | End-to-end tests | Yes (builds images) |
-| `uv run pytest tests/protocol/` | IRC protocol message tests | No |
-| `uv run pytest apps/bridge/tests/` | All bridge tests | No |
+| Command                            | What it runs                             | Docker needed?                         |
+| ---------------------------------- | ---------------------------------------- | -------------------------------------- |
+| `just test`                        | Root pytest suite (`tests/`)             | Integration and e2e tests build images |
+| `just test-all`                    | Root suite + bridge tests                | Same as above                          |
+| `just bridge test`                 | Bridge tests only (`apps/bridge/tests/`) | No                                     |
+| `uv run pytest tests/unit/`        | Unit tests only                          | No                                     |
+| `uv run pytest tests/integration/` | Integration tests                        | Yes (builds images)                    |
+| `uv run pytest tests/e2e/`         | End-to-end tests                         | Yes (builds images)                    |
+| `uv run pytest tests/protocol/`    | IRC protocol message tests               | No                                     |
+| `uv run pytest apps/bridge/tests/` | All bridge tests                         | No                                     |
 
 For day-to-day development, run unit and bridge tests — they complete in seconds without Docker:
 
@@ -179,26 +179,27 @@ Fixtures are defined in `tests/conftest.py` (root) and `apps/bridge/tests/confte
 
 These are created once per test session:
 
-| Fixture | Description |
-|---|---|
-| `docker_client` | Docker API client (skips if Docker is unavailable) |
-| `project_root` / `repo_root` | Monorepo root `Path` |
-| `compose_file` | Path to root `compose.yaml` |
-| `setup_test_environment` | Sets `TESTING=true` and creates temp directories (autouse) |
+| Fixture                      | Description                                                |
+| ---------------------------- | ---------------------------------------------------------- |
+| `docker_client`              | Docker API client (skips if Docker is unavailable)         |
+| `project_root` / `repo_root` | Monorepo root `Path`                                       |
+| `compose_file`               | Path to root `compose.yaml`                                |
+| `setup_test_environment`     | Sets `TESTING=true` and creates temp directories (autouse) |
 
 ### Function-scoped fixtures
 
 These are created fresh for each test:
 
-| Fixture | Description |
-|---|---|
+| Fixture               | Description                                        |
+| --------------------- | -------------------------------------------------- |
 | `prepared_config_dir` | Temp directory with copied UnrealIRCd config files |
-| `temp_dir` | Clean temporary directory (`tmp_path` alias) |
+| `temp_dir`            | Clean temporary directory (`tmp_path` alias)       |
+
 | `sampl
- `controller` | UnrealIRCd controller with Docker container support |
-| `mock_requests_get` | Patched `requests.get` returning `{"status": "ok"}` |
-| `cleanup_files` | Track and auto-cleanup files/dirs created during tests |
-| `test_config` | Parametrised fixture providing `"minimal"` and `"full"` configs |
+ `controller`| UnrealIRCd controller with Docker container support |
+|`mock_requests_get`| Patched`requests.get`returning`{"status": "ok"}`|
+|`cleanup_files`| Track and auto-cleanup files/dirs created during tests |
+|`test_config`| Parametrised fixture providing`"minimal"`and`"full"` configs |
 
 ### Docker container fixtures
 
@@ -344,18 +345,18 @@ The CI pipeline is defined in `.github/workflows/ci.yml`. It uses path-based fil
 
 The `changes` job uses `dorny/paths-filter` to detect which areas of the monorepo were modified, then triggers downstream jobs conditionally:
 
-| Job | Trigger paths | What it does |
-|---|---|---|
-| `lint-irc` | `apps/unrealircd/**`, `apps/atheme/**`, `tests/**`, `scripts/**` | Shell linting (shellcheck) |
-| `lint-xmpp` | `apps/prosody/**` | Lua linting (luacheck) |
-| `lint-bridge` | `apps/bridge/**` | `ruff check` + `ruff format --check` |
-| `test-bridge` | `apps/bridge/**` | `uv run pytest tests -v --tb=short` |
-| `lint-web` | `apps/web/**` | `pnpm run check` (Biome/ultracite) |
-| `build-web` | `apps/web/**` | `pnpm run build` (Next.js build) |
-| `security-global` | IRC or XMPP changes | Security scanning (Gitleaks, Trivy) |
-| `docker-irc` | `apps/unrealircd/**` | Docker image build for UnrealIRCd |
-| `docker-xmpp` | `apps/prosody/**` | Docker image build for Prosody |
-| `release` | Push to `main` only | Semantic release via `pnpm run release` |
+| Job               | Trigger paths                                                    | What it does                            |
+| ----------------- | ---------------------------------------------------------------- | --------------------------------------- |
+| `lint-irc`        | `apps/unrealircd/**`, `apps/atheme/**`, `tests/**`, `scripts/**` | Shell linting (shellcheck)              |
+| `lint-xmpp`       | `apps/prosody/**`                                                | Lua linting (luacheck)                  |
+| `lint-bridge`     | `apps/bridge/**`                                                 | `ruff check` + `ruff format --check`    |
+| `test-bridge`     | `apps/bridge/**`                                                 | `uv run pytest tests -v --tb=short`     |
+| `lint-web`        | `apps/web/**`                                                    | `pnpm run check` (Biome/ultracite)      |
+| `build-web`       | `apps/web/**`                                                    | `pnpm run build` (Next.js build)        |
+| `security-global` | IRC or XMPP changes                                              | Security scanning (Gitleaks, Trivy)     |
+| `docker-irc`      | `apps/unrealircd/**`                                             | Docker image build for UnrealIRCd       |
+| `docker-xmpp`     | `apps/prosody/**`                                                | Docker image build for Prosody          |
+| `release`         | Push to `main` only                                              | Semantic release via `pnpm run release` |
 
 ### What runs on every PR
 
@@ -400,19 +401,18 @@ All pytest settings live in `pyproject.toml` under `[tool.pytest.ini_options]`:
 
 Test tooling is declared in `pyproject.toml` under `[dependency-groups] dev`:
 
-| Package | Purpose |
-|---|---|
-| `pytest` | Test framework |
-| `pytest-mock` | `mocker` fixture for patching |
-| `pytest-asyncio` | Async test support |
-| `pytest-docker` | Docker Compose integration |
+| Package               | Purpose                               |
+| --------------------- | ------------------------------------- |
+| `pytest`              | Test framework                        |
+| `pytest-mock`         | `mocker` fixture for patching         |
+| `pytest-asyncio`      | Async test support                    |
+| `pytest-docker`       | Docker Compose integration            |
 | `pytest-docker-tools` | Declarative Docker container fixtures |
-| `pytest-xdist` | Parallel test execution (`-n auto`) |
-| `pytest-timeout` | Per-test timeout enforcement |
-| `pytest-sugar` | Pretty test output |
-| `pytest-html` | HTML test reports |
-| `hypothesis` | Property-based testing |
-
+| `pytest-xdist`        | Parallel test execution (`-n auto`)   |
+| `pytest-timeout`      | Per-test timeout enforcement          |
+| `pytest-sugar`        | Pretty test output                    |
+| `pytest-html`         | HTML test reports                     |
+| `hypothesis`          | Property-based testing                |
 
 ## Related pages
 

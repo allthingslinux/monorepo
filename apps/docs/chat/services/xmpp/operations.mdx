@@ -29,14 +29,14 @@ docker exec atl-xmpp-server prosodyctl status
 
 Common `prosodyctl` commands:
 
-| Command | Description |
-|---|---|
-| `prosodyctl status` | Show whether Prosody is running |
-| `prosodyctl reload` | Reload configuration files |
-| `prosodyctl restart` | Restart the Prosody process |
-| `prosodyctl about` | Show version, paths, and loaded modules |
-| `prosodyctl check` | Run configuration and DNS checks |
-| `prosodyctl cert generate <domain>` | Generate a self-signed certificate |
+| Command                             | Description                             |
+| ----------------------------------- | --------------------------------------- |
+| `prosodyctl status`                 | Show whether Prosody is running         |
+| `prosodyctl reload`                 | Reload configuration files              |
+| `prosodyctl restart`                | Restart the Prosody process             |
+| `prosodyctl about`                  | Show version, paths, and loaded modules |
+| `prosodyctl check`                  | Run configuration and DNS checks        |
+| `prosodyctl cert generate <domain>` | Generate a self-signed certificate      |
 
 The `just xmpp` recipes provide shortcuts:
 
@@ -110,14 +110,12 @@ docker compose logs atl-xmpp-server 2>&1 | grep -i "error"
 
 Common failure modes to watch for:
 
-| Log pattern | Meaning | Resolution |
-|---|---|---|
-| `error: Failed to open` | Certificate file missing or unreadable | Check cert paths and permissions |
-| `warn: No certificate` | TLS certificate not configured for a VirtualHost | Add certificate config to `prosody.cfg.lua` |
-| `error: component connection refused` | Bridge cannot connect as a component | Verify `component_interfaces` in Prosody config |
-| `warn: DNS resolution failed` | Cannot resolve federation targets | Check DNS records and network connectivity |
-
-
+| Log pattern                           | Meaning                                          | Resolution                                      |
+| ------------------------------------- | ------------------------------------------------ | ----------------------------------------------- |
+| `error: Failed to open`               | Certificate file missing or unreadable           | Check cert paths and permissions                |
+| `warn: No certificate`                | TLS certificate not configured for a VirtualHost | Add certificate config to `prosody.cfg.lua`     |
+| `error: component connection refused` | Bridge cannot connect as a component             | Verify `component_interfaces` in Prosody config |
+| `warn: DNS resolution failed`         | Cannot resolve federation targets                | Check DNS records and network connectivity      |
 
 ## Related pages
 

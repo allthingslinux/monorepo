@@ -15,22 +15,22 @@ finger client → systemd socket (:79) → efingerd
 
 When a finger request arrives, systemd accepts the connection and spawns efingerd. efingerd runs one of its handler scripts depending on the query type:
 
-| Script | Triggered by | Purpose |
-|--------|-------------|---------|
-| `luser` | `finger username@atl.sh` | Look up a specific user |
-| `list` | `finger @atl.sh` | List logged-in users |
-| `nouser` | `finger nonexistent@atl.sh` | Handle unknown users |
-| `log` | All queries | Logging |
+| Script   | Triggered by                | Purpose                 |
+| -------- | --------------------------- | ----------------------- |
+| `luser`  | `finger username@atl.sh`    | Look up a specific user |
+| `list`   | `finger @atl.sh`            | List logged-in users    |
+| `nouser` | `finger nonexistent@atl.sh` | Handle unknown users    |
+| `log`    | All queries                 | Logging                 |
 
 The `luser` script reads `~/.plan` and `~/.project` to build the response. If the user has a `~/.efingerd` executable script, it runs that instead.
 
 ## User files
 
-| File | Purpose |
-|------|---------|
-| `~/.plan` | Free-form text — what you're working on, thinking about |
-| `~/.project` | One-line project description |
-| `~/.efingerd` | Optional custom script for full control over output |
+| File          | Purpose                                                 |
+| ------------- | ------------------------------------------------------- |
+| `~/.plan`     | Free-form text — what you're working on, thinking about |
+| `~/.project`  | One-line project description                            |
+| `~/.efingerd` | Optional custom script for full control over output     |
 
 Both `.plan` and `.project` are created from `/etc/skel/` when the account is provisioned. Edit them with any text editor:
 
@@ -56,11 +56,11 @@ When present, efingerd runs this script instead of its default `luser` handler. 
 
 ## Ansible configuration
 
-| File | Purpose |
-|------|---------|
-| `roles/services/tasks/finger.yml` | Install efingerd + finger client, set script permissions, deploy systemd units |
-| `roles/services/templates/finger.socket.j2` | Systemd socket unit (port 79) |
-| `roles/services/templates/finger@.service.j2` | Systemd service template unit |
+| File                                          | Purpose                                                                        |
+| --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `roles/services/tasks/finger.yml`             | Install efingerd + finger client, set script permissions, deploy systemd units |
+| `roles/services/templates/finger.socket.j2`   | Systemd socket unit (port 79)                                                  |
+| `roles/services/templates/finger@.service.j2` | Systemd service template unit                                                  |
 
 The `finger` client package is also installed — it's needed by efingerd's `luser` script to resolve user information.
 
@@ -69,15 +69,18 @@ All scripts in `/etc/efingerd/` are set to mode `0755` to ensure they're executa
 ## Troubleshooting
 
 **finger returns nothing or "no such user"**
+
 - Verify the user exists: `getent passwd username`
 - Check `~/.plan` exists and is readable: `ls -la ~/.plan`
 - Test locally: `finger username@localhost`
 
 **finger returns garbled output**
+
 - Emoji or non-ASCII in `.plan` can cause issues with some clients
 - The smoke test uses `grep -c` instead of direct output to avoid UTF-8 surrogate errors
 
 **Socket not listening**
+
 - Check: `systemctl status finger.socket`
 - Restart: `sudo systemctl restart finger.socket`
 - Verify port: `ss -tlnp | grep :79`

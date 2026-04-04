@@ -44,6 +44,7 @@ echo "Hello from $(hostname) at $(date)"
 ```
 
 Requirements:
+
 - Script must be executable (`chmod +x`)
 - Must have a valid shebang line (`#!/bin/bash`, `#!/usr/bin/env python3`, etc.)
 - Must output a `Content-Type` header followed by a blank line, then the body
@@ -58,52 +59,55 @@ For users who have opted into the [webring](/sh/webring), nginx uses `sub_filter
 
 Nginx adds the following headers to all responses:
 
-| Header | Value |
-|--------|-------|
-| `X-Frame-Options` | `SAMEORIGIN` |
-| `X-Content-Type-Options` | `nosniff` |
-| `X-XSS-Protection` | `1; mode=block` |
+| Header                   | Value           |
+| ------------------------ | --------------- |
+| `X-Frame-Options`        | `SAMEORIGIN`    |
+| `X-Content-Type-Options` | `nosniff`       |
+| `X-XSS-Protection`       | `1; mode=block` |
 
 Gzip compression is enabled for text, CSS, JSON, JavaScript, and XML content types.
 
 ## Ansible configuration
 
-| File | Purpose |
-|------|---------|
-| `roles/services/tasks/web.yml` | Installs nginx, fcgiwrap, certbot; deploys tilde config |
-| `roles/services/templates/tilde-site.conf.j2` | Nginx server block template |
-| `roles/services/defaults/main.yml` | Default variables (`tilde_docroot`, nginx options) |
+| File                                          | Purpose                                                 |
+| --------------------------------------------- | ------------------------------------------------------- |
+| `roles/services/tasks/web.yml`                | Installs nginx, fcgiwrap, certbot; deploys tilde config |
+| `roles/services/templates/tilde-site.conf.j2` | Nginx server block template                             |
+| `roles/services/defaults/main.yml`            | Default variables (`tilde_docroot`, nginx options)      |
 
 Key variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `tilde_docroot` | `public_html` | Subdirectory name under each user's home |
-| `nginx_server_tokens` | `off` | Hide nginx version in responses |
-| `nginx_client_max_body_size` | `64m` | Max upload size for CGI POST requests |
+| Variable                     | Default       | Description                              |
+| ---------------------------- | ------------- | ---------------------------------------- |
+| `tilde_docroot`              | `public_html` | Subdirectory name under each user's home |
+| `nginx_server_tokens`        | `off`         | Hide nginx version in responses          |
+| `nginx_client_max_body_size` | `64m`         | Max upload size for CGI POST requests    |
 
 ## Log files
 
-| Log | Path |
-|-----|------|
+| Log        | Path                        |
+| ---------- | --------------------------- |
 | Access log | `/var/log/nginx/access.log` |
-| Error log | `/var/log/nginx/error.log` |
+| Error log  | `/var/log/nginx/error.log`  |
 
 Logs rotate daily, keeping 14 days. Rotation is managed by logrotate with a `USR1` signal to nginx for graceful reopening.
 
 ## Troubleshooting
 
 **Page returns 403 Forbidden**
+
 - Home directory must be `711` (traversable): `chmod 711 ~`
 - `public_html` must be `755`: `chmod 755 ~/public_html`
 - Files must be world-readable: `chmod 644 ~/public_html/index.html`
 
 **CGI script returns 502 Bad Gateway**
+
 - Check the script is executable: `chmod +x script.cgi`
 - Verify the shebang points to an existing interpreter
 - Test the script directly: `./script.cgi` — it should output headers + body
 - Check fcgiwrap is running: `systemctl status fcgiwrap`
 
 **Changes not appearing**
+
 - Nginx caches nothing by default — hard-refresh your browser (`Ctrl+Shift+R`)
 - If using Cloudflare, purge the cache there

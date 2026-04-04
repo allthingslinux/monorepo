@@ -61,12 +61,12 @@ NODE_VERSION = "18.18.0"
 
 Key settings:
 
-| Setting | Value | Purpose |
-|---|---|---|
-| `name` | `atl-chat` | Cloudflare Pages project name |
-| `pages_build_output_dir` | `.vercel/output/static` | Build output directory for `@cloudflare/next-on-pages` |
-| `compatibility_flags` | `nodejs_compat` | Enables Node.js API compatibility in Workers runtime |
-| `NODE_VERSION` | `18.18.0` | Node.js version used in the Cloudflare build environment |
+| Setting                  | Value                   | Purpose                                                  |
+| ------------------------ | ----------------------- | -------------------------------------------------------- |
+| `name`                   | `atl-chat`              | Cloudflare Pages project name                            |
+| `pages_build_output_dir` | `.vercel/output/static` | Build output directory for `@cloudflare/next-on-pages`   |
+| `compatibility_flags`    | `nodejs_compat`         | Enables Node.js API compatibility in Workers runtime     |
+| `NODE_VERSION`           | `18.18.0`               | Node.js version used in the Cloudflare build environment |
 
 Pushes to the main branch trigger an automatic Cloudflare Pages deployment. Environment variables for production (such as `NEXT_PUBLIC_IRC_WS_URL`) are managed in the Cloudflare dashboard under the project's environment settings.
 
@@ -103,7 +103,6 @@ just web type-check    # Run TypeScript type checking (tsc --noEmit)
 The Biome configuration in `biome.jsonc` extends the `ultracite/biome/core` and `ultracite/biome/next` presets.
 
 > **Note:** `ultracite check` currently fails due to a pre-existing issue where the Biome config expects a `.gitignore` in `apps/web/`. The Next.js build (`just web build`) works fine regardless.
-
 
 ## Related pages
 

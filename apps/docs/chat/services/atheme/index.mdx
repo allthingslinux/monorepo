@@ -27,26 +27,26 @@ graph LR
 
 Atheme runs multiple service bots, each handling a specific domain. The primary bots you interact with daily are:
 
-| Bot | Purpose |
-|---|---|
-| NickServ | Nickname registration, identification, password management, and account settings |
-| ChanServ | Channel registration, access control lists, mode locks, and topic management |
-| OperServ | Network administration — AKILLs, clones monitoring, server jupes, and runtime settings |
-| MemoServ | Private messaging between registered users and channels |
-| HostServ | Virtual host (vhost) requests, offers, and management |
-| GroupServ | Account grouping for shared channel access and permissions |
+| Bot       | Purpose                                                                                |
+| --------- | -------------------------------------------------------------------------------------- |
+| NickServ  | Nickname registration, identification, password management, and account settings       |
+| ChanServ  | Channel registration, access control lists, mode locks, and topic management           |
+| OperServ  | Network administration — AKILLs, clones monitoring, server jupes, and runtime settings |
+| MemoServ  | Private messaging between registered users and channels                                |
+| HostServ  | Virtual host (vhost) requests, offers, and management                                  |
+| GroupServ | Account grouping for shared channel access and permissions                             |
 
 Additional service bots are also active:
 
-| Bot | Purpose |
-|---|---|
-| SaslServ | SASL authentication (PLAIN and SCRAM-SHA mechanisms) |
-| HelpServ | Help ticket system and service directory |
-| InfoServ | Network announcements displayed at login |
-| Global | Network-wide broadcast messages from operators |
-| StatServ | Network statistics — server, channel, and netsplit tracking |
-| ALIS | Channel directory and search (Advanced List Service) |
-| Proxyscan | DNSBL-based proxy and open relay detection |
+| Bot       | Purpose                                                     |
+| --------- | ----------------------------------------------------------- |
+| SaslServ  | SASL authentication (PLAIN and SCRAM-SHA mechanisms)        |
+| HelpServ  | Help ticket system and service directory                    |
+| InfoServ  | Network announcements displayed at login                    |
+| Global    | Network-wide broadcast messages from operators              |
+| StatServ  | Network statistics — server, channel, and netsplit tracking |
+| ALIS      | Channel directory and search (Advanced List Service)        |
+| Proxyscan | DNSBL-based proxy and open relay detection                  |
 
 > **Note:** BotServ, GameServ, and RPGServ modules are present in the config template but disabled (commented out) by default. You can enable them by uncommenting the relevant `loadmodule` lines in `atheme.conf.template` and regenerating the config.
 
@@ -67,27 +67,27 @@ Key architectural details:
 
 ## Technology
 
-| Component | Technology |
-|---|---|
-| Software | Atheme IRC Services (built from `master` branch) |
-| Base image | Alpine Linux 3.23 |
-| Init system | tini |
-| Config management | Template substitution via `scripts/prepare-config.sh` |
-| Database | opensex flat-file backend |
-| Password hashing | PBKDF2v2 (SCRAM-SHA-256, 64k rounds) |
-| Container name | `atl-irc-services` |
-| Network mode | Shares UnrealIRCd namespace (`network_mode: service:atl-irc-server`) |
-| Uplink | `127.0.0.1:6901` |
-| HTTP API | JSON-RPC on port `8081` |
+| Component         | Technology                                                           |
+| ----------------- | -------------------------------------------------------------------- |
+| Software          | Atheme IRC Services (built from `master` branch)                     |
+| Base image        | Alpine Linux 3.23                                                    |
+| Init system       | tini                                                                 |
+| Config management | Template substitution via `scripts/prepare-config.sh`                |
+| Database          | opensex flat-file backend                                            |
+| Password hashing  | PBKDF2v2 (SCRAM-SHA-256, 64k rounds)                                 |
+| Container name    | `atl-irc-services`                                                   |
+| Network mode      | Shares UnrealIRCd namespace (`network_mode: service:atl-irc-server`) |
+| Uplink            | `127.0.0.1:6901`                                                     |
+| HTTP API          | JSON-RPC on port `8081`                                              |
 
 ## Data and volumes
 
 The compose configuration mounts three volumes into the Atheme container:
 
-| Host path | Container path | Purpose |
-|---|---|---|
-| `apps/atheme/config/` | `/usr/local/atheme/etc` | Configuration (read-only at runtime after generation) |
-| `data/atheme/data/` | `/usr/local/atheme/data` | Database file (`services.db`) — persistent |
+| Host path             | Container path           | Purpose                                               |
+| --------------------- | ------------------------ | ----------------------------------------------------- |
+| `apps/atheme/config/` | `/usr/local/atheme/etc`  | Configuration (read-only at runtime after generation) |
+| `data/atheme/data/`   | `/usr/local/atheme/data` | Database file (`services.db`) — persistent            |
 
 > **Note:** Atheme logs to stdout via `/dev/stdout`. Logs are captured by Docker's json-file driver — use `docker compose logs atl-irc-services` to view them.
 

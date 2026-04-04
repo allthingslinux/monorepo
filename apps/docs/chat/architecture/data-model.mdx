@@ -68,19 +68,19 @@ data/
 
 Every bind-mount is defined in the compose fragments under `infra/compose/`. Paths are relative to the repository root.
 
-| Host path | Container mount | Service | Compose file |
-|---|---|---|---|
-| `data/irc/data` | `/home/unrealircd/unrealircd/data` | UnrealIRCd | `irc.yaml` |
-| `data/certs` | `/home/unrealircd/unrealircd/certs` (ro) | UnrealIRCd | `irc.yaml` |
-| `data/atheme/data` | `/usr/local/atheme/data` | Atheme | `irc.yaml` |
-| `data/irc/webpanel-data` | `/var/www/html/unrealircd-webpanel/data` | WebPanel | `irc.yaml` |
-| `data/xmpp/data` | `/var/lib/prosody/data` | Prosody | `xmpp.yaml` |
-| `data/xmpp/uploads` | `/var/lib/prosody/uploads` | Prosody | `xmpp.yaml` |
-| `data/certs` | `/etc/prosody/certs` | Prosody | `xmpp.yaml` |
-| `data/certs` | `/etc/nginx/certs` (ro) | XMPP Nginx | `xmpp.yaml` |
-| `data/thelounge` | `/var/opt/thelounge` | The Lounge | `thelounge.yaml` |
-| `data/obsidianirc` | _(none)_ | ObsidianIRC | `obsidianirc.yaml` |
-| `data/certs` | `/data` | Cert Manager | `cert-manager.yaml` |
+| Host path                | Container mount                          | Service      | Compose file        |
+| ------------------------ | ---------------------------------------- | ------------ | ------------------- |
+| `data/irc/data`          | `/home/unrealircd/unrealircd/data`       | UnrealIRCd   | `irc.yaml`          |
+| `data/certs`             | `/home/unrealircd/unrealircd/certs` (ro) | UnrealIRCd   | `irc.yaml`          |
+| `data/atheme/data`       | `/usr/local/atheme/data`                 | Atheme       | `irc.yaml`          |
+| `data/irc/webpanel-data` | `/var/www/html/unrealircd-webpanel/data` | WebPanel     | `irc.yaml`          |
+| `data/xmpp/data`         | `/var/lib/prosody/data`                  | Prosody      | `xmpp.yaml`         |
+| `data/xmpp/uploads`      | `/var/lib/prosody/uploads`               | Prosody      | `xmpp.yaml`         |
+| `data/certs`             | `/etc/prosody/certs`                     | Prosody      | `xmpp.yaml`         |
+| `data/certs`             | `/etc/nginx/certs` (ro)                  | XMPP Nginx   | `xmpp.yaml`         |
+| `data/thelounge`         | `/var/opt/thelounge`                     | The Lounge   | `thelounge.yaml`    |
+| `data/obsidianirc`       | _(none)_                                 | ObsidianIRC  | `obsidianirc.yaml`  |
+| `data/certs`             | `/data`                                  | Cert Manager | `cert-manager.yaml` |
 
 > **Note:** The Bridge service does not have a `data/` volume. Its configuration (`apps/bridge/config.yaml`) is bind-mounted read-only from the source tree, not from `data/`.
 
@@ -119,17 +119,17 @@ just init
 
 Older documentation and setups may reference paths that no longer exist. If you find any of these directories, you can safely remove them:
 
-| Obsolete path | Current equivalent |
-|---|---|
-| `data/unrealircd/` | `data/irc/data/` |
-| `data/letsencrypt/` | `data/certs/` |
-| `data/atheme/atheme.db` | `data/atheme/data/services.db` |
-| `logs/atheme/` | Removed — logs go to stdout (Docker) |
-| `logs/atl-irc-server/` | Removed — logs go to stdout (Docker) |
-| `data/irc/logs/` | Removed — logs go to stdout (Docker) |
-| `data/atheme/logs/` | Removed — logs go to stdout (Docker) |
-| `data/xmpp/logs/` | Removed — logs go to stdout (Docker) |
-| `data/docs/` | Not used — remove if present |
+| Obsolete path           | Current equivalent                   |
+| ----------------------- | ------------------------------------ |
+| `data/unrealircd/`      | `data/irc/data/`                     |
+| `data/letsencrypt/`     | `data/certs/`                        |
+| `data/atheme/atheme.db` | `data/atheme/data/services.db`       |
+| `logs/atheme/`          | Removed — logs go to stdout (Docker) |
+| `logs/atl-irc-server/`  | Removed — logs go to stdout (Docker) |
+| `data/irc/logs/`        | Removed — logs go to stdout (Docker) |
+| `data/atheme/logs/`     | Removed — logs go to stdout (Docker) |
+| `data/xmpp/logs/`       | Removed — logs go to stdout (Docker) |
+| `data/docs/`            | Not used — remove if present         |
 
 ```bash
 # Clean up obsolete directories (safe to run; skips if not present)

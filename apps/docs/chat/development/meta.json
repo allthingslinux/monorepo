@@ -1,8 +1,4 @@
 {
-    "title": "Development",
-    "pages": [
-        "contributing",
-        "testing",
-        "adding-a-service"
-    ]
+  "title": "Development",
+  "pages": ["contributing", "testing", "adding-a-service"]
 }

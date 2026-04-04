@@ -1,8 +1,4 @@
 {
-    "title": "The Lounge",
-    "pages": [
-        "index",
-        "configuration",
-        "operations"
-    ]
+  "title": "The Lounge",
+  "pages": ["index", "configuration", "operations"]
 }

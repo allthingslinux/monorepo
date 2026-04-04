@@ -52,10 +52,10 @@ docker compose restart atl-thelounge
 
 Each user account is a JSON file at `data/thelounge/users/<username>.json`. The file contains the user's hashed password, client settings, saved networks, and channel preferences. The Lounge reads these files at startup and watches for changes at runtime.
 
-| Host path | Container path | Contents |
-|---|---|---|
+| Host path                          | Container path                         | Contents                                                |
+| ---------------------------------- | -------------------------------------- | ------------------------------------------------------- |
 | `data/thelounge/users/<user>.json` | `/var/opt/thelounge/users/<user>.json` | Hashed password, networks, channels, client preferences |
-| `data/thelounge/users/` | `/var/opt/thelounge/users/` | All user account files |
+| `data/thelounge/users/`            | `/var/opt/thelounge/users/`            | All user account files                                  |
 
 ## Log management
 
@@ -78,10 +78,10 @@ docker compose logs --since 1h atl-thelounge
 
 The Lounge also writes logs inside its data directory. These include chat message logs when logging is enabled per-user:
 
-| Host path | Container path | Contents |
-|---|---|---|
-| `data/thelounge/logs/` | `/var/opt/thelounge/logs/` | Per-user, per-channel message logs |
-| `data/thelounge/logs/<user>/<network>/` | `/var/opt/thelounge/logs/<user>/<network>/` | Channel-specific log files |
+| Host path                               | Container path                              | Contents                           |
+| --------------------------------------- | ------------------------------------------- | ---------------------------------- |
+| `data/thelounge/logs/`                  | `/var/opt/thelounge/logs/`                  | Per-user, per-channel message logs |
+| `data/thelounge/logs/<user>/<network>/` | `/var/opt/thelounge/logs/<user>/<network>/` | Channel-specific log files         |
 
 Message logging is a per-user setting controlled from The Lounge's web interface under Settings. When enabled, logs are stored as plain text files organised by user, network, and channel.
 

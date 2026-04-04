@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "mint": "^4.2.447",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   }
 }

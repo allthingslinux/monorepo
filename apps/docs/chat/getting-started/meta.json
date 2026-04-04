@@ -1,7 +1,4 @@
 {
-    "title": "Getting Started",
-    "pages": [
-        "index",
-        "local-development"
-    ]
+  "title": "Getting Started",
+  "pages": ["index", "local-development"]
 }

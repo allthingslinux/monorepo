@@ -31,26 +31,26 @@ graph TD
 
 ### Section overview
 
-| Section | Purpose |
-|---|---|
-| Plugin paths | Community and custom module directories |
-| `modules_enabled` | All globally loaded modules, grouped by function |
-| `modules_disabled` | Explicitly disabled auto-loaded modules |
-| Core server settings | PID file, user/group, admin JIDs |
-| Data storage | SQLite/PostgreSQL backend, per-store assignments |
-| Message archiving (MAM) | Retention, compression, query limits |
-| Networking | Ports, interfaces, IPv6, backend tuning |
-| HTTP services | BOSH, WebSocket, file upload, CORS, security headers |
-| TURN/STUN | External TURN server for audio/video calls |
-| Logging | Console and file log levels, OpenMetrics |
-| Security | Rate limits, registration throttling, anti-spam |
-| TLS/SSL | Protocol version, ciphers, certificate paths |
-| Authentication | SASL mechanisms, hashed storage, blocked usernames |
-| OAuth2 | Bearer token generation for Portal integration |
-| Push notifications | Cloud notify settings for mobile clients |
-| VirtualHost | Primary domain with per-host modules and SSL |
-| Components | MUC, file upload, proxy65, PubSub, bridge |
-| Contact info | Admin contacts, server info, account cleanup |
+| Section                 | Purpose                                              |
+| ----------------------- | ---------------------------------------------------- |
+| Plugin paths            | Community and custom module directories              |
+| `modules_enabled`       | All globally loaded modules, grouped by function     |
+| `modules_disabled`      | Explicitly disabled auto-loaded modules              |
+| Core server settings    | PID file, user/group, admin JIDs                     |
+| Data storage            | SQLite/PostgreSQL backend, per-store assignments     |
+| Message archiving (MAM) | Retention, compression, query limits                 |
+| Networking              | Ports, interfaces, IPv6, backend tuning              |
+| HTTP services           | BOSH, WebSocket, file upload, CORS, security headers |
+| TURN/STUN               | External TURN server for audio/video calls           |
+| Logging                 | Console and file log levels, OpenMetrics             |
+| Security                | Rate limits, registration throttling, anti-spam      |
+| TLS/SSL                 | Protocol version, ciphers, certificate paths         |
+| Authentication          | SASL mechanisms, hashed storage, blocked usernames   |
+| OAuth2                  | Bearer token generation for Portal integration       |
+| Push notifications      | Cloud notify settings for mobile clients             |
+| VirtualHost             | Primary domain with per-host modules and SSL         |
+| Components              | MUC, file upload, proxy65, PubSub, bridge            |
+| Contact info            | Admin contacts, server info, account cleanup         |
 
 ## Environment variables
 
@@ -58,87 +58,87 @@ All Prosody settings can be tuned via environment variables defined in `.env`. T
 
 ### Core XMPP variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `XMPP_DOMAIN` | Primary XMPP domain (sets `PROSODY_DOMAIN` in compose) | `atl.chat` |
-| `PROSODY_ADMIN_EMAIL` | Admin email for contact info | `admin@allthingslinux.org` |
-| `PROSODY_ADMIN_JID` | Admin JID for prosodyctl and MUC ownership | `admin@<domain>` |
-| `PROSODY_ALLOW_REGISTRATION` | Enable in-band registration (`true`/`false`) | `false` |
-| `PROSODY_LOG_LEVEL` | Minimum log level (`debug`, `info`, `warn`, `error`) | `info` |
+| Variable                     | Description                                            | Default                    |
+| ---------------------------- | ------------------------------------------------------ | -------------------------- |
+| `XMPP_DOMAIN`                | Primary XMPP domain (sets `PROSODY_DOMAIN` in compose) | `atl.chat`                 |
+| `PROSODY_ADMIN_EMAIL`        | Admin email for contact info                           | `admin@allthingslinux.org` |
+| `PROSODY_ADMIN_JID`          | Admin JID for prosodyctl and MUC ownership             | `admin@<domain>`           |
+| `PROSODY_ALLOW_REGISTRATION` | Enable in-band registration (`true`/`false`)           | `false`                    |
+| `PROSODY_LOG_LEVEL`          | Minimum log level (`debug`, `info`, `warn`, `error`)   | `info`                     |
 
 ### Port variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_C2S_PORT` | Client-to-server (STARTTLS) | `5222` |
-| `PROSODY_S2S_PORT` | Server-to-server (federation) | `5269` |
-| `PROSODY_HTTP_PORT` | HTTP (BOSH/WebSocket) | `5280` |
-| `PROSODY_HTTPS_PORT` | HTTPS (via nginx proxy) | `5281` |
-| `PROSODY_C2S_DIRECT_TLS_PORT` | Client-to-server direct TLS | `5223` |
-| `PROSODY_S2S_DIRECT_TLS_PORT` | Server-to-server direct TLS | `5270` |
-| `PROSODY_PROXY65_PORT` | SOCKS5 file transfer proxy | `5000` |
+| Variable                      | Description                   | Default |
+| ----------------------------- | ----------------------------- | ------- |
+| `PROSODY_C2S_PORT`            | Client-to-server (STARTTLS)   | `5222`  |
+| `PROSODY_S2S_PORT`            | Server-to-server (federation) | `5269`  |
+| `PROSODY_HTTP_PORT`           | HTTP (BOSH/WebSocket)         | `5280`  |
+| `PROSODY_HTTPS_PORT`          | HTTPS (via nginx proxy)       | `5281`  |
+| `PROSODY_C2S_DIRECT_TLS_PORT` | Client-to-server direct TLS   | `5223`  |
+| `PROSODY_S2S_DIRECT_TLS_PORT` | Server-to-server direct TLS   | `5270`  |
+| `PROSODY_PROXY65_PORT`        | SOCKS5 file transfer proxy    | `5000`  |
 
 ### Security variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_C2S_REQUIRE_ENCRYPTION` | Require TLS for client connections | `true` |
-| `PROSODY_S2S_REQUIRE_ENCRYPTION` | Require TLS for server federation | `true` |
-| `PROSODY_S2S_SECURE_AUTH` | Require certificate-based s2s auth | `true` |
-| `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Allow plaintext passwords without TLS | `false` |
-| `PROSODY_TLS_CHANNEL_BINDING` | Enable TLS channel binding for SASL | `true` |
-| `PROSODY_OAUTH2_REGISTRATION_KEY` | OAuth2 dynamic client registration key | *(must be set)* |
-| `PROSODY_MAX_CONNECTIONS_PER_IP` | Max concurrent connections per IP | `5` |
-| `PROSODY_REGISTRATION_THROTTLE_MAX` | Max registrations per throttle period | `3` |
-| `PROSODY_REGISTRATION_THROTTLE_PERIOD` | Throttle window for registration rate limiting (seconds) | `3600` |
+| Variable                               | Description                                              | Default         |
+| -------------------------------------- | -------------------------------------------------------- | --------------- |
+| `PROSODY_C2S_REQUIRE_ENCRYPTION`       | Require TLS for client connections                       | `true`          |
+| `PROSODY_S2S_REQUIRE_ENCRYPTION`       | Require TLS for server federation                        | `true`          |
+| `PROSODY_S2S_SECURE_AUTH`              | Require certificate-based s2s auth                       | `true`          |
+| `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Allow plaintext passwords without TLS                    | `false`         |
+| `PROSODY_TLS_CHANNEL_BINDING`          | Enable TLS channel binding for SASL                      | `true`          |
+| `PROSODY_OAUTH2_REGISTRATION_KEY`      | OAuth2 dynamic client registration key                   | _(must be set)_ |
+| `PROSODY_MAX_CONNECTIONS_PER_IP`       | Max concurrent connections per IP                        | `5`             |
+| `PROSODY_REGISTRATION_THROTTLE_MAX`    | Max registrations per throttle period                    | `3`             |
+| `PROSODY_REGISTRATION_THROTTLE_PERIOD` | Throttle window for registration rate limiting (seconds) | `3600`          |
 
 ### Database variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_DB_PORT` | Database port | `5432` |
-| `PROSODY_DB_NAME` | Database name | `prosody` |
-| `PROSODY_DB_USER` | Database user | `prosody` |
-| `PROSODY_DB_PASSWORD` | Database password | *(change before production)* |
+| Variable              | Description       | Default                      |
+| --------------------- | ----------------- | ---------------------------- |
+| `PROSODY_DB_PORT`     | Database port     | `5432`                       |
+| `PROSODY_DB_NAME`     | Database name     | `prosody`                    |
+| `PROSODY_DB_USER`     | Database user     | `prosody`                    |
+| `PROSODY_DB_PASSWORD` | Database password | _(change before production)_ |
 
 ### MAM (message archiving) variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_ARCHIVE_EXPIRES_AFTER` | Archive retention period | `1y` |
-| `PROSODY_ARCHIVE_POLICY` | Archive all conversations by default | `true` |
-| `PROSODY_ARCHIVE_COMPRESSION` | Compress archived messages | `true` |
-| `PROSODY_ARCHIVE_MAX_QUERY_RESULTS` | Max results per MAM query | `250` |
+| Variable                            | Description                          | Default |
+| ----------------------------------- | ------------------------------------ | ------- |
+| `PROSODY_ARCHIVE_EXPIRES_AFTER`     | Archive retention period             | `1y`    |
+| `PROSODY_ARCHIVE_POLICY`            | Archive all conversations by default | `true`  |
+| `PROSODY_ARCHIVE_COMPRESSION`       | Compress archived messages           | `true`  |
+| `PROSODY_ARCHIVE_MAX_QUERY_RESULTS` | Max results per MAM query            | `250`   |
 
 ### MUC variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_MUC_DEFAULT_PUBLIC` | New rooms are public by default | `true` |
-| `PROSODY_MUC_DEFAULT_PERSISTENT` | New rooms persist by default | `true` |
-| `PROSODY_MUC_LOCKING` | Lock rooms until configured | `false` |
-| `PROSODY_MUC_LOG_BY_DEFAULT` | Archive MUC messages by default | `true` |
-| `PROSODY_MUC_LOG_EXPIRES_AFTER` | MUC archive retention | `1y` |
-| `PROSODY_RESTRICT_ROOM_CREATION` | Restrict who can create rooms | `false` |
+| Variable                         | Description                     | Default |
+| -------------------------------- | ------------------------------- | ------- |
+| `PROSODY_MUC_DEFAULT_PUBLIC`     | New rooms are public by default | `true`  |
+| `PROSODY_MUC_DEFAULT_PERSISTENT` | New rooms persist by default    | `true`  |
+| `PROSODY_MUC_LOCKING`            | Lock rooms until configured     | `false` |
+| `PROSODY_MUC_LOG_BY_DEFAULT`     | Archive MUC messages by default | `true`  |
+| `PROSODY_MUC_LOG_EXPIRES_AFTER`  | MUC archive retention           | `1y`    |
+| `PROSODY_RESTRICT_ROOM_CREATION` | Restrict who can create rooms   | `false` |
 
 ### TURN/STUN variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `TURN_SECRET` | Shared secret with TURN server | *(change before production)* |
-| `TURN_EXTERNAL_HOST` | TURN server hostname | `turn.atl.network` |
-| `TURN_PORT` | TURN/STUN UDP port | `3478` |
-| `TURNS_PORT` | TURN over TLS port | `5349` |
+| Variable             | Description                    | Default                      |
+| -------------------- | ------------------------------ | ---------------------------- |
+| `TURN_SECRET`        | Shared secret with TURN server | _(change before production)_ |
+| `TURN_EXTERNAL_HOST` | TURN server hostname           | `turn.atl.network`           |
+| `TURN_PORT`          | TURN/STUN UDP port             | `3478`                       |
+| `TURNS_PORT`         | TURN over TLS port             | `5349`                       |
 
 ### Rate limiting variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_C2S_RATE` | Client connection rate limit | `10kb/s` |
-| `PROSODY_C2S_BURST` | Client burst allowance | `25kb` |
+| Variable                  | Description                    | Default  |
+| ------------------------- | ------------------------------ | -------- |
+| `PROSODY_C2S_RATE`        | Client connection rate limit   | `10kb/s` |
+| `PROSODY_C2S_BURST`       | Client burst allowance         | `25kb`   |
 | `PROSODY_C2S_STANZA_SIZE` | Max client stanza size (bytes) | `262144` |
-| `PROSODY_S2S_RATE` | Server federation rate limit | `30kb/s` |
-| `PROSODY_S2S_BURST` | Server burst allowance | `100kb` |
+| `PROSODY_S2S_RATE`        | Server federation rate limit   | `30kb/s` |
+| `PROSODY_S2S_BURST`       | Server burst allowance         | `100kb`  |
 | `PROSODY_S2S_STANZA_SIZE` | Max server stanza size (bytes) | `524288` |
 
 For the complete list of all environment variables, see the [Environment Variables reference](/docs/reference/environment-variables).
@@ -210,13 +210,13 @@ The MUC component creates a `general` room on startup with the admin JID as owne
 
 MUC rate limiting is configured globally:
 
-| Setting | Value | Description |
-|---|---|---|
-| `muc_event_rate` | `0.5` | Max events/second (one every 2 seconds) |
-| `muc_burst_factor` | `6` | Allow 6× burst for 6 seconds |
-| `muc_max_nick_length` | `23` | Max nickname length |
-| `muc_max_char_count` | `5664` | Max bytes per message |
-| `muc_max_line_count` | `23` | Max lines per message |
+| Setting               | Value  | Description                             |
+| --------------------- | ------ | --------------------------------------- |
+| `muc_event_rate`      | `0.5`  | Max events/second (one every 2 seconds) |
+| `muc_burst_factor`    | `6`    | Allow 6× burst for 6 seconds            |
+| `muc_max_nick_length` | `23`   | Max nickname length                     |
+| `muc_max_char_count`  | `5664` | Max bytes per message                   |
+| `muc_max_line_count`  | `23`   | Max lines per message                   |
 
 ### HTTP file upload
 
@@ -227,12 +227,12 @@ http_external_url = os.getenv("PROSODY_UPLOAD_EXTERNAL_URL")
     or ("https://upload." .. domain .. "/")
 ```
 
-| Setting | Value |
-|---|---|
-| Max file size | 100 MB |
-| Daily quota per user | 1 GB |
-| Global quota | 10 GB |
-| File expiration | 30 days |
+| Setting              | Value   |
+| -------------------- | ------- |
+| Max file size        | 100 MB  |
+| Daily quota per user | 1 GB    |
+| Global quota         | 10 GB   |
+| File expiration      | 30 days |
 
 ### SOCKS5 proxy (XEP-0065)
 
@@ -283,13 +283,13 @@ sql = {
 
 Storage is assigned per data type:
 
-| Data type | Backend | Notes |
-|---|---|---|
-| accounts, roster, vcard, private, blocklist | `sql` | User data |
-| archive, muc_log, offline | `sql` | Message archives |
-| pubsub_nodes, pubsub_data, pep | `sql` | PubSub and PEP |
-| http_file_share | `sql` | File upload metadata |
-| caps, carbons | `memory` | Ephemeral (not persisted) |
+| Data type                                   | Backend  | Notes                     |
+| ------------------------------------------- | -------- | ------------------------- |
+| accounts, roster, vcard, private, blocklist | `sql`    | User data                 |
+| archive, muc_log, offline                   | `sql`    | Message archives          |
+| pubsub_nodes, pubsub_data, pep              | `sql`    | PubSub and PEP            |
+| http_file_share                             | `sql`    | File upload metadata      |
+| caps, carbons                               | `memory` | Ephemeral (not persisted) |
 
 Data is stored in Docker volumes mapped to `data/xmpp/data/` on the host.
 
@@ -316,12 +316,12 @@ This enforces TLS 1.2+ with modern AEAD ciphers and ECDHE key exchange. The cert
 
 ### Encryption enforcement
 
-| Setting | Default | Recommendation |
-|---|---|---|
-| `c2s_require_encryption` | `true` | Always `true` in production |
-| `s2s_require_encryption` | `true` | Always `true` in production |
-| `s2s_secure_auth` | `true` | `true` for certificate-based federation auth |
-| `allow_unencrypted_plain_auth` | `false` | Never `true` in production |
+| Setting                        | Default | Recommendation                               |
+| ------------------------------ | ------- | -------------------------------------------- |
+| `c2s_require_encryption`       | `true`  | Always `true` in production                  |
+| `s2s_require_encryption`       | `true`  | Always `true` in production                  |
+| `s2s_secure_auth`              | `true`  | `true` for certificate-based federation auth |
+| `allow_unencrypted_plain_auth` | `false` | Never `true` in production                   |
 
 ### Authentication
 
@@ -341,11 +341,11 @@ SCRAM-SHA-1 is kept for compatibility with older clients. In-band registration i
 
 Three rate limit tiers protect against abuse:
 
-| Tier | Rate | Burst | Max stanza |
-|---|---|---|---|
-| Client (c2s) | 10 KB/s | 25 KB | 256 KB |
-| Server (s2s) | 30 KB/s | 100 KB | 512 KB |
-| HTTP upload | 2 MB/s | 10 MB | — |
+| Tier         | Rate    | Burst  | Max stanza |
+| ------------ | ------- | ------ | ---------- |
+| Client (c2s) | 10 KB/s | 25 KB  | 256 KB     |
+| Server (s2s) | 30 KB/s | 100 KB | 512 KB     |
+| HTTP upload  | 2 MB/s  | 10 MB  | —          |
 
 Additional protections:
 
@@ -358,14 +358,14 @@ Additional protections:
 
 Prosody serves HTTP responses with hardened headers:
 
-| Header | Value |
-|---|---|
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload` |
-| `X-Frame-Options` | `DENY` |
-| `X-Content-Type-Options` | `nosniff` |
-| `X-XSS-Protection` | `1; mode=block` |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Content-Security-Policy` | Allows `self` and XMPP endpoints (connect-src for BOSH/WebSocket) |
+| Header                      | Value                                                             |
+| --------------------------- | ----------------------------------------------------------------- |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload`                    |
+| `X-Frame-Options`           | `DENY`                                                            |
+| `X-Content-Type-Options`    | `nosniff`                                                         |
+| `X-XSS-Protection`          | `1; mode=block`                                                   |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`                                 |
+| `Content-Security-Policy`   | Allows `self` and XMPP endpoints (connect-src for BOSH/WebSocket) |
 
 ## Audit findings and recommendations
 

@@ -35,14 +35,14 @@ just irc reload
 
 The template defines an `admin` oper with these properties:
 
-| Property | Value | Notes |
-|---|---|---|
-| `class` | `opers` | Higher sendq/recvq limits |
-| `mask` | `*@172.16.0.0/12` | Restricted to Docker network |
-| `password` | `${IRC_OPER_PASSWORD}` | Argon2id hash from `.env` |
-| `operclass` | `netadmin-with-override` | Full admin privileges |
-| `vhost` | `${IRC_STAFF_VHOST}` | Custom hostname for opers |
-| `require-modes` | `z` | Must connect via TLS |
+| Property        | Value                    | Notes                        |
+| --------------- | ------------------------ | ---------------------------- |
+| `class`         | `opers`                  | Higher sendq/recvq limits    |
+| `mask`          | `*@172.16.0.0/12`        | Restricted to Docker network |
+| `password`      | `${IRC_OPER_PASSWORD}`   | Argon2id hash from `.env`    |
+| `operclass`     | `netadmin-with-override` | Full admin privileges        |
+| `vhost`         | `${IRC_STAFF_VHOST}`     | Custom hostname for opers    |
+| `require-modes` | `z`                      | Must connect via TLS         |
 
 ### Becoming an operator
 
@@ -113,10 +113,10 @@ UnrealIRCd supports live config reloads without disconnecting users. Atheme does
 
 ### Rehash vs restart
 
-| Action | Command | Effect | When to use |
-|---|---|---|---|
-| Rehash (reload) | `just irc reload` | Re-reads config without disconnecting users | Most config changes: set blocks, oper blocks, listen options, anti-flood, spamfilters |
-| Restart | `docker compose restart atl-irc-server` | Full process restart, disconnects all users | Module changes (loadmodule/unloadmodule), TLS library updates, binary upgrades |
+| Action          | Command                                 | Effect                                      | When to use                                                                           |
+| --------------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Rehash (reload) | `just irc reload`                       | Re-reads config without disconnecting users | Most config changes: set blocks, oper blocks, listen options, anti-flood, spamfilters |
+| Restart         | `docker compose restart atl-irc-server` | Full process restart, disconnects all users | Module changes (loadmodule/unloadmodule), TLS library updates, binary upgrades        |
 
 ### What requires a restart
 
@@ -238,13 +238,13 @@ curl -sk https://localhost:8600/api/server.list
 
 ### Common failure modes
 
-| Symptom | Likely cause | Resolution |
-|---|---|---|
-| Container exits immediately | Config syntax error | Check logs: `docker compose logs atl-irc-server` |
-| TLS handshake fails | Missing or expired certificate | Verify cert paths and expiry dates |
-| Atheme won't link | Wrong `IRC_SERVICES_PASSWORD` | Ensure password matches in both configs |
-| WebSocket 502 | Port 8000 not listening | Check UnrealIRCd started with websocket module loaded |
-| RPC auth fails | Wrong `WEBPANEL_RPC_PASSWORD` | Ensure password matches between WebPanel and UnrealIRCd |
+| Symptom                     | Likely cause                   | Resolution                                              |
+| --------------------------- | ------------------------------ | ------------------------------------------------------- |
+| Container exits immediately | Config syntax error            | Check logs: `docker compose logs atl-irc-server`        |
+| TLS handshake fails         | Missing or expired certificate | Verify cert paths and expiry dates                      |
+| Atheme won't link           | Wrong `IRC_SERVICES_PASSWORD`  | Ensure password matches in both configs                 |
+| WebSocket 502               | Port 8000 not listening        | Check UnrealIRCd started with websocket module loaded   |
+| RPC auth fails              | Wrong `WEBPANEL_RPC_PASSWORD`  | Ensure password matches between WebPanel and UnrealIRCd |
 
 ## Related pages
 

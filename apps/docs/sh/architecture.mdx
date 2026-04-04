@@ -83,13 +83,13 @@ atl.sh runs on a physical dedicated server hosted by
 The production server is managed manually (bare-metal, not provisioned by
 Terraform). Terraform provisions only the staging environment.
 
-| Component    | Provider / Technology               |
-|--------------|-------------------------------------|
-| Server       | Hetzner dedicated (physical, manual)|
-| Staging      | Hetzner Cloud VPS (Terraform)       |
-| DNS          | Cloudflare (Terraform)              |
-| OS           | Debian 13 (Trixie)                  |
-| Config mgmt  | Ansible                             |
+| Component   | Provider / Technology                |
+| ----------- | ------------------------------------ |
+| Server      | Hetzner dedicated (physical, manual) |
+| Staging     | Hetzner Cloud VPS (Terraform)        |
+| DNS         | Cloudflare (Terraform)               |
+| OS          | Debian 13 (Trixie)                   |
+| Config mgmt | Ansible                              |
 
 ### Terraform
 
@@ -206,45 +206,45 @@ Per-user resource isolation and environment setup:
 
 All public-facing services and community features:
 
-| Task file      | Service                                              |
-|----------------|------------------------------------------------------|
-| `web.yml`      | Nginx + fcgiwrap for tilde sites and CGI             |
-| `gemini.yml`   | molly-brown Gemini server                            |
-| `gopher.yml`   | Gophernicus Gopher server                            |
-| `finger.yml`   | efingerd (systemd socket-activated)                  |
-| `games.yml`    | NetHack, Botany, Angband, Crawl, arcade games        |
-| `webring.yml`  | Self-managing member ring with nginx auto-injection  |
-| `dict.yml`     | dictd with 7 offline dictionaries (localhost:2628)   |
+| Task file     | Service                                             |
+| ------------- | --------------------------------------------------- |
+| `web.yml`     | Nginx + fcgiwrap for tilde sites and CGI            |
+| `gemini.yml`  | molly-brown Gemini server                           |
+| `gopher.yml`  | Gophernicus Gopher server                           |
+| `finger.yml`  | efingerd (systemd socket-activated)                 |
+| `games.yml`   | NetHack, Botany, Angband, Crawl, arcade games       |
+| `webring.yml` | Self-managing member ring with nginx auto-injection |
+| `dict.yml`    | dictd with 7 offline dictionaries (localhost:2628)  |
 
 ## Network
 
 ### Open Ports
 
-| Port(s)       | Protocol | Service                         |
-|---------------|----------|---------------------------------|
-| 22, 2222      | TCP      | SSH                             |
-| 70            | TCP      | Gopher                          |
-| 79            | TCP      | Finger                          |
-| 80            | TCP      | HTTP (nginx)                    |
-| 443           | TCP      | HTTPS (nginx + Cloudflare)      |
-| 1965          | TCP      | Gemini                          |
-| 21            | TCP      | FTP control (vsftpd)            |
-| 40000–40100   | TCP      | FTP passive data                |
+| Port(s)     | Protocol | Service                    |
+| ----------- | -------- | -------------------------- |
+| 22, 2222    | TCP      | SSH                        |
+| 70          | TCP      | Gopher                     |
+| 79          | TCP      | Finger                     |
+| 80          | TCP      | HTTP (nginx)               |
+| 443         | TCP      | HTTPS (nginx + Cloudflare) |
+| 1965        | TCP      | Gemini                     |
+| 21          | TCP      | FTP control (vsftpd)       |
+| 40000–40100 | TCP      | FTP passive data           |
 
 All other ports are blocked by UFW. SSH is additionally protected by Fail2ban
 rate limiting.
 
 ### Internal Services
 
-| Service         | Bind address       | Notes                              |
-|-----------------|--------------------|------------------------------------|
-| Node Exporter   | `127.0.0.1:9100`   | Prometheus metrics, not public     |
-| dictd           | `127.0.0.1:2628`   | Dictionary server (RFC 2229)       |
-| talkd           | `0.0.0.0:517-518`  | Talk daemon via inetd, UFW blocked |
-| fcgiwrap        | Unix socket        | CGI execution for tilde sites      |
-| molly-brown     | `0.0.0.0:1965`     | Gemini TLS server                  |
-| Gophernicus     | `0.0.0.0:70`       | Gopher server                      |
-| efingerd        | systemd socket     | Finger protocol, socket-activated  |
+| Service       | Bind address      | Notes                              |
+| ------------- | ----------------- | ---------------------------------- |
+| Node Exporter | `127.0.0.1:9100`  | Prometheus metrics, not public     |
+| dictd         | `127.0.0.1:2628`  | Dictionary server (RFC 2229)       |
+| talkd         | `0.0.0.0:517-518` | Talk daemon via inetd, UFW blocked |
+| fcgiwrap      | Unix socket       | CGI execution for tilde sites      |
+| molly-brown   | `0.0.0.0:1965`    | Gemini TLS server                  |
+| Gophernicus   | `0.0.0.0:70`      | Gopher server                      |
+| efingerd      | systemd socket    | Finger protocol, socket-activated  |
 
 ## Tilde Web Architecture
 
@@ -271,11 +271,11 @@ The webring lives at `/var/www/html/ring/`:
 
 Three environments share the same Ansible playbook and roles:
 
-| Environment | Infrastructure                  | Purpose                              |
-|-------------|----------------------------------|--------------------------------------|
-| `dev`       | Local Vagrant VM                 | Ansible development and testing      |
-| `staging`   | Hetzner Cloud VPS (Terraform)    | Pre-production validation            |
-| `prod`      | Hetzner dedicated (bare-metal)   | Live production system               |
+| Environment | Infrastructure                 | Purpose                         |
+| ----------- | ------------------------------ | ------------------------------- |
+| `dev`       | Local Vagrant VM               | Ansible development and testing |
+| `staging`   | Hetzner Cloud VPS (Terraform)  | Pre-production validation       |
+| `prod`      | Hetzner dedicated (bare-metal) | Live production system          |
 
 All three run Debian 13 (Trixie) and use the full playbook including security
 hardening and quotas, so dev closely mirrors production. See

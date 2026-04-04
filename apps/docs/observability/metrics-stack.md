@@ -36,6 +36,7 @@ The stack is designed as a **Monolithic** deployment for simplicity and efficien
 ## ⚙️ Configuration
 
 ### Key Directories
+
 - `mimir/`: Mimir configuration (`mimir.yaml`).
 - `prometheus/`: Prometheus config, rules, and alerts.
 - `loki/`: Loki configuration (`config.yml`).
@@ -44,23 +45,25 @@ The stack is designed as a **Monolithic** deployment for simplicity and efficien
 
 ### Ports & Access
 
-| Service | Internal Port | External Access | Auth |
-|---------|---------------|-----------------|------|
-| **Grafana** | 3000 | `https://metrics.atl.services` | SSO/Admin |
-| **Prometheus**| 9090 | Tailscale Only | None |
-| **Mimir** | 8080 | Tailscale Only | None |
-| **Loki** | 3100 | Tailscale Only | None |
-| **Alloy** | 12345 | Tailscale Only | None |
+| Service        | Internal Port | External Access                | Auth      |
+| -------------- | ------------- | ------------------------------ | --------- |
+| **Grafana**    | 3000          | `https://metrics.atl.services` | SSO/Admin |
+| **Prometheus** | 9090          | Tailscale Only                 | None      |
+| **Mimir**      | 8080          | Tailscale Only                 | None      |
+| **Loki**       | 3100          | Tailscale Only                 | None      |
+| **Alloy**      | 12345         | Tailscale Only                 | None      |
 
 ## 🚀 Deployment
 
 ### Prerequisites
+
 - Docker Compose installed.
 - Tailscale configured on the host.
 - Cloudflare R2 buckets created: `atl-metrics-mimir`, `atl-metrics-mimir-blocks`.
 - `.env` file populated with secrets.
 
 ### Commands
+
 ```bash
 # Start the stack
 docker compose up -d
@@ -80,9 +83,9 @@ To monitor a new service (e.g., a new VPS):
 2.  **Ensure Connectivity**: The VPS must be on the same Tailscale network (`100.64.x.x`).
 3.  **Update Prometheus**: Add the new target to `prometheus.yml` in `atl.services/metrics`.
     ```yaml
-    - job_name: 'new-service'
+    - job_name: "new-service"
       static_configs:
-        - targets: ['new-service-hostname:9100']
+        - targets: ["new-service-hostname:9100"]
     ```
 4.  **Reload Prometheus**:
     ```bash
@@ -92,15 +95,18 @@ To monitor a new service (e.g., a new VPS):
 ## 🔧 Troubleshooting
 
 ### "Mimir is failing to start"
+
 - Check S3/R2 credentials in `.env`.
 - Ensure R2 buckets exist.
 - Check logs: `docker compose logs mimir`.
 
 ### "No metrics in Grafana"
+
 - Verify Prometheus targets are UP: `http://localhost:9090/targets`.
 - Check `remote_write` status in Prometheus logs.
 - Ensure Grafana datasource is pointing to Mimir (`http://mimir:8080/prometheus`).
 
 ### "Loki rejecting logs"
+
 - Check if logs are too old (outside retention window).
 - Verify labels are low cardinality (avoid high-cardinality dynamic labels).

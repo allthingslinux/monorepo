@@ -16,7 +16,7 @@ mappings:
       server: ${IRC_BRIDGE_SERVER}
       port: ${IRC_TLS_PORT}
       tls: true
-      channel: '#general'
+      channel: "#general"
     xmpp:
       muc_jid: general@muc.${PROSODY_DOMAIN}
 
@@ -27,7 +27,7 @@ identity_cache_ttl_seconds: 3600
 avatar_cache_ttl_seconds: 86400
 xmpp_avatar_base_url: ${XMPP_AVATAR_BASE_URL}
 irc_puppet_idle_timeout_hours: 24
-irc_puppet_postfix: ''
+irc_puppet_postfix: ""
 
 irc_throttle_limit: 10
 irc_message_queue: 30
@@ -41,29 +41,29 @@ irc_relaymsg_clean_nicks: false
 irc_redact_enabled: false
 
 irc_use_sasl: false
-irc_sasl_user: ''
-irc_sasl_password: ''
+irc_sasl_user: ""
+irc_sasl_password: ""
 ```
 
 > **Warning:** `irc_tls_verify` defaults to `false` in development (self-signed certificates). You must set `BRIDGE_IRC_TLS_VERIFY=true` in `.env` before any public deployment.
 
 ## Environment variables
 
-| Variable | Description | Required |
-|---|---|---|
-| `BRIDGE_DISCORD_TOKEN` | Discord bot token | Yes (if Discord adapter enabled) |
-| `BRIDGE_DISCORD_CHANNEL_ID` | Discord channel snowflake ID to bridge | Yes |
-| `IRC_BRIDGE_SERVER` | IRC server hostname (use Docker service name internally) | Yes |
-| `IRC_TLS_PORT` | IRC server port (default: `6697`) | No |
-| `BRIDGE_IRC_NICK` | IRC nick for the bridge bot | No |
-| `BRIDGE_IRC_OPER_PASSWORD` | IRC oper password for the bridge | No |
-| `BRIDGE_IRC_TLS_VERIFY` | Override `irc_tls_verify` (`true`/`false`) | No |
-| `BRIDGE_XMPP_COMPONENT_JID` | XMPP component JID (for component protocol) | Yes (if XMPP enabled) |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component secret | Yes (if XMPP enabled) |
-| `BRIDGE_XMPP_COMPONENT_SERVER` | XMPP server hostname for component connection | No |
-| `BRIDGE_XMPP_COMPONENT_PORT` | XMPP component port (default: `5347`) | No |
-| `BRIDGE_PORTAL_BASE_URL` | Portal API base URL for identity resolution | No |
-| `BRIDGE_PORTAL_TOKEN` | Portal API authentication token | No |
+| Variable                       | Description                                              | Required                         |
+| ------------------------------ | -------------------------------------------------------- | -------------------------------- |
+| `BRIDGE_DISCORD_TOKEN`         | Discord bot token                                        | Yes (if Discord adapter enabled) |
+| `BRIDGE_DISCORD_CHANNEL_ID`    | Discord channel snowflake ID to bridge                   | Yes                              |
+| `IRC_BRIDGE_SERVER`            | IRC server hostname (use Docker service name internally) | Yes                              |
+| `IRC_TLS_PORT`                 | IRC server port (default: `6697`)                        | No                               |
+| `BRIDGE_IRC_NICK`              | IRC nick for the bridge bot                              | No                               |
+| `BRIDGE_IRC_OPER_PASSWORD`     | IRC oper password for the bridge                         | No                               |
+| `BRIDGE_IRC_TLS_VERIFY`        | Override `irc_tls_verify` (`true`/`false`)               | No                               |
+| `BRIDGE_XMPP_COMPONENT_JID`    | XMPP component JID (for component protocol)              | Yes (if XMPP enabled)            |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component secret                                    | Yes (if XMPP enabled)            |
+| `BRIDGE_XMPP_COMPONENT_SERVER` | XMPP server hostname for component connection            | No                               |
+| `BRIDGE_XMPP_COMPONENT_PORT`   | XMPP component port (default: `5347`)                    | No                               |
+| `BRIDGE_PORTAL_BASE_URL`       | Portal API base URL for identity resolution              | No                               |
+| `BRIDGE_PORTAL_TOKEN`          | Portal API authentication token                          | No                               |
 
 ## Portal integration
 
@@ -81,6 +81,7 @@ BRIDGE_PORTAL_TOKEN=your-portal-api-token
 When Portal is not configured, the bridge runs in dev mode with fallback nick resolution — bridged messages use the originating platform's display name with a platform suffix.
 
 The Portal client includes:
+
 - Automatic retries with exponential backoff (via tenacity)
 - TTL-based identity cache (default: 1024 entries) to reduce API calls
 - Lookup methods: `discord_to_irc`, `discord_to_xmpp`, `irc_to_discord`, `xmpp_to_discord`
@@ -91,31 +92,31 @@ Channel mappings connect a Discord channel to an IRC channel and/or an XMPP MUC 
 
 ```yaml
 mappings:
-  - discord_channel_id: "123456789012345678"  # Discord channel snowflake ID
+  - discord_channel_id: "123456789012345678" # Discord channel snowflake ID
     irc:
-      server: "irc.atl.chat"                  # IRC server hostname
-      port: 6697                               # IRC server port
-      tls: true                                # Use TLS connection
-      channel: "#general"                      # IRC channel name
+      server: "irc.atl.chat" # IRC server hostname
+      port: 6697 # IRC server port
+      tls: true # Use TLS connection
+      channel: "#general" # IRC channel name
     xmpp:
-      muc_jid: "general@muc.atl.chat"  # XMPP MUC room JID
+      muc_jid: "general@muc.atl.chat" # XMPP MUC room JID
 ```
 
 Each mapping requires a `discord_channel_id`. The `irc` and `xmpp` sections are optional — you can bridge Discord to IRC only, Discord to XMPP only, or all three platforms together.
 
 ### IRC target fields
 
-| Field | Type | Description |
-|---|---|---|
-| `server` | string | IRC server hostname |
-| `port` | integer | IRC server port (default: `6667`) |
-| `tls` | boolean | Use TLS for the connection |
-| `channel` | string | IRC channel name (including `#` prefix) |
+| Field     | Type    | Description                             |
+| --------- | ------- | --------------------------------------- |
+| `server`  | string  | IRC server hostname                     |
+| `port`    | integer | IRC server port (default: `6667`)       |
+| `tls`     | boolean | Use TLS for the connection              |
+| `channel` | string  | IRC channel name (including `#` prefix) |
 
 ### XMPP target fields
 
-| Field | Type | Description |
-|---|---|---|
+| Field     | Type   | Description                   |
+| --------- | ------ | ----------------------------- |
 | `muc_jid` | string | Full JID of the XMPP MUC room |
 
 ### Multiple mappings
@@ -141,7 +142,6 @@ mappings:
       channel: "#support"
     # No XMPP target — this channel bridges Discord <-> IRC only
 ```
-
 
 ## Related pages
 

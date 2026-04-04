@@ -1,8 +1,4 @@
 {
-    "title": "Atheme",
-    "pages": [
-        "index",
-        "configuration",
-        "operations"
-    ]
+  "title": "Atheme",
+  "pages": ["index", "configuration", "operations"]
 }

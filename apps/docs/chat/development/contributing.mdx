@@ -13,14 +13,14 @@ atl.chat uses a fork-and-PR model against the `main` branch. Every merge into `m
 
 Use a descriptive prefix that matches the work type:
 
-| Prefix | Use case | Example |
-|---|---|---|
-| `feat/` | New feature or enhancement | `feat/xmpp-muc-bridging` |
-| `fix/` | Bug fix | `fix/cloak-key-fallback` |
-| `docs/` | Documentation only | `docs/add-atheme-ops-guide` |
-| `chore/` | Tooling, CI, dependency updates | `chore/bump-unrealircd-image` |
-| `refactor/` | Code restructuring (no behaviour change) | `refactor/bridge-event-bus` |
-| `test/` | Test additions or fixes | `test/irc-integration-suite` |
+| Prefix      | Use case                                 | Example                       |
+| ----------- | ---------------------------------------- | ----------------------------- |
+| `feat/`     | New feature or enhancement               | `feat/xmpp-muc-bridging`      |
+| `fix/`      | Bug fix                                  | `fix/cloak-key-fallback`      |
+| `docs/`     | Documentation only                       | `docs/add-atheme-ops-guide`   |
+| `chore/`    | Tooling, CI, dependency updates          | `chore/bump-unrealircd-image` |
+| `refactor/` | Code restructuring (no behaviour change) | `refactor/bridge-event-bus`   |
+| `test/`     | Test additions or fixes                  | `test/irc-integration-suite`  |
 
 ### Step-by-step
 
@@ -70,17 +70,17 @@ atl.chat enforces [Conventional Commits](https://www.conventionalcommits.org/) v
 
 ### Types
 
-| Type | Version bump | Purpose |
-|---|---|---|
-| `feat` | minor | New feature or user-facing enhancement |
-| `fix` | patch | Bug fix |
-| `docs` | — | Documentation only |
-| `chore` | — | Tooling, CI, dependencies |
-| `refactor` | — | Code restructuring without behaviour change |
-| `test` | — | Adding or updating tests |
-| `ci` | — | CI/CD pipeline changes |
-| `style` | — | Formatting, whitespace (no logic change) |
-| `perf` | patch | Performance improvement |
+| Type       | Version bump | Purpose                                     |
+| ---------- | ------------ | ------------------------------------------- |
+| `feat`     | minor        | New feature or user-facing enhancement      |
+| `fix`      | patch        | Bug fix                                     |
+| `docs`     | —            | Documentation only                          |
+| `chore`    | —            | Tooling, CI, dependencies                   |
+| `refactor` | —            | Code restructuring without behaviour change |
+| `test`     | —            | Adding or updating tests                    |
+| `ci`       | —            | CI/CD pipeline changes                      |
+| `style`    | —            | Formatting, whitespace (no logic change)    |
+| `perf`     | patch        | Performance improvement                     |
 
 A commit with `BREAKING CHANGE:` in the footer (or `!` after the type) triggers a major version bump.
 
@@ -159,25 +159,25 @@ atl.chat uses [pre-commit](https://pre-commit.com/) to enforce code quality on e
 
 The full hook set defined in `.pre-commit-config.yaml`:
 
-| Hook | Source | What it does |
-|---|---|---|
-| `check-json` | pre-commit-hooks | Validates JSON syntax |
-| `check-toml` | pre-commit-hooks | Validates TOML syntax |
-| `end-of-file-fixer` | pre-commit-hooks | Ensures files end with a newline |
-| `trailing-whitespace` | pre-commit-hooks | Removes trailing whitespace (excludes `.md`) |
-| `validate-pyproject` | validate-pyproject | Validates `pyproject.toml` schema |
-| `yamlfix` | yamlfix | Auto-formats YAML files |
-| `yamllint` | yamllint | Lints YAML files |
-| `actionlint` | actionlint | Lints GitHub Actions workflows |
-| `markdownlint-fix` | markdownlint-cli | Auto-fixes Markdown style issues |
-| `ruff-check` | ruff-pre-commit | Python linting with auto-fix (`--fix`) |
-| `ruff-format` | ruff-pre-commit | Python formatting |
-| `shellcheck` | shellcheck-py | Shell script static analysis |
-| `shfmt` | pre-commit-shfmt | Shell script formatting |
-| `gitleaks` | gitleaks | Scans for accidentally committed secrets |
-| `commitlint` | commitlint-pre-commit-hook | Validates commit message format (commit-msg stage) |
-| `luacheck` | local (Docker) | Lua static analysis (runs via Docker image) |
-| `lint-web` | local | Runs Biome/ultracite on `apps/web/` TypeScript/JSX files |
+| Hook                  | Source                     | What it does                                             |
+| --------------------- | -------------------------- | -------------------------------------------------------- |
+| `check-json`          | pre-commit-hooks           | Validates JSON syntax                                    |
+| `check-toml`          | pre-commit-hooks           | Validates TOML syntax                                    |
+| `end-of-file-fixer`   | pre-commit-hooks           | Ensures files end with a newline                         |
+| `trailing-whitespace` | pre-commit-hooks           | Removes trailing whitespace (excludes `.md`)             |
+| `validate-pyproject`  | validate-pyproject         | Validates `pyproject.toml` schema                        |
+| `yamlfix`             | yamlfix                    | Auto-formats YAML files                                  |
+| `yamllint`            | yamllint                   | Lints YAML files                                         |
+| `actionlint`          | actionlint                 | Lints GitHub Actions workflows                           |
+| `markdownlint-fix`    | markdownlint-cli           | Auto-fixes Markdown style issues                         |
+| `ruff-check`          | ruff-pre-commit            | Python linting with auto-fix (`--fix`)                   |
+| `ruff-format`         | ruff-pre-commit            | Python formatting                                        |
+| `shellcheck`          | shellcheck-py              | Shell script static analysis                             |
+| `shfmt`               | pre-commit-shfmt           | Shell script formatting                                  |
+| `gitleaks`            | gitleaks                   | Scans for accidentally committed secrets                 |
+| `commitlint`          | commitlint-pre-commit-hook | Validates commit message format (commit-msg stage)       |
+| `luacheck`            | local (Docker)             | Lua static analysis (runs via Docker image)              |
+| `lint-web`            | local                      | Runs Biome/ultracite on `apps/web/` TypeScript/JSX files |
 
 ### Running hooks manually
 
@@ -201,13 +201,13 @@ Each language in the monorepo has its own linter and formatter. The pre-commit h
 
 All Python code (bridge, tests, scripts) is linted and formatted by [ruff](https://docs.astral.sh/ruff/). Configuration lives in the root `pyproject.toml`.
 
-| Setting | Value |
-|---|---|
-| Target version | Python 3.11 |
-| Line length | 120 |
-| Quote style | Double quotes |
-| Indent style | Spaces |
-| Line ending | LF |
+| Setting        | Value         |
+| -------------- | ------------- |
+| Target version | Python 3.11   |
+| Line length    | 120           |
+| Quote style    | Double quotes |
+| Indent style   | Spaces        |
+| Line ending    | LF            |
 
 Enabled rule sets: `E` (pycodestyle), `F` (pyflakes), `I` (isort), `N` (pep8-naming), `UP` (pyupgrade), `B` (flake8-bugbear), `SIM` (flake8-simplify), `PL` (pylint), `RUF` (ruff-specific).
 
@@ -248,10 +248,10 @@ Prosody configuration and any Lua scripts are checked by [luacheck](https://luac
 
 Configuration lives in `.luacheckrc` at the repo root:
 
-| Setting | Value |
-|---|---|
-| Standard | `min` (minimal standard globals) |
-| Max line length | 300 |
+| Setting         | Value                                                                           |
+| --------------- | ------------------------------------------------------------------------------- |
+| Standard        | `min` (minimal standard globals)                                                |
+| Max line length | 300                                                                             |
 | Prosody globals | Declared in the `globals` table (VirtualHost, Component, modules_enabled, etc.) |
 
 ```bash
@@ -270,14 +270,14 @@ Shell scripts (`scripts/`, `infra/`) are analysed by [shellcheck](https://www.sh
 
 shfmt settings (from `.pre-commit-config.yaml`):
 
-| Setting | Value |
-|---|---|
-| Language | `bash` |
-| Indent | 2 spaces |
-| Binary ops | Newline after |
-| Switch cases | Indented |
-| Keep padding | Yes |
-| Simplify | Yes |
+| Setting      | Value         |
+| ------------ | ------------- |
+| Language     | `bash`        |
+| Indent       | 2 spaces      |
+| Binary ops   | Newline after |
+| Switch cases | Indented      |
+| Keep padding | Yes           |
+| Simplify     | Yes           |
 
 ```bash
 # Run shellcheck

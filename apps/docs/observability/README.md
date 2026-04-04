@@ -51,7 +51,6 @@ Central monitoring infrastructure for collecting, storing, and visualizing metri
 - **[Grafana Loki](https://grafana.com/docs/loki/latest/)**: Log aggregation system
   - Stores logs with labels for efficient querying
   - Supports LogQL for log queries
-  
 - **[Grafana Mimir](https://grafana.com/docs/mimir/latest/)**: Prometheus-compatible metrics storage
   - Long-term metrics retention
   - Supports PromQL queries
@@ -66,15 +65,15 @@ Central monitoring infrastructure for collecting, storing, and visualizing metri
 
 ### Exporters
 
-
-
 **Built-in to Alloy:**
+
 - **Node Exporter** (Unix) - Host-level metrics (CPU, memory, disk, network)
 - **cAdvisor** - Container-level metrics (resource usage, throttling)
 - **Postgres Exporter** - PostgreSQL metrics (XMPP, Tux, ISO databases)
 - **Redis Exporter** - Valkey/Redis metrics (Tux, Wiki)
 
 **External Containers:**
+
 - **MySQL Exporter** - MariaDB metrics (Wiki)
 - **Nginx Exporter** - Nginx metrics (Wiki)
 - **Cloudflare Exporter** - Cloudflare API metrics
@@ -83,21 +82,25 @@ Central monitoring infrastructure for collecting, storing, and visualizing metri
 ## What Gets Monitored
 
 ### Logs
+
 - **Docker Containers**: All container stdout/stderr logs
 - **Cloudflare Workers**: Worker execution logs via Cloudflare API
 
 ### Metrics
 
 **Infrastructure:**
+
 - Host metrics (CPU, memory, disk, network)
 - Container metrics (resource usage, OOM kills)
 
 **Databases:**
+
 - PostgreSQL (Prosody XMPP, Tux, Keycloak)
 - Valkey/Redis (Tux, Wiki)
 - MariaDB (Wiki)
 
 **Services:**
+
 - Prosody (XMPP server)
 - UnrealIRCd (IRC server)
 - Keycloak (SSO)
@@ -109,6 +112,7 @@ Central monitoring infrastructure for collecting, storing, and visualizing metri
 - InfluxDB (Time-series database)
 
 **Synthetic Monitoring:**
+
 - HTTP endpoint availability
 - Response times
 - SSL certificate expiry
@@ -118,11 +122,12 @@ Central monitoring infrastructure for collecting, storing, and visualizing metri
 ### Prerequisites
 
 1. **Environment Variables** - Configure in `.env`:
+
    ```bash
    # Cloudflare Worker Logs
    CF_ZONE_ID=your-zone-id
    CF_API_TOKEN=your-api-token
-   
+
    # Postgres Exporter Credentials
    XMPP_DB_PASSWORD=your-xmpp-password
    TUX_DB_USER=tuxuser
@@ -171,18 +176,21 @@ http://localhost:3000
 We have replaced 9 external exporter containers with Alloy's built-in components:
 
 **Consolidated Components:**
+
 - **Node Exporter**: Host metrics (Unix exporter)
 - **cAdvisor**: Container metrics
 - **Postgres**: Database metrics (3 instances)
 - **Redis**: Database metrics (2 instances)
 
 **Benefits:**
+
 - ✅ Fewer containers (-9 containers, ~900MB RAM saved)
 - ✅ Simplified configuration in a single Alloy file
 - ✅ Centralized management and lifecycle
 - ✅ Consistent labeling and scraping pipeline
 
 **Example Configuration (Postgres):**
+
 ```alloy
 prometheus.exporter.postgres "databases" {
   data_source_names = [

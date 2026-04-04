@@ -36,11 +36,11 @@ cp .env.dev.example .env.dev
 
 Key variables to set for local development:
 
-| Variable | Description |
-|---|---|
-| `IRC_DOMAIN` | IRC server hostname (defaults to `irc.localhost` in `.env.dev`) |
-| `PROSODY_DOMAIN` | XMPP server domain (defaults to `xmpp.localhost` in `.env.dev`) |
-| `DISCORD_TOKEN` | Discord bot token for the bridge (optional for IRC/XMPP-only testing) |
+| Variable         | Description                                                           |
+| ---------------- | --------------------------------------------------------------------- |
+| `IRC_DOMAIN`     | IRC server hostname (defaults to `irc.localhost` in `.env.dev`)       |
+| `PROSODY_DOMAIN` | XMPP server domain (defaults to `xmpp.localhost` in `.env.dev`)       |
+| `DISCORD_TOKEN`  | Discord bot token for the bridge (optional for IRC/XMPP-only testing) |
 
 See the full [Environment Variables reference](/docs/reference/environment-variables) for all available options.
 
@@ -53,6 +53,7 @@ just init
 ```
 
 This runs `scripts/init.sh`, which:
+
 - Creates all `data/` subdirectories for persistent storage
 - Generates self-signed TLS certificates for local development
 - Runs `envsubst` on config templates to produce final config files
@@ -127,15 +128,15 @@ After `just dev` completes, verify each service is running:
 
 ## Useful just recipes
 
-| Recipe | Description |
-|---|---|
-| `just dev` | Start all services with dev profile |
-| `just down` | Stop the dev stack |
+| Recipe                | Description                                     |
+| --------------------- | ----------------------------------------------- |
+| `just dev`            | Start all services with dev profile             |
+| `just down`           | Stop the dev stack                              |
 | `just logs [service]` | Follow logs (optionally for a specific service) |
-| `just status` | Show container status |
-| `just lint` | Run all pre-commit hooks |
-| `just test` | Run unit tests |
-| `just test-all` | Run all tests including bridge tests |
+| `just status`         | Show container status                           |
+| `just lint`           | Run all pre-commit hooks                        |
+| `just test`           | Run unit tests                                  |
+| `just test-all`       | Run all tests including bridge tests            |
 
 ## Common first-run issues
 

@@ -30,15 +30,15 @@ The `create-user.yml` playbook handles this automatically when provisioning new 
 
 Molly-brown's config lives at `/etc/molly-brown/molly-brown.conf`, templated from `molly-brown.ini.j2`:
 
-| Setting | Value |
-|---------|-------|
-| `Port` | `1965` |
-| `Hostname` | `atl.sh` |
-| `DocBase` | `/var/gemini` |
-| `HomeDocBase` | `public_gemini` |
-| `GeminiExt` | `gmi` |
-| `DirectoryListing` | `true` |
-| `CGIPaths` | `/cgi-bin` |
+| Setting            | Value           |
+| ------------------ | --------------- |
+| `Port`             | `1965`          |
+| `Hostname`         | `atl.sh`        |
+| `DocBase`          | `/var/gemini`   |
+| `HomeDocBase`      | `public_gemini` |
+| `GeminiExt`        | `gmi`           |
+| `DirectoryListing` | `true`          |
+| `CGIPaths`         | `/cgi-bin`      |
 
 ### TLS certificates
 
@@ -46,6 +46,7 @@ Molly-brown's config lives at `/etc/molly-brown/molly-brown.conf`, templated fro
 - **Dev**: Uses a self-signed EC key with SAN (Go's TLS library rejects CN-only certs)
 
 The self-signed cert is generated with:
+
 ```bash
 openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes \
   -keyout /etc/ssl/private/molly-brown.key \
@@ -73,36 +74,39 @@ Molly-brown runs as `molly-brown@molly-brown.service`. A systemd override at `/e
 
 ## Ansible configuration
 
-| File | Purpose |
-|------|---------|
-| `roles/services/tasks/gemini.yml` | Install, cert generation, config deploy, systemd override |
-| `roles/services/templates/molly-brown.ini.j2` | Config template |
-| `roles/services/defaults/main.yml` | Default variables |
+| File                                          | Purpose                                                   |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `roles/services/tasks/gemini.yml`             | Install, cert generation, config deploy, systemd override |
+| `roles/services/templates/molly-brown.ini.j2` | Config template                                           |
+| `roles/services/defaults/main.yml`            | Default variables                                         |
 
 Key variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `gemini_port` | `1965` | Listening port |
-| `gemini_capsule_root` | `/var/gemini` | DocBase path |
+| Variable              | Default       | Description    |
+| --------------------- | ------------- | -------------- |
+| `gemini_port`         | `1965`        | Listening port |
+| `gemini_capsule_root` | `/var/gemini` | DocBase path   |
 
 ## Log files
 
-| Log | Path |
-|-----|------|
+| Log        | Path                              |
+| ---------- | --------------------------------- |
 | Access log | `/var/log/molly-brown/access.log` |
-| Error log | `/var/log/molly-brown/error.log` |
+| Error log  | `/var/log/molly-brown/error.log`  |
 
 ## Troubleshooting
 
 **Capsule returns "51 Not found"**
+
 - Check the real path exists: `ls -la /var/gemini/public_gemini/username/`
 - Verify the symlink: `ls -la ~/public_gemini` — should point to `/var/gemini/public_gemini/username`
 - Files must be world-readable
 
 **TLS handshake fails (dev)**
+
 - The self-signed cert must have a SAN extension. Go's TLS library rejects CN-only certs. Re-run `just deploy-tag dev services` to regenerate.
 
 **Service won't start**
+
 - Check logs: `journalctl -u molly-brown@molly-brown -e`
 - Verify cert permissions: `ls -la /etc/ssl/private/molly-brown.key` — must be readable by `ssl-cert` group

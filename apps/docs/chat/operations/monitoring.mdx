@@ -24,15 +24,15 @@ docker inspect --format='{{.State.Health.Status}}' <container-name>
 
 The table below lists the exact health check command defined in each service's Compose file. These run automatically at 30-second intervals.
 
-| Container | Health check command | What it verifies |
-|---|---|---|
-| `atl-irc-server` | JSON-RPC query via Unix socket (`nc -U /home/unrealircd/unrealircd/data/rpc.socket`) | UnrealIRCd is running and the RPC interface responds |
-| `atl-irc-services` | `pgrep -f atheme-services` | Atheme process is alive |
-| `atl-xmpp-server` | `curl -sf http://localhost:5280/status` | Prosody HTTP server responds on port 5280 |
-| `atl-xmpp-nginx` | `wget -q -O - --no-check-certificate https://localhost:5281/health` | Nginx HTTPS proxy for Prosody responds |
-| `atl-bridge` | `pgrep -f bridge.__main__` | Bridge Python process is alive |
-| `atl-thelounge` | _(none defined)_ | No built-in health check — verify manually (see below) |
-| `atl-irc-webpanel` | _(none defined)_ | No built-in health check — verify manually (see below) |
+| Container          | Health check command                                                                 | What it verifies                                       |
+| ------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| `atl-irc-server`   | JSON-RPC query via Unix socket (`nc -U /home/unrealircd/unrealircd/data/rpc.socket`) | UnrealIRCd is running and the RPC interface responds   |
+| `atl-irc-services` | `pgrep -f atheme-services`                                                           | Atheme process is alive                                |
+| `atl-xmpp-server`  | `curl -sf http://localhost:5280/status`                                              | Prosody HTTP server responds on port 5280              |
+| `atl-xmpp-nginx`   | `wget -q -O - --no-check-certificate https://localhost:5281/health`                  | Nginx HTTPS proxy for Prosody responds                 |
+| `atl-bridge`       | `pgrep -f bridge.__main__`                                                           | Bridge Python process is alive                         |
+| `atl-thelounge`    | _(none defined)_                                                                     | No built-in health check — verify manually (see below) |
+| `atl-irc-webpanel` | _(none defined)_                                                                     | No built-in health check — verify manually (see below) |
 
 ### Manual health verification
 
@@ -98,14 +98,14 @@ Dozzle is configured with `DOZZLE_FILTER=name=atl-*` so it only shows atl.chat c
 
 Most services log to stdout/stderr, captured by Docker's json-file logging driver. Use `docker compose logs` to view them. The Lounge is an exception — it writes logs to files under `/var/opt/thelounge/` (bind-mounted to `data/thelounge/` on the host):
 
-| Service | Log destination | Notes |
-|---|---|---|
-| UnrealIRCd | stdout (JSON format via `/dev/stdout`) | `docker compose logs atl-irc-server` |
-| Atheme | stdout (via `/dev/stdout` logfile) | `docker compose logs atl-irc-services` |
-| Prosody | stdout (console sink) | `docker compose logs atl-xmpp-server` |
-| Bridge | stderr (loguru) | `docker compose logs atl-bridge` |
-| The Lounge | `/var/opt/thelounge/` | `data/thelounge/` |
-| WebPanel | nginx access/error logs | `docker compose logs atl-irc-webpanel` |
+| Service    | Log destination                        | Notes                                  |
+| ---------- | -------------------------------------- | -------------------------------------- |
+| UnrealIRCd | stdout (JSON format via `/dev/stdout`) | `docker compose logs atl-irc-server`   |
+| Atheme     | stdout (via `/dev/stdout` logfile)     | `docker compose logs atl-irc-services` |
+| Prosody    | stdout (console sink)                  | `docker compose logs atl-xmpp-server`  |
+| Bridge     | stderr (loguru)                        | `docker compose logs atl-bridge`       |
+| The Lounge | `/var/opt/thelounge/`                  | `data/thelounge/`                      |
+| WebPanel   | nginx access/error logs                | `docker compose logs atl-irc-webpanel` |
 
 ### Common log patterns to watch for
 
@@ -127,18 +127,18 @@ docker compose logs atl-bridge 2>&1 | grep -iE "disconnect|error|reconnect"
 
 Monitor these metrics to catch issues before they affect users:
 
-| Metric | Source | Warning threshold | Critical threshold |
-|---|---|---|---|
-| Container health status | `docker inspect` | Any service `unhealthy` | Any service `unhealthy` for > 5 min |
-| IRC client connections | UnrealIRCd RPC (`rpc.info`) | — | Drops to 0 unexpectedly |
-| IRC server-to-server links | UnrealIRCd logs | Link count changes | Netsplit detected |
-| XMPP C2S connections | Prosody OpenMetrics | — | Drops to 0 unexpectedly |
-| XMPP auth failure rate | Prosody OpenMetrics | > 10/min sustained | > 50/min sustained |
-| Bridge process alive | `pgrep` health check | — | Process not found |
-| TLS certificate expiry | Certificate files in `data/certs/` | < 14 days | < 3 days |
-| Disk usage (`data/` volume) | Host filesystem | > 80% | > 95% |
-| Container restart count | `docker inspect` | Any restart | > 3 restarts in 10 min |
-| Memory usage per container | `docker stats` | > 500 MB (Prosody) | > 1 GB |
+| Metric                      | Source                             | Warning threshold       | Critical threshold                  |
+| --------------------------- | ---------------------------------- | ----------------------- | ----------------------------------- |
+| Container health status     | `docker inspect`                   | Any service `unhealthy` | Any service `unhealthy` for > 5 min |
+| IRC client connections      | UnrealIRCd RPC (`rpc.info`)        | —                       | Drops to 0 unexpectedly             |
+| IRC server-to-server links  | UnrealIRCd logs                    | Link count changes      | Netsplit detected                   |
+| XMPP C2S connections        | Prosody OpenMetrics                | —                       | Drops to 0 unexpectedly             |
+| XMPP auth failure rate      | Prosody OpenMetrics                | > 10/min sustained      | > 50/min sustained                  |
+| Bridge process alive        | `pgrep` health check               | —                       | Process not found                   |
+| TLS certificate expiry      | Certificate files in `data/certs/` | < 14 days               | < 3 days                            |
+| Disk usage (`data/` volume) | Host filesystem                    | > 80%                   | > 95%                               |
+| Container restart count     | `docker inspect`                   | Any restart             | > 3 restarts in 10 min              |
+| Memory usage per container  | `docker stats`                     | > 500 MB (Prosody)      | > 1 GB                              |
 
 ### Checking certificate expiry
 
@@ -168,7 +168,7 @@ Prosody exposes an OpenMetrics-compatible endpoint via the `http_openmetrics` mo
 ### Prosody OpenMetrics endpoint
 
 The endpoint is availabl
- to your `prometheus.yml` under `scrape_configs`:
+to your `prometheus.yml` under `scrape_configs`:
 
 ```yaml
 scrape_configs:
@@ -179,7 +179,7 @@ scrape_configs:
     scrape_interval: 30s
     scrape_timeout: 10s
     static_configs:
-      - targets: ["atl-xmpp-server:5280"]  # Use container name within Docker network
+      - targets: ["atl-xmpp-server:5280"] # Use container name within Docker network
         labels:
           service: prosody
           environment: production
@@ -191,16 +191,16 @@ scrape_configs:
 
 The `http_openmetrics` and `measure_modules` modules expose these metric families:
 
-| Category | Metrics | Description |
-|---|---|---|
-| Connections | `prosody_c2s_connections_total`, `prosody_s2s_connections_total` | Client and server-to-server connection counts |
-| Authentication | `prosody_c2s_auth_success_total`, `prosody_c2s_auth_failure_total` | Auth success/failure counters |
-| Messages | `prosody_messages_sent_total`, `prosody_messages_received_total` | Message throughput |
-| Presence | `prosody_presence_sent_total`, `prosody_presence_received_total` | Presence update counters |
-| Storage | `prosody_storage_operations_total`, `prosody_storage_errors_total` | Database operation counters |
-| HTTP | `prosody_http_requests_total`, `prosody_http_request_duration_seconds` | BOSH/WebSocket request metrics |
-| System | `prosody_memory_usage_bytes`, `prosody_cpu_usage_seconds_total` | Resource usage |
-| Modules | `prosody_module_*` | Per-module status gauges (0=ok, 1=info, 2=warn, 3=error) |
+| Category       | Metrics                                                                | Description                                              |
+| -------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| Connections    | `prosody_c2s_connections_total`, `prosody_s2s_connections_total`       | Client and server-to-server connection counts            |
+| Authentication | `prosody_c2s_auth_success_total`, `prosody_c2s_auth_failure_total`     | Auth success/failure counters                            |
+| Messages       | `prosody_messages_sent_total`, `prosody_messages_received_total`       | Message throughput                                       |
+| Presence       | `prosody_presence_sent_total`, `prosody_presence_received_total`       | Presence update counters                                 |
+| Storage        | `prosody_storage_operations_total`, `prosody_storage_errors_total`     | Database operation counters                              |
+| HTTP           | `prosody_http_requests_total`, `prosody_http_request_duration_seconds` | BOSH/WebSocket request metrics                           |
+| System         | `prosody_memory_usage_bytes`, `prosody_cpu_usage_seconds_total`        | Resource usage                                           |
+| Modules        | `prosody_module_*`                                                     | Per-module status gauges (0=ok, 1=info, 2=warn, 3=error) |
 
 ### Other services
 
@@ -251,13 +251,13 @@ groups:
 
 [Uptime Kuma](https://github.com/louislam/uptime-kuma) provides a simple web UI for monitoring endpoints. Configure HTTP/TCP checks for each service:
 
-| Check type | Target | Interval |
-|---|---|---|
-| TCP | `localhost:6697` (IRC TLS) | 60s |
-| HTTP | `http://localhost:5280/status` (Prosody) | 60s |
-| HTTP | `http://localhost:9000` (The Lounge) | 60s |
-| HTTP | `http://localhost:8080` (WebPanel) | 60s |
-| TCP | `localhost:5222` (XMPP C2S) | 60s |
+| Check type | Target                                   | Interval |
+| ---------- | ---------------------------------------- | -------- |
+| TCP        | `localhost:6697` (IRC TLS)               | 60s      |
+| HTTP       | `http://localhost:5280/status` (Prosody) | 60s      |
+| HTTP       | `http://localhost:9000` (The Lounge)     | 60s      |
+| HTTP       | `http://localhost:8080` (WebPanel)       | 60s      |
+| TCP        | `localhost:5222` (XMPP C2S)              | 60s      |
 
 ### Option 3: Cron-based health pings (minimal)
 
@@ -287,7 +287,6 @@ If you use Grafana with Prometheus, create dashboards covering:
 3. **Performance** — Prosody memory and CPU usage, HTTP request duration
 4. **Errors and health** — auth failures, storage errors, container restart counts
 5. **Infrastructure** — disk usage for `data/` volumes, container resource consumption
-
 
 ## Related pages
 

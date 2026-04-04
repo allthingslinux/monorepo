@@ -9,15 +9,16 @@ The IRC server requires a public A record, open firewall ports for client and TL
 
 These port assignments are defined in `apps/unrealircd/config/unrealircd.conf.template`:
 
-| Port | Purpose | Options |
-|---|---|---|
-| `6697` | IRC over TLS (client connections) | `tls` |
-| `6900` | Server-to-server links (TLS) | `tls; serversonly` |
-| `6901` | Atheme services uplink (internal) | `serversonly` |
+| Port   | Purpose                                            | Options                    |
+| ------ | -------------------------------------------------- | -------------------------- |
+| `6697` | IRC over TLS (client connections)                  | `tls`                      |
+| `6900` | Server-to-server links (TLS)                       | `tls; serversonly`         |
+| `6901` | Atheme services uplink (internal)                  | `serversonly`              |
 | `8000` | WebSocket (plain, TLS terminated at reverse proxy) | `websocket { type text; }` |
-| `8600` | JSON-RPC API (TLS) | `rpc; tls` |
+| `8600` | JSON-RPC API (TLS)                                 | `rpc; tls`                 |
 
 UnrealIRCd also listens on two Unix sockets for local IPC:
+
 - `/home/unrealircd/unrealircd/data/rpc.socket` — RPC socket for the WebPanel
 - `/home/unrealircd/unrealircd/data/services.sock` — Atheme services socket
 
@@ -58,10 +59,10 @@ set {
 
 You control STS behaviour through two environment variables:
 
-| Variable | Description | Recommended production value |
-|---|---|---|
-| `IRC_STS_DURATION` | Cache duration for the STS policy | `180d` (6 months) |
-| `IRC_STS_PRELOAD` | Enable STS preloading in clients | `yes` |
+| Variable           | Description                       | Recommended production value |
+| ------------------ | --------------------------------- | ---------------------------- |
+| `IRC_STS_DURATION` | Cache duration for the STS policy | `180d` (6 months)            |
+| `IRC_STS_PRELOAD`  | Enable STS preloading in clients  | `yes`                        |
 
 Roll out STS gradually — start with a short duration (e.g., `1m`) and increase over time as you confirm clients connect successfully over TLS.
 

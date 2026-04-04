@@ -34,20 +34,20 @@ Look for connection confirmation messages from each adapter.
 
 Each adapter logs connection events and errors. Key log patterns to watch for:
 
-| Pattern | Meaning |
-|---|---|
-| `[Discord]` `bot ready` | Discord adapter connected successfully |
-| `[IRC]` `connected to <host>` | IRC adapter connected to the server |
-| `[XMPP]` `component started` | XMPP adapter established a session |
+| Pattern                       | Meaning                                |
+| ----------------------------- | -------------------------------------- |
+| `[Discord]` `bot ready`       | Discord adapter connected successfully |
+| `[IRC]` `connected to <host>` | IRC adapter connected to the server    |
+| `[XMPP]` `component started`  | XMPP adapter established a session     |
 
 ### Common error patterns
 
-| Pattern | Meaning | Resolution |
-|---|---|---|
+| Pattern                       | Meaning                          | Resolution                                                 |
+| ----------------------------- | -------------------------------- | ---------------------------------------------------------- |
 | `[Discord]` auth/token errors | Invalid or expired Discord token | Regenerate `DISCORD_TOKEN` in the Discord Developer Portal |
-| `[IRC]` connection refused | IRC server unreachable | Verify UnrealIRCd is running with `just status` |
-| `[XMPP]` auth/connect errors | Wrong XMPP password | Check `XMPP_BRIDGE_PASSWORD` matches Prosody config |
-| `[Relay]` no mapping | Message from an unmapped channel | Add the channel to the `mappings` list in config |
+| `[IRC]` connection refused    | IRC server unreachable           | Verify UnrealIRCd is running with `just status`            |
+| `[XMPP]` auth/connect errors  | Wrong XMPP password              | Check `XMPP_BRIDGE_PASSWORD` matches Prosody config        |
+| `[Relay]` no mapping          | Message from an unmapped channel | Add the channel to the `mappings` list in config           |
 
 ### Viewing full logs
 

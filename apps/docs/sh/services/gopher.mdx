@@ -28,16 +28,16 @@ hMy website	URL:https://atl.sh/~username	atl.sh	70
 
 ### Item type codes
 
-| Type | Meaning |
-|------|---------|
-| `i` | Informational text (no link) |
-| `0` | Text file |
-| `1` | Directory / submenu |
-| `7` | Search query |
-| `h` | HTML link (prefix URL with `URL:`) |
-| `9` | Binary file |
-| `g` | GIF image |
-| `I` | Other image |
+| Type | Meaning                            |
+| ---- | ---------------------------------- |
+| `i`  | Informational text (no link)       |
+| `0`  | Text file                          |
+| `1`  | Directory / submenu                |
+| `7`  | Search query                       |
+| `h`  | HTML link (prefix URL with `URL:`) |
+| `9`  | Binary file                        |
+| `g`  | GIF image                          |
+| `I`  | Other image                        |
 
 If no `gophermap` exists, Gophernicus generates a directory listing automatically.
 
@@ -53,28 +53,28 @@ Gophernicus is configured via `/etc/default/gophernicus`:
 GOPHERNICUS_OPTS="-h atl.sh -r /var/gopher -u public_gopher"
 ```
 
-| Flag | Value | Purpose |
-|------|-------|---------|
-| `-h` | `atl.sh` | Hostname in generated links |
-| `-r` | `/var/gopher` | Document root |
+| Flag | Value           | Purpose                                   |
+| ---- | --------------- | ----------------------------------------- |
+| `-h` | `atl.sh`        | Hostname in generated links               |
+| `-r` | `/var/gopher`   | Document root                             |
 | `-u` | `public_gopher` | User directory name (for tilde selectors) |
 
 ## Ansible configuration
 
-| File | Purpose |
-|------|---------|
-| `roles/services/tasks/gopher.yml` | Install, config deploy, enable socket |
-| `roles/services/templates/gophernicus.env.j2` | Config template |
-| `roles/services/defaults/main.yml` | Default variables |
+| File                                          | Purpose                               |
+| --------------------------------------------- | ------------------------------------- |
+| `roles/services/tasks/gopher.yml`             | Install, config deploy, enable socket |
+| `roles/services/templates/gophernicus.env.j2` | Config template                       |
+| `roles/services/defaults/main.yml`            | Default variables                     |
 
 Key variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `gopher_port` | `70` | Listening port |
+| Variable          | Default               | Description                  |
+| ----------------- | --------------------- | ---------------------------- |
+| `gopher_port`     | `70`                  | Listening port               |
 | `gopher_hostname` | `{{ pubnix_domain }}` | Hostname for generated links |
-| `gopher_root` | `/var/gopher` | Document root |
-| `gopher_user_dir` | `public_gopher` | User subdirectory name |
+| `gopher_root`     | `/var/gopher`         | Document root                |
+| `gopher_user_dir` | `public_gopher`       | User subdirectory name       |
 
 ## Clients
 
@@ -85,11 +85,13 @@ Key variables:
 ## Troubleshooting
 
 **Hole returns empty or "error"**
+
 - Home directory must be `711`: `chmod 711 ~`
 - `public_gopher` must be `755`: `chmod 755 ~/public_gopher`
 - Check gophermap syntax — tabs must be real tab characters, not spaces
 - Test locally: `echo "/~username" | nc localhost 70`
 
 **Socket not listening**
+
 - Check: `systemctl status gophernicus.socket`
 - Restart: `sudo systemctl restart gophernicus.socket`

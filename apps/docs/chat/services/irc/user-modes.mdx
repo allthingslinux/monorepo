@@ -23,43 +23,43 @@ The following modes are confirmed available on the current UnrealIRCd 6.x config
 
 These modes can be set by any user on themselves.
 
-| Mode | Module | Description |
-|---|---|---|
-| `B` | `usermodes/bot` | Marks you as a bot. Adds a line to `/WHOIS` so others can identify bots. |
-| `I` | built-in | Hides your idle time in `/WHOIS`. Configure `set::hide-idle-time` to control server-side defaults. |
-| `d` | built-in | Deaf to channel messages except those prefixed with a command character (e.g. `!`). Useful for command-only bots. |
-| `D` | `usermodes/privdeaf` | Blocks private messages from everyone except IRC operators, servers, and services. |
-| `G` | `usermodes/censor` | Applies the server's bad-word filter to messages you receive. |
-| `i` | built-in | Invisible — hidden from `/WHO` and `/NAMES` queries by users outside your channels. Set by default. |
-| `p` | `usermodes/privacy` | Hides your channel list from `/WHOIS`. |
-| `R` | `usermodes/regonlymsg` | Only receive private messages from registered (identified) users. Effective anti-spam measure. |
-| `T` | `usermodes/noctcp` | Blocks incoming CTCP requests (VERSION, TIME, etc.). Recommended for bots or during CTCP floods. |
-| `w` | `usermodes/wallops` | Receive wallops messages (network announcements from operators). Set by default. |
-| `x` | built-in | Cloaked hostname — hides your real IP/hostname. Set by default and cannot be removed. |
-| `Z` | `usermodes/secureonlymsg` | Only communicate with users on TLS connections. You also cannot message non-TLS users. |
+| Mode | Module                    | Description                                                                                                       |
+| ---- | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `B`  | `usermodes/bot`           | Marks you as a bot. Adds a line to `/WHOIS` so others can identify bots.                                          |
+| `I`  | built-in                  | Hides your idle time in `/WHOIS`. Configure `set::hide-idle-time` to control server-side defaults.                |
+| `d`  | built-in                  | Deaf to channel messages except those prefixed with a command character (e.g. `!`). Useful for command-only bots. |
+| `D`  | `usermodes/privdeaf`      | Blocks private messages from everyone except IRC operators, servers, and services.                                |
+| `G`  | `usermodes/censor`        | Applies the server's bad-word filter to messages you receive.                                                     |
+| `i`  | built-in                  | Invisible — hidden from `/WHO` and `/NAMES` queries by users outside your channels. Set by default.               |
+| `p`  | `usermodes/privacy`       | Hides your channel list from `/WHOIS`.                                                                            |
+| `R`  | `usermodes/regonlymsg`    | Only receive private messages from registered (identified) users. Effective anti-spam measure.                    |
+| `T`  | `usermodes/noctcp`        | Blocks incoming CTCP requests (VERSION, TIME, etc.). Recommended for bots or during CTCP floods.                  |
+| `w`  | `usermodes/wallops`       | Receive wallops messages (network announcements from operators). Set by default.                                  |
+| `x`  | built-in                  | Cloaked hostname — hides your real IP/hostname. Set by default and cannot be removed.                             |
+| `Z`  | `usermodes/secureonlymsg` | Only communicate with users on TLS connections. You also cannot message non-TLS users.                            |
 
 ### Server/services-set modes
 
 These modes are set automatically and cannot be changed manually.
 
-| Mode | Module | Description |
-|---|---|---|
-| `r` | built-in | Registered nick — set by NickServ when you identify. Used by `+R` filtering. |
-| `S` | `usermodes/servicebot` | Services bot — set on Atheme service bots (NickServ, ChanServ, etc.). Provides extra protection. |
-| `t` | built-in | Using a virtual host — set when you have an active `/VHOST` or oper vhost. |
-| `z` | built-in | Connected via TLS — set automatically when you connect on port 6697. |
+| Mode | Module                 | Description                                                                                      |
+| ---- | ---------------------- | ------------------------------------------------------------------------------------------------ |
+| `r`  | built-in               | Registered nick — set by NickServ when you identify. Used by `+R` filtering.                     |
+| `S`  | `usermodes/servicebot` | Services bot — set on Atheme service bots (NickServ, ChanServ, etc.). Provides extra protection. |
+| `t`  | built-in               | Using a virtual host — set when you have an active `/VHOST` or oper vhost.                       |
+| `z`  | built-in               | Connected via TLS — set automatically when you connect on port 6697.                             |
 
 ### IRC operator modes
 
 These modes require IRC operator status (`+o`).
 
-| Mode | Module | Description |
-|---|---|---|
-| `H` | built-in | Hide oper status — regular users cannot see you are an operator in `/WHOIS`. |
-| `o` | built-in | IRC operator — granted via the `/OPER` command with valid credentials. |
-| `q` | `usermodes/nokick` | Unkickable — only services (U-lines) can kick you. Use sparingly. |
-| `s` | built-in | Server notices — enables snomask-based server monitoring. Use `/MODE yournick +s +snomask`. |
-| `W` | `usermodes/showwhois` | Shows you when someone performs a `/WHOIS` on you. |
+| Mode | Module                | Description                                                                                 |
+| ---- | --------------------- | ------------------------------------------------------------------------------------------- |
+| `H`  | built-in              | Hide oper status — regular users cannot see you are an operator in `/WHOIS`.                |
+| `o`  | built-in              | IRC operator — granted via the `/OPER` command with valid credentials.                      |
+| `q`  | `usermodes/nokick`    | Unkickable — only services (U-lines) can kick you. Use sparingly.                           |
+| `s`  | built-in              | Server notices — enables snomask-based server monitoring. Use `/MODE yournick +s +snomask`. |
+| `W`  | `usermodes/showwhois` | Shows you when someone performs a `/WHOIS` on you.                                          |
 
 ## Operator modes on oper-up
 

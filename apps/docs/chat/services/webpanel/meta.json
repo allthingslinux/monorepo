@@ -1,7 +1,4 @@
 {
-    "title": "WebPanel",
-    "pages": [
-        "index",
-        "configuration"
-    ]
+  "title": "WebPanel",
+  "pages": ["index", "configuration"]
 }

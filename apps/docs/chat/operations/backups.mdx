@@ -9,15 +9,15 @@ This page documents how to back up and restore every stateful service in the atl
 
 All persistent data lives under the `data/` directory at the repository root, created by `scripts/init.sh`. Each subdirectory maps to Docker volume mounts in the compose files.
 
-| Service | Data location | What's stored |
-|---|---|---|
-| UnrealIRCd | `data/irc/data/` | Runtime data, RPC socket, persistent channel DB |
-| WebPanel | `data/irc/webpanel-data/` | WebPanel session and configuration data |
-| Atheme | `data/atheme/data/` | Services database (`services.db`) — NickServ, ChanServ registrations |
-| Prosody | `data/xmpp/data/` | XMPP user accounts, rosters, MUC history |
-| Prosody | `data/xmpp/uploads/` | HTTP file upload storage |
-| The Lounge | `data/thelounge/` | User configs, chat history, installed plugins |
-| TLS Certificates | `data/certs/` | Private keys and certificates (shared by IRC and XMPP) |
+| Service          | Data location             | What's stored                                                        |
+| ---------------- | ------------------------- | -------------------------------------------------------------------- |
+| UnrealIRCd       | `data/irc/data/`          | Runtime data, RPC socket, persistent channel DB                      |
+| WebPanel         | `data/irc/webpanel-data/` | WebPanel session and configuration data                              |
+| Atheme           | `data/atheme/data/`       | Services database (`services.db`) — NickServ, ChanServ registrations |
+| Prosody          | `data/xmpp/data/`         | XMPP user accounts, rosters, MUC history                             |
+| Prosody          | `data/xmpp/uploads/`      | HTTP file upload storage                                             |
+| The Lounge       | `data/thelounge/`         | User configs, chat history, installed plugins                        |
+| TLS Certificates | `data/certs/`             | Private keys and certificates (shared by IRC and XMPP)               |
 
 > **Note:** All services log to stdout, captured by Docker's json-file logging driver. Logs are not stored in `data/` — use `docker compose logs <service>` to view them.
 
@@ -328,11 +328,11 @@ Schedule it with cron:
 
 A recommended retention schedule balances storage cost with recovery flexibility:
 
-| Tier | Frequency | Retention | Purpose |
-|---|---|---|---|
-| Daily | Every day | Keep 7 days | Quick recovery from recent issues |
-| Weekly | Every Sunday | Keep 4 weeks | Recovery from issues noticed late |
-| Monthly | First of month | Keep 12 months | Long-term recovery, compliance |
+| Tier    | Frequency      | Retention      | Purpose                           |
+| ------- | -------------- | -------------- | --------------------------------- |
+| Daily   | Every day      | Keep 7 days    | Quick recovery from recent issues |
+| Weekly  | Every Sunday   | Keep 4 weeks   | Recovery from issues noticed late |
+| Monthly | First of month | Keep 12 months | Long-term recovery, compliance    |
 
 ### Cleanup script
 
@@ -443,7 +443,6 @@ Atheme creates periodic backups in `data/atheme/data/` with `.bak` extensions. C
 # Check tar archive is valid
 tar -tzf backup-file.tar.gz > /dev/null && echo "Archive OK" || echo "Archive corrupt"
 ```
-
 
 ## Related pages
 

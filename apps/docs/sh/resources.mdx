@@ -7,10 +7,10 @@ atl.sh enforces per-user resource limits to keep the server fair and stable for 
 
 ## Disk Quota
 
-| Limit | Value |
-|-------|-------|
-| Soft limit | 5 GB |
-| Hard limit | 6 GB |
+| Limit      | Value |
+| ---------- | ----- |
+| Soft limit | 5 GB  |
+| Hard limit | 6 GB  |
 
 The soft limit triggers a grace period warning. The hard limit is absolute — writes fail once you hit it.
 
@@ -27,25 +27,25 @@ Things that eat disk quickly: language package caches, build artifacts, log file
 
 ## CPU Limit
 
-| Limit | Value |
-|-------|-------|
+| Limit   | Value          |
+| ------- | -------------- |
 | Max CPU | 200% (2 cores) |
 
 Enforced via systemd cgroup v2 per-user slice. Long-running CPU-intensive processes are fine — just be considerate of other users.
 
 ## Memory Limit
 
-| Limit | Value |
-|-------|-------|
+| Limit   | Value  |
+| ------- | ------ |
 | Max RAM | 1.5 GB |
 
 Enforced via systemd cgroup v2. If your processes exceed this, the kernel OOM-kills them.
 
 ## Process Limits
 
-| Limit | Value |
-|-------|-------|
-| Max tasks (processes + threads) | 200 |
+| Limit                           | Value |
+| ------------------------------- | ----- |
+| Max tasks (processes + threads) | 200   |
 
 Set via both PAM (`nproc`) and systemd cgroup.
 
@@ -54,6 +54,7 @@ Set via both PAM (`nproc`) and systemd cgroup.
 Your `/tmp`, `/var/tmp`, and `/run/lock` are **private to your session** via `pam_namespace`. Other users cannot see or access files you create there. This is per-login — a new SSH session gets a fresh namespace.
 
 This means:
+
 - `/tmp/myfile` from your session is invisible to other users
 - Shared IPC via `/tmp` across users won't work (use sockets in your home directory instead)
 

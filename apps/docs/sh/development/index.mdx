@@ -7,32 +7,32 @@ atl.sh is a full development environment. Everything is pre-installed system-wid
 
 ## Languages and Runtimes
 
-| Language | Commands | Notes |
-|----------|----------|-------|
-| Python | `python3`, `pip3`, `ipython3`, `bpython` | venv, pip, pipx all available |
-| Node.js | `node`, `npm`, `npx` | packages install to `~/.local` |
-| Ruby | `ruby`, `gem`, `irb` | gems install to `~/.local/share/gem` |
-| Go | `go` | workspace at `~/.go` |
-| Rust | `rustc`, `cargo` | toolchain at `~/.cargo` |
-| Lua | `lua5.4` | |
-| Perl | `perl` | |
-| PHP | `php` (CLI only) | |
-| Java | `java`, `javac` | OpenJDK |
-| Elixir | `elixir`, `iex`, `mix` | Erlang/OTP included |
-| Erlang | `erl`, `erlc` | |
-| Haskell | `ghc`, `runghc` | |
-| OCaml | `ocaml`, `ocamlopt` | |
-| Scala | `scala`, `scalac` | |
-| Racket | `racket` | |
-| Ada | `gnat` | |
-| Fortran | `gfortran` | |
-| D | `gdc`, `ldc` | Two compilers |
-| Pascal | `fpc` (Free Pascal) | |
-| COBOL | `cobc` (GnuCOBOL) | |
-| Vala | `valac` | |
-| Assembly | `nasm`, `yasm` | |
-| C# | `mcs` (Mono) | |
-| Objective-C | `gobjc`, `gobjc++` | |
+| Language    | Commands                                 | Notes                                |
+| ----------- | ---------------------------------------- | ------------------------------------ |
+| Python      | `python3`, `pip3`, `ipython3`, `bpython` | venv, pip, pipx all available        |
+| Node.js     | `node`, `npm`, `npx`                     | packages install to `~/.local`       |
+| Ruby        | `ruby`, `gem`, `irb`                     | gems install to `~/.local/share/gem` |
+| Go          | `go`                                     | workspace at `~/.go`                 |
+| Rust        | `rustc`, `cargo`                         | toolchain at `~/.cargo`              |
+| Lua         | `lua5.4`                                 |                                      |
+| Perl        | `perl`                                   |                                      |
+| PHP         | `php` (CLI only)                         |                                      |
+| Java        | `java`, `javac`                          | OpenJDK                              |
+| Elixir      | `elixir`, `iex`, `mix`                   | Erlang/OTP included                  |
+| Erlang      | `erl`, `erlc`                            |                                      |
+| Haskell     | `ghc`, `runghc`                          |                                      |
+| OCaml       | `ocaml`, `ocamlopt`                      |                                      |
+| Scala       | `scala`, `scalac`                        |                                      |
+| Racket      | `racket`                                 |                                      |
+| Ada         | `gnat`                                   |                                      |
+| Fortran     | `gfortran`                               |                                      |
+| D           | `gdc`, `ldc`                             | Two compilers                        |
+| Pascal      | `fpc` (Free Pascal)                      |                                      |
+| COBOL       | `cobc` (GnuCOBOL)                        |                                      |
+| Vala        | `valac`                                  |                                      |
+| Assembly    | `nasm`, `yasm`                           |                                      |
+| C#          | `mcs` (Mono)                             |                                      |
+| Objective-C | `gobjc`, `gobjc++`                       |                                      |
 
 ## Compilers and Build Tools
 
@@ -125,25 +125,25 @@ deno install --global npm:typescript
 
 ## Editors
 
-| Editor | Command | Style |
-|--------|---------|-------|
-| Neovim | `nvim` | Modal, highly extensible |
-| Vim | `vim` | Modal, ubiquitous |
-| Emacs | `emacs` | Everything editor |
-| Nano | `nano` | Simple, non-modal |
-| Micro | `micro` | Modern, keyboard shortcuts like GUI editors |
-| Joe | `joe` | WordStar-style |
-| Mg | `mg` | Tiny Emacs-compatible |
-| Ed | `ed` | The standard editor |
+| Editor | Command | Style                                       |
+| ------ | ------- | ------------------------------------------- |
+| Neovim | `nvim`  | Modal, highly extensible                    |
+| Vim    | `vim`   | Modal, ubiquitous                           |
+| Emacs  | `emacs` | Everything editor                           |
+| Nano   | `nano`  | Simple, non-modal                           |
+| Micro  | `micro` | Modern, keyboard shortcuts like GUI editors |
+| Joe    | `joe`   | WordStar-style                              |
+| Mg     | `mg`    | Tiny Emacs-compatible                       |
+| Ed     | `ed`    | The standard editor                         |
 
 ## Terminal Multiplexers
 
-| Tool | Command | Notes |
-|------|---------|-------|
-| tmux | `tmux` | Default config pre-installed (see below) |
-| screen | `screen` | Classic |
-| byobu | `byobu` | tmux/screen wrapper with status bar |
-| tmate | `tmate` | tmux + instant terminal sharing |
+| Tool   | Command  | Notes                                    |
+| ------ | -------- | ---------------------------------------- |
+| tmux   | `tmux`   | Default config pre-installed (see below) |
+| screen | `screen` | Classic                                  |
+| byobu  | `byobu`  | tmux/screen wrapper with status bar      |
+| tmate  | `tmate`  | tmux + instant terminal sharing          |
 
 ### tmux defaults
 
@@ -170,11 +170,11 @@ tmux attach  reattach to your session
 
 The default shell is `bash`. You can switch to any of the following:
 
-| Shell | Change command |
-|-------|---------------|
-| zsh | `chsh -s /usr/bin/zsh` |
-| fish | `chsh -s /usr/bin/fish` |
-| mksh | `chsh -s /bin/mksh` |
+| Shell | Change command          |
+| ----- | ----------------------- |
+| zsh   | `chsh -s /usr/bin/zsh`  |
+| fish  | `chsh -s /usr/bin/fish` |
+| mksh  | `chsh -s /bin/mksh`     |
 
 Changes take effect on next login.
 
@@ -236,21 +236,21 @@ pv                      # pipe progress viewer
 
 The following paths are added to your `PATH` at login via `/etc/profile.d/environment-paths.sh`:
 
-| Path | Purpose |
-|------|---------|
-| `~/.local/bin` | pip tools, pipx, npm, general local installs |
-| `~/.cargo/bin` | Rust/Cargo binaries |
-| `~/.go/bin` | Go binaries |
-| `~/.local/share/gem/bin` | Ruby gems |
-| `~/.deno/bin` | Deno |
-| `~/.config/composer/vendor/bin` | PHP Composer |
-| `/var/cache/pnpm/bin` | pnpm global binaries |
+| Path                            | Purpose                                      |
+| ------------------------------- | -------------------------------------------- |
+| `~/.local/bin`                  | pip tools, pipx, npm, general local installs |
+| `~/.cargo/bin`                  | Rust/Cargo binaries                          |
+| `~/.go/bin`                     | Go binaries                                  |
+| `~/.local/share/gem/bin`        | Ruby gems                                    |
+| `~/.deno/bin`                   | Deno                                         |
+| `~/.config/composer/vendor/bin` | PHP Composer                                 |
+| `/var/cache/pnpm/bin`           | pnpm global binaries                         |
 
 XDG directories are also set:
 
-| Variable | Path |
-|----------|------|
-| `XDG_CONFIG_HOME` | `~/.config` |
-| `XDG_CACHE_HOME` | `~/.cache` |
-| `XDG_DATA_HOME` | `~/.local/share` |
-| `XDG_STATE_HOME` | `~/.local/state` |
+| Variable          | Path             |
+| ----------------- | ---------------- |
+| `XDG_CONFIG_HOME` | `~/.config`      |
+| `XDG_CACHE_HOME`  | `~/.cache`       |
+| `XDG_DATA_HOME`   | `~/.local/share` |
+| `XDG_STATE_HOME`  | `~/.local/state` |

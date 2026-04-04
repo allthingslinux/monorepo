@@ -52,11 +52,11 @@ Follow these steps when setting up the project for the first time.
 
 ## Environments
 
-| Target    | Host              | Description                    |
-|-----------|-------------------|--------------------------------|
-| `dev`     | `127.0.0.1:2223`  | Local Vagrant VM               |
-| `staging` | `staging.atl.sh`  | Hetzner Cloud VPS              |
-| `prod`    | `atl.sh`          | Physical Hetzner dedicated server |
+| Target    | Host             | Description                       |
+| --------- | ---------------- | --------------------------------- |
+| `dev`     | `127.0.0.1:2223` | Local Vagrant VM                  |
+| `staging` | `staging.atl.sh` | Hetzner Cloud VPS                 |
+| `prod`    | `atl.sh`         | Physical Hetzner dedicated server |
 
 The inventory lives in `ansible/inventory/`. Each environment maps to an
 Ansible host group with its own `host_vars` for per-environment overrides.
@@ -143,13 +143,13 @@ just deploy-tag prod "infra,services"
 
 The playbook uses five roles, each handling a distinct layer of the system.
 
-| Role          | Purpose                                                         |
-|---------------|-----------------------------------------------------------------|
+| Role          | Purpose                                                              |
+| ------------- | -------------------------------------------------------------------- |
 | `base`        | Apt cache, base packages, NTP, shells, languages, editors, CLI tools |
 | `infra`       | SSH hardening, firewall, fail2ban, auditd, AIDE, monitoring, backups |
-| `users`       | Skel files, MOTD, PAM limits                                    |
-| `environment` | Cgroup limits, disk quotas, tmpfs isolation, XDG dirs, PATH     |
-| `services`    | Nginx, Gemini, Gopher, finger, FTP, games, webring              |
+| `users`       | Skel files, MOTD, PAM limits                                         |
+| `environment` | Cgroup limits, disk quotas, tmpfs isolation, XDG dirs, PATH          |
+| `services`    | Nginx, Gemini, Gopher, finger, FTP, games, webring                   |
 
 The `infra` role is further split internally into three task files
 (`security/`, `monitoring.yml`, `backup.yml`) to keep concerns navigable
@@ -207,14 +207,14 @@ Cloudflare API tokens, and any other credentials the roles consume.
 
 The server uses a hybrid logging approach.
 
-| Log source  | Mechanism | Location |
-|-------------|-----------|----------|
-| System logs | `systemd-journald` (1 GB cap) | `journalctl` |
-| Nginx       | `logrotate` | `/var/log/nginx/` |
-| Fail2ban    | `logrotate` | `/var/log/fail2ban.log` |
-| Gemini      | `molly-brown` | `/var/log/molly-brown/` |
-| Audit log   | `auditd` | `/var/log/audit/audit.log` |
-| Backups     | `borgmatic` timer | `journalctl -u borgmatic` |
+| Log source  | Mechanism                     | Location                   |
+| ----------- | ----------------------------- | -------------------------- |
+| System logs | `systemd-journald` (1 GB cap) | `journalctl`               |
+| Nginx       | `logrotate`                   | `/var/log/nginx/`          |
+| Fail2ban    | `logrotate`                   | `/var/log/fail2ban.log`    |
+| Gemini      | `molly-brown`                 | `/var/log/molly-brown/`    |
+| Audit log   | `auditd`                      | `/var/log/audit/audit.log` |
+| Backups     | `borgmatic` timer             | `journalctl -u borgmatic`  |
 
 `auditd` runs 40+ rules covering identity files, privilege escalation, network
 configuration changes, suspicious tools (`wget`, `curl`, `nc`, `socat`),

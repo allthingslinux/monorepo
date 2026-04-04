@@ -7,23 +7,23 @@ The atl.chat stack exposes several internal APIs for server management, IRC serv
 
 ## API overview
 
-| API | Protocol | Port | Consumer | Purpose |
-|---|---|---|---|---|
-| [UnrealIRCd JSON-RPC](#unrealircd-json-rpc) | JSON-RPC 2.0 | 8600 | WebPanel, Portal | IRC server management |
-| [Atheme HTTP API](#atheme-http-api) | JSON-RPC | 8081 | Portal | IRC services management (NickServ, ChanServ, etc.) |
-| [Prosody REST API](#prosody-rest-api) | REST (HTTP) | 5280 | Portal | XMPP user account provisioning |
-| [Portal Bridge API](#portal-bridge-api) | REST (HTTP) | — | Bridge | Cross-protocol identity resolution |
-| [Fumadocs Search API](#fumadocs-search-api) | REST (HTTP) | 3000 | Docs UI | Documentation full-text search |
+| API                                         | Protocol     | Port | Consumer         | Purpose                                            |
+| ------------------------------------------- | ------------ | ---- | ---------------- | -------------------------------------------------- |
+| [UnrealIRCd JSON-RPC](#unrealircd-json-rpc) | JSON-RPC 2.0 | 8600 | WebPanel, Portal | IRC server management                              |
+| [Atheme HTTP API](#atheme-http-api)         | JSON-RPC     | 8081 | Portal           | IRC services management (NickServ, ChanServ, etc.) |
+| [Prosody REST API](#prosody-rest-api)       | REST (HTTP)  | 5280 | Portal           | XMPP user account provisioning                     |
+| [Portal Bridge API](#portal-bridge-api)     | REST (HTTP)  | —    | Bridge           | Cross-protocol identity resolution                 |
+| [Fumadocs Search API](#fumadocs-search-api) | REST (HTTP)  | 3000 | Docs UI          | Documentation full-text search                     |
 
 ## UnrealIRCd JSON-RPC
 
 UnrealIRCd 6.x exposes a [JSON-RPC 2.0](https://www.unrealircd.org/docs/JSON-RPC) interface for server management. The WebPanel and Portal use this API to query server state, manage users, and perform administrative actions.
 
-| Detail | Value |
-|---|---|
-| Endpoint | `https://<IRC_DOMAIN>:8600/api` |
-| Protocol | JSON-RPC 2.0 over HTTPS |
-| Authentication | HTTP Basic (`IRC_UNREAL_RPC_USER` / `IRC_UNREAL_RPC_PASSWORD`) |
+| Detail          | Value                                                               |
+| --------------- | ------------------------------------------------------------------- |
+| Endpoint        | `https://<IRC_DOMAIN>:8600/api`                                     |
+| Protocol        | JSON-RPC 2.0 over HTTPS                                             |
+| Authentication  | HTTP Basic (`IRC_UNREAL_RPC_USER` / `IRC_UNREAL_RPC_PASSWORD`)      |
 | Internal socket | `/home/unrealircd/unrealircd/data/rpc.socket` (used by healthcheck) |
 
 The healthcheck verifies the RPC socket is responsive:
@@ -37,11 +37,11 @@ Common methods include `rpc.info`, `user.list`, `channel.list`, and `server.reha
 
 ### Environment variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `IRC_UNREAL_JSONRPC_URL` | Full RPC endpoint URL | `https://irc.atl.chat:8600/api` |
-| `IRC_UNREAL_RPC_USER` | RPC username (matches `WEBPANEL_RPC_USER`) | `adminpanel` |
-| `IRC_UNREAL_RPC_PASSWORD` | RPC password (matches `WEBPANEL_RPC_PASSWORD`) | `change_me_webpanel_password` |
+| Variable                  | Description                                    | Default                         |
+| ------------------------- | ---------------------------------------------- | ------------------------------- |
+| `IRC_UNREAL_JSONRPC_URL`  | Full RPC endpoint URL                          | `https://irc.atl.chat:8600/api` |
+| `IRC_UNREAL_RPC_USER`     | RPC username (matches `WEBPANEL_RPC_USER`)     | `adminpanel`                    |
+| `IRC_UNREAL_RPC_PASSWORD` | RPC password (matches `WEBPANEL_RPC_PASSWORD`) | `change_me_webpanel_password`   |
 
 > **Warning:** Change `IRC_UNREAL_RPC_PASSWORD` before production deployment. This credential grants full administrative access to the IRC server.
 
@@ -49,41 +49,41 @@ Common methods include `rpc.info`, `user.list`, `channel.list`, and `server.reha
 
 Atheme IRC services expose an HTTP JSON-RPC interface for programmatic access to NickServ, ChanServ, OperServ, and other service bots. The Portal uses this API to manage IRC registrations and query account information.
 
-| Detail | Value |
-|---|---|
-| Endpoint | `http://atl-irc-server:8081/jsonrpc` |
-| Protocol | JSON-RPC over HTTP |
+| Detail         | Value                                                     |
+| -------------- | --------------------------------------------------------- |
+| Endpoint       | `http://atl-irc-server:8081/jsonrpc`                      |
+| Protocol       | JSON-RPC over HTTP                                        |
 | Authentication | Atheme credentials (configured in Atheme's `httpd` block) |
 
 Atheme shares the network namespace with UnrealIRCd (`network_mode: service:atl-irc-server`), so port 8081 is exposed through the IRC server container.
 
 ### Environment variables
 
-| Variable | Description | Default |
-|---|---|---|
+| Variable                 | Description                  | Default                              |
+| ------------------------ | ---------------------------- | ------------------------------------ |
 | `IRC_ATHEME_JSONRPC_URL` | Atheme JSON-RPC endpoint URL | `http://atl-irc-server:8081/jsonrpc` |
 
 ## Prosody REST API
 
 Prosody exposes a REST API via [`mod_http_admin_api`](https://modules.prosody.im/mod_http_admin_api) for XMPP user account management. The Portal uses this API to provision and deprovision XMPP accounts. Self-registration is disabled — all user creation flows through this API.
 
-| Detail | Value |
-|---|---|
-| Base URL | `http://atl-xmpp-server:5280` |
-| Protocol | REST over HTTP |
+| Detail         | Value                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Base URL       | `http://atl-xmpp-server:5280`                                                                                                    |
+| Protocol       | REST over HTTP                                                                                                                   |
 | Authentication | Bearer token (via `mod_tokenauth`) — **primary for Portal**. OAuth2 Bearer (via `mod_http_oauth2`) or HTTP Basic also supported. |
-| Module | `mod_http_admin_api` (loaded per-VirtualHost, not globally) |
+| Module         | `mod_http_admin_api` (loaded per-VirtualHost, not globally)                                                                      |
 
 **Portal integration:** Use `PROSODY_REST_TOKEN` (Bearer) for Portal. Generate a token with `just prosody-token` or `prosodyctl shell` (see Prosody configuration docs). Legacy `PROSODY_REST_USERNAME` / `PROSODY_REST_PASSWORD` (HTTP Basic) are deprecated for Portal — Prosody 13+ with `mod_http_admin_api` uses Bearer auth via `mod_tokenauth`.
 
 ### Environment variables (Portal)
 
-| Variable | Description | Default |
-|---|---|---|
-| `PROSODY_REST_URL` | Prosody REST API base URL | `http://atl-xmpp-server:5280` |
-| `PROSODY_REST_TOKEN` | Bearer token for `mod_http_admin_api` (primary for Portal) | — |
-| `PROSODY_REST_USERNAME` | REST admin username (JID) — *legacy, HTTP Basic* | `admin@atl.chat` |
-| `PROSODY_REST_PASSWORD` | REST admin password — *legacy, HTTP Basic* | `change_me_prosody_rest_password` |
+| Variable                | Description                                                | Default                           |
+| ----------------------- | ---------------------------------------------------------- | --------------------------------- |
+| `PROSODY_REST_URL`      | Prosody REST API base URL                                  | `http://atl-xmpp-server:5280`     |
+| `PROSODY_REST_TOKEN`    | Bearer token for `mod_http_admin_api` (primary for Portal) | —                                 |
+| `PROSODY_REST_USERNAME` | REST admin username (JID) — _legacy, HTTP Basic_           | `admin@atl.chat`                  |
+| `PROSODY_REST_PASSWORD` | REST admin password — _legacy, HTTP Basic_                 | `change_me_prosody_rest_password` |
 
 > **Warning:** `PROSODY_REST_TOKEN` (or `PROSODY_REST_PASSWORD` if using legacy Basic auth) grants admin-level access to XMPP user management. Change from defaults before production deployment.
 
@@ -105,12 +105,12 @@ Authentication uses a Bearer token (`BRIDGE_PORTAL_TOKEN`) in the `Authorization
 
 Look up a user identity by providing one of the following query parameters:
 
-| Parameter | Type | Description |
-|---|---|---|
-| `discordId` | string | Discord user ID |
-| `ircNick` | string | IRC nickname |
+| Parameter   | Type   | Description                                         |
+| ----------- | ------ | --------------------------------------------------- |
+| `discordId` | string | Discord user ID                                     |
+| `ircNick`   | string | IRC nickname                                        |
 | `ircServer` | string | IRC server hostname (optional, used with `ircNick`) |
-| `xmppJid` | string | XMPP JID |
+| `xmppJid`   | string | XMPP JID                                            |
 
 ### Response
 
@@ -144,10 +144,10 @@ When `BRIDGE_PORTAL_BASE_URL` is not set, identity resolution is disabled and th
 
 ### Environment variables
 
-| Variable | Description | Default |
-|---|---|---|
-| `BRIDGE_PORTAL_BASE_URL` | Portal API base URL | `https://portal.atl.tools` |
-| `BRIDGE_PORTAL_TOKEN` | Bearer token for Portal API | `change_me_bridge_portal_token` |
+| Variable                 | Description                 | Default                         |
+| ------------------------ | --------------------------- | ------------------------------- |
+| `BRIDGE_PORTAL_BASE_URL` | Portal API base URL         | `https://portal.atl.tools`      |
+| `BRIDGE_PORTAL_TOKEN`    | Bearer token for Portal API | `change_me_bridge_portal_token` |
 
 > **Warning:** Change `BRIDGE_PORTAL_TOKEN` before production deployment.
 

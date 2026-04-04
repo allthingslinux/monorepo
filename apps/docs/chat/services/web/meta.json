@@ -1,7 +1,4 @@
 {
-    "title": "Web",
-    "pages": [
-        "index",
-        "development"
-    ]
+  "title": "Web",
+  "pages": ["index", "development"]
 }

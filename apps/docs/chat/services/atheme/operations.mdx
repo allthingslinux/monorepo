@@ -95,14 +95,14 @@ ChanServ uses a flags-based access system. You can use named templates or raw fl
 
 Built-in templates and their flags:
 
-| Template | Flags | Typical role |
-|---|---|---|
-| `MEMBER` | `+Ai` | Basic member (auto-invite) |
-| `VOP` | `+AV` | Auto-voice |
-| `HOP` | `+AHehitrv` | Half-op |
-| `AOP` | `+AOehiortv` | Auto-op |
-| `SOP` | `+AOaefhiorstv` | Super-op |
-| `FOUNDER` | `+AFORaefhioqrstv` | Full control |
+| Template  | Flags              | Typical role               |
+| --------- | ------------------ | -------------------------- |
+| `MEMBER`  | `+Ai`              | Basic member (auto-invite) |
+| `VOP`     | `+AV`              | Auto-voice                 |
+| `HOP`     | `+AHehitrv`        | Half-op                    |
+| `AOP`     | `+AOehiortv`       | Auto-op                    |
+| `SOP`     | `+AOaefhiorstv`    | Super-op                   |
+| `FOUNDER` | `+AFORaefhioqrstv` | Full control               |
 
 Examples:
 
@@ -246,7 +246,7 @@ Vhost requests require operator approval unless an operator has pre-configured o
 
 Operators can offer vhosts to groups of users or manage individual requests:
 
-```text
+````text
 /msg HostServ OFFER <pattern> <vhost>
 /msg HostServ ACTIVATE <nickname>
 /msg HostServ REJECT <nickname> <reason>
@@ -257,7 +257,7 @@ els:
 /msg BotServ HELP
 /msg BotServ INFO #channel
 /msg BotServ SET #channel FANTASY ON
-```
+````
 
 BotServ bots can relay NPC-style messages in channels via `SAY` and `ACT` commands.
 
@@ -345,8 +345,8 @@ cp data/atheme/data/services.db "backups/atheme-$(date +%Y%m%d-%H%M%S).db"
 
 ### Database location summary
 
-| Host path | Container path | Contents |
-|---|---|---|
+| Host path                      | Container path                       | Contents                                                              |
+| ------------------------------ | ------------------------------------ | --------------------------------------------------------------------- |
 | `data/atheme/data/services.db` | `/usr/local/atheme/data/services.db` | All registered nicknames, channels, access lists, memos, and settings |
 
 > **Note:** Atheme logs to stdout via `/dev/stdout`. Use `docker compose logs atl-irc-services` to view logs.

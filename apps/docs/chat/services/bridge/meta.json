@@ -1,8 +1,4 @@
 {
-    "title": "Bridge",
-    "pages": [
-        "index",
-        "configuration",
-        "operations"
-    ]
+  "title": "Bridge",
+  "pages": ["index", "configuration", "operations"]
 }

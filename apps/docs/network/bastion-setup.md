@@ -6,19 +6,24 @@
 ## Implementation
 
 ### 1. Root Access
+
 `root` is setup to only allow specific admins for management purposes.
 
 **/root/.ssh/authorized_keys**
+
 ```
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINwyVKhwdg8dlt6PAGRl/ayGWUV7H3rfVpg1Ys8MUpV6 admin@kzn.sh
 ```
 
 ### 2. Jump User
+
 Setup `jump` user for ssh jumping and ssh jumping only.
 `useradd -m -s /usr/sbin/nologin jump`
 
 ### 3. SSHD Hardening
+
 **/etc/ssh/sshd_config**
+
 ```ssh
 # Basic SSH settings
 Port 22
@@ -32,8 +37,8 @@ PasswordAuthentication no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 UsePAM yes
-UseDNS no 
-GSSAPIAuthentication no 
+UseDNS no
+GSSAPIAuthentication no
 
 # Root access restrictions
 PermitRootLogin prohibit-password
@@ -85,7 +90,9 @@ Match User jump
 ```
 
 ### 4. Jump Wrapper Script
+
 **/usr/local/bin/ssh-jump-wrapper**
+
 ```bash
 #!/bin/bash
 
@@ -100,7 +107,7 @@ logger -t ssh-jump "Jump attempt from $SSH_CLIENT to $SSH_ORIGINAL_COMMAND"
 # Parse SSH command
 if [[ "$SSH_ORIGINAL_COMMAND" =~ ^ssh.*[[:space:]]+([^[:space:]]+@)?([^[:space:]]+) ]]; then
     TARGET="${BASH_REMATCH[2]}"
-    
+
     # Check if target is allowed
     ALLOWED=false
     for host in "${!ALLOWED_HOSTS[@]}"; do
@@ -109,7 +116,7 @@ if [[ "$SSH_ORIGINAL_COMMAND" =~ ^ssh.*[[:space:]]+([^[:space:]]+@)?([^[:space:]
             break
         fi
     done
-    
+
     if [[ "$ALLOWED" == "true" ]]; then
         exec $SSH_ORIGINAL_COMMAND
     else
@@ -125,7 +132,9 @@ fi
 ```
 
 ### 5. Banner
+
 **/etc/ssh/banner**
+
 ```
 ********************************************************************
 *                              WARNING                             *
@@ -137,18 +146,21 @@ fi
 ```
 
 ### 6. Firewall (UFW)
+
 ```
 Status: active
 To                         Action      From
 --                         ------      ----
-Anywhere on lo             ALLOW       Anywhere                  
-22/tcp                     ALLOW       Anywhere                  
-Anywhere (v6) on lo        ALLOW       Anywhere (v6)             
-22/tcp (v6)                ALLOW       Anywhere (v6) 
+Anywhere on lo             ALLOW       Anywhere
+22/tcp                     ALLOW       Anywhere
+Anywhere (v6) on lo        ALLOW       Anywhere (v6)
+22/tcp (v6)                ALLOW       Anywhere (v6)
 ```
 
 ### 7. Fail2Ban
+
 **/etc/fail2ban/jail.d/sshd-custom.conf**
+
 ```ini
 [sshd]
 enabled = true
@@ -171,6 +183,7 @@ bantime = 86400
 ```
 
 **/etc/fail2ban/filter.d/sshd-aggressive.conf**
+
 ```ini
 [INCLUDES]
 before = common.conf
@@ -186,7 +199,9 @@ ignoreregex =
 ```
 
 ### 8. System Hardening
+
 **/etc/audit/rules.d/ssh.rules**
+
 ```
 -w /usr/sbin/sshd -p x -k ssh-daemon
 -w /etc/ssh/sshd_config -p wa -k ssh-config
@@ -196,6 +211,7 @@ ignoreregex =
 ```
 
 **/etc/sysctl.conf**
+
 ```
 # Network security
 net.ipv4.ip_forward = 0
@@ -218,7 +234,9 @@ kernel.yama.ptrace_scope = 1
 ```
 
 ### 9. Adding New VPS
+
 To add a new server to the jump list:
+
 1.  Modify `/usr/local/bin/ssh-jump-wrapper` on Bastion.
 2.  Add: `ALLOWED_HOSTS["new-host-name"]="<TAILNET-IP>"`
 3.  Secure the new VPS SSHD config using the standard template.

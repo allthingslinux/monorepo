@@ -9,11 +9,11 @@ The WebPanel connects to UnrealIRCd via JSON-RPC on port 8600 using credentials 
 
 The WebPanel uses three variables from `.env.example`, all in the IRC service section under `--- WebPanel ---`:
 
-| Variable | Description | Default | Sensitive |
-|---|---|---|---|
-| `WEBPANEL_PORT` | Host port mapped to the WebPanel container (container always listens on 8080 internally) | `8080` | No |
-| `WEBPANEL_RPC_USER` | Username for JSON-RPC authentication against UnrealIRCd | `adminpanel` | No |
-| `WEBPANEL_RPC_PASSWORD` | Password for JSON-RPC authentication against UnrealIRCd | `change_me_webpanel_password` | Yes |
+| Variable                | Description                                                                              | Default                       | Sensitive |
+| ----------------------- | ---------------------------------------------------------------------------------------- | ----------------------------- | --------- |
+| `WEBPANEL_PORT`         | Host port mapped to the WebPanel container (container always listens on 8080 internally) | `8080`                        | No        |
+| `WEBPANEL_RPC_USER`     | Username for JSON-RPC authentication against UnrealIRCd                                  | `adminpanel`                  | No        |
+| `WEBPANEL_RPC_PASSWORD` | Password for JSON-RPC authentication against UnrealIRCd                                  | `change_me_webpanel_password` | Yes       |
 
 > **Warning:** Change `WEBPANEL_RPC_PASSWORD` from the default before any public deployment. This password grants full administrative RPC access to UnrealIRCd. The same credential is also referenced by the external Portal integration as `IRC_UNREAL_RPC_PASSWORD`.
 
@@ -77,9 +77,9 @@ The `match` block restricts RPC access to Docker network IPs (`172.16.0.0/12`) a
 
 UnrealIRCd defines two RPC permission classes:
 
-| Class | Permissions | Use case |
-|---|---|---|
-| `full` | All RPC operations | WebPanel (default) |
+| Class       | Permissions                                            | Use case                               |
+| ----------- | ------------------------------------------------------ | -------------------------------------- |
+| `full`      | All RPC operations                                     | WebPanel (default)                     |
 | `read-only` | Stats, logs, user/server/channel listing, bans listing | Monitoring tools, read-only dashboards |
 
 The WebPanel uses `full` because it needs write access for ban management, spamfilter editing, and other administrative actions. If you want a restricted monitoring-only integration, create a separate `rpc-user` with `rpc-class read-only`.
@@ -90,7 +90,7 @@ The compose service definition in `infra/compose/irc.yaml` maps the WebPanel por
 
 ```yaml
 ports:
-  - '${WEBPANEL_PORT:-8080}:8080'
+  - "${WEBPANEL_PORT:-8080}:8080"
 ```
 
 The container always listens on port 8080 internally (Nginx inside the container). The `WEBPANEL_PORT` variable only controls the host-side mapping. To change the access port:
@@ -119,8 +119,8 @@ On first access, the WebPanel runs a setup wizard that creates an admin account 
 
 User credentials are stored as files within the data volume:
 
-| Host path | Container path | Contents |
-|---|---|---|
+| Host path                 | Container path                           | Contents                                  |
+| ------------------------- | ---------------------------------------- | ----------------------------------------- |
 | `data/irc/webpanel-data/` | `/var/www/html/unrealircd-webpanel/data` | Config state, session data, user accounts |
 
 The `data/irc/webpanel-data/` directory is created by `scripts/init.sh` during `just init`.
@@ -141,11 +141,11 @@ add_header X-Content-Type-Options "nosniff" always;
 add_header X-XSS-Protection "1; mode=block" always;
 ```
 
-| Header | Effect |
-|---|---|
-| `X-Frame-Options: SAMEORIGIN` | Prevents the WebPanel from being embedded in iframes on other domains (clickjacking protection) |
-| `X-Content-Type-Options: nosniff` | Prevents browsers from MIME-sniffing responses away from the declared content type |
-| `X-XSS-Protection: 1; mode=block` | Enables the browser's built-in XSS filter and blocks the page if an attack is detected |
+| Header                            | Effect                                                                                          |
+| --------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `X-Frame-Options: SAMEORIGIN`     | Prevents the WebPanel from being embedded in iframes on other domains (clickjacking protection) |
+| `X-Content-Type-Options: nosniff` | Prevents browsers from MIME-sniffing responses away from the declared content type              |
+| `X-XSS-Protection: 1; mode=block` | Enables the browser's built-in XSS filter and blocks the page if an attack is detected          |
 
 ### Access restrictions
 
@@ -167,12 +167,12 @@ This prevents browsers from directly accessing the WebPanel's stored configurati
 
 ### PHP and static file handling
 
-| Setting | Value | Notes |
-|---|---|---|
-| PHP-FPM | `127.0.0.1:9000` (inside container) | FastCGI to the local PHP-FPM process |
-| `fastcgi_read_timeout` | `300s` | Allows long-running RPC operations to complete |
-| Static file caching | `1 year`, `Cache-Control: public, immutable` | JS, CSS, images are aggressively cached |
-| URL rewriting | `try_files $uri $uri/ /index.php?$query_string` | All routes fall through to PHP |
+| Setting                | Value                                           | Notes                                          |
+| ---------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| PHP-FPM                | `127.0.0.1:9000` (inside container)             | FastCGI to the local PHP-FPM process           |
+| `fastcgi_read_timeout` | `300s`                                          | Allows long-running RPC operations to complete |
+| Static file caching    | `1 year`, `Cache-Control: public, immutable`    | JS, CSS, images are aggressively cached        |
+| URL rewriting          | `try_files $uri $uri/ /index.php?$query_string` | All routes fall through to PHP                 |
 
 ## Container setup
 
@@ -183,14 +183,14 @@ The WebPanel container is built from `apps/webpanel/Containerfile` using a multi
 
 The compose definition in `infra/compose/irc.yaml`:
 
-| Setting | Value |
-|---|---|
-| Container name | `atl-irc-webpanel` |
-| Restart policy | `unless-stopped` |
-| Depends on | `atl-irc-server` (healthy) |
-| Volume | `data/irc/webpanel-data` → `/var/www/html/unrealircd-webpanel/data` |
-| Port | `${WEBPANEL_PORT:-8080}:8080` |
-| Network | `atl-chat` |
+| Setting        | Value                                                               |
+| -------------- | ------------------------------------------------------------------- |
+| Container name | `atl-irc-webpanel`                                                  |
+| Restart policy | `unless-stopped`                                                    |
+| Depends on     | `atl-irc-server` (healthy)                                          |
+| Volume         | `data/irc/webpanel-data` → `/var/www/html/unrealircd-webpanel/data` |
+| Port           | `${WEBPANEL_PORT:-8080}:8080`                                       |
+| Network        | `atl-chat`                                                          |
 
 The `depends_on` with `condition: service_healthy` ensures UnrealIRCd's JSON-RPC API is ready before the WebPanel starts. UnrealIRCd's health check verifies the RPC socket is responding.
 

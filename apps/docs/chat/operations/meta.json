@@ -1,11 +1,11 @@
 {
-    "title": "Operations",
-    "pages": [
-        "deployment",
-        "ssl-tls",
-        "monitoring",
-        "backups",
-        "troubleshooting",
-        "security"
-    ]
+  "title": "Operations",
+  "pages": [
+    "deployment",
+    "ssl-tls",
+    "monitoring",
+    "backups",
+    "troubleshooting",
+    "security"
+  ]
 }

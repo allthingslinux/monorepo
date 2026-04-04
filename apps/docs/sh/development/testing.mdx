@@ -144,8 +144,8 @@ The `debian/trixie64` box supports only **libvirt** (KVM). If Vagrant picks Virt
 - **"Permission denied (publickey)" for root@127.0.0.1**: The provisioner may have left `authorized_keys` owned by vagrant. Re-run `vagrant provision`. If it persists, `vagrant ssh` in and run `sudo chown root:root /root/.ssh/authorized_keys`.
 - **Port 2223 in use**: Change the host port in the Vagrantfile and update `ansible_port` in `ansible/inventory/hosts.yml`.
 - **libvirt `virNetworkCreate` / `guest_nat` nftables error**: The default libvirt NAT network can conflict with nftables on Arch. See [libvirt - ArchWiki](https://wiki.archlinux.org/title/Libvirt#Using_nftables).
-
   1. **Flush and reset**:
+
      ```bash
      sudo nft delete table ip libvirt_network 2>/dev/null
      sudo nft delete table ip6 libvirt_network 2>/dev/null
@@ -155,6 +155,7 @@ The `debian/trixie64` box supports only **libvirt** (KVM). If Vagrant picks Virt
      ```
 
   2. **Allow virbr0 in nftables**: If you use a custom `/etc/nftables.conf` with `policy drop`, add:
+
      ```
      iifname virbr0 udp dport {53, 67} accept    # in chain input
      iifname virbr0 accept                        # in chain forward

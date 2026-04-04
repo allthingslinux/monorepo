@@ -102,7 +102,7 @@ Create `infra/compose/<service>.yaml` following this pattern (modelled after `in
 name: atl-<service>
 
 include:
-  - networks.yaml  # shared atl-chat network
+  - networks.yaml # shared atl-chat network
 
 services:
   atl-<service>:
@@ -132,7 +132,7 @@ services:
       - ../../data/<service>:/data
 
     ports:
-      - '${ATL_CHAT_IP:-127.0.0.1}:${MY_SERVICE_PORT:-8080}:8080'
+      - "${ATL_CHAT_IP:-127.0.0.1}:${MY_SERVICE_PORT:-8080}:8080"
 
     networks:
       - atl-chat
@@ -302,11 +302,11 @@ description: "Overview of <Service Name> within the atl.chat stack."
 
 ## Technology
 
-| Component | Technology |
-|---|---|
-| Runtime | Python 3.12 / Node.js 22 / etc. |
-| Container | Alpine-based multi-stage |
-| Config | envsubst templates |
+| Component | Technology                      |
+| --------- | ------------------------------- |
+| Runtime   | Python 3.12 / Node.js 22 / etc. |
+| Container | Alpine-based multi-stage        |
+| Config    | envsubst templates              |
 
 ## Related pages
 

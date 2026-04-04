@@ -9,10 +9,10 @@ atl.chat uses a Tailscale overlay to connect production servers, a single Docker
 
 Production runs on two Tailscale nodes within the CGNAT subnet `100.64.0.0/10`:
 
-| Node | Tailscale IP | Role |
-|---|---|---|
+| Node                    | Tailscale IP | Role                                                 |
+| ----------------------- | ------------ | ---------------------------------------------------- |
 | `atl.network` (gateway) | `100.64.1.0` | Nginx Proxy Manager, TLS termination, public ingress |
-| `atl.chat` (services) | `100.64.7.0` | All Dockerised chat services |
+| `atl.chat` (services)   | `100.64.7.0` | All Dockerised chat services                         |
 
 The `ATL_GATEWAY_IP` and `ATL_CHAT_IP` variables in `.env` control which IP addresses services bind to. In development, `.env.dev` overrides `ATL_CHAT_IP` to `127.0.0.1` so ports bind to localhost only.
 
@@ -53,24 +53,24 @@ The following table lists every port exposed by the Docker Compose stack, verifi
 
 ### External ports (host-mapped)
 
-| Port | Service | Container | Protocol | Bind IP | Env Variable | Compose File |
-|---|---|---|---|---|---|---|
-| 6697 | UnrealIRCd | `atl-irc-server` | IRC (TLS) | `ATL_CHAT_IP` | `IRC_TLS_PORT` | `irc.yaml` |
-| 6900 | UnrealIRCd | `atl-irc-server` | IRC (S2S link) | `ATL_CHAT_IP` | `IRC_SERVER_PORT` | `irc.yaml` |
-| 8600 | UnrealIRCd | `atl-irc-server` | JSON-RPC (HTTPS) | `ATL_CHAT_IP` | `IRC_RPC_PORT` | `irc.yaml` |
-| 8000 | UnrealIRCd | `atl-irc-server` | IRC WebSocket | `ATL_CHAT_IP` | `IRC_WEBSOCKET_PORT` | `irc.yaml` |
-| 8081 | Atheme | `atl-irc-server`¹ | HTTP (JSON-RPC) | `ATL_CHAT_IP` | `ATHEME_HTTPD_PORT` | `irc.yaml` |
-| 8080 | WebPanel | `atl-irc-webpanel` | HTTP | — | `WEBPANEL_PORT` | `irc.yaml` |
-| 5222 | Prosody | `atl-xmpp-server` | XMPP C2S (STARTTLS) | — | `PROSODY_C2S_PORT` | `xmpp.yaml` |
-| 5223 | Prosody | `atl-xmpp-server` | XMPP C2S (Direct TLS) | — | `PROSODY_C2S_DIRECT_TLS_PORT` | `xmpp.yaml` |
-| 5269 | Prosody | `atl-xmpp-server` | XMPP S2S (STARTTLS) | — | `PROSODY_S2S_PORT` | `xmpp.yaml` |
-| 5270 | Prosody | `atl-xmpp-server` | XMPP S2S (Direct TLS) | — | `PROSODY_S2S_DIRECT_TLS_PORT` | `xmpp.yaml` |
-| 5280 | Prosody | `atl-xmpp-server` | HTTP (BOSH/WebSocket) | — | `PROSODY_HTTP_PORT` | `xmpp.yaml` |
-| 5281 | XMPP Nginx | `atl-xmpp-nginx` | HTTPS (BOSH/WebSocket) | — | `PROSODY_HTTPS_PORT` | `xmpp.yaml` |
-| 5000 | Prosody | `atl-xmpp-server` | Proxy65 (file transfer) | — | `PROSODY_PROXY65_PORT` | `xmpp.yaml` |
-| 9000 | The Lounge | `atl-thelounge` | HTTP (Web IRC) | — | `THELOUNGE_PORT` | `thelounge.yaml` |
-| 8090 | ObsidianIRC | `atl-obsidianirc` | HTTP (Web IRC) | — | `OBSIDIANIRC_PORT` | `obsidianirc.yaml` |
-| 8082 | Dozzle | `dozzle` | HTTP (log viewer) | — | `DOZZLE_PORT` | `compose.yaml` |
+| Port | Service     | Container          | Protocol                | Bind IP       | Env Variable                  | Compose File       |
+| ---- | ----------- | ------------------ | ----------------------- | ------------- | ----------------------------- | ------------------ |
+| 6697 | UnrealIRCd  | `atl-irc-server`   | IRC (TLS)               | `ATL_CHAT_IP` | `IRC_TLS_PORT`                | `irc.yaml`         |
+| 6900 | UnrealIRCd  | `atl-irc-server`   | IRC (S2S link)          | `ATL_CHAT_IP` | `IRC_SERVER_PORT`             | `irc.yaml`         |
+| 8600 | UnrealIRCd  | `atl-irc-server`   | JSON-RPC (HTTPS)        | `ATL_CHAT_IP` | `IRC_RPC_PORT`                | `irc.yaml`         |
+| 8000 | UnrealIRCd  | `atl-irc-server`   | IRC WebSocket           | `ATL_CHAT_IP` | `IRC_WEBSOCKET_PORT`          | `irc.yaml`         |
+| 8081 | Atheme      | `atl-irc-server`¹  | HTTP (JSON-RPC)         | `ATL_CHAT_IP` | `ATHEME_HTTPD_PORT`           | `irc.yaml`         |
+| 8080 | WebPanel    | `atl-irc-webpanel` | HTTP                    | —             | `WEBPANEL_PORT`               | `irc.yaml`         |
+| 5222 | Prosody     | `atl-xmpp-server`  | XMPP C2S (STARTTLS)     | —             | `PROSODY_C2S_PORT`            | `xmpp.yaml`        |
+| 5223 | Prosody     | `atl-xmpp-server`  | XMPP C2S (Direct TLS)   | —             | `PROSODY_C2S_DIRECT_TLS_PORT` | `xmpp.yaml`        |
+| 5269 | Prosody     | `atl-xmpp-server`  | XMPP S2S (STARTTLS)     | —             | `PROSODY_S2S_PORT`            | `xmpp.yaml`        |
+| 5270 | Prosody     | `atl-xmpp-server`  | XMPP S2S (Direct TLS)   | —             | `PROSODY_S2S_DIRECT_TLS_PORT` | `xmpp.yaml`        |
+| 5280 | Prosody     | `atl-xmpp-server`  | HTTP (BOSH/WebSocket)   | —             | `PROSODY_HTTP_PORT`           | `xmpp.yaml`        |
+| 5281 | XMPP Nginx  | `atl-xmpp-nginx`   | HTTPS (BOSH/WebSocket)  | —             | `PROSODY_HTTPS_PORT`          | `xmpp.yaml`        |
+| 5000 | Prosody     | `atl-xmpp-server`  | Proxy65 (file transfer) | —             | `PROSODY_PROXY65_PORT`        | `xmpp.yaml`        |
+| 9000 | The Lounge  | `atl-thelounge`    | HTTP (Web IRC)          | —             | `THELOUNGE_PORT`              | `thelounge.yaml`   |
+| 8090 | ObsidianIRC | `atl-obsidianirc`  | HTTP (Web IRC)          | —             | `OBSIDIANIRC_PORT`            | `obsidianirc.yaml` |
+| 8082 | Dozzle      | `dozzle`           | HTTP (log viewer)       | —             | `DOZZLE_PORT`                 | `compose.yaml`     |
 
 ¹ Atheme shares UnrealIRCd's network namespace (`network_mode: service:atl-irc-server`), so its port 8081 is exposed through the `atl-irc-server` container's port bindings.
 
@@ -80,24 +80,23 @@ The following table lists every port exposed by the Docker Compose stack, verifi
 
 These ports are used for inter-service communication on the `atl-chat` Docker network and are not mapped to the host:
 
-| Port | Service | Protocol | Used By |
-|---|---|---|---|
-| 6901 | UnrealIRCd | IRC (S2S uplink) | Atheme connects via `127.0.0.1:6901` (shared namespace) |
-| 5347 | Prosody | XMPP component | Bridge connects as `bridge.atl.chat` component |
-| 8081 | Atheme HTTP | JSON-RPC | Bridge and Portal query Atheme via `atl-irc-server:8081` |
-| 8600 | UnrealIRCd RPC | JSON-RPC | WebPanel queries UnrealIRCd via `atl-irc-server:8600` |
+| Port | Service        | Protocol         | Used By                                                  |
+| ---- | -------------- | ---------------- | -------------------------------------------------------- |
+| 6901 | UnrealIRCd     | IRC (S2S uplink) | Atheme connects via `127.0.0.1:6901` (shared namespace)  |
+| 5347 | Prosody        | XMPP component   | Bridge connects as `bridge.atl.chat` component           |
+| 8081 | Atheme HTTP    | JSON-RPC         | Bridge and Portal query Atheme via `atl-irc-server:8081` |
+| 8600 | UnrealIRCd RPC | JSON-RPC         | WebPanel queries UnrealIRCd via `atl-irc-server:8600`    |
 
 ### Bind address behaviour
 
 The `ATL_CHAT_IP` variable controls which host IP the IRC stack ports bind to:
 
-| Environment | `ATL_CHAT_IP` | Effect |
-|---|---|---|
-| Development (`.env.dev`) | `127.0.0.1` | Ports only accessible from localhost |
-| Production (`.env`) | `100.64.7.0` | Ports bind to the Tailscale IP, accessible only within the Tailnet |
+| Environment              | `ATL_CHAT_IP` | Effect                                                             |
+| ------------------------ | ------------- | ------------------------------------------------------------------ |
+| Development (`.env.dev`) | `127.0.0.1`   | Ports only accessible from localhost                               |
+| Production (`.env`)      | `100.64.7.0`  | Ports bind to the Tailscale IP, accessible only within the Tailnet |
 
 XMPP, WebPanel, The Lounge, and Dozzle ports do not use `ATL_CHAT_IP` — they bind to `0.0.0.0` by default. In production, firewall rules (see below) restrict access.
-
 
 ## Tailscale overlay
 
@@ -158,13 +157,13 @@ atl.chat uses structured DNS zones for each protocol. All public DNS records poi
 
 ### A/AAAA records
 
-| Hostname | Points To | Purpose |
-|---|---|---|
-| `atl.chat` | Gateway public IP | Main web interface, XMPP domain |
-| `irc.atl.chat` | Gateway public IP | IRC server (TLS, WebSocket, RPC) |
-| `xmpp.atl.chat` | Gateway public IP | XMPP BOSH/WebSocket HTTPS endpoint |
-| `chat.atl.chat` | Gateway public IP | The Lounge web IRC client |
-| `turn.atl.network` | Gateway public IP | TURN/STUN server for XMPP media |
+| Hostname           | Points To         | Purpose                            |
+| ------------------ | ----------------- | ---------------------------------- |
+| `atl.chat`         | Gateway public IP | Main web interface, XMPP domain    |
+| `irc.atl.chat`     | Gateway public IP | IRC server (TLS, WebSocket, RPC)   |
+| `xmpp.atl.chat`    | Gateway public IP | XMPP BOSH/WebSocket HTTPS endpoint |
+| `chat.atl.chat`    | Gateway public IP | The Lounge web IRC client          |
+| `turn.atl.network` | Gateway public IP | TURN/STUN server for XMPP media    |
 
 ### SRV records for XMPP
 
@@ -199,13 +198,13 @@ _ircs._tcp.atl.chat.  3600  IN  SRV  5 0 6697  irc.atl.chat.
 
 XMPP multi-user chat (MUC) and bridge components use subdomains of the XMPP domain. These do not need separate DNS records — Prosody handles them internally — but they must be resolvable if federation is enabled:
 
-| Subdomain | Purpose |
-|---|---|
-| `muc.atl.chat` | MUC (multi-user chat) rooms |
-| `bridge.atl.chat` | Bridge XMPP component JID |
+| Subdomain         | Purpose                                |
+| ----------------- | -------------------------------------- |
+| `muc.atl.chat`    | MUC (multi-user chat) rooms            |
+| `bridge.atl.chat` | Bridge XMPP component JID              |
 | `upload.atl.chat` | HTTP file upload (mod_http_file_share) |
-| `pubsub.atl.chat` | PubSub service |
-| `proxy.atl.chat` | Proxy65 file transfer |
+| `pubsub.atl.chat` | PubSub service                         |
+| `proxy.atl.chat`  | Proxy65 file transfer                  |
 
 ## Firewall rules
 
@@ -213,17 +212,17 @@ XMPP multi-user chat (MUC) and bridge components use subdomains of the XMPP doma
 
 The gateway is the only node with a public IP. Open these ports to the internet:
 
-| Port | Protocol | Service |
-|---|---|---|
-| 80 | TCP | HTTP (Let's Encrypt challenges, redirect to HTTPS) |
-| 443 | TCP | HTTPS (Nginx Proxy Manager → web, BOSH, WebSocket) |
-| 6697 | TCP | IRC TLS (stream pass-through to `atl.chat`) |
-| 5222 | TCP | XMPP C2S STARTTLS (stream pass-through) |
-| 5223 | TCP | XMPP C2S Direct TLS (stream pass-through) |
-| 5269 | TCP | XMPP S2S STARTTLS (stream pass-through) |
-| 5270 | TCP | XMPP S2S Direct TLS (stream pass-through) |
-| 3478 | UDP | TURN (media relay) |
-| 5349 | TCP | TURNS (TLS media relay) |
+| Port | Protocol | Service                                            |
+| ---- | -------- | -------------------------------------------------- |
+| 80   | TCP      | HTTP (Let's Encrypt challenges, redirect to HTTPS) |
+| 443  | TCP      | HTTPS (Nginx Proxy Manager → web, BOSH, WebSocket) |
+| 6697 | TCP      | IRC TLS (stream pass-through to `atl.chat`)        |
+| 5222 | TCP      | XMPP C2S STARTTLS (stream pass-through)            |
+| 5223 | TCP      | XMPP C2S Direct TLS (stream pass-through)          |
+| 5269 | TCP      | XMPP S2S STARTTLS (stream pass-through)            |
+| 5270 | TCP      | XMPP S2S Direct TLS (stream pass-through)          |
+| 3478 | UDP      | TURN (media relay)                                 |
+| 5349 | TCP      | TURNS (TLS media relay)                            |
 
 Example `ufw` rules:
 

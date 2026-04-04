@@ -1,10 +1,4 @@
 {
-    "title": "Reference",
-    "pages": [
-        "environment-variables",
-        "ports",
-        "api",
-        "glossary",
-        "faq"
-    ]
+  "title": "Reference",
+  "pages": ["environment-variables", "ports", "api", "glossary", "faq"]
 }

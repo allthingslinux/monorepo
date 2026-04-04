@@ -9,14 +9,14 @@ This page lists every port used by atl.chat services, verified against the curre
 
 Defined in `infra/compose/irc.yaml`.
 
-| Port | Env Variable | Service | Protocol | Bind address | Description |
-|---|---|---|---|---|---|
-| `6697` | `IRC_TLS_PORT` | UnrealIRCd | TCP | `ATL_CHAT_IP` | IRC over TLS — primary client connection |
-| `8000` | `IRC_WEBSOCKET_PORT` | UnrealIRCd | TCP | `ATL_CHAT_IP` | IRC WebSocket for web clients |
-| `8600` | `IRC_RPC_PORT` | UnrealIRCd | TCP | `ATL_CHAT_IP` | JSON-RPC API (used by WebPanel and tooling) |
-| `6900` | `IRC_SERVER_PORT` | UnrealIRCd | TCP | `ATL_CHAT_IP` | Server-to-server links |
-| `8081` | `ATHEME_HTTPD_PORT` | Atheme | TCP | `ATL_CHAT_IP` | Atheme HTTP API (Atheme shares the IRC server's network namespace) |
-| `8080` | `WEBPANEL_PORT` | WebPanel | TCP | `0.0.0.0` | UnrealIRCd admin web panel |
+| Port   | Env Variable         | Service    | Protocol | Bind address  | Description                                                        |
+| ------ | -------------------- | ---------- | -------- | ------------- | ------------------------------------------------------------------ |
+| `6697` | `IRC_TLS_PORT`       | UnrealIRCd | TCP      | `ATL_CHAT_IP` | IRC over TLS — primary client connection                           |
+| `8000` | `IRC_WEBSOCKET_PORT` | UnrealIRCd | TCP      | `ATL_CHAT_IP` | IRC WebSocket for web clients                                      |
+| `8600` | `IRC_RPC_PORT`       | UnrealIRCd | TCP      | `ATL_CHAT_IP` | JSON-RPC API (used by WebPanel and tooling)                        |
+| `6900` | `IRC_SERVER_PORT`    | UnrealIRCd | TCP      | `ATL_CHAT_IP` | Server-to-server links                                             |
+| `8081` | `ATHEME_HTTPD_PORT`  | Atheme     | TCP      | `ATL_CHAT_IP` | Atheme HTTP API (Atheme shares the IRC server's network namespace) |
+| `8080` | `WEBPANEL_PORT`      | WebPanel   | TCP      | `0.0.0.0`     | UnrealIRCd admin web panel                                         |
 
 The five UnrealIRCd and Atheme ports bind to `ATL_CHAT_IP` (default `127.0.0.1`). The WebPanel port binds to all interfaces (`0.0.0.0`) and does not use `ATL_CHAT_IP`.
 
@@ -26,22 +26,22 @@ Atheme uses `network_mode: service:atl-irc-server`, so it shares the IRC server'
 
 Defined in `infra/compose/xmpp.yaml`.
 
-| Port | Env Variable | Service | Protocol | Description |
-|---|---|---|---|---|
-| `5222` | `PROSODY_C2S_PORT` | Prosody | TCP | XMPP client-to-server (STARTTLS) |
-| `5223` | `PROSODY_C2S_DIRECT_TLS_PORT` | Prosody | TCP | XMPP client-to-server (Direct TLS) |
-| `5269` | `PROSODY_S2S_PORT` | Prosody | TCP | XMPP server-to-server federation |
-| `5270` | `PROSODY_S2S_DIRECT_TLS_PORT` | Prosody | TCP | XMPP server-to-server (Direct TLS) |
-| `5280` | `PROSODY_HTTP_PORT` | Prosody | TCP | HTTP — BOSH and WebSocket endpoints |
-| `5000` | `PROSODY_PROXY65_PORT` | Prosody | TCP | SOCKS5 bytestream proxy for file transfers |
-| `5281` | `PROSODY_HTTPS_PORT` | Nginx (XMPP) | TCP | HTTPS reverse proxy for Prosody |
-| `443` | _(see note)_ | Nginx (XMPP) | TCP | `127.0.0.1:443` only — same vhost/certs as `5281`; clients that use `https://<XMPP_DOMAIN>/…` with no port (e.g. Fluux discovery, `wss://<domain>/ws`) hit this |
+| Port   | Env Variable                  | Service      | Protocol | Description                                                                                                                                                     |
+| ------ | ----------------------------- | ------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `5222` | `PROSODY_C2S_PORT`            | Prosody      | TCP      | XMPP client-to-server (STARTTLS)                                                                                                                                |
+| `5223` | `PROSODY_C2S_DIRECT_TLS_PORT` | Prosody      | TCP      | XMPP client-to-server (Direct TLS)                                                                                                                              |
+| `5269` | `PROSODY_S2S_PORT`            | Prosody      | TCP      | XMPP server-to-server federation                                                                                                                                |
+| `5270` | `PROSODY_S2S_DIRECT_TLS_PORT` | Prosody      | TCP      | XMPP server-to-server (Direct TLS)                                                                                                                              |
+| `5280` | `PROSODY_HTTP_PORT`           | Prosody      | TCP      | HTTP — BOSH and WebSocket endpoints                                                                                                                             |
+| `5000` | `PROSODY_PROXY65_PORT`        | Prosody      | TCP      | SOCKS5 bytestream proxy for file transfers                                                                                                                      |
+| `5281` | `PROSODY_HTTPS_PORT`          | Nginx (XMPP) | TCP      | HTTPS reverse proxy for Prosody                                                                                                                                 |
+| `443`  | _(see note)_                  | Nginx (XMPP) | TCP      | `127.0.0.1:443` only — same vhost/certs as `5281`; clients that use `https://<XMPP_DOMAIN>/…` with no port (e.g. Fluux discovery, `wss://<domain>/ws`) hit this |
 
 ## Web clients
 
-| Port | Env Variable | Service | Compose File | Description |
-|---|---|---|---|---|
-| `9000` | `THELOUNGE_PORT` | The Lounge | `infra/compose/thelounge.yaml` | Web IRC client (private mode, requires user account) |
+| Port   | Env Variable       | Service     | Compose File                     | Description                                              |
+| ------ | ------------------ | ----------- | -------------------------------- | -------------------------------------------------------- |
+| `9000` | `THELOUNGE_PORT`   | The Lounge  | `infra/compose/thelounge.yaml`   | Web IRC client (private mode, requires user account)     |
 | `8090` | `OBSIDIANIRC_PORT` | ObsidianIRC | `infra/compose/obsidianirc.yaml` | Modern web IRC client (custom build, single-server mode) |
 
 ## Bridge
@@ -52,26 +52,26 @@ Defined in `infra/compose/bridge.yaml`. The bridge service does not expose any h
 
 Available when running `just dev` (activates the `dev` Docker Compose profile).
 
-| Port | Env Variable | Service | Description |
-|---|---|---|---|
-| `8082` | `DOZZLE_PORT` | Dozzle | Docker log viewer (container port `8080` mapped to host `8082`) |
+| Port   | Env Variable  | Service | Description                                                     |
+| ------ | ------------- | ------- | --------------------------------------------------------------- |
+| `8082` | `DOZZLE_PORT` | Dozzle  | Docker log viewer (container port `8080` mapped to host `8082`) |
 
 ## TURN/STUN (standalone)
 
 Deployed separately via `infra/turn-standalone/compose.yaml` using host networking. Not part of the main `compose.yaml` stack.
 
-| Port | Protocol | Service | Description |
-|---|---|---|---|
-| `3478` | TCP/UDP | Coturn | STUN/TURN relay |
-| `5349` | TCP | Coturn | TURNS (TLS) |
-| `49152–49202` | UDP | Coturn | Media relay port range |
+| Port          | Protocol | Service | Description            |
+| ------------- | -------- | ------- | ---------------------- |
+| `3478`        | TCP/UDP  | Coturn  | STUN/TURN relay        |
+| `5349`        | TCP      | Coturn  | TURNS (TLS)            |
+| `49152–49202` | UDP      | Coturn  | Media relay port range |
 
 ## Services not in Docker Compose
 
 These services run outside the Docker stack during development:
 
-| Port | Service | Description |
-|---|---|---|
+| Port   | Service         | Description                                |
+| ------ | --------------- | ------------------------------------------ |
 | `3000` | Next.js web app | Run locally with `pnpm dev` in `apps/web/` |
 
 ## Customising ports
@@ -86,7 +86,6 @@ IRC_TLS_PORT=6698
 The IRC stack ports also respect `ATL_CHAT_IP` (default `127.0.0.1`), which controls the bind address. Set it to `0.0.0.0` to listen on all interfaces in production.
 
 See the [environment variables reference](/docs/reference/environment-variables) for the full list.
-
 
 ## Related pages
 

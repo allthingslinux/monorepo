@@ -5,12 +5,12 @@ description: Host websites, Gemini capsules, Gopher holes, and CGI scripts on at
 
 atl.sh supports four publishing protocols. All content lives in subdirectories of your home folder and goes live automatically — no deployment step needed.
 
-| Protocol | Directory | Public address |
-|----------|-----------|----------------|
-| HTTPS | `~/public_html/` | `https://atl.sh/~your-username` |
-| Gemini | `~/public_gemini/` | `gemini://atl.sh/~your-username` |
-| Gopher | `~/public_gopher/` | `gopher://atl.sh/~your-username` |
-| FTP/S | `~/` (home root) | `ftp://atl.sh` (port 21) |
+| Protocol | Directory          | Public address                   |
+| -------- | ------------------ | -------------------------------- |
+| HTTPS    | `~/public_html/`   | `https://atl.sh/~your-username`  |
+| Gemini   | `~/public_gemini/` | `gemini://atl.sh/~your-username` |
+| Gopher   | `~/public_gopher/` | `gopher://atl.sh/~your-username` |
+| FTP/S    | `~/` (home root)   | `ftp://atl.sh` (port 21)         |
 
 ## Web (HTTPS)
 
@@ -52,7 +52,7 @@ Your capsule is served by [Molly Brown](https://tildegit.org/solderpunk/molly-br
 
 Gemtext is a simple line-oriented format. Each line has a type determined by its prefix:
 
-```
+````
 # Heading 1
 ## Heading 2
 ### Heading 3
@@ -68,7 +68,7 @@ Plain paragraph text. No inline formatting.
 > Blockquote text
 
 ``` (code block, fenced with backticks)
-```
+````
 
 ### Directory listing
 
@@ -110,16 +110,16 @@ hLink to a website	URL:https://example.com	atl.sh	70
 
 Item type codes:
 
-| Type | Meaning |
-|------|---------|
-| `i` | Informational text (no link) |
-| `0` | Text file |
-| `1` | Directory/submenu |
-| `7` | Search |
-| `h` | HTML (external URL) |
-| `9` | Binary file |
-| `g` | GIF image |
-| `I` | Image |
+| Type | Meaning                      |
+| ---- | ---------------------------- |
+| `i`  | Informational text (no link) |
+| `0`  | Text file                    |
+| `1`  | Directory/submenu            |
+| `7`  | Search                       |
+| `h`  | HTML (external URL)          |
+| `9`  | Binary file                  |
+| `g`  | GIF image                    |
+| `I`  | Image                        |
 
 ### Clients
 
@@ -132,14 +132,14 @@ You can upload files to your home directory using FTP with Explicit TLS (FTPS). 
 
 **Connection details:**
 
-| Setting | Value |
-|---------|-------|
-| Host | `atl.sh` |
-| Port | `21` |
-| Encryption | Explicit FTP over TLS (FTPS) |
-| Username | your shell username |
-| Password | your shell password |
-| Passive ports | 40000–40100 |
+| Setting       | Value                        |
+| ------------- | ---------------------------- |
+| Host          | `atl.sh`                     |
+| Port          | `21`                         |
+| Encryption    | Explicit FTP over TLS (FTPS) |
+| Username      | your shell username          |
+| Password      | your shell password          |
+| Passive ports | 40000–40100                  |
 
 Your home directory is the FTP root — you land in `~/` on connect.
 

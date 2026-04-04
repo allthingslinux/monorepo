@@ -17,12 +17,12 @@ The event bus decouples adapters from each other: a message arriving on Discord 
 
 ## Technology
 
-| Component | Library |
-|---|---|
-| Discord adapter | `discord.py` |
-| IRC adapter | `pydle` |
-| XMPP adapter | `slixmpp` |
-| Entry point | `apps/bridge/src/bridge/__main__.py` |
+| Component       | Library                              |
+| --------------- | ------------------------------------ |
+| Discord adapter | `discord.py`                         |
+| IRC adapter     | `pydle`                              |
+| XMPP adapter    | `slixmpp`                            |
+| Entry point     | `apps/bridge/src/bridge/__main__.py` |
 
 ## Configuration schema
 
@@ -48,57 +48,57 @@ Validation runs on load and on SIGHUP reload — every mapping must be a dict wi
 
 ### Relay toggles
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `announce_joins_and_quits` | bool | `true` | Relay join/part/quit events to other protocols |
-| `announce_extras` | bool | `false` | Relay topic and mode changes |
-| `content_filter_regex` | list | `[]` | Messages matching any regex pattern are not bridged |
+| Key                        | Type | Default | Description                                         |
+| -------------------------- | ---- | ------- | --------------------------------------------------- |
+| `announce_joins_and_quits` | bool | `true`  | Relay join/part/quit events to other protocols      |
+| `announce_extras`          | bool | `false` | Relay topic and mode changes                        |
+| `content_filter_regex`     | list | `[]`    | Messages matching any regex pattern are not bridged |
 
 ### Identity and caching
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `identity_cache_ttl_seconds` | int | `3600` | TTL for Portal identity cache |
-| `avatar_cache_ttl_seconds` | int | `86400` | TTL for avatar URL cache |
-| `xmpp_avatar_base_url` | string | — | Base URL for XMPP avatar HEAD checks (use internal Docker hostname) |
+| Key                          | Type   | Default | Description                                                         |
+| ---------------------------- | ------ | ------- | ------------------------------------------------------------------- |
+| `identity_cache_ttl_seconds` | int    | `3600`  | TTL for Portal identity cache                                       |
+| `avatar_cache_ttl_seconds`   | int    | `86400` | TTL for avatar URL cache                                            |
+| `xmpp_avatar_base_url`       | string | —       | Base URL for XMPP avatar HEAD checks (use internal Docker hostname) |
 
 ### IRC adapter settings
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `irc_puppet_idle_timeout_hours` | int | `24` | Disconnect idle puppet connections after this many hours |
-| `irc_puppet_ping_interval` | int | `120` | Keep-alive PING interval in seconds |
-| `irc_puppet_prejoin_commands` | list | `[]` | Commands sent after puppet connects (supports `{nick}` placeholder) |
-| `irc_puppet_postfix` | string | `""` | Suffix appended to puppet nicknames |
-| `irc_throttle_limit` | int | `10` | IRC messages per second (token bucket) |
-| `irc_message_queue` | int | `30` | Maximum IRC outbound queue size |
-| `irc_rejoin_delay` | float | `5` | Seconds before rejoin after KICK or disconnect |
-| `irc_auto_rejoin` | bool | `true` | Auto-rejoin channels after KICK or disconnect |
+| Key                             | Type   | Default | Description                                                         |
+| ------------------------------- | ------ | ------- | ------------------------------------------------------------------- |
+| `irc_puppet_idle_timeout_hours` | int    | `24`    | Disconnect idle puppet connections after this many hours            |
+| `irc_puppet_ping_interval`      | int    | `120`   | Keep-alive PING interval in seconds                                 |
+| `irc_puppet_prejoin_commands`   | list   | `[]`    | Commands sent after puppet connects (supports `{nick}` placeholder) |
+| `irc_puppet_postfix`            | string | `""`    | Suffix appended to puppet nicknames                                 |
+| `irc_throttle_limit`            | int    | `10`    | IRC messages per second (token bucket)                              |
+| `irc_message_queue`             | int    | `30`    | Maximum IRC outbound queue size                                     |
+| `irc_rejoin_delay`              | float  | `5`     | Seconds before rejoin after KICK or disconnect                      |
+| `irc_auto_rejoin`               | bool   | `true`  | Auto-rejoin channels after KICK or disconnect                       |
 
 ### IRC TLS and authentication
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `irc_tls_verify` | bool | `true` | Verify IRC TLS certificates. Overridden by `BRIDGE_IRC_TLS_VERIFY` env var |
-| `irc_use_sasl` | bool | `false` | Use SASL PLAIN for IRC authentication |
-| `irc_sasl_user` | string | `""` | SASL username |
-| `irc_sasl_password` | string | `""` | SASL password |
+| Key                 | Type   | Default | Description                                                                |
+| ------------------- | ------ | ------- | -------------------------------------------------------------------------- |
+| `irc_tls_verify`    | bool   | `true`  | Verify IRC TLS certificates. Overridden by `BRIDGE_IRC_TLS_VERIFY` env var |
+| `irc_use_sasl`      | bool   | `false` | Use SASL PLAIN for IRC authentication                                      |
+| `irc_sasl_user`     | string | `""`    | SASL username                                                              |
+| `irc_sasl_password` | string | `""`    | SASL password                                                              |
 
 ### IRC protocol features
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `irc_relaymsg_clean_nicks` | bool | `false` | Use `/d` suffix for RELAYMSG. Enable only if UnrealIRCd has `allow-clean-nicks yes` |
-| `irc_redact_enabled` | bool | `false` | Send REDACT when a Discord message is deleted. Disabled by default due to a known UnrealIRCd `third/redact` crash (exit 139) |
+| Key                        | Type | Default | Description                                                                                                                  |
+| -------------------------- | ---- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `irc_relaymsg_clean_nicks` | bool | `false` | Use `/d` suffix for RELAYMSG. Enable only if UnrealIRCd has `allow-clean-nicks yes`                                          |
+| `irc_redact_enabled`       | bool | `false` | Send REDACT when a Discord message is deleted. Disabled by default due to a known UnrealIRCd `third/redact` crash (exit 139) |
 
 ### Environment variable overrides
 
 Several config keys can be overridden at runtime via environment variables without editing `config.yaml`:
 
-| Environment variable | Overrides | Notes |
-|---|---|---|
-| `BRIDGE_IRC_TLS_VERIFY` | `irc_tls_verify` | `true`/`false` |
-| `BRIDGE_IRC_REDACT_ENABLED` | `irc_redact_enabled` | `true`/`false` |
+| Environment variable          | Overrides                  | Notes          |
+| ----------------------------- | -------------------------- | -------------- |
+| `BRIDGE_IRC_TLS_VERIFY`       | `irc_tls_verify`           | `true`/`false` |
+| `BRIDGE_IRC_REDACT_ENABLED`   | `irc_redact_enabled`       | `true`/`false` |
 | `BRIDGE_RELAYMSG_CLEAN_NICKS` | `irc_relaymsg_clean_nicks` | `true`/`false` |
 
 ### Config reload

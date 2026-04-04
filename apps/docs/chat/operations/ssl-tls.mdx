@@ -26,12 +26,12 @@ The `cert-manager` service is defined in `infra/compose/cert-manager.yaml` and r
 
 The service requires two environment variables in your `.env` file:
 
-| Variable | Description | Required |
-|---|---|---|
-| `CLOUDFLARE_DNS_API_TOKEN` | Cloudflare API token with DNS edit permissions for your zone | Yes (production) |
-| `LETSENCRYPT_EMAIL` | Email for Let's Encrypt account registration and expiry notices | Yes |
-| `IRC_ROOT_DOMAIN` | Root domain for certificates (default: `atl.chat`) | No |
-| `SSL_DOMAIN` | Alternative domain override (fallback if `IRC_ROOT_DOMAIN` is unset) | No |
+| Variable                   | Description                                                          | Required         |
+| -------------------------- | -------------------------------------------------------------------- | ---------------- |
+| `CLOUDFLARE_DNS_API_TOKEN` | Cloudflare API token with DNS edit permissions for your zone         | Yes (production) |
+| `LETSENCRYPT_EMAIL`        | Email for Let's Encrypt account registration and expiry notices      | Yes              |
+| `IRC_ROOT_DOMAIN`          | Root domain for certificates (default: `atl.chat`)                   | No               |
+| `SSL_DOMAIN`               | Alternative domain override (fallback if `IRC_ROOT_DOMAIN` is unset) | No               |
 
 If `CLOUDFLARE_DNS_API_TOKEN` is not set, the cert-manager logs a warning and sleeps indefinitely — this is normal in development where self-signed certificates are used instead.
 
@@ -79,22 +79,22 @@ data/certs/
 
 ### Per-service mount points
 
-| Service | Container mount | Certificate path inside container |
-|---|---|---|
-| UnrealIRCd | `data/certs` → `/home/unrealircd/unrealircd/certs` | `/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/fullchain.pem` |
-| Prosody | `data/certs` → `/etc/prosody/certs` | `/etc/prosody/certs/live/${XMPP_DOMAIN}/fullchain.pem` |
-| Nginx (XMPP HTTPS) | `data/certs` → `/etc/nginx/certs` (read-only) | `/etc/nginx/certs/live/${XMPP_DOMAIN}/fullchain.pem` |
+| Service            | Container mount                                    | Certificate path inside container                                    |
+| ------------------ | -------------------------------------------------- | -------------------------------------------------------------------- |
+| UnrealIRCd         | `data/certs` → `/home/unrealircd/unrealircd/certs` | `/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/fullchain.pem` |
+| Prosody            | `data/certs` → `/etc/prosody/certs`                | `/etc/prosody/certs/live/${XMPP_DOMAIN}/fullchain.pem`               |
+| Nginx (XMPP HTTPS) | `data/certs` → `/etc/nginx/certs` (read-only)      | `/etc/nginx/certs/live/${XMPP_DOMAIN}/fullchain.pem`                 |
 
 ### Environment variable overrides
 
 You can override the default certificate paths using environment variables:
 
-| Variable | Default | Service |
-|---|---|---|
+| Variable            | Default                                                              | Service    |
+| ------------------- | -------------------------------------------------------------------- | ---------- |
 | `IRC_SSL_CERT_PATH` | `/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/fullchain.pem` | UnrealIRCd |
-| `IRC_SSL_KEY_PATH` | `/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/privkey.pem` | UnrealIRCd |
-| `PROSODY_SSL_CERT` | `certs/live/${XMPP_DOMAIN}/fullchain.pem` | Prosody |
-| `PROSODY_SSL_KEY` | `certs/live/${XMPP_DOMAIN}/privkey.pem` | Prosody |
+| `IRC_SSL_KEY_PATH`  | `/home/unrealircd/unrealircd/certs/live/${IRC_DOMAIN}/privkey.pem`   | UnrealIRCd |
+| `PROSODY_SSL_CERT`  | `certs/live/${XMPP_DOMAIN}/fullchain.pem`                            | Prosody    |
+| `PROSODY_SSL_KEY`   | `certs/live/${XMPP_DOMAIN}/privkey.pem`                              | Prosody    |
 
 ## TLS configuration
 

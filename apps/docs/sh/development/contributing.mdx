@@ -34,13 +34,13 @@ atl.sh is open source at [github.com/allthingslinux/monorepo/tree/main/infra/sh]
 
 Use conventional commit prefixes:
 
-| Prefix | Use for |
-|--------|---------|
-| `fix(role):` | Bug fixes — `fix(gemini): use EC key with SAN` |
-| `feat(role):` | New features — `feat: add smoke-test playbook` |
-| `docs:` | Documentation only — `docs: add troubleshooting page` |
-| `refactor(role):` | Code restructuring without behavior change |
-| `chore:` | Maintenance — dependency updates, CI changes |
+| Prefix            | Use for                                               |
+| ----------------- | ----------------------------------------------------- |
+| `fix(role):`      | Bug fixes — `fix(gemini): use EC key with SAN`        |
+| `feat(role):`     | New features — `feat: add smoke-test playbook`        |
+| `docs:`           | Documentation only — `docs: add troubleshooting page` |
+| `refactor(role):` | Code restructuring without behavior change            |
+| `chore:`          | Maintenance — dependency updates, CI changes          |
 
 Commit each file individually with a descriptive message. This makes `git log` useful and reverts clean.
 
@@ -83,6 +83,7 @@ just syntax-check  # playbook syntax only
 ```
 
 The pre-commit config checks:
+
 - Trailing whitespace
 - End-of-file newlines
 - YAML syntax

@@ -32,12 +32,12 @@ The Lounge uses a small set of environment variables. Some are defined in `.env.
 
 ### Variables from `.env.example`
 
-| Variable | Description | Default |
-|---|---|---|
-| `THELOUNGE_PORT` | Host port mapped to The Lounge's web interface (container always listens on 9000) | `9000` |
-| `THELOUNGE_WEBIRC_PASSWORD` | Shared secret for the WebIRC handshake between The Lounge and UnrealIRCd | `change_me_thelounge_webirc` |
-| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Minutes before the janitor plugin deletes uploaded files (`0` disables cleanup) | `1440` (24 hours) |
-| `IRC_NETWORK_NAME` | Network name shown in The Lounge's server list | `"All Things Linux IRC"` |
+| Variable                                 | Description                                                                       | Default                      |
+| ---------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------- |
+| `THELOUNGE_PORT`                         | Host port mapped to The Lounge's web interface (container always listens on 9000) | `9000`                       |
+| `THELOUNGE_WEBIRC_PASSWORD`              | Shared secret for the WebIRC handshake between The Lounge and UnrealIRCd          | `change_me_thelounge_webirc` |
+| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Minutes before the janitor plugin deletes uploaded files (`0` disables cleanup)   | `1440` (24 hours)            |
+| `IRC_NETWORK_NAME`                       | Network name shown in The Lounge's server list                                    | `"All Things Linux IRC"`     |
 
 > **Warning:** `THELOUNGE_WEBIRC_PASSWORD` must match the WebIRC password configured in UnrealIRCd. Change this from the default before any public deployment. If the passwords do not match, UnrealIRCd will reject The Lounge's connections and users will see a "WebIRC authentication failed" error.
 
@@ -45,8 +45,8 @@ The Lounge uses a small set of environment variables. Some are defined in `.env.
 
 These variables are not in `.env.example` — they are computed by `prepare-config.sh`:
 
-| Variable | Description | Logic |
-|---|---|---|
+| Variable                         | Description                                                             | Logic                                          |
+| -------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------- |
 | `IRC_LOUNGE_REJECT_UNAUTHORIZED` | Whether The Lounge rejects self-signed TLS certificates from UnrealIRCd | Explicit via `.env` / `.env.dev` / `.env.prod` |
 
 In development, self-signed certificates are used for the IRC server, so TLS verification is disabled. In production, this defaults to `true` so that The Lounge only connects to UnrealIRCd if the TLS certificate is valid.
@@ -59,8 +59,8 @@ The config template (`apps/thelounge/config.js.template`) produces a Node.js mod
 
 ```js
 module.exports = {
-  public: false,       // Private mode — admin must create user accounts
-  reverseProxy: true,  // Trust X-Forwarded-For headers for real client IPs
+  public: false, // Private mode — admin must create user accounts
+  reverseProxy: true, // Trust X-Forwarded-For headers for real client IPs
   theme: "default",
 };
 ```
@@ -134,8 +134,8 @@ The `2>/dev/null || true` pattern suppresses errors if the plugin is already ins
 
 The janitor plugin automatically deletes uploaded files after a configurable retention period. This keeps disk usage under control without manual intervention.
 
-| Setting | Variable | Default | Notes |
-|---|---|---|---|
+| Setting              | Variable                                 | Default           | Notes                                   |
+| -------------------- | ---------------------------------------- | ----------------- | --------------------------------------- |
 | Delete uploads after | `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | `1440` (24 hours) | Set to `0` to disable automatic cleanup |
 
 The config template maps this to the `deleteUploadsAfter` key:
@@ -150,10 +150,10 @@ deleteUploadsAfter: ${THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES},
 
 The giphy plugin adds a `/giphy` command to The Lounge's chat interface for searching and posting GIFs.
 
-| Command | Description |
-|---|---|
+| Command                | Description                                                   |
+| ---------------------- | ------------------------------------------------------------- |
 | `/giphy search <term>` | Search for a GIF matching the term and post it in the channel |
-| `/giphy random` | Post a random GIF in the channel |
+| `/giphy random`        | Post a random GIF in the channel                              |
 
 The plugin requires no additional configuration — it works out of the box after installation.
 
@@ -203,16 +203,16 @@ docker compose restart atl-thelounge
 
 The compose file (`infra/compose/thelounge.yaml`) defines the container setup:
 
-| Setting | Value |
-|---|---|
-| Image | `ghcr.io/thelounge/thelounge:latest` |
-| Container name | `atl-thelounge` |
-| Restart policy | `unless-stopped` |
-| User/group | `${PUID:-1000}:${PGID:-1000}` |
-| Port mapping | `${THELOUNGE_PORT:-9000}:9000` |
-| Volume | `data/thelounge:/var/opt/thelounge` |
-| Network | `atl-chat` |
-| Depends on | `atl-irc-server` (healthy) |
+| Setting        | Value                                |
+| -------------- | ------------------------------------ |
+| Image          | `ghcr.io/thelounge/thelounge:latest` |
+| Container name | `atl-thelounge`                      |
+| Restart policy | `unless-stopped`                     |
+| User/group     | `${PUID:-1000}:${PGID:-1000}`        |
+| Port mapping   | `${THELOUNGE_PORT:-9000}:9000`       |
+| Volume         | `data/thelounge:/var/opt/thelounge`  |
+| Network        | `atl-chat`                           |
+| Depends on     | `atl-irc-server` (healthy)           |
 
 The `THELOUNGE_HOME` environment variable is set to `/var/opt/thelounge` inside the container, which is where The Lounge looks for its config, user data, and uploads.
 

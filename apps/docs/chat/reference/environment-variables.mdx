@@ -23,17 +23,17 @@ Compose merges `.env` then the overlay. **`apps/docs`** deploy (Alchemy / Worker
 
 ## Core
 
-| Variable | Description | Required | Default (`.env.example`) |
-|---|---|---|---|
-| `PUID` | Container UID for volume ownership | No | `1000` |
-| `PGID` | Container GID for volume ownership | No | `1000` |
-| `TZ` | Timezone | No | `UTC` |
-| `ATL_GATEWAY_IP` | Address used in UnrealIRCd WebIRC `match { ip … }` blocks | Yes | `127.0.0.1` (use Tailscale or gateway IP in prod) |
-| `ATL_CHAT_IP` | Host IP Compose binds IRC/XMPP ports to | Yes | `127.0.0.1` |
-| `LETSENCRYPT_EMAIL` | ACME registration email (cert-manager) | For LE | `admin@allthingslinux.org` |
-| `CLOUDFLARE_DNS_API_TOKEN` | DNS-01 API token (cert-manager) | Prod LE | _(empty)_ |
-| `LOG_MAX_SIZE` | Docker `json-file` max size per log file | No | `50m` |
-| `LOG_MAX_FILES` | Rotated log files to keep per container | No | `5` |
+| Variable                   | Description                                               | Required | Default (`.env.example`)                          |
+| -------------------------- | --------------------------------------------------------- | -------- | ------------------------------------------------- |
+| `PUID`                     | Container UID for volume ownership                        | No       | `1000`                                            |
+| `PGID`                     | Container GID for volume ownership                        | No       | `1000`                                            |
+| `TZ`                       | Timezone                                                  | No       | `UTC`                                             |
+| `ATL_GATEWAY_IP`           | Address used in UnrealIRCd WebIRC `match { ip … }` blocks | Yes      | `127.0.0.1` (use Tailscale or gateway IP in prod) |
+| `ATL_CHAT_IP`              | Host IP Compose binds IRC/XMPP ports to                   | Yes      | `127.0.0.1`                                       |
+| `LETSENCRYPT_EMAIL`        | ACME registration email (cert-manager)                    | For LE   | `admin@allthingslinux.org`                        |
+| `CLOUDFLARE_DNS_API_TOKEN` | DNS-01 API token (cert-manager)                           | Prod LE  | _(empty)_                                         |
+| `LOG_MAX_SIZE`             | Docker `json-file` max size per log file                  | No       | `50m`                                             |
+| `LOG_MAX_FILES`            | Rotated log files to keep per container                   | No       | `5`                                               |
 
 > **Warning:** `CLOUDFLARE_DNS_API_TOKEN` is highly sensitive. In local dev it is often unset; Compose may warn — safe to ignore if you are not issuing certs.
 
@@ -41,75 +41,75 @@ Compose merges `.env` then the overlay. **`apps/docs`** deploy (Alchemy / Worker
 
 These are set in `.env.example` so dev/prod behaviour does not depend on a single `ATL_ENVIRONMENT` variable. `scripts/prepare-config.sh` uses **`BRIDGE_IRC_TLS_VERIFY`** (if set) when exporting **`IRC_TLS_VERIFY`** for UnrealIRCd-related substitution.
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `IRC_TLS_VERIFY` | Verify TLS when connecting to IRC (e.g. bridge → IRC) | `false` |
-| `IRC_LOUNGE_REJECT_UNAUTHORIZED` | Node TLS `rejectUnauthorized` for The Lounge → IRC | `false` |
-| `IRC_WEBSOCKET_USE_TLS` | Enable TLS on UnrealIRCd listener in generated config | `true` |
-| `BRIDGE_IRC_TLS_VERIFY` | Passed to the bridge container; prefer this for bridge-specific TLS | `false` |
+| Variable                         | Description                                                         | Default (`.env.example`) |
+| -------------------------------- | ------------------------------------------------------------------- | ------------------------ |
+| `IRC_TLS_VERIFY`                 | Verify TLS when connecting to IRC (e.g. bridge → IRC)               | `false`                  |
+| `IRC_LOUNGE_REJECT_UNAUTHORIZED` | Node TLS `rejectUnauthorized` for The Lounge → IRC                  | `false`                  |
+| `IRC_WEBSOCKET_USE_TLS`          | Enable TLS on UnrealIRCd listener in generated config               | `true`                   |
+| `BRIDGE_IRC_TLS_VERIFY`          | Passed to the bridge container; prefer this for bridge-specific TLS | `false`                  |
 
 ## IRC Service (UnrealIRCd + Atheme)
 
 ### Build versions
 
-| Variable | Description | Required | Default (`.env.example`) |
-|---|---|---|---|
-| `UNREALIRCD_VERSION` | UnrealIRCd image tag | Yes | `6.2.0.1` |
-| `ATHEME_VERSION` | Atheme image tag | Yes | `master` |
+| Variable             | Description          | Required | Default (`.env.example`) |
+| -------------------- | -------------------- | -------- | ------------------------ |
+| `UNREALIRCD_VERSION` | UnrealIRCd image tag | Yes      | `6.2.0.1`                |
+| `ATHEME_VERSION`     | Atheme image tag     | Yes      | `master`                 |
 
 > **Warning:** `ATHEME_VERSION=master` is non-reproducible. Pin for production.
 
 ### Network identity
 
-| Variable | Description | Required | Default (`.env.example`) |
-|---|---|---|---|
-| `IRC_DOMAIN` | Public IRC hostname (TLS/SNI, cert paths) | Yes | `irc.localhost` (prod: e.g. `irc.atl.chat`) |
-| `IRC_ROOT_DOMAIN` | Network root domain | Yes | `atl.chat` |
-| `IRC_NETWORK_NAME` | Human-readable network name | Yes | `All Things Linux IRC` |
-| `IRC_CLOAK_PREFIX` | Cloak prefix | Yes | `atl` |
+| Variable           | Description                               | Required | Default (`.env.example`)                    |
+| ------------------ | ----------------------------------------- | -------- | ------------------------------------------- |
+| `IRC_DOMAIN`       | Public IRC hostname (TLS/SNI, cert paths) | Yes      | `irc.localhost` (prod: e.g. `irc.atl.chat`) |
+| `IRC_ROOT_DOMAIN`  | Network root domain                       | Yes      | `atl.chat`                                  |
+| `IRC_NETWORK_NAME` | Human-readable network name               | Yes      | `All Things Linux IRC`                      |
+| `IRC_CLOAK_PREFIX` | Cloak prefix                              | Yes      | `atl`                                       |
 
 ### Ports
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_TLS_PORT` | TLS client port | Yes | `6697` |
-| `IRC_SERVER_PORT` | Server link port | Yes | `6900` |
-| `IRC_RPC_PORT` | JSON-RPC port | Yes | `8600` |
-| `IRC_WEBSOCKET_PORT` | WebSocket port | Yes | `8000` |
+| Variable             | Description      | Required | Default |
+| -------------------- | ---------------- | -------- | ------- |
+| `IRC_TLS_PORT`       | TLS client port  | Yes      | `6697`  |
+| `IRC_SERVER_PORT`    | Server link port | Yes      | `6900`  |
+| `IRC_RPC_PORT`       | JSON-RPC port    | Yes      | `8600`  |
+| `IRC_WEBSOCKET_PORT` | WebSocket port   | Yes      | `8000`  |
 
 ### Security secrets
 
-| Variable | Description | Required | Default (`.env.example`) |
-|---|---|---|---|
-| `IRC_CLOAK_KEY_1` … `IRC_CLOAK_KEY_3` | Cloak keys (same on all linked servers) | Yes | `replace_with_cloak_key_*` |
-| `IRC_OPER_PASSWORD` | IRC oper password | Yes | `change_me_irc_oper_password` |
-| `IRC_DRPASS` | UnrealIRCd die/restart password | Yes | `change_me_drpass` |
-| `IRC_SERVICES_PASSWORD` | UnrealIRCd ↔ Atheme link password | Yes | `change_me_irc_services_password` |
-| `ATL_WEBIRC_PASSWORD` | WebIRC shared secret (UnrealIRCd + clients) | Yes | `change_me_webirc_password` |
+| Variable                              | Description                                 | Required | Default (`.env.example`)          |
+| ------------------------------------- | ------------------------------------------- | -------- | --------------------------------- |
+| `IRC_CLOAK_KEY_1` … `IRC_CLOAK_KEY_3` | Cloak keys (same on all linked servers)     | Yes      | `replace_with_cloak_key_*`        |
+| `IRC_OPER_PASSWORD`                   | IRC oper password                           | Yes      | `change_me_irc_oper_password`     |
+| `IRC_DRPASS`                          | UnrealIRCd die/restart password             | Yes      | `change_me_drpass`                |
+| `IRC_SERVICES_PASSWORD`               | UnrealIRCd ↔ Atheme link password           | Yes      | `change_me_irc_services_password` |
+| `ATL_WEBIRC_PASSWORD`                 | WebIRC shared secret (UnrealIRCd + clients) | Yes      | `change_me_webirc_password`       |
 
 > **Warning:** Replace all placeholders before any public deployment. `just irc gencloak` for cloak keys; hashed oper passwords: `docker run --rm ghcr.io/allthingslinux/unrealircd ./unrealircd mkpasswd argon2 <password>`.
 
 ### Admin info
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_ADMIN_NAME` | Shown in `/admin` | Yes | `All Things Linux` |
-| `IRC_ADMIN_EMAIL` | Admin contact | Yes | `admin@allthingslinux.org` |
-| `IRC_STAFF_VHOST` | Staff vhost | No | `allthingslinux.org` |
+| Variable          | Description       | Required | Default                    |
+| ----------------- | ----------------- | -------- | -------------------------- |
+| `IRC_ADMIN_NAME`  | Shown in `/admin` | Yes      | `All Things Linux`         |
+| `IRC_ADMIN_EMAIL` | Admin contact     | Yes      | `admin@allthingslinux.org` |
+| `IRC_STAFF_VHOST` | Staff vhost       | No       | `allthingslinux.org`       |
 
 ### Strict Transport Security (STS)
 
-| Variable | Description | Default |
-|---|---|---|
-| `IRC_STS_DURATION` | STS duration | `1m` |
-| `IRC_STS_PRELOAD` | STS preload | `no` |
+| Variable           | Description  | Default |
+| ------------------ | ------------ | ------- |
+| `IRC_STS_DURATION` | STS duration | `1m`    |
+| `IRC_STS_PRELOAD`  | STS preload  | `no`    |
 
 ### TLS certificate paths (inside UnrealIRCd container)
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `IRC_SSL_CERT_PATH` | Fullchain path | `…/certs/live/irc.localhost/fullchain.pem` |
-| `IRC_SSL_KEY_PATH` | Private key path | `…/certs/live/irc.localhost/privkey.pem` |
+| Variable            | Description      | Default (`.env.example`)                   |
+| ------------------- | ---------------- | ------------------------------------------ |
+| `IRC_SSL_CERT_PATH` | Fullchain path   | `…/certs/live/irc.localhost/fullchain.pem` |
+| `IRC_SSL_KEY_PATH`  | Private key path | `…/certs/live/irc.localhost/privkey.pem`   |
 
 > **Warning:** Never commit private keys.
 
@@ -117,67 +117,67 @@ These are set in `.env.example` so dev/prod behaviour does not depend on a singl
 
 `.env.example` only exposes the variables substituted into `apps/atheme/config/atheme.conf.template`. Service bot nicks/users/hosts are **hardcoded in that template** (or commented for optional modules) — they are not per-bot env vars in the current layout.
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `IRC_SERVICES_SERVER` | UnrealIRCd `link services.*` target hostname | Optional; default in prepare-config is `ATHEME_SERVER_NAME` or `services.${IRC_ROOT_DOMAIN}` |
-| `ATHEME_SERVER_NAME` | Services server name on the network | `services.atl.chat` |
-| `ATHEME_SERVER_DESC` | Server description | `All Things Linux IRC Services` |
-| `ATHEME_UPLINK_HOST` | UnrealIRCd hostname from Atheme container | `127.0.0.1` |
-| `ATHEME_UPLINK_PORT` | UnrealIRCd listen port for services | `6901` |
-| `ATHEME_NUMERIC` | Server numeric | `00A` |
-| `ATHEME_RECONTIME` | Reconnect interval (seconds) | `10` |
-| `ATHEME_HTTPD_PORT` | JSON-RPC HTTP port | `8081` |
-| `ATHEME_NETNAME` | Network name in Atheme | `atl.chat` |
-| `ATHEME_HIDEHOST_SUFFIX` | Hidden-host suffix | `users.atl.chat` |
-| `ATHEME_ADMIN_NAME` | Admin display name | `All Things Linux` |
-| `ATHEME_ADMIN_EMAIL` | Admin email in config | `admin@allthingslinux.org` |
-| `ATHEME_REGISTER_EMAIL` | Registration mail from-address | `noreply@allthingslinux.org` |
-| `ATHEME_SRA_BOOTSTRAP_ACCOUNT` | Nick granted SRA on first DB init | `admin` |
-| `ATHEME_HELP_CHANNEL` | Help channel | `#help` |
-| `ATHEME_HELP_URL` | Help URL | `https://allthingslinux.org` |
+| Variable                       | Description                                  | Default (`.env.example`)                                                                     |
+| ------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `IRC_SERVICES_SERVER`          | UnrealIRCd `link services.*` target hostname | Optional; default in prepare-config is `ATHEME_SERVER_NAME` or `services.${IRC_ROOT_DOMAIN}` |
+| `ATHEME_SERVER_NAME`           | Services server name on the network          | `services.atl.chat`                                                                          |
+| `ATHEME_SERVER_DESC`           | Server description                           | `All Things Linux IRC Services`                                                              |
+| `ATHEME_UPLINK_HOST`           | UnrealIRCd hostname from Atheme container    | `127.0.0.1`                                                                                  |
+| `ATHEME_UPLINK_PORT`           | UnrealIRCd listen port for services          | `6901`                                                                                       |
+| `ATHEME_NUMERIC`               | Server numeric                               | `00A`                                                                                        |
+| `ATHEME_RECONTIME`             | Reconnect interval (seconds)                 | `10`                                                                                         |
+| `ATHEME_HTTPD_PORT`            | JSON-RPC HTTP port                           | `8081`                                                                                       |
+| `ATHEME_NETNAME`               | Network name in Atheme                       | `atl.chat`                                                                                   |
+| `ATHEME_HIDEHOST_SUFFIX`       | Hidden-host suffix                           | `users.atl.chat`                                                                             |
+| `ATHEME_ADMIN_NAME`            | Admin display name                           | `All Things Linux`                                                                           |
+| `ATHEME_ADMIN_EMAIL`           | Admin email in config                        | `admin@allthingslinux.org`                                                                   |
+| `ATHEME_REGISTER_EMAIL`        | Registration mail from-address               | `noreply@allthingslinux.org`                                                                 |
+| `ATHEME_SRA_BOOTSTRAP_ACCOUNT` | Nick granted SRA on first DB init            | `admin`                                                                                      |
+| `ATHEME_HELP_CHANNEL`          | Help channel                                 | `#help`                                                                                      |
+| `ATHEME_HELP_URL`              | Help URL                                     | `https://allthingslinux.org`                                                                 |
 
 ### Atheme service bot identities (template defaults)
 
 The live `apps/atheme/config/atheme.conf.template` hardcodes nicks, users, hosts, and realnames for each service bot (NickServ, ChanServ, etc.). They are **not** exposed as `ATHEME_*` env vars in `.env.example`. If you fork the template, each bot follows the pattern `ATHEME_<SERVICE>_NICK`, `_USER`, `_HOST`, `_REAL`.
 
-| Service | Nick | User | Host | Real name |
-|---|---|---|---|---|
-| NickServ | `NickServ` | `NickServ` | `services.atl.chat` | Nickname Services |
-| ChanServ | `ChanServ` | `ChanServ` | `services.atl.chat` | Channel Services |
-| OperServ | `OperServ` | `OperServ` | `services.atl.chat` | Operator Services |
-| MemoServ | `MemoServ` | `MemoServ` | `services.atl.chat` | Memo Services |
-| SaslServ | `SaslServ` | `SaslServ` | `services.atl.chat` | SASL Authentication Agent |
-| BotServ | `BotServ` | `BotServ` | `services.atl.chat` | Bot Services |
+| Service   | Nick        | User        | Host                | Real name                 |
+| --------- | ----------- | ----------- | ------------------- | ------------------------- |
+| NickServ  | `NickServ`  | `NickServ`  | `services.atl.chat` | Nickname Services         |
+| ChanServ  | `ChanServ`  | `ChanServ`  | `services.atl.chat` | Channel Services          |
+| OperServ  | `OperServ`  | `OperServ`  | `services.atl.chat` | Operator Services         |
+| MemoServ  | `MemoServ`  | `MemoServ`  | `services.atl.chat` | Memo Services             |
+| SaslServ  | `SaslServ`  | `SaslServ`  | `services.atl.chat` | SASL Authentication Agent |
+| BotServ   | `BotServ`   | `BotServ`   | `services.atl.chat` | Bot Services              |
 | GroupServ | `GroupServ` | `GroupServ` | `services.atl.chat` | Group Management Services |
-| HostServ | `HostServ` | `HostServ` | `services.atl.chat` | Host Management Services |
-| InfoServ | `InfoServ` | `InfoServ` | `services.atl.chat` | Information Service |
-| HelpServ | `HelpServ` | `HelpServ` | `services.atl.chat` | Help Services |
-| StatServ | `StatServ` | `StatServ` | `services.atl.chat` | Statistics Services |
-| Global | `Global` | `Global` | `services.atl.chat` | Network Announcements |
-| ALIS | `ALIS` | `alis` | `services.atl.chat` | Channel Directory |
-| Proxyscan | `Proxyscan` | `dnsbl` | `services.atl.chat` | Proxyscan Service |
-| GameServ | `GameServ` | `GameServ` | `services.atl.chat` | Game Services |
-| RPGServ | `RPGServ` | `RPGServ` | `services.atl.chat` | RPG Finding Services |
+| HostServ  | `HostServ`  | `HostServ`  | `services.atl.chat` | Host Management Services  |
+| InfoServ  | `InfoServ`  | `InfoServ`  | `services.atl.chat` | Information Service       |
+| HelpServ  | `HelpServ`  | `HelpServ`  | `services.atl.chat` | Help Services             |
+| StatServ  | `StatServ`  | `StatServ`  | `services.atl.chat` | Statistics Services       |
+| Global    | `Global`    | `Global`    | `services.atl.chat` | Network Announcements     |
+| ALIS      | `ALIS`      | `alis`      | `services.atl.chat` | Channel Directory         |
+| Proxyscan | `Proxyscan` | `dnsbl`     | `services.atl.chat` | Proxyscan Service         |
+| GameServ  | `GameServ`  | `GameServ`  | `services.atl.chat` | Game Services             |
+| RPGServ   | `RPGServ`   | `RPGServ`   | `services.atl.chat` | RPG Finding Services      |
 
 Example: `ATHEME_NICKSERV_NICK=NickServ`, `ATHEME_NICKSERV_USER=NickServ`, `ATHEME_NICKSERV_HOST=services.atl.chat`, `ATHEME_NICKSERV_REAL="Nickname Services"`.
 
 ### WebPanel (UnrealIRCd admin UI)
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `WEBPANEL_PORT` | Host port mapping (`infra/compose/irc.yaml`) | Often `8080` (optional in `.env.example`; uncomment to set) |
-| `WEBPANEL_RPC_USER` | UnrealIRCd JSON-RPC user | `adminpanel` |
-| `WEBPANEL_RPC_PASSWORD` | UnrealIRCd JSON-RPC password | `change_me_webpanel_password` |
+| Variable                | Description                                  | Default (`.env.example`)                                    |
+| ----------------------- | -------------------------------------------- | ----------------------------------------------------------- |
+| `WEBPANEL_PORT`         | Host port mapping (`infra/compose/irc.yaml`) | Often `8080` (optional in `.env.example`; uncomment to set) |
+| `WEBPANEL_RPC_USER`     | UnrealIRCd JSON-RPC user                     | `adminpanel`                                                |
+| `WEBPANEL_RPC_PASSWORD` | UnrealIRCd JSON-RPC password                 | `change_me_webpanel_password`                               |
 
 > **Warning:** RPC credentials are full admin access to UnrealIRCd’s API.
 
 ### The Lounge
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `THELOUNGE_PORT` | Port for The Lounge web IRC client | Yes | `9000` |
-| `THELOUNGE_WEBIRC_PASSWORD` | WebIRC password for The Lounge to authenticate with UnrealIRCd | Yes | `change_me_thelounge_webirc` |
-| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Auto-delete uploaded files after this many minutes | No | `1440` |
+| Variable                                 | Description                                                    | Required | Default                      |
+| ---------------------------------------- | -------------------------------------------------------------- | -------- | ---------------------------- |
+| `THELOUNGE_PORT`                         | Port for The Lounge web IRC client                             | Yes      | `9000`                       |
+| `THELOUNGE_WEBIRC_PASSWORD`              | WebIRC password for The Lounge to authenticate with UnrealIRCd | Yes      | `change_me_thelounge_webirc` |
+| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Auto-delete uploaded files after this many minutes             | No       | `1440`                       |
 
 > **Warning:** `THELOUNGE_WEBIRC_PASSWORD` must match the WebIRC password configured in UnrealIRCd. Change this from the default before production deployment.
 
@@ -185,12 +185,12 @@ Example: `ATHEME_NICKSERV_NICK=NickServ`, `ATHEME_NICKSERV_USER=NickServ`, `ATHE
 
 Commented examples in `.env.example`; enable when using `infra/compose/obsidianirc.yaml`. Values are **build args** — change `.env` then `just obsidianirc rebuild`.
 
-| Variable | Description | Example |
-|---|---|---|
-| `OBSIDIANIRC_PORT` | Published port | `8090` |
-| `OBSIDIANIRC_IRC_WS_URL` | Browser → IRC WebSocket | `wss://irc.localhost/ws` |
-| `OBSIDIANIRC_SERVER_NAME` | Server label in client UI | `irc.localhost` |
-| `OBSIDIANIRC_AUTOJOIN` | Channels to auto-join | `#general` |
+| Variable                  | Description               | Example                  |
+| ------------------------- | ------------------------- | ------------------------ |
+| `OBSIDIANIRC_PORT`        | Published port            | `8090`                   |
+| `OBSIDIANIRC_IRC_WS_URL`  | Browser → IRC WebSocket   | `wss://irc.localhost/ws` |
+| `OBSIDIANIRC_SERVER_NAME` | Server label in client UI | `irc.localhost`          |
+| `OBSIDIANIRC_AUTOJOIN`    | Channels to auto-join     | `#general`               |
 
 ## XMPP Service (Prosody)
 
@@ -198,200 +198,200 @@ Prosody reads optional tuneables from the environment in `apps/prosody/config/pr
 
 ### Domain and admin
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `XMPP_DOMAIN` | Primary VirtualHost / cert identity | `xmpp.localhost` |
-| `PROSODY_DOMAIN` | Often set equal to `XMPP_DOMAIN` for templates | `xmpp.localhost` |
-| `PROSODY_ADMIN_JID` | Admin JID (mod_admin_adhoc, etc.) | `admin@xmpp.localhost` |
-| `PROSODY_ADMIN_EMAIL` | Contact string in config | `admin@allthingslinux.org` |
+| Variable              | Description                                    | Default (`.env.example`)   |
+| --------------------- | ---------------------------------------------- | -------------------------- |
+| `XMPP_DOMAIN`         | Primary VirtualHost / cert identity            | `xmpp.localhost`           |
+| `PROSODY_DOMAIN`      | Often set equal to `XMPP_DOMAIN` for templates | `xmpp.localhost`           |
+| `PROSODY_ADMIN_JID`   | Admin JID (mod_admin_adhoc, etc.)              | `admin@xmpp.localhost`     |
+| `PROSODY_ADMIN_EMAIL` | Contact string in config                       | `admin@allthingslinux.org` |
 
 ### Storage
 
-| Variable | Description |
-|---|---|
-| _(omit)_ | Default in `prosody.cfg.lua`: SQLite file storage (typical dev). |
+| Variable              | Description                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| _(omit)_              | Default in `prosody.cfg.lua`: SQLite file storage (typical dev).                         |
 | `PROSODY_STORAGE=sql` | Use SQL backend; then set PostgreSQL vars below (see commented block in `.env.example`). |
 
 ### Database (only when `PROSODY_STORAGE=sql`)
 
-| Variable | Description | Example |
-|---|---|---|
-| `PROSODY_DB_DRIVER` | SQL driver name | `PostgreSQL` |
-| `PROSODY_DB_HOST` | DB hostname (compose service) | `xmpp-postgres` |
-| `PROSODY_DB_PORT` | DB port | `5432` |
-| `PROSODY_DB_NAME` | Database name | `prosody` |
-| `PROSODY_DB_USER` | DB user | `prosody` |
-| `PROSODY_DB_PASSWORD` | DB password | _(strong secret)_ |
+| Variable              | Description                   | Example           |
+| --------------------- | ----------------------------- | ----------------- |
+| `PROSODY_DB_DRIVER`   | SQL driver name               | `PostgreSQL`      |
+| `PROSODY_DB_HOST`     | DB hostname (compose service) | `xmpp-postgres`   |
+| `PROSODY_DB_PORT`     | DB port                       | `5432`            |
+| `PROSODY_DB_NAME`     | Database name                 | `prosody`         |
+| `PROSODY_DB_USER`     | DB user                       | `prosody`         |
+| `PROSODY_DB_PASSWORD` | DB password                   | _(strong secret)_ |
 
 > **Warning:** Restrict DB network access to Prosody only in production.
 
 ### Ports
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_C2S_PORT` | Client-to-server port | Yes | `5222` |
-| `PROSODY_S2S_PORT` | Server-to-server port | Yes | `5269` |
-| `PROSODY_HTTP_PORT` | HTTP port (BOSH/WebSocket) | Yes | `5280` |
-| `PROSODY_HTTPS_PORT` | HTTPS port (via nginx) | Yes | `5281` |
-| `PROSODY_C2S_DIRECT_TLS_PORT` | Direct TLS client port | No | `5223` |
-| `PROSODY_S2S_DIRECT_TLS_PORT` | Direct TLS server port | No | `5270` |
-| `PROSODY_PROXY65_PORT` | SOCKS5 bytestream proxy port | No | `5000` |
+| Variable                      | Description                  | Required | Default |
+| ----------------------------- | ---------------------------- | -------- | ------- |
+| `PROSODY_C2S_PORT`            | Client-to-server port        | Yes      | `5222`  |
+| `PROSODY_S2S_PORT`            | Server-to-server port        | Yes      | `5269`  |
+| `PROSODY_HTTP_PORT`           | HTTP port (BOSH/WebSocket)   | Yes      | `5280`  |
+| `PROSODY_HTTPS_PORT`          | HTTPS port (via nginx)       | Yes      | `5281`  |
+| `PROSODY_C2S_DIRECT_TLS_PORT` | Direct TLS client port       | No       | `5223`  |
+| `PROSODY_S2S_DIRECT_TLS_PORT` | Direct TLS server port       | No       | `5270`  |
+| `PROSODY_PROXY65_PORT`        | SOCKS5 bytestream proxy port | No       | `5000`  |
 
 ### TURN/STUN
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `TURN_PORT` | TURN server port | No | `3478` |
-| `TURNS_PORT` | TURN over TLS port | No | `5349` |
-| `TURN_SECRET` | Shared secret for TURN authentication | Yes | `change_me_turn_secret` |
-| `TURN_EXTERNAL_HOST` | External hostname for TURN server | Yes | `turn.atl.network` |
+| Variable             | Description                           | Required | Default                 |
+| -------------------- | ------------------------------------- | -------- | ----------------------- |
+| `TURN_PORT`          | TURN server port                      | No       | `3478`                  |
+| `TURNS_PORT`         | TURN over TLS port                    | No       | `5349`                  |
+| `TURN_SECRET`        | Shared secret for TURN authentication | Yes      | `change_me_turn_secret` |
+| `TURN_EXTERNAL_HOST` | External hostname for TURN server     | Yes      | `turn.atl.network`      |
 
 > **Warning:** `TURN_SECRET` is a shared authentication secret. Generate a strong random value for production.
 
 ### Security
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_OAUTH2_REGISTRATION_KEY` | OAuth2 registration key | Yes | `change_me_prosody_oauth2_registration_key` (`.env.example`) |
-| `PROSODY_ALLOW_PLACEHOLDER_KEY` | Allow placeholder OAuth2 key (dev only) | No | `true` in example — set `false` in prod |
-| `PROSODY_ALLOW_REGISTRATION` | Allow public registration | No | `false` (cfg default when unset) |
-| `PROSODY_C2S_REQUIRE_ENCRYPTION` | Require TLS for c2s | No | `true` (relaxed in `.env.dev`) |
-| `PROSODY_S2S_REQUIRE_ENCRYPTION` | Require TLS for s2s | No | `true` |
-| `PROSODY_S2S_SECURE_AUTH` | Verified certs for s2s | No | `true` |
-| `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Plain auth without TLS | No | `false` |
-| `PROSODY_MAX_CONNECTIONS_PER_IP` | Max connections per IP | No | `5` |
-| `PROSODY_REGISTRATION_THROTTLE_MAX` | Registrations per throttle window | No | `3` |
-| `PROSODY_REGISTRATION_THROTTLE_PERIOD` | Throttle window (seconds) | No | `3600` |
-| `PROSODY_BLOCK_REGISTRATIONS_REQUIRE` | Username regex | No | `^[a-zA-Z0-9_.-]+$` |
-| `PROSODY_TLS_CHANNEL_BINDING` | TLS channel binding | No | `true` (unset enables binding; set to `false` to disable) |
+| Variable                               | Description                             | Required | Default                                                      |
+| -------------------------------------- | --------------------------------------- | -------- | ------------------------------------------------------------ |
+| `PROSODY_OAUTH2_REGISTRATION_KEY`      | OAuth2 registration key                 | Yes      | `change_me_prosody_oauth2_registration_key` (`.env.example`) |
+| `PROSODY_ALLOW_PLACEHOLDER_KEY`        | Allow placeholder OAuth2 key (dev only) | No       | `true` in example — set `false` in prod                      |
+| `PROSODY_ALLOW_REGISTRATION`           | Allow public registration               | No       | `false` (cfg default when unset)                             |
+| `PROSODY_C2S_REQUIRE_ENCRYPTION`       | Require TLS for c2s                     | No       | `true` (relaxed in `.env.dev`)                               |
+| `PROSODY_S2S_REQUIRE_ENCRYPTION`       | Require TLS for s2s                     | No       | `true`                                                       |
+| `PROSODY_S2S_SECURE_AUTH`              | Verified certs for s2s                  | No       | `true`                                                       |
+| `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Plain auth without TLS                  | No       | `false`                                                      |
+| `PROSODY_MAX_CONNECTIONS_PER_IP`       | Max connections per IP                  | No       | `5`                                                          |
+| `PROSODY_REGISTRATION_THROTTLE_MAX`    | Registrations per throttle window       | No       | `3`                                                          |
+| `PROSODY_REGISTRATION_THROTTLE_PERIOD` | Throttle window (seconds)               | No       | `3600`                                                       |
+| `PROSODY_BLOCK_REGISTRATIONS_REQUIRE`  | Username regex                          | No       | `^[a-zA-Z0-9_.-]+$`                                          |
+| `PROSODY_TLS_CHANNEL_BINDING`          | TLS channel binding                     | No       | `true` (unset enables binding; set to `false` to disable)    |
 
 > **Warning:** Rotate `PROSODY_OAUTH2_REGISTRATION_KEY` for production; do not ship `PROSODY_ALLOW_PLACEHOLDER_KEY=true` publicly.
 
 ### HTTP, upload URLs, and admin API
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `PROSODY_HTTP_HOST` | HTTP bind / advertised host | `localhost` (cfg) |
-| `PROSODY_HTTP_SCHEME` | `http` or `https` | `http` (cfg) |
-| `PROSODY_HTTP_EXTERNAL_URL` | BOSH/WebSocket base for clients | `http://xmpp.localhost:5280/` |
-| `PROSODY_HTTPS_VIA_PROXY` | Terminate HTTPS at nginx/proxy | `false` |
-| `PROSODY_UPLOAD_EXTERNAL_URL` | Public upload URL | `https://xmpp.localhost:5281/upload/` |
-| `PROSODY_PROXY_ADDRESS` | Proxy hostname in generated URLs | `xmpp.localhost` |
-| `PROSODY_REST_URL` | Base URL for `mod_http_admin_api` | `http://atl-xmpp-server:5280/admin_api` |
-| `PROSODY_REST_TOKEN` | Bearer for admin API (Portal provisioning); `just prosody-token` | _(empty)_ |
+| Variable                      | Description                                                      | Default (`.env.example`)                |
+| ----------------------------- | ---------------------------------------------------------------- | --------------------------------------- |
+| `PROSODY_HTTP_HOST`           | HTTP bind / advertised host                                      | `localhost` (cfg)                       |
+| `PROSODY_HTTP_SCHEME`         | `http` or `https`                                                | `http` (cfg)                            |
+| `PROSODY_HTTP_EXTERNAL_URL`   | BOSH/WebSocket base for clients                                  | `http://xmpp.localhost:5280/`           |
+| `PROSODY_HTTPS_VIA_PROXY`     | Terminate HTTPS at nginx/proxy                                   | `false`                                 |
+| `PROSODY_UPLOAD_EXTERNAL_URL` | Public upload URL                                                | `https://xmpp.localhost:5281/upload/`   |
+| `PROSODY_PROXY_ADDRESS`       | Proxy hostname in generated URLs                                 | `xmpp.localhost`                        |
+| `PROSODY_REST_URL`            | Base URL for `mod_http_admin_api`                                | `http://atl-xmpp-server:5280/admin_api` |
+| `PROSODY_REST_TOKEN`          | Bearer for admin API (Portal provisioning); `just prosody-token` | _(empty)_                               |
 
 Legacy Basic-auth vars (`PROSODY_REST_USERNAME`, `PROSODY_REST_PASSWORD`) are not in current `.env.example`; prefer Bearer token.
 
 ### TLS certificates (paths inside Prosody container)
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `PROSODY_SSL_KEY` | Private key path | `/etc/prosody/certs/live/xmpp.localhost/privkey.pem` |
-| `PROSODY_SSL_CERT` | Full chain path | `/etc/prosody/certs/live/xmpp.localhost/fullchain.pem` |
+| Variable           | Description      | Default (`.env.example`)                               |
+| ------------------ | ---------------- | ------------------------------------------------------ |
+| `PROSODY_SSL_KEY`  | Private key path | `/etc/prosody/certs/live/xmpp.localhost/privkey.pem`   |
+| `PROSODY_SSL_CERT` | Full chain path  | `/etc/prosody/certs/live/xmpp.localhost/fullchain.pem` |
 
 > **Warning:** Never commit private keys.
 
 ### Logging and statistics
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_LOG_LEVEL` | Log verbosity (`debug`, `info`, `warn`, `error`) | No | `info` |
-| `PROSODY_STATISTICS` | Statistics backend (`internal` or `statsd`) | No | `internal` |
-| `PROSODY_STATISTICS_INTERVAL` | Statistics collection interval | No | `manual` |
-| `PROSODY_OPENMETRICS_IP` | IP address for OpenMetrics endpoint | No | `127.0.0.1` |
-| `PROSODY_OPENMETRICS_CIDR` | CIDR range allowed to access OpenMetrics | No | `172.16.0.0/12` |
+| Variable                      | Description                                      | Required | Default         |
+| ----------------------------- | ------------------------------------------------ | -------- | --------------- |
+| `PROSODY_LOG_LEVEL`           | Log verbosity (`debug`, `info`, `warn`, `error`) | No       | `info`          |
+| `PROSODY_STATISTICS`          | Statistics backend (`internal` or `statsd`)      | No       | `internal`      |
+| `PROSODY_STATISTICS_INTERVAL` | Statistics collection interval                   | No       | `manual`        |
+| `PROSODY_OPENMETRICS_IP`      | IP address for OpenMetrics endpoint              | No       | `127.0.0.1`     |
+| `PROSODY_OPENMETRICS_CIDR`    | CIDR range allowed to access OpenMetrics         | No       | `172.16.0.0/12` |
 
 ### Message Archiving (MAM)
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_ARCHIVE_EXPIRES_AFTER` | Archive retention period | No | `1y` |
-| `PROSODY_ARCHIVE_POLICY` | Enable message archiving | No | `true` |
-| `PROSODY_ARCHIVE_COMPRESSION` | Enable archive compression | No | `true` |
-| `PROSODY_ARCHIVE_STORE` | Archive storage backend name | No | `archive` |
-| `PROSODY_ARCHIVE_MAX_QUERY_RESULTS` | Maximum results per MAM query | No | `250` |
-| `PROSODY_MAM_SMART_ENABLE` | Enable smart MAM (archive only when needed) | No | `false` (set env to `true` to enable) |
+| Variable                            | Description                                 | Required | Default                               |
+| ----------------------------------- | ------------------------------------------- | -------- | ------------------------------------- |
+| `PROSODY_ARCHIVE_EXPIRES_AFTER`     | Archive retention period                    | No       | `1y`                                  |
+| `PROSODY_ARCHIVE_POLICY`            | Enable message archiving                    | No       | `true`                                |
+| `PROSODY_ARCHIVE_COMPRESSION`       | Enable archive compression                  | No       | `true`                                |
+| `PROSODY_ARCHIVE_STORE`             | Archive storage backend name                | No       | `archive`                             |
+| `PROSODY_ARCHIVE_MAX_QUERY_RESULTS` | Maximum results per MAM query               | No       | `250`                                 |
+| `PROSODY_MAM_SMART_ENABLE`          | Enable smart MAM (archive only when needed) | No       | `false` (set env to `true` to enable) |
 
 ### MUC (Multi-User Chat)
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_MUC_NOTIFICATIONS` | Enable MUC notifications | No | `true` |
-| `PROSODY_MUC_OFFLINE_DELIVERY` | Deliver messages to offline MUC participants | No | `true` |
-| `PROSODY_BRIDGE_MUC_JID` | Bridge JID for MUC-related ACL defaults in config | No | `bridge.` + primary domain (e.g. `bridge.xmpp.localhost`) |
-| `XMPP_WEBCHAT_URL` | MUC disco#info webchat URL; `{jid}` → room JID. Set when using Fluux / compose that passes it | No | _(optional; see `.env.example` comment)_ |
-| `PROSODY_RESTRICT_ROOM_CREATION` | Restrict who can create rooms | No | `false` |
-| `PROSODY_MUC_DEFAULT_PUBLIC` | New rooms are public by default | No | `true` |
-| `PROSODY_MUC_DEFAULT_PERSISTENT` | New rooms are persistent by default | No | `true` |
-| `PROSODY_MUC_DEFAULT_PUBLIC_JIDS` | Show participant JIDs by default | No | `true` |
-| `PROSODY_MUC_LOCKING` | Lock rooms until configured | No | `false` |
-| `PROSODY_MUC_LOG_BY_DEFAULT` | Log MUC messages by default | No | `true` |
-| `PROSODY_MUC_LOG_EXPIRES_AFTER` | MUC log retention period | No | `1y` |
-| `PROSODY_MUC_LOG_PRESENCES` | Log presence changes in MUC | No | `false` |
-| `PROSODY_MUC_LOG_ALL_ROOMS` | Log all rooms regardless of room setting | No | `false` |
-| `PROSODY_MUC_LOG_CLEANUP_INTERVAL` | Cleanup interval for expired logs (seconds) | No | `86400` |
-| `PROSODY_MUC_MAX_ARCHIVE_QUERY_RESULTS` | Maximum MUC archive query results | No | `100` |
-| `PROSODY_MUC_LOG_STORE` | MUC log storage backend name | No | `muc_log` |
-| `PROSODY_MUC_LOG_COMPRESSION` | Enable MUC log compression | No | `true` |
-| `PROSODY_MUC_MAM_SMART_ENABLE` | Enable smart MAM for MUC | No | `false` |
+| Variable                                | Description                                                                                   | Required | Default                                                   |
+| --------------------------------------- | --------------------------------------------------------------------------------------------- | -------- | --------------------------------------------------------- |
+| `PROSODY_MUC_NOTIFICATIONS`             | Enable MUC notifications                                                                      | No       | `true`                                                    |
+| `PROSODY_MUC_OFFLINE_DELIVERY`          | Deliver messages to offline MUC participants                                                  | No       | `true`                                                    |
+| `PROSODY_BRIDGE_MUC_JID`                | Bridge JID for MUC-related ACL defaults in config                                             | No       | `bridge.` + primary domain (e.g. `bridge.xmpp.localhost`) |
+| `XMPP_WEBCHAT_URL`                      | MUC disco#info webchat URL; `{jid}` → room JID. Set when using Fluux / compose that passes it | No       | _(optional; see `.env.example` comment)_                  |
+| `PROSODY_RESTRICT_ROOM_CREATION`        | Restrict who can create rooms                                                                 | No       | `false`                                                   |
+| `PROSODY_MUC_DEFAULT_PUBLIC`            | New rooms are public by default                                                               | No       | `true`                                                    |
+| `PROSODY_MUC_DEFAULT_PERSISTENT`        | New rooms are persistent by default                                                           | No       | `true`                                                    |
+| `PROSODY_MUC_DEFAULT_PUBLIC_JIDS`       | Show participant JIDs by default                                                              | No       | `true`                                                    |
+| `PROSODY_MUC_LOCKING`                   | Lock rooms until configured                                                                   | No       | `false`                                                   |
+| `PROSODY_MUC_LOG_BY_DEFAULT`            | Log MUC messages by default                                                                   | No       | `true`                                                    |
+| `PROSODY_MUC_LOG_EXPIRES_AFTER`         | MUC log retention period                                                                      | No       | `1y`                                                      |
+| `PROSODY_MUC_LOG_PRESENCES`             | Log presence changes in MUC                                                                   | No       | `false`                                                   |
+| `PROSODY_MUC_LOG_ALL_ROOMS`             | Log all rooms regardless of room setting                                                      | No       | `false`                                                   |
+| `PROSODY_MUC_LOG_CLEANUP_INTERVAL`      | Cleanup interval for expired logs (seconds)                                                   | No       | `86400`                                                   |
+| `PROSODY_MUC_MAX_ARCHIVE_QUERY_RESULTS` | Maximum MUC archive query results                                                             | No       | `100`                                                     |
+| `PROSODY_MUC_LOG_STORE`                 | MUC log storage backend name                                                                  | No       | `muc_log`                                                 |
+| `PROSODY_MUC_LOG_COMPRESSION`           | Enable MUC log compression                                                                    | No       | `true`                                                    |
+| `PROSODY_MUC_MAM_SMART_ENABLE`          | Enable smart MAM for MUC                                                                      | No       | `false`                                                   |
 
 ### Rate limiting
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_C2S_RATE` | Client-to-server rate limit | No | `10kb/s` |
-| `PROSODY_C2S_BURST` | Client-to-server burst allowance | No | `25kb` |
-| `PROSODY_C2S_STANZA_SIZE` | Maximum c2s stanza size (bytes) | No | `262144` |
-| `PROSODY_S2S_RATE` | Server-to-server rate limit | No | `30kb/s` |
-| `PROSODY_S2S_BURST` | Server-to-server burst allowance | No | `100kb` |
-| `PROSODY_S2S_STANZA_SIZE` | Maximum s2s stanza size (bytes) | No | `524288` |
-| `PROSODY_HTTP_UPLOAD_RATE` | HTTP upload rate limit | No | `2mb/s` |
-| `PROSODY_HTTP_UPLOAD_BURST` | HTTP upload burst allowance | No | `10mb` |
+| Variable                    | Description                      | Required | Default  |
+| --------------------------- | -------------------------------- | -------- | -------- |
+| `PROSODY_C2S_RATE`          | Client-to-server rate limit      | No       | `10kb/s` |
+| `PROSODY_C2S_BURST`         | Client-to-server burst allowance | No       | `25kb`   |
+| `PROSODY_C2S_STANZA_SIZE`   | Maximum c2s stanza size (bytes)  | No       | `262144` |
+| `PROSODY_S2S_RATE`          | Server-to-server rate limit      | No       | `30kb/s` |
+| `PROSODY_S2S_BURST`         | Server-to-server burst allowance | No       | `100kb`  |
+| `PROSODY_S2S_STANZA_SIZE`   | Maximum s2s stanza size (bytes)  | No       | `524288` |
+| `PROSODY_HTTP_UPLOAD_RATE`  | HTTP upload rate limit           | No       | `2mb/s`  |
+| `PROSODY_HTTP_UPLOAD_BURST` | HTTP upload burst allowance      | No       | `10mb`   |
 
 ### Push notifications
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_PUSH_IMPORTANT_BODY` | Body text for important push notifications | No | `New Message!` |
-| `PROSODY_PUSH_MAX_ERRORS` | Maximum push errors before disabling | No | `16` |
-| `PROSODY_PUSH_MAX_DEVICES` | Maximum push devices per user | No | `5` |
-| `PROSODY_PUSH_MAX_HIBERNATION_TIMEOUT` | Maximum hibernation timeout (seconds) | No | `259200` |
-| `PROSODY_PUSH_NOTIFICATION_WITH_BODY` | Include message body in push | No | `false` |
-| `PROSODY_PUSH_NOTIFICATION_WITH_SENDER` | Include sender in push | No | `false` |
+| Variable                                | Description                                | Required | Default        |
+| --------------------------------------- | ------------------------------------------ | -------- | -------------- |
+| `PROSODY_PUSH_IMPORTANT_BODY`           | Body text for important push notifications | No       | `New Message!` |
+| `PROSODY_PUSH_MAX_ERRORS`               | Maximum push errors before disabling       | No       | `16`           |
+| `PROSODY_PUSH_MAX_DEVICES`              | Maximum push devices per user              | No       | `5`            |
+| `PROSODY_PUSH_MAX_HIBERNATION_TIMEOUT`  | Maximum hibernation timeout (seconds)      | No       | `259200`       |
+| `PROSODY_PUSH_NOTIFICATION_WITH_BODY`   | Include message body in push               | No       | `false`        |
+| `PROSODY_PUSH_NOTIFICATION_WITH_SENDER` | Include sender in push                     | No       | `false`        |
 
 ### Account lifecycle
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_ACCOUNT_INACTIVE_PERIOD` | Seconds before an account is considered inactive | No | `31536000` |
-| `PROSODY_ACCOUNT_GRACE_PERIOD` | Grace period before inactive account cleanup (seconds) | No | `2592000` |
+| Variable                          | Description                                            | Required | Default    |
+| --------------------------------- | ------------------------------------------------------ | -------- | ---------- |
+| `PROSODY_ACCOUNT_INACTIVE_PERIOD` | Seconds before an account is considered inactive       | No       | `31536000` |
+| `PROSODY_ACCOUNT_GRACE_PERIOD`    | Grace period before inactive account cleanup (seconds) | No       | `2592000`  |
 
 ### Server info
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_SERVER_NAME` | Server display name | No | `localhost` |
-| `PROSODY_SERVER_WEBSITE` | Server website URL | No | `http://localhost` |
-| `PROSODY_SERVER_DESCRIPTION` | Server description | No | `XMPP Service` |
-| `PROSODY_SUPPORT_CONTACT` | Support JID advertised in service discovery | No | `support@` + primary XMPP domain (same rule as `PROSODY_DOMAIN` / `XMPP_DOMAIN`) |
-| `PROSODY_SUPPORT_CONTACT_NICK` | Support contact display nick | No | `Support` |
+| Variable                       | Description                                 | Required | Default                                                                          |
+| ------------------------------ | ------------------------------------------- | -------- | -------------------------------------------------------------------------------- |
+| `PROSODY_SERVER_NAME`          | Server display name                         | No       | `localhost`                                                                      |
+| `PROSODY_SERVER_WEBSITE`       | Server website URL                          | No       | `http://localhost`                                                               |
+| `PROSODY_SERVER_DESCRIPTION`   | Server description                          | No       | `XMPP Service`                                                                   |
+| `PROSODY_SUPPORT_CONTACT`      | Support JID advertised in service discovery | No       | `support@` + primary XMPP domain (same rule as `PROSODY_DOMAIN` / `XMPP_DOMAIN`) |
+| `PROSODY_SUPPORT_CONTACT_NICK` | Support contact display nick                | No       | `Support`                                                                        |
 
 ### Performance tuning (Lua GC)
 
 Used only by `prosody.cfg.lua` (not listed in `.env.example`).
 
-| Variable | Description | Required | Default (if unset) |
-|---|---|---|---|
-| `LUA_GC_STEP_SIZE` | Lua garbage collector step size | No | `13` |
-| `LUA_GC_PAUSE` | Lua GC pause parameter | No | `110` |
-| `LUA_GC_SPEED` | Lua GC speed parameter | No | `200` |
-| `LUA_GC_THRESHOLD` | Lua GC threshold parameter | No | `120` |
+| Variable           | Description                     | Required | Default (if unset) |
+| ------------------ | ------------------------------- | -------- | ------------------ |
+| `LUA_GC_STEP_SIZE` | Lua garbage collector step size | No       | `13`               |
+| `LUA_GC_PAUSE`     | Lua GC pause parameter          | No       | `110`              |
+| `LUA_GC_SPEED`     | Lua GC speed parameter          | No       | `200`              |
+| `LUA_GC_THRESHOLD` | Lua GC threshold parameter      | No       | `120`              |
 
 ### PubSub feeds
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `PROSODY_FEED_URL` | Atom/RSS feed URL for PubSub | No | `https://allthingslinux.org/feed` |
+| Variable           | Description                  | Required | Default                           |
+| ------------------ | ---------------------------- | -------- | --------------------------------- |
+| `PROSODY_FEED_URL` | Atom/RSS feed URL for PubSub | No       | `https://allthingslinux.org/feed` |
 
 ## Bridge Service (Discord↔IRC↔XMPP relay)
 
@@ -399,48 +399,48 @@ Used only by `prosody.cfg.lua` (not listed in `.env.example`).
 
 ### Discord and Portal
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `BRIDGE_DISCORD_TOKEN` | Discord bot token | _(empty; set to run bridge)_ |
-| `BRIDGE_DISCORD_CHANNEL_ID` | Channel to bridge | _(empty)_ |
-| `BRIDGE_PORTAL_BASE_URL` | Portal origin (e.g. `https://portal.example.com`) | _(empty)_ — set in prod with Portal |
-| `BRIDGE_PORTAL_TOKEN` | Shared secret for `/api/bridge/identity` | _(empty)_ |
+| Variable                    | Description                                       | Default (`.env.example`)            |
+| --------------------------- | ------------------------------------------------- | ----------------------------------- |
+| `BRIDGE_DISCORD_TOKEN`      | Discord bot token                                 | _(empty; set to run bridge)_        |
+| `BRIDGE_DISCORD_CHANNEL_ID` | Channel to bridge                                 | _(empty)_                           |
+| `BRIDGE_PORTAL_BASE_URL`    | Portal origin (e.g. `https://portal.example.com`) | _(empty)_ — set in prod with Portal |
+| `BRIDGE_PORTAL_TOKEN`       | Shared secret for `/api/bridge/identity`          | _(empty)_                           |
 
 ### XMPP component
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `BRIDGE_XMPP_COMPONENT_JID` | Component JID | `bridge.xmpp.localhost` |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | Component secret (match Prosody) | `change_me_xmpp_component_secret` |
-| `BRIDGE_XMPP_COMPONENT_SERVER` | Prosody hostname in Docker network | `atl-xmpp-server` |
-| `BRIDGE_XMPP_COMPONENT_PORT` | Component listener port | `5347` |
+| Variable                       | Description                        | Default (`.env.example`)          |
+| ------------------------------ | ---------------------------------- | --------------------------------- |
+| `BRIDGE_XMPP_COMPONENT_JID`    | Component JID                      | `bridge.xmpp.localhost`           |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | Component secret (match Prosody)   | `change_me_xmpp_component_secret` |
+| `BRIDGE_XMPP_COMPONENT_SERVER` | Prosody hostname in Docker network | `atl-xmpp-server`                 |
+| `BRIDGE_XMPP_COMPONENT_PORT`   | Component listener port            | `5347`                            |
 
 ### IRC
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `BRIDGE_IRC_NICK` | Bridge bot nick | `bridge` |
-| `BRIDGE_IRC_OPER_PASSWORD` | Oper password for bridge (if used) | _(empty in example)_ |
-| `IRC_BRIDGE_SERVER` | IRC server hostname in Docker network | `atl-irc-server` |
-| `BRIDGE_IRC_TLS_VERIFY` | Verify IRC TLS from bridge | `false` (enable `true` with real certs) |
+| Variable                   | Description                           | Default (`.env.example`)                |
+| -------------------------- | ------------------------------------- | --------------------------------------- |
+| `BRIDGE_IRC_NICK`          | Bridge bot nick                       | `bridge`                                |
+| `BRIDGE_IRC_OPER_PASSWORD` | Oper password for bridge (if used)    | _(empty in example)_                    |
+| `IRC_BRIDGE_SERVER`        | IRC server hostname in Docker network | `atl-irc-server`                        |
+| `BRIDGE_IRC_TLS_VERIFY`    | Verify IRC TLS from bridge            | `false` (enable `true` with real certs) |
 
 ### Relay, redaction, and media
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `BRIDGE_RELAYMSG_CLEAN_NICKS` | Cleaner RELAYMSG nicks (UnrealIRCd `require-separator no`) | `true` |
-| `BRIDGE_IRC_REDACT_ENABLED` | Enable IRC-side redaction handling | `false` |
-| `XMPP_AVATAR_BASE_URL` | Internal HTTP base for avatar checks | `http://atl-xmpp-server:5280` |
-| `XMPP_AVATAR_PUBLIC_URL` | Optional public base for avatar URLs | _(empty)_ |
-| `XMPP_UPLOAD_FETCH_URL` | Internal base for upload fetch / Discord media | `http://atl-xmpp-server:5280` |
+| Variable                      | Description                                                | Default (`.env.example`)      |
+| ----------------------------- | ---------------------------------------------------------- | ----------------------------- |
+| `BRIDGE_RELAYMSG_CLEAN_NICKS` | Cleaner RELAYMSG nicks (UnrealIRCd `require-separator no`) | `true`                        |
+| `BRIDGE_IRC_REDACT_ENABLED`   | Enable IRC-side redaction handling                         | `false`                       |
+| `XMPP_AVATAR_BASE_URL`        | Internal HTTP base for avatar checks                       | `http://atl-xmpp-server:5280` |
+| `XMPP_AVATAR_PUBLIC_URL`      | Optional public base for avatar URLs                       | _(empty)_                     |
+| `XMPP_UPLOAD_FETCH_URL`       | Internal base for upload fetch / Discord media             | `http://atl-xmpp-server:5280` |
 
 ### Dev-only (no Portal)
 
 Commented in `.env.dev.example`: `BRIDGE_DEV_IRC_PUPPETS`, `BRIDGE_DEV_IRC_NICK_MAP` — per-user IRC connections for local testing.
 
-| Variable | Description | Default |
-|---|---|---|
-| `IRC_PUPPET_IDLE_TIMEOUT_HOURS` | Disconnect idle IRC puppet connections after this many hours | `24` |
+| Variable                        | Description                                                  | Default |
+| ------------------------------- | ------------------------------------------------------------ | ------- |
+| `IRC_PUPPET_IDLE_TIMEOUT_HOURS` | Disconnect idle IRC puppet connections after this many hours | `24`    |
 
 ### Env overrides vs `config.yaml`
 
@@ -448,15 +448,15 @@ These environment variables override the corresponding fields in the bridge’s 
 
 ### Logging
 
-| Variable | Description | Default |
-|---|---|---|
+| Variable    | Description                         | Default                                                |
+| ----------- | ----------------------------------- | ------------------------------------------------------ |
 | `LOG_LEVEL` | `DEBUG`, `INFO`, `WARNING`, `ERROR` | `INFO` (`.env.example`); `DEBUG` in `.env.dev.example` |
 
 ## Web frontend (`apps/web`, Next.js)
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `NEXT_PUBLIC_IRC_WS_URL` | Browser → IRC WebSocket | `wss://irc.localhost/ws` |
+| Variable                    | Description                                        | Default (`.env.example`)                                                                                                                                 |
+| --------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_IRC_WS_URL`    | Browser → IRC WebSocket                            | `wss://irc.localhost/ws`                                                                                                                                 |
 | `NEXT_PUBLIC_XMPP_BOSH_URL` | Browser → XMPP BOSH (`/http-bind` on Prosody HTTP) | `https://xmpp.localhost:5281/http-bind` (TLS via `atl-xmpp-nginx`; use `http://localhost:5280/http-bind` for plain HTTP to Prosody, e.g. `just web dev`) |
 
 **XMPP WebSocket (RFC 7395)** is served at path **`/xmpp-websocket`** on Prosody’s HTTP stack. With the dockerized nginx sidecar, use **`wss://<XMPP_DOMAIN>:5281/xmpp-websocket`** (or **`wss://…/ws`**, which nginx proxies to the same upstream). Do not confuse with BOSH at **`/http-bind`**.
@@ -465,22 +465,22 @@ These environment variables override the corresponding fields in the bridge’s 
 
 ## Fluux messenger (`infra/compose/fluux-messenger.yaml`)
 
-| Variable | Description | Default (`.env.example`) |
-|---|---|---|
-| `FLUUX_VERSION` | Fluux image / ref tag | `v0.13.3` |
-| `FLUUX_DOMAIN` | Public vhost for the messenger | `webxmpp.atl.chat` |
-| `FLUUX_CERT_DOMAIN` | Cert / TLS identity helper | `atl.chat` |
-| `FLUUX_MESSENGER_PORT` | HTTP port | `8091` |
-| `FLUUX_MESSENGER_HTTPS_PORT` | HTTPS port | `8443` |
-| `XMPP_DOMAIN` | Prosody host header for Fluux’s `/ws` → Prosody proxy | Same as `XMPP_DOMAIN` / JID domain (e.g. `xmpp.localhost`) |
+| Variable                     | Description                                           | Default (`.env.example`)                                   |
+| ---------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| `FLUUX_VERSION`              | Fluux image / ref tag                                 | `v0.13.3`                                                  |
+| `FLUUX_DOMAIN`               | Public vhost for the messenger                        | `webxmpp.atl.chat`                                         |
+| `FLUUX_CERT_DOMAIN`          | Cert / TLS identity helper                            | `atl.chat`                                                 |
+| `FLUUX_MESSENGER_PORT`       | HTTP port                                             | `8091`                                                     |
+| `FLUUX_MESSENGER_HTTPS_PORT` | HTTPS port                                            | `8443`                                                     |
+| `XMPP_DOMAIN`                | Prosody host header for Fluux’s `/ws` → Prosody proxy | Same as `XMPP_DOMAIN` / JID domain (e.g. `xmpp.localhost`) |
 
 Fluux’s default URLs use **port 443** (`https://<jid-domain>/.well-known/…`, **`wss://<jid-domain>/ws`**). **`atl-xmpp-nginx`** publishes **`127.0.0.1:443` → :443** (same TLS as **5281**) so those defaults work. If you cannot bind **127.0.0.1:443**, drop that mapping and set **Server (optional)** to **`wss://<XMPP_DOMAIN>:5281/ws`** or **`wss://localhost:8443/ws`** (Fluux-side proxy after rebuild).
 
 ## Docs (Cloudflare Workers via Alchemy)
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `ALCHEMY_PASSWORD` | Password used by Alchemy to encrypt deployment state secrets | Yes | `change-me` |
+| Variable           | Description                                                  | Required | Default     |
+| ------------------ | ------------------------------------------------------------ | -------- | ----------- |
+| `ALCHEMY_PASSWORD` | Password used by Alchemy to encrypt deployment state secrets | Yes      | `change-me` |
 
 > **Warning:** `ALCHEMY_PASSWORD` encrypts secrets in the deployment state. Use a strong, unique value and do not share it. Required only when running `pnpm run deploy` or `pnpm run destroy` from `apps/docs`.
 
@@ -488,14 +488,14 @@ Fluux’s default URLs use **port 443** (`https://<jid-domain>/.well-known/…`,
 
 Listed as comments in `.env.example` when they apply only if you enable a fragment or override:
 
-| Variable | Purpose |
-|---|---|
-| `IRC_SERVICES_SERVER` | Override UnrealIRCd → Atheme link hostname |
-| `IRC_ENABLE_GEOIP_CLASSIC` | GeoIP classic DB download at UnrealIRCd startup |
-| `WEBPANEL_PORT` | Host port for WebPanel (`infra/compose/irc.yaml`) |
-| `XMPP_WEBCHAT_URL` | Passed into Prosody for MUC webchat discovery |
-| `SSL_DOMAIN` | Cert-manager helper (`infra/compose/cert-manager.yaml`) |
-| `OBSIDIANIRC_*` | ObsidianIRC build args (see [ObsidianIRC](#obsidianirc-optional-compose-fragment)) |
+| Variable                   | Purpose                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------- |
+| `IRC_SERVICES_SERVER`      | Override UnrealIRCd → Atheme link hostname                                         |
+| `IRC_ENABLE_GEOIP_CLASSIC` | GeoIP classic DB download at UnrealIRCd startup                                    |
+| `WEBPANEL_PORT`            | Host port for WebPanel (`infra/compose/irc.yaml`)                                  |
+| `XMPP_WEBCHAT_URL`         | Passed into Prosody for MUC webchat discovery                                      |
+| `SSL_DOMAIN`               | Cert-manager helper (`infra/compose/cert-manager.yaml`)                            |
+| `OBSIDIANIRC_*`            | ObsidianIRC build args (see [ObsidianIRC](#obsidianirc-optional-compose-fragment)) |
 
 ## Portal integration (external ATL Portal)
 
@@ -503,15 +503,15 @@ The **Portal** app reads these from **its own** `apps/portal/.env` (see Portal `
 
 Typical values when Portal talks to **Docker service hostnames** (from Portal’s container network) vs **public hostnames** (from a host-run Portal) differ — use the hostname Portal can actually reach.
 
-| Variable | Role |
-|---|---|
-| `IRC_ATHEME_JSONRPC_URL` | Atheme JSON-RPC, e.g. `http://atl-irc-server:8081/jsonrpc` |
-| `IRC_UNREAL_JSONRPC_URL` | UnrealIRCd JSON-RPC HTTPS URL |
-| `IRC_UNREAL_RPC_USER` / `IRC_UNREAL_RPC_PASSWORD` | Match `WEBPANEL_RPC_*` |
-| `PROSODY_REST_URL` | Prosody admin API base — include path, e.g. `http://atl-xmpp-server:5280/admin_api` |
-| `PROSODY_REST_TOKEN` | Bearer from `just prosody-token` (preferred) |
-| `PROSODY_REST_USERNAME` / `PROSODY_REST_PASSWORD` | Legacy HTTP Basic for admin API — avoid if Bearer is configured |
-| `IRC_SERVER` / `IRC_PORT` | Client-style IRC connection target |
+| Variable                                          | Role                                                                                |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `IRC_ATHEME_JSONRPC_URL`                          | Atheme JSON-RPC, e.g. `http://atl-irc-server:8081/jsonrpc`                          |
+| `IRC_UNREAL_JSONRPC_URL`                          | UnrealIRCd JSON-RPC HTTPS URL                                                       |
+| `IRC_UNREAL_RPC_USER` / `IRC_UNREAL_RPC_PASSWORD` | Match `WEBPANEL_RPC_*`                                                              |
+| `PROSODY_REST_URL`                                | Prosody admin API base — include path, e.g. `http://atl-xmpp-server:5280/admin_api` |
+| `PROSODY_REST_TOKEN`                              | Bearer from `just prosody-token` (preferred)                                        |
+| `PROSODY_REST_USERNAME` / `PROSODY_REST_PASSWORD` | Legacy HTTP Basic for admin API — avoid if Bearer is configured                     |
+| `IRC_SERVER` / `IRC_PORT`                         | Client-style IRC connection target                                                  |
 
 > **Warning:** Treat RPC and REST tokens as admin credentials; rotate defaults before production.
 
@@ -521,29 +521,28 @@ Compose loads **`.env`** then **`.env.dev`**. The committed **`.env.example`** i
 
 ### Variables set in `.env.dev.example` (non-commented)
 
-| Variable | Typical purpose |
-|---|---|
-| `ATL_CHAT_IP`, `ATL_GATEWAY_IP` | `127.0.0.1` — local bind |
-| `IRC_DOMAIN`, `XMPP_DOMAIN`, `PROSODY_DOMAIN` | `*.localhost` hostnames |
-| `IRC_SSL_CERT_PATH`, `IRC_SSL_KEY_PATH` | Paths for dev certs |
-| `IRC_TLS_VERIFY`, `IRC_LOUNGE_REJECT_UNAUTHORIZED`, `IRC_WEBSOCKET_USE_TLS`, `BRIDGE_IRC_TLS_VERIFY` | Dev TLS behaviour |
-| `PROSODY_ALLOW_PLACEHOLDER_KEY`, `PROSODY_HTTPS_VIA_PROXY` | Local Prosody convenience |
-| `PROSODY_UPLOAD_EXTERNAL_URL`, `PROSODY_HTTP_EXTERNAL_URL`, `PROSODY_PROXY_ADDRESS`, `PROSODY_SSL_KEY`, `PROSODY_SSL_CERT` | URLs and cert paths for dev |
-| `PROSODY_C2S_REQUIRE_ENCRYPTION`, `PROSODY_S2S_REQUIRE_ENCRYPTION`, `PROSODY_S2S_SECURE_AUTH`, `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Relaxed crypto for self-signed / plain |
-| `BRIDGE_XMPP_COMPONENT_JID`, `BRIDGE_PORTAL_BASE_URL`, `BRIDGE_RELAYMSG_CLEAN_NICKS`, `LOG_LEVEL` | Bridge: local JID, empty Portal URL, verbose logs |
-| `XMPP_AVATAR_BASE_URL`, `XMPP_UPLOAD_FETCH_URL` | Docker-internal Prosody HTTP for bridge |
-| `NEXT_PUBLIC_IRC_WS_URL`, `NEXT_PUBLIC_XMPP_BOSH_URL` | Local web app endpoints |
+| Variable                                                                                                                              | Typical purpose                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `ATL_CHAT_IP`, `ATL_GATEWAY_IP`                                                                                                       | `127.0.0.1` — local bind                          |
+| `IRC_DOMAIN`, `XMPP_DOMAIN`, `PROSODY_DOMAIN`                                                                                         | `*.localhost` hostnames                           |
+| `IRC_SSL_CERT_PATH`, `IRC_SSL_KEY_PATH`                                                                                               | Paths for dev certs                               |
+| `IRC_TLS_VERIFY`, `IRC_LOUNGE_REJECT_UNAUTHORIZED`, `IRC_WEBSOCKET_USE_TLS`, `BRIDGE_IRC_TLS_VERIFY`                                  | Dev TLS behaviour                                 |
+| `PROSODY_ALLOW_PLACEHOLDER_KEY`, `PROSODY_HTTPS_VIA_PROXY`                                                                            | Local Prosody convenience                         |
+| `PROSODY_UPLOAD_EXTERNAL_URL`, `PROSODY_HTTP_EXTERNAL_URL`, `PROSODY_PROXY_ADDRESS`, `PROSODY_SSL_KEY`, `PROSODY_SSL_CERT`            | URLs and cert paths for dev                       |
+| `PROSODY_C2S_REQUIRE_ENCRYPTION`, `PROSODY_S2S_REQUIRE_ENCRYPTION`, `PROSODY_S2S_SECURE_AUTH`, `PROSODY_ALLOW_UNENCRYPTED_PLAIN_AUTH` | Relaxed crypto for self-signed / plain            |
+| `BRIDGE_XMPP_COMPONENT_JID`, `BRIDGE_PORTAL_BASE_URL`, `BRIDGE_RELAYMSG_CLEAN_NICKS`, `LOG_LEVEL`                                     | Bridge: local JID, empty Portal URL, verbose logs |
+| `XMPP_AVATAR_BASE_URL`, `XMPP_UPLOAD_FETCH_URL`                                                                                       | Docker-internal Prosody HTTP for bridge           |
+| `NEXT_PUBLIC_IRC_WS_URL`, `NEXT_PUBLIC_XMPP_BOSH_URL`                                                                                 | Local web app endpoints                           |
 
 ### Commented examples in `.env.dev.example`
 
 Uncomment and fill when needed:
 
-| Variable | Purpose |
-|---|---|
-| `BRIDGE_PORTAL_BASE_URL`, `BRIDGE_PORTAL_TOKEN` | Portal on host (e.g. `http://host.docker.internal:3000`) — token must match Portal `BRIDGE_SERVICE_TOKEN` |
-| `PROSODY_REST_URL`, `PROSODY_REST_TOKEN` | Portal-driven XMPP provisioning (`just prosody-token`) |
-| `BRIDGE_DEV_IRC_PUPPETS`, `BRIDGE_DEV_IRC_NICK_MAP` | Dev IRC puppets without Portal |
-
+| Variable                                            | Purpose                                                                                                   |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `BRIDGE_PORTAL_BASE_URL`, `BRIDGE_PORTAL_TOKEN`     | Portal on host (e.g. `http://host.docker.internal:3000`) — token must match Portal `BRIDGE_SERVICE_TOKEN` |
+| `PROSODY_REST_URL`, `PROSODY_REST_TOKEN`            | Portal-driven XMPP provisioning (`just prosody-token`)                                                    |
+| `BRIDGE_DEV_IRC_PUPPETS`, `BRIDGE_DEV_IRC_NICK_MAP` | Dev IRC puppets without Portal                                                                            |
 
 ## Related pages
 

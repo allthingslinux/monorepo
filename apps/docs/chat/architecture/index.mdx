@@ -69,15 +69,15 @@ graph TB
 
 The root `compose.yaml` aggregates all service-level configurations using the `include` directive. Each compose fragment lives under `infra/compose/` and defines one logical stack:
 
-| Fragment | Services | Purpose |
-|---|---|---|
-| `networks.yaml` | — | Defines the shared `atl-chat` bridge network |
-| `cert-manager.yaml` | `atl-cert-manager` | Let's Encrypt certificate management via Lego + Cloudflare DNS |
-| `irc.yaml` | `atl-irc-server`, `atl-irc-services`, `atl-irc-webpanel` | IRC server, services, and admin panel |
-| `xmpp.yaml` | `atl-xmpp-server`, `atl-xmpp-nginx` | XMPP server and HTTPS reverse proxy |
-| `bridge.yaml` | `atl-bridge` | Discord↔IRC↔XMPP message bridge |
-| `thelounge.yaml` | `atl-thelounge` | Web IRC client |
-| `obsidianirc.yaml` | `atl-obsidianirc` | Modern web IRC client |
+| Fragment            | Services                                                 | Purpose                                                        |
+| ------------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+| `networks.yaml`     | —                                                        | Defines the shared `atl-chat` bridge network                   |
+| `cert-manager.yaml` | `atl-cert-manager`                                       | Let's Encrypt certificate management via Lego + Cloudflare DNS |
+| `irc.yaml`          | `atl-irc-server`, `atl-irc-services`, `atl-irc-webpanel` | IRC server, services, and admin panel                          |
+| `xmpp.yaml`         | `atl-xmpp-server`, `atl-xmpp-nginx`                      | XMPP server and HTTPS reverse proxy                            |
+| `bridge.yaml`       | `atl-bridge`                                             | Discord↔IRC↔XMPP message bridge                                |
+| `thelounge.yaml`    | `atl-thelounge`                                          | Web IRC client                                                 |
+| `obsidianirc.yaml`  | `atl-obsidianirc`                                        | Modern web IRC client                                          |
 
 The root `compose.yaml` also defines `dozzle` (Docker log viewer) under the `dev` profile.
 

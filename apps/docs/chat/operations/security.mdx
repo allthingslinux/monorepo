@@ -101,19 +101,19 @@ openssl rand -base64 32
 
 ### Bridge secrets
 
-| Variable | Purpose | Generation |
-|---|---|---|
-| `BRIDGE_DISCORD_TOKEN` | Discord bot token | Create at [Discord Developer Portal](https://discord.com/developers/applications) → Bot → Reset Token |
-| `BRIDGE_PORTAL_TOKEN` | Portal API authentication | `openssl rand -base64 32` |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component authentication | `openssl rand -base64 32` |
-| `BRIDGE_IRC_OPER_PASSWORD` | Bridge IRC oper credentials | `openssl rand -base64 32` |
+| Variable                       | Purpose                       | Generation                                                                                            |
+| ------------------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `BRIDGE_DISCORD_TOKEN`         | Discord bot token             | Create at [Discord Developer Portal](https://discord.com/developers/applications) → Bot → Reset Token |
+| `BRIDGE_PORTAL_TOKEN`          | Portal API authentication     | `openssl rand -base64 32`                                                                             |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | XMPP component authentication | `openssl rand -base64 32`                                                                             |
+| `BRIDGE_IRC_OPER_PASSWORD`     | Bridge IRC oper credentials   | `openssl rand -base64 32`                                                                             |
 
 ### Prosody (XMPP) secrets
 
-| Variable | Purpose | Generation |
-|---|---|---|
-| `PROSODY_DB_PASSWORD` | PostgreSQL database password (production only) | `openssl rand -base64 32` |
-| `PROSODY_OAUTH2_REGISTRATION_KEY` | OAuth2 client registration key | `openssl rand -base64 32` |
+| Variable                          | Purpose                                        | Generation                |
+| --------------------------------- | ---------------------------------------------- | ------------------------- |
+| `PROSODY_DB_PASSWORD`             | PostgreSQL database password (production only) | `openssl rand -base64 32` |
+| `PROSODY_OAUTH2_REGISTRATION_KEY` | OAuth2 client registration key                 | `openssl rand -base64 32` |
 
 ### TURN secret (`TURN_SECRET`)
 
@@ -139,10 +139,10 @@ openssl rand -base64 32
 
 These variables are consumed by the external ATL Portal service, not by this monorepo's compose stack:
 
-| Variable | Purpose | Generation |
-|---|---|---|
+| Variable                  | Purpose                      | Generation                           |
+| ------------------------- | ---------------------------- | ------------------------------------ |
 | `IRC_UNREAL_RPC_PASSWORD` | Portal → UnrealIRCd JSON-RPC | Should match `WEBPANEL_RPC_PASSWORD` |
-| `PROSODY_REST_PASSWORD` | Portal → Prosody REST API | `openssl rand -base64 32` |
+| `PROSODY_REST_PASSWORD`   | Portal → Prosody REST API    | `openssl rand -base64 32`            |
 
 ## Credential rotation
 
@@ -157,6 +157,7 @@ Rotate all secrets on a regular schedule (every 6–12 months) or immediately af
    bash scripts/prepare-config.sh
    ```
 4. Restart affected services:
+
    ```bash
    # Single service
    docker compose restart atl-irc-server
@@ -165,6 +166,7 @@ Rotate all secrets on a regular schedule (every 6–12 months) or immediately af
    docker compose down
    docker compose up -d
    ```
+
 5. Verify the service is healthy:
    ```bash
    docker compose ps
@@ -174,15 +176,15 @@ Rotate all secrets on a regular schedule (every 6–12 months) or immediately af
 
 Some secrets are shared between services and must be updated in lockstep:
 
-| Secret | Services that share it |
-|---|---|
-| `IRC_SERVICES_PASSWORD` | UnrealIRCd ↔ Atheme |
-| `ATL_WEBIRC_PASSWORD` | UnrealIRCd ↔ Next.js web app |
-| `THELOUNGE_WEBIRC_PASSWORD` | UnrealIRCd ↔ The Lounge |
-| `WEBPANEL_RPC_PASSWORD` | UnrealIRCd ↔ WebPanel |
-| `BRIDGE_XMPP_COMPONENT_SECRET` | Prosody ↔ Bridge |
-| `BRIDGE_IRC_OPER_PASSWORD` | UnrealIRCd ↔ Bridge |
-| `IRC_CLOAK_KEY_1/2/3` | All IRC servers in the network |
+| Secret                         | Services that share it         |
+| ------------------------------ | ------------------------------ |
+| `IRC_SERVICES_PASSWORD`        | UnrealIRCd ↔ Atheme            |
+| `ATL_WEBIRC_PASSWORD`          | UnrealIRCd ↔ Next.js web app   |
+| `THELOUNGE_WEBIRC_PASSWORD`    | UnrealIRCd ↔ The Lounge        |
+| `WEBPANEL_RPC_PASSWORD`        | UnrealIRCd ↔ WebPanel          |
+| `BRIDGE_XMPP_COMPONENT_SECRET` | Prosody ↔ Bridge               |
+| `BRIDGE_IRC_OPER_PASSWORD`     | UnrealIRCd ↔ Bridge            |
+| `IRC_CLOAK_KEY_1/2/3`          | All IRC servers in the network |
 
 After updating a shared secret, restart both services that use it. For example, after rotating `IRC_SERVICES_PASSWORD`:
 
@@ -202,36 +204,36 @@ All services run on a single Docker bridge network named `atl-chat`, defined in 
 
 These ports are bound to the host and accessible to external clients. In production, they bind to the Tailscale IP (`ATL_CHAT_IP`). In development, they bind to `127.0.0.1` via `.env.dev`.
 
-| Service | Port | Variable | Purpose |
-|---|---|---|---|
-| UnrealIRCd | 6697 | `IRC_TLS_PORT` | IRC client connections (TLS) |
-| UnrealIRCd | 6900 | `IRC_SERVER_PORT` | Server-to-server linking |
-| UnrealIRCd | 8600 | `IRC_RPC_PORT` | JSON-RPC API |
-| UnrealIRCd | 8000 | `IRC_WEBSOCKET_PORT` | WebSocket for web clients |
-| UnrealIRCd | 8081 | `ATHEME_HTTPD_PORT` | Atheme JSON-RPC (shared network namespace) |
-| WebPanel | 8080 | `WEBPANEL_PORT` | Admin web interface |
-| Prosody | 5222 | `PROSODY_C2S_PORT` | XMPP client-to-server |
-| Prosody | 5269 | `PROSODY_S2S_PORT` | XMPP server-to-server |
-| Prosody | 5223 | `PROSODY_C2S_DIRECT_TLS_PORT` | XMPP Direct TLS |
-| Prosody | 5270 | `PROSODY_S2S_DIRECT_TLS_PORT` | XMPP S2S Direct TLS |
-| Prosody | 5280 | `PROSODY_HTTP_PORT` | BOSH / WebSocket |
-| Prosody | 5000 | `PROSODY_PROXY65_PORT` | File transfer proxy |
-| Nginx (XMPP) | 5281 | `PROSODY_HTTPS_PORT` | XMPP HTTPS proxy |
-| The Lounge | 9000 | `THELOUNGE_PORT` | Web IRC client |
-| Dozzle | 8082 | `DOZZLE_PORT` | Log viewer (dev profile only) |
+| Service      | Port | Variable                      | Purpose                                    |
+| ------------ | ---- | ----------------------------- | ------------------------------------------ |
+| UnrealIRCd   | 6697 | `IRC_TLS_PORT`                | IRC client connections (TLS)               |
+| UnrealIRCd   | 6900 | `IRC_SERVER_PORT`             | Server-to-server linking                   |
+| UnrealIRCd   | 8600 | `IRC_RPC_PORT`                | JSON-RPC API                               |
+| UnrealIRCd   | 8000 | `IRC_WEBSOCKET_PORT`          | WebSocket for web clients                  |
+| UnrealIRCd   | 8081 | `ATHEME_HTTPD_PORT`           | Atheme JSON-RPC (shared network namespace) |
+| WebPanel     | 8080 | `WEBPANEL_PORT`               | Admin web interface                        |
+| Prosody      | 5222 | `PROSODY_C2S_PORT`            | XMPP client-to-server                      |
+| Prosody      | 5269 | `PROSODY_S2S_PORT`            | XMPP server-to-server                      |
+| Prosody      | 5223 | `PROSODY_C2S_DIRECT_TLS_PORT` | XMPP Direct TLS                            |
+| Prosody      | 5270 | `PROSODY_S2S_DIRECT_TLS_PORT` | XMPP S2S Direct TLS                        |
+| Prosody      | 5280 | `PROSODY_HTTP_PORT`           | BOSH / WebSocket                           |
+| Prosody      | 5000 | `PROSODY_PROXY65_PORT`        | File transfer proxy                        |
+| Nginx (XMPP) | 5281 | `PROSODY_HTTPS_PORT`          | XMPP HTTPS proxy                           |
+| The Lounge   | 9000 | `THELOUNGE_PORT`              | Web IRC client                             |
+| Dozzle       | 8082 | `DOZZLE_PORT`                 | Log viewer (dev profile only)              |
 
 ### Internal-only communication
 
 These connections happen over the `atl-chat` Docker network and are never exposed to the host:
 
-| From | To | Port | Purpose |
-|---|---|---|---|
-| Atheme | UnrealIRCd | 6901 | Services link (shared network namespace via `network_mode: service:atl-irc-server`) |
-| Bridge | UnrealIRCd | 6697 | IRC connection |
-| Bridge | Prosody | 5347 | XMPP component protocol |
-| The Lounge | UnrealIRCd | 6697 | IRC connection (WebIRC) |
-| WebPanel | UnrealIRCd | 8600 | JSON-RPC |
-| cert-manager | — | — | Writes to shared `data/certs/` volume only |
+| From         | To         | Port | Purpose                                                                             |
+| ------------ | ---------- | ---- | ----------------------------------------------------------------------------------- |
+| Atheme       | UnrealIRCd | 6901 | Services link (shared network namespace via `network_mode: service:atl-irc-server`) |
+| Bridge       | UnrealIRCd | 6697 | IRC connection                                                                      |
+| Bridge       | Prosody    | 5347 | XMPP component protocol                                                             |
+| The Lounge   | UnrealIRCd | 6697 | IRC connection (WebIRC)                                                             |
+| WebPanel     | UnrealIRCd | 8600 | JSON-RPC                                                                            |
+| cert-manager | —          | —    | Writes to shared `data/certs/` volume only                                          |
 
 ### Atheme network namespace sharing
 
@@ -253,6 +255,7 @@ This ensures services are only reachable over the Tailscale mesh, not on the pub
 
 Detailed certificate management is covered in the [SSL/TLS page](/docs/operations/ssl-tls). This section
 tore private keys in the repository. The `data/` directory is in `.gitignore`.
+
 - In development, `just init` generates self-signed certificates. These are not suitable for production.
 
 ### Post-renewal hooks
@@ -271,10 +274,10 @@ docker compose exec atl-xmpp-server prosodyctl reload
 
 UnrealIRCd's Strict Transport Security is configured via environment variables:
 
-| Variable | Default | Description |
-|---|---|---|
-| `IRC_STS_DURATION` | `1m` | STS policy duration (use longer values like `365d` in production) |
-| `IRC_STS_PRELOAD` | `no` | Whether to include in STS preload lists |
+| Variable           | Default | Description                                                       |
+| ------------------ | ------- | ----------------------------------------------------------------- |
+| `IRC_STS_DURATION` | `1m`    | STS policy duration (use longer values like `365d` in production) |
+| `IRC_STS_PRELOAD`  | `no`    | Whether to include in STS preload lists                           |
 
 ## Gitleaks pre-commit hook
 
@@ -341,6 +344,7 @@ If a secret was committed before the hook was installed:
 
 1. Rotate the compromised secret immediately using the generation methods above
 2. Remove the secret from the repository history using `git filter-repo`:
+
    ```bash
    # Install git-filter-repo if needed
    pip install git-filter-repo
@@ -351,6 +355,7 @@ If a secret was committed before the hook was installed:
    # Or replace a specific string across all history
    git filter-repo --replace-text <(echo 'OLD_SECRET==>REDACTED')
    ```
+
 3. Force-push the cleaned history:
    ```bash
    git push --force --all

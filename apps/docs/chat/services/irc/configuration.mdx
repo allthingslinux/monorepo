@@ -9,10 +9,10 @@ The IRC stack is configured entirely through environment variables in `.env` and
 
 UnrealIRCd and Atheme both use template files that contain `${VARIABLE}` placeholders. When you run `just init` or `just dev`, the `scripts/prepare-config.sh` script runs `envsubst` to substitute your `.env` values into the templates, producing the final config files.
 
-| Template | Output | Service |
-|---|---|---|
+| Template                                          | Output                                   | Service    |
+| ------------------------------------------------- | ---------------------------------------- | ---------- |
 | `apps/unrealircd/config/unrealircd.conf.template` | `apps/unrealircd/config/unrealircd.conf` | UnrealIRCd |
-| `apps/atheme/config/atheme.conf.template` | `apps/atheme/config/atheme.conf` | Atheme |
+| `apps/atheme/config/atheme.conf.template`         | `apps/atheme/config/atheme.conf`         | Atheme     |
 
 To add a new config block, edit the `.template` file (not the generated `.conf`), add any new `${VARIABLES}` to `.env.example`, and re-run `scripts/prepare-config.sh` (or `just init`).
 
@@ -24,93 +24,93 @@ All IRC-related variables are defined in the `IRC SERVICE` section of `.env.exam
 
 ### Network identity
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_DOMAIN` | Public hostname of the IRC server | Yes | `irc.atl.chat` |
-| `IRC_ROOT_DOMAIN` | Root domain for the network | Yes | `atl.chat` |
-| `IRC_NETWORK_NAME` | Human-readable network name shown to clients | Yes | `All Things Linux IRC` |
-| `IRC_CLOAK_PREFIX` | Prefix for cloaked hostnames (e.g. `atl-ABC123.users.atl.chat`) | Yes | `atl` |
+| Variable           | Description                                                     | Required | Default                |
+| ------------------ | --------------------------------------------------------------- | -------- | ---------------------- |
+| `IRC_DOMAIN`       | Public hostname of the IRC server                               | Yes      | `irc.atl.chat`         |
+| `IRC_ROOT_DOMAIN`  | Root domain for the network                                     | Yes      | `atl.chat`             |
+| `IRC_NETWORK_NAME` | Human-readable network name shown to clients                    | Yes      | `All Things Linux IRC` |
+| `IRC_CLOAK_PREFIX` | Prefix for cloaked hostnames (e.g. `atl-ABC123.users.atl.chat`) | Yes      | `atl`                  |
 
 ### Build versions
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `UNREALIRCD_VERSION` | UnrealIRCd Docker image git tag | Yes | `6.2.0.1` |
-| `ATHEME_VERSION` | Atheme Docker image git tag | Yes | `master` |
+| Variable             | Description                     | Required | Default   |
+| -------------------- | ------------------------------- | -------- | --------- |
+| `UNREALIRCD_VERSION` | UnrealIRCd Docker image git tag | Yes      | `6.2.0.1` |
+| `ATHEME_VERSION`     | Atheme Docker image git tag     | Yes      | `master`  |
 
 ### Ports
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_TLS_PORT` | Client TLS port | Yes | `6697` |
-| `IRC_SERVER_PORT` | Server-to-server TLS port | Yes | `6900` |
-| `IRC_RPC_PORT` | JSON-RPC API port (WebPanel) | Yes | `8600` |
-| `IRC_WEBSOCKET_PORT` | WebSocket port for web clients | Yes | `8000` |
+| Variable             | Description                    | Required | Default |
+| -------------------- | ------------------------------ | -------- | ------- |
+| `IRC_TLS_PORT`       | Client TLS port                | Yes      | `6697`  |
+| `IRC_SERVER_PORT`    | Server-to-server TLS port      | Yes      | `6900`  |
+| `IRC_RPC_PORT`       | JSON-RPC API port (WebPanel)   | Yes      | `8600`  |
+| `IRC_WEBSOCKET_PORT` | WebSocket port for web clients | Yes      | `8000`  |
 
 ### Security secrets
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_CLOAK_KEY_1` | First cloak key for IP masking | Yes | Example key (change for prod) |
-| `IRC_CLOAK_KEY_2` | Second cloak key | Yes | Example key (change for prod) |
-| `IRC_CLOAK_KEY_3` | Third cloak key | Yes | Example key (change for prod) |
-| `IRC_OPER_PASSWORD` | IRC operator password (argon2id hash) | Yes | `change_me_irc_oper_password` |
-| `IRC_DRPASS` | Password for `/DIE` and `/RESTART` commands | Yes | `change_me_drpass` |
-| `IRC_SERVICES_PASSWORD` | Atheme ↔ UnrealIRCd link password | Yes | `change_me_secure_services_pass` |
-| `ATL_WEBIRC_PASSWORD` | WEBIRC password for gateway proxy | Yes | `change_me_webirc_password` |
+| Variable                | Description                                 | Required | Default                          |
+| ----------------------- | ------------------------------------------- | -------- | -------------------------------- |
+| `IRC_CLOAK_KEY_1`       | First cloak key for IP masking              | Yes      | Example key (change for prod)    |
+| `IRC_CLOAK_KEY_2`       | Second cloak key                            | Yes      | Example key (change for prod)    |
+| `IRC_CLOAK_KEY_3`       | Third cloak key                             | Yes      | Example key (change for prod)    |
+| `IRC_OPER_PASSWORD`     | IRC operator password (argon2id hash)       | Yes      | `change_me_irc_oper_password`    |
+| `IRC_DRPASS`            | Password for `/DIE` and `/RESTART` commands | Yes      | `change_me_drpass`               |
+| `IRC_SERVICES_PASSWORD` | Atheme ↔ UnrealIRCd link password           | Yes      | `change_me_secure_services_pass` |
+| `ATL_WEBIRC_PASSWORD`   | WEBIRC password for gateway proxy           | Yes      | `change_me_webirc_password`      |
 
 > **Warning:** All `change_me_*` values must be replaced before any public deployment. See [Security](/docs/operations/security) for generation instructions.
 
 ### Admin info
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_ADMIN_NAME` | Admin name shown in `/ADMIN` | Yes | `All Things Linux` |
-| `IRC_ADMIN_EMAIL` | Admin email shown in ban messages | Yes | `admin@allthingslinux.org` |
-| `IRC_STAFF_VHOST` | Virtual host for IRC operators | Yes | `allthingslinux.org` |
+| Variable          | Description                       | Required | Default                    |
+| ----------------- | --------------------------------- | -------- | -------------------------- |
+| `IRC_ADMIN_NAME`  | Admin name shown in `/ADMIN`      | Yes      | `All Things Linux`         |
+| `IRC_ADMIN_EMAIL` | Admin email shown in ban messages | Yes      | `admin@allthingslinux.org` |
+| `IRC_STAFF_VHOST` | Virtual host for IRC operators    | Yes      | `allthingslinux.org`       |
 
 ### STS (Strict Transport Security)
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_STS_DURATION` | STS cache duration (start low: `1m`, increase to `180d`) | Yes | `1m` |
-| `IRC_STS_PRELOAD` | Enable STS preload in clients | Yes | `no` |
+| Variable           | Description                                              | Required | Default |
+| ------------------ | -------------------------------------------------------- | -------- | ------- |
+| `IRC_STS_DURATION` | STS cache duration (start low: `1m`, increase to `180d`) | Yes      | `1m`    |
+| `IRC_STS_PRELOAD`  | Enable STS preload in clients                            | Yes      | `no`    |
 
 ### TLS certificate paths
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_SSL_CERT_PATH` | Path to fullchain.pem inside container | Yes | `/home/unrealircd/unrealircd/certs/live/irc.atl.chat/fullchain.pem` |
-| `IRC_SSL_KEY_PATH` | Path to privkey.pem inside container | Yes | `/home/unrealircd/unrealircd/certs/live/irc.atl.chat/privkey.pem` |
+| Variable            | Description                            | Required | Default                                                             |
+| ------------------- | -------------------------------------- | -------- | ------------------------------------------------------------------- |
+| `IRC_SSL_CERT_PATH` | Path to fullchain.pem inside container | Yes      | `/home/unrealircd/unrealircd/certs/live/irc.atl.chat/fullchain.pem` |
+| `IRC_SSL_KEY_PATH`  | Path to privkey.pem inside container   | Yes      | `/home/unrealircd/unrealircd/certs/live/irc.atl.chat/privkey.pem`   |
 
 ### Atheme services link
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `IRC_SERVICES_SERVER` | Atheme server name in the IRC network | Yes | `services.atl.chat` |
-| `ATHEME_SERVER_NAME` | Atheme's own server identity | Yes | `services.atl.chat` |
-| `ATHEME_SERVER_DESC` | Atheme server description | Yes | `All Things Linux IRC Services` |
-| `ATHEME_UPLINK_HOST` | Host Atheme connects to (localhost via network namespace) | Yes | `127.0.0.1` |
-| `ATHEME_UPLINK_PORT` | Port Atheme connects to on UnrealIRCd | Yes | `6901` |
-| `ATHEME_NUMERIC` | Atheme server numeric identifier | Yes | `00A` |
-| `ATHEME_RECONTIME` | Reconnect interval in seconds | Yes | `10` |
-| `ATHEME_HTTPD_PORT` | Atheme JSON-RPC HTTP port | Yes | `8081` |
+| Variable              | Description                                               | Required | Default                         |
+| --------------------- | --------------------------------------------------------- | -------- | ------------------------------- |
+| `IRC_SERVICES_SERVER` | Atheme server name in the IRC network                     | Yes      | `services.atl.chat`             |
+| `ATHEME_SERVER_NAME`  | Atheme's own server identity                              | Yes      | `services.atl.chat`             |
+| `ATHEME_SERVER_DESC`  | Atheme server description                                 | Yes      | `All Things Linux IRC Services` |
+| `ATHEME_UPLINK_HOST`  | Host Atheme connects to (localhost via network namespace) | Yes      | `127.0.0.1`                     |
+| `ATHEME_UPLINK_PORT`  | Port Atheme connects to on UnrealIRCd                     | Yes      | `6901`                          |
+| `ATHEME_NUMERIC`      | Atheme server numeric identifier                          | Yes      | `00A`                           |
+| `ATHEME_RECONTIME`    | Reconnect interval in seconds                             | Yes      | `10`                            |
+| `ATHEME_HTTPD_PORT`   | Atheme JSON-RPC HTTP port                                 | Yes      | `8081`                          |
 
 ### WebPanel
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `WEBPANEL_PORT` | WebPanel HTTP port | Yes | `8080` |
-| `WEBPANEL_RPC_USER` | RPC username for WebPanel → UnrealIRCd | Yes | `adminpanel` |
-| `WEBPANEL_RPC_PASSWORD` | RPC password | Yes | `change_me_webpanel_password` |
+| Variable                | Description                            | Required | Default                       |
+| ----------------------- | -------------------------------------- | -------- | ----------------------------- |
+| `WEBPANEL_PORT`         | WebPanel HTTP port                     | Yes      | `8080`                        |
+| `WEBPANEL_RPC_USER`     | RPC username for WebPanel → UnrealIRCd | Yes      | `adminpanel`                  |
+| `WEBPANEL_RPC_PASSWORD` | RPC password                           | Yes      | `change_me_webpanel_password` |
 
 ### The Lounge
 
-| Variable | Description | Required | Default |
-|---|---|---|---|
-| `THELOUNGE_PORT` | The Lounge web client port | Yes | `9000` |
-| `THELOUNGE_WEBIRC_PASSWORD` | WEBIRC password for The Lounge → UnrealIRCd | Yes | `change_me_thelounge_webirc` |
-| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Auto-delete uploaded files after N minutes | No | `1440` |
+| Variable                                 | Description                                 | Required | Default                      |
+| ---------------------------------------- | ------------------------------------------- | -------- | ---------------------------- |
+| `THELOUNGE_PORT`                         | The Lounge web client port                  | Yes      | `9000`                       |
+| `THELOUNGE_WEBIRC_PASSWORD`              | WEBIRC password for The Lounge → UnrealIRCd | Yes      | `change_me_thelounge_webirc` |
+| `THELOUNGE_DELETE_UPLOADS_AFTER_MINUTES` | Auto-delete uploaded files after N minutes  | No       | `1440`                       |
 
 ## Cloak keys
 
@@ -143,20 +143,20 @@ just irc reload
 
 The main template at `apps/unrealircd/config/unrealircd.conf.template` is organized into the following sections:
 
-| Section | Lines | Contents |
-| --- | --- | --- |
-| Third-party modules | 320–370 | cloak_sha256, metadata, react, redact, relaymsg-atl |
-| Server identity (`me {}`) | 370–380 | Server name, SID, network info |
-| Proxy/WEBIRC blocks | 380–420 | NPM gateway, The Lounge, X-Forwarded-For trust |
-| Listen blocks | 420–460 | Ports 6697, 6900, 6901, 8600, 8000, Unix sockets |
-| TLS configuration | 460–540 | Protocols, ciphers, STS, plaintext/outdated policies |
-| Link and allow blocks | 540–570 | Atheme services link, client allow rules |
-| Ban nicks | 570–690 | Reserved nicknames (services, system names) |
-| Blacklists (DNSBL) | 690–730 | DroneBL, EFnetRBL, Tornevall |
-| Network `set {}` block | 730–760 | Network name, cloak keys, hidden host prefix |
-| Oper blocks | 760–800 | Admin oper, bridge oper, RPC user |
-| Logging | 800–840 | Text log (100M), JSON log (250M) |
-| Server `set {}` block | 840–end | Modes, anti-flood, connthrottle, restrict-commands, history |
+| Section                   | Lines   | Contents                                                    |
+| ------------------------- | ------- | ----------------------------------------------------------- |
+| Third-party modules       | 320–370 | cloak_sha256, metadata, react, redact, relaymsg-atl         |
+| Server identity (`me {}`) | 370–380 | Server name, SID, network info                              |
+| Proxy/WEBIRC blocks       | 380–420 | NPM gateway, The Lounge, X-Forwarded-For trust              |
+| Listen blocks             | 420–460 | Ports 6697, 6900, 6901, 8600, 8000, Unix sockets            |
+| TLS configuration         | 460–540 | Protocols, ciphers, STS, plaintext/outdated policies        |
+| Link and allow blocks     | 540–570 | Atheme services link, client allow rules                    |
+| Ban nicks                 | 570–690 | Reserved nicknames (services, system names)                 |
+| Blacklists (DNSBL)        | 690–730 | DroneBL, EFnetRBL, Tornevall                                |
+| Network `set {}` block    | 730–760 | Network name, cloak keys, hidden host prefix                |
+| Oper blocks               | 760–800 | Admin oper, bridge oper, RPC user                           |
+| Logging                   | 800–840 | Text log (100M), JSON log (250M)                            |
+| Server `set {}` block     | 840–end | Modes, anti-flood, connthrottle, restrict-commands, history |
 
 ## Audit findings and recommendations
 

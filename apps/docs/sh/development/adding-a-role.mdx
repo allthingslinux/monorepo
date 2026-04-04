@@ -51,6 +51,7 @@ ansible/roles/my-role/
 ```
 
 Conventions:
+
 - Use fully qualified module names (`ansible.builtin.apt`, not `apt`)
 - Task names are sentence case
 - Config files use templates, not `copy` with inline content
@@ -97,7 +98,7 @@ roles:
   - { role: environment, tags: ["environment"] }
   - { role: services, tags: ["services"] }
   - { role: ftp, tags: ["ftp"] }
-  - { role: my-role, tags: ["my-role"] }      # ← add here
+  - { role: my-role, tags: ["my-role"] } # ← add here
   - { role: monitoring, tags: ["monitoring"] }
   - { role: backup, tags: ["backup"] }
 ```
@@ -112,7 +113,7 @@ If your service needs external access, add the port to `roles/security/defaults/
 firewall_allowed_tcp_ports:
   - "22"
   # ...existing ports...
-  - "8080"  # my-service
+  - "8080" # my-service
 ```
 
 ## 7. Add a smoke test check
@@ -144,6 +145,7 @@ just smoke-test dev
 ## 9. Document it
 
 Add a page at `docs/content/docs/services/my-service.mdx` covering:
+
 - How it works (request flow)
 - Configuration (key settings)
 - Ansible files and variables

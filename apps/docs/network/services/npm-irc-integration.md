@@ -49,6 +49,7 @@ The UnrealIRCd Webpanel is a standard web application.
 ## Security Note
 
 By using this setup:
+
 - The `atl.chat` VPS IP is hidden. All public traffic hits (`atl.network`).
 - Traffic between `atl.network` and `atl.chat` is automatically encrypted by Tailscale.
 - UnrealIRCd is configured to **only** listen on the Tailscale interface, preventing direct public access.

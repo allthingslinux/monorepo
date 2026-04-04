@@ -12,16 +12,16 @@ The web app (`apps/web`) is the public-facing atl.chat landing site — a Next.j
 
 ## Technology stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS + shadcn/ui |
-| UI components | Button, Card, Badge (from shadcn/ui via Radix UI) |
-| Icons | Lucide React |
-| Linting | Biome (via ultracite) |
-| Deployment target | Cloudflare Pages (`@cloudflare/next-on-pages`) |
-| Package manager | pnpm (workspace member `atl.chat`) |
+| Layer             | Technology                                        |
+| ----------------- | ------------------------------------------------- |
+| Framework         | Next.js (App Router)                              |
+| Language          | TypeScript                                        |
+| Styling           | Tailwind CSS + shadcn/ui                          |
+| UI components     | Button, Card, Badge (from shadcn/ui via Radix UI) |
+| Icons             | Lucide React                                      |
+| Linting           | Biome (via ultracite)                             |
+| Deployment target | Cloudflare Pages (`@cloudflare/next-on-pages`)    |
+| Package manager   | pnpm (workspace member `atl.chat`)                |
 
 ## Architecture
 
@@ -49,9 +49,9 @@ apps/web/
 
 The site currently has a single route:
 
-| Route | Component | Description |
-|---|---|---|
-| `/` | `app/page.tsx` | Landing page with platform cards for IRC, XMPP, Signal, and a Discord join button. Also shows "Someday Maybe?" badges for Mastodon and Matrix. |
+| Route | Component      | Description                                                                                                                                    |
+| ----- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`   | `app/page.tsx` | Landing page with platform cards for IRC, XMPP, Signal, and a Discord join button. Also shows "Someday Maybe?" badges for Mastodon and Matrix. |
 
 The app uses Next.js App Router with `layout.tsx` providing the root HTML structure, Geist font variables, and global styles. There are no additional routes, API routes, or dynamic segments at this time — the site is a static single-page application.
 
@@ -59,13 +59,13 @@ The app uses Next.js App Router with `layout.tsx` providing the root HTML struct
 
 The web app uses client-side environment variables (prefixed with `NEXT_PUBLIC_`) to configure service connection URLs:
 
-| Variable | Description | Default |
-|---|---|---|
-| `NEXT_PUBLIC_ATL_BASE_DOMAIN` | Base domain for the atl.chat project | `atl.chat` |
-| `NEXT_PUBLIC_ATL_ENVIRONMENT` | Environment identifier (`development` or `production`) | `development` |
-| `NEXT_PUBLIC_IRC_WS_URL` | IRC WebSocket URL for browser-based IRC clients | `wss://irc.atl.chat/ws` |
-| `NEXT_PUBLIC_XMPP_BOSH_URL` | XMPP BOSH endpoint for browser-based XMPP clients | `https://xmpp.atl.chat/http-bind` |
-| `NEXT_PUBLIC_SENTRY_DSN` | Sentry DSN for error tracking (optional) | _(empty)_ |
+| Variable                      | Description                                            | Default                           |
+| ----------------------------- | ------------------------------------------------------ | --------------------------------- |
+| `NEXT_PUBLIC_ATL_BASE_DOMAIN` | Base domain for the atl.chat project                   | `atl.chat`                        |
+| `NEXT_PUBLIC_ATL_ENVIRONMENT` | Environment identifier (`development` or `production`) | `development`                     |
+| `NEXT_PUBLIC_IRC_WS_URL`      | IRC WebSocket URL for browser-based IRC clients        | `wss://irc.atl.chat/ws`           |
+| `NEXT_PUBLIC_XMPP_BOSH_URL`   | XMPP BOSH endpoint for browser-based XMPP clients      | `https://xmpp.atl.chat/http-bind` |
+| `NEXT_PUBLIC_SENTRY_DSN`      | Sentry DSN for error tracking (optional)               | _(empty)_                         |
 
 See `apps/web/.env.example` for the full list. Copy it to `apps/web/.env.local` for local overrides.
 

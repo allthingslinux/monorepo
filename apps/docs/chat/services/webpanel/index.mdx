@@ -49,25 +49,25 @@ The WebPanel provides these administration capabilities through the browser:
 
 The compose configuration mounts a single bind-mount volume into the WebPanel container:
 
-| Host path | Container path | Purpose |
-|---|---|---|
+| Host path                 | Container path                           | Purpose                                                              |
+| ------------------------- | ---------------------------------------- | -------------------------------------------------------------------- |
 | `data/irc/webpanel-data/` | `/var/www/html/unrealircd-webpanel/data` | Persistent data — configuration state, session data, SQLite database |
 
 The `data/irc/webpanel-data/` directory is created by `scripts/init.sh` during `just init`. The WebPanel stores its runtime configuration and any file-based authentication data here.
 
 ## Technology
 
-| Component | Technology |
-|---|---|
-| Software | [UnrealIRCd WebPanel](https://github.com/unrealircd/unrealircd-webpanel) (latest) |
-| Base image | `trafex/php-nginx` (PHP 8.4 + Nginx) |
-| Container name | `atl-irc-webpanel` |
-| Build | Multi-stage — Composer dependency install, then PHP-Nginx runtime |
-| Web interface | Port `8080` (configurable via `WEBPANEL_PORT`) |
-| RPC connection | JSON-RPC to UnrealIRCd on port `8600` |
-| Authentication | File-based (default) or SQL |
-| Network | `atl-chat` Docker network |
-| Security headers | `X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection` via Nginx |
+| Component        | Technology                                                                        |
+| ---------------- | --------------------------------------------------------------------------------- |
+| Software         | [UnrealIRCd WebPanel](https://github.com/unrealircd/unrealircd-webpanel) (latest) |
+| Base image       | `trafex/php-nginx` (PHP 8.4 + Nginx)                                              |
+| Container name   | `atl-irc-webpanel`                                                                |
+| Build            | Multi-stage — Composer dependency install, then PHP-Nginx runtime                 |
+| Web interface    | Port `8080` (configurable via `WEBPANEL_PORT`)                                    |
+| RPC connection   | JSON-RPC to UnrealIRCd on port `8600`                                             |
+| Authentication   | File-based (default) or SQL                                                       |
+| Network          | `atl-chat` Docker network                                                         |
+| Security headers | `X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection` via Nginx         |
 
 ## Troubleshooting
 

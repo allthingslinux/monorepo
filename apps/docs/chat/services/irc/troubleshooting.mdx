@@ -41,6 +41,7 @@ docker compose -f compose.yaml -p atl-chat logs atl-irc-services
 ```
 
 Common causes:
+
 - Config syntax error — look for `error` or `fatal` in the log output
 - Missing environment variables — ensure `.env` exists and has all required values
 - Port conflict — another process is using port 6697, 8000, or 8600

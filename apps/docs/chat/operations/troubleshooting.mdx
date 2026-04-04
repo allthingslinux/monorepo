@@ -691,16 +691,16 @@ just dev
 
 ## Recovery quick reference
 
-| Scenario | Command |
-|---|---|
-| Restart a single service | `docker compose restart <container-name>` |
-| Restart the full stack | `just down && just dev` |
-| Regenerate configs | `scripts/prepare-config.sh` |
-| Recreate data directories | `just init` |
-| Rebuild all containers | `just build` |
-| Reset to clean state | `just down && rm -rf data/ && just init && just dev` |
-| View real-time logs | `docker compose logs --follow <container-name>` |
-| Check all container health | `just status` |
+| Scenario                   | Command                                              |
+| -------------------------- | ---------------------------------------------------- |
+| Restart a single service   | `docker compose restart <container-name>`            |
+| Restart the full stack     | `just down && just dev`                              |
+| Regenerate configs         | `scripts/prepare-config.sh`                          |
+| Recreate data directories  | `just init`                                          |
+| Rebuild all containers     | `just build`                                         |
+| Reset to clean state       | `just down && rm -rf data/ && just init && just dev` |
+| View real-time logs        | `docker compose logs --follow <container-name>`      |
+| Check all container health | `just status`                                        |
 
 > **Warning:** Resetting to clean state (`rm -rf data/`) destroys all persistent data including user registrations, chat history, and certificates. Back up first — see [Backups](/docs/operations/backups).
 
