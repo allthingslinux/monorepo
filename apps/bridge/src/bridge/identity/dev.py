@@ -54,7 +54,9 @@ class DevIdentityResolver(IdentityResolver):
                     self._discord_irc[discord_id] = nick
                     seeded += 1
         if seeded:
-            logger.info("dev identity seeded {} Discord↔IRC mappings from BRIDGE_DEV_IRC_NICK_MAP", seeded)
+            logger.info(
+                "dev identity seeded {} Discord↔IRC mappings from BRIDGE_DEV_IRC_NICK_MAP", seeded
+            )
 
     # -- Programmatic mapping helpers ----------------------------------------
 

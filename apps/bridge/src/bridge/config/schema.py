@@ -145,7 +145,9 @@ def _build_irc_config(data: dict[str, Any], env: dict[str, str]) -> IRCConfig:
 
     kw["chathistory_on_reconnect"] = _coerce_bool(data.get("irc_chathistory_on_reconnect"), True)
     kw["chathistory_limit"] = int(data.get("irc_chathistory_limit", 50))
-    kw["history_replay_threshold_seconds"] = int(data.get("irc_history_replay_threshold_seconds", 30))
+    kw["history_replay_threshold_seconds"] = int(
+        data.get("irc_history_replay_threshold_seconds", 30)
+    )
 
     # --- env overrides for redact_enabled ---
     env_redact = env.get("BRIDGE_IRC_REDACT_ENABLED", "")
@@ -179,9 +181,13 @@ def _build_xmpp_config(data: dict[str, Any]) -> XMPPConfig:
     public = data.get("xmpp_avatar_public_url")
     return XMPPConfig(
         avatar_base_url=base.strip() if isinstance(base, str) and base and base.strip() else None,
-        avatar_public_url=public.strip() if isinstance(public, str) and public and public.strip() else None,
+        avatar_public_url=public.strip()
+        if isinstance(public, str) and public and public.strip()
+        else None,
         auto_rejoin=_coerce_bool(data.get("xmpp_auto_rejoin"), True),
-        promote_retraction_to_moderation=_coerce_bool(data.get("xmpp_promote_retraction_to_moderation"), True),
+        promote_retraction_to_moderation=_coerce_bool(
+            data.get("xmpp_promote_retraction_to_moderation"), True
+        ),
     )
 
 

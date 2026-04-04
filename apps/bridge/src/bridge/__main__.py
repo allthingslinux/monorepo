@@ -22,7 +22,12 @@ from bridge.events import config_reload
 from bridge.gateway import Bus, ChannelRouter, Relay
 from bridge.gateway.msgid_resolver import DefaultMessageIDResolver
 from bridge.gateway.relay import rebuild_content_filters
-from bridge.identity import DevIdentityResolver, IdentityResolver, PortalClient, PortalIdentityResolver
+from bridge.identity import (
+    DevIdentityResolver,
+    IdentityResolver,
+    PortalClient,
+    PortalIdentityResolver,
+)
 
 
 class Adapter(Protocol):
@@ -145,7 +150,9 @@ def setup_logging(verbose: bool = False) -> None:
     logger.add(
         sys.stderr,
         level=level,
-        format=("<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | {extra[prefix]} | {message}"),
+        format=(
+            "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | {extra[prefix]} | {message}"
+        ),
         filter=_safe_message_filter,
     )
     _intercept_logging(level)
@@ -160,7 +167,9 @@ def reload_config(config_path: Path) -> Config:
 
 def main() -> None:
     """Main entrypoint."""
-    parser = argparse.ArgumentParser(description="ATL Bridge — Discord–IRC–XMPP multi-presence bridge")
+    parser = argparse.ArgumentParser(
+        description="ATL Bridge — Discord–IRC–XMPP multi-presence bridge"
+    )
     parser.add_argument(
         "--config",
         "-c",
@@ -213,7 +222,9 @@ def main() -> None:
         logger.info("Portal identity client configured: {}", portal_url)
     elif _dev_irc_puppets_enabled():
         identity_resolver = DevIdentityResolver()
-        logger.info("Dev IRC puppets enabled (no Portal); nicks from BRIDGE_DEV_IRC_NICK_MAP or atl_dev_*")
+        logger.info(
+            "Dev IRC puppets enabled (no Portal); nicks from BRIDGE_DEV_IRC_NICK_MAP or atl_dev_*"
+        )
     else:
         logger.warning("BRIDGE_PORTAL_BASE_URL not set; identity resolution disabled")
 

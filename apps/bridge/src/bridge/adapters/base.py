@@ -18,9 +18,8 @@ class AdapterBase(ABC):
         """Return True if this adapter wants the event. Override for filtering."""
         return False
 
-    def push_event(self, source: str, evt: object) -> None:
+    def push_event(self, source: str, evt: object) -> None:  # noqa: B027
         """Handle event. Override to process. May queue for async handling."""
-        pass
 
     @abstractmethod
     async def start(self) -> None:

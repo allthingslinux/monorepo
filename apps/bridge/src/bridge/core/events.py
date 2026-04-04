@@ -431,7 +431,9 @@ class Dispatcher:
                         elapsed,
                     )
             except Exception as exc:
-                logger.exception("failed to dispatch {} from {} to {}: {}", evt_type, source, target, exc)
+                logger.exception(
+                    "failed to dispatch {} from {} to {}: {}", evt_type, source, target, exc
+                )
 
 
 dispatcher = Dispatcher()
