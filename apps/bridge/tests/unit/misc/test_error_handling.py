@@ -4,12 +4,12 @@ from unittest.mock import AsyncMock
 
 import httpx
 import pytest
+
 from bridge.events import message_in
 from bridge.gateway.bus import Bus
 from bridge.gateway.relay import Relay
 from bridge.gateway.router import ChannelRouter
 from bridge.identity import PortalClient, PortalIdentityResolver
-
 from tests.mocks import MockIRCAdapter
 
 
@@ -75,6 +75,7 @@ class TestConfigErrors:
         import tempfile
 
         import yaml
+
         from bridge.config import load_config
 
         # Act & Assert

@@ -92,8 +92,9 @@ class TestAdapterIsolation:
         **Validates: Requirement 8.1**
         """
         violations = _check_adapter_isolation("discord")
-        assert violations == [], "Discord adapter imports from other adapter packages:\n" + "\n".join(
-            f"  {f}: imports {m} (forbidden prefix: {p})" for f, m, p in violations
+        assert violations == [], (
+            "Discord adapter imports from other adapter packages:\n"
+            + "\n".join(f"  {f}: imports {m} (forbidden prefix: {p})" for f, m, p in violations)
         )
 
     def test_irc_does_not_import_discord_or_xmpp(self) -> None:

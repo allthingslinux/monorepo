@@ -139,11 +139,15 @@ class TestContentMatchesFilter:
             assert _content_matches_filter("clean message") is False
 
     def test_second_pattern_matches(self):
-        with patch("bridge.gateway.relay._compiled_filters", _build_content_filters([r"spam", r"blocked"])):
+        with patch(
+            "bridge.gateway.relay._compiled_filters", _build_content_filters([r"spam", r"blocked"])
+        ):
             assert _content_matches_filter("this is blocked") is True
 
     def test_invalid_regex_skipped_no_crash(self):
-        with patch("bridge.gateway.relay._compiled_filters", _build_content_filters([r"[invalid", r"spam"])):
+        with patch(
+            "bridge.gateway.relay._compiled_filters", _build_content_filters([r"[invalid", r"spam"])
+        ):
             assert _content_matches_filter("spam") is True  # second pattern still works
 
     def test_empty_content_no_match(self):

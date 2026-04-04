@@ -9,6 +9,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+
 from bridge.adapters.irc.handlers import (
     _sanitize_nick_for_retry,
     generate_collision_nick,

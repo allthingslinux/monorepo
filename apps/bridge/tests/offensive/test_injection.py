@@ -6,6 +6,7 @@ Validates: Requirement 15.4
 from __future__ import annotations
 
 import pytest
+
 from bridge.formatting.converter import convert
 from bridge.formatting.primitives import strip_invalid_xml_chars
 from bridge.gateway.pipeline import Pipeline, TransformContext

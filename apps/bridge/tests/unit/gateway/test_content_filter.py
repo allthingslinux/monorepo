@@ -11,6 +11,10 @@ from __future__ import annotations
 import re
 from unittest.mock import patch
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
+import bridge.gateway.relay as relay_mod
 from bridge.gateway.relay import (
     _build_content_filters,
     _content_matches_filter,
@@ -149,13 +153,12 @@ class TestContentMatchesFilter:
 # Property-based tests
 # ---------------------------------------------------------------------------
 
-import bridge.gateway.relay as relay_mod
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # Strategy: generate simple, always-valid regex patterns built from safe atoms.
 # We avoid arbitrary strings to prevent re.error from invalid regex.
-_SAFE_LITERALS = st.sampled_from(["spam", "ads", "hello", "world", "foo", "bar", "test", "block", "drop"])
+_SAFE_LITERALS = st.sampled_from(
+    ["spam", "ads", "hello", "world", "foo", "bar", "test", "block", "drop"]
+)
 _WORD_BOUNDARY = _SAFE_LITERALS.map(lambda w: rf"\b{w}\b")
 _ANCHORED_START = _SAFE_LITERALS.map(lambda w: f"^{w}")
 _CHAR_CLASS = st.sampled_from([r"[a-z]+", r"[0-9]+", r"[A-Za-z]+", r"\d+", r"\w+"])

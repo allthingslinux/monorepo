@@ -7,6 +7,7 @@ from typing import cast
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
 from bridge.adapters.xmpp import XMPPAdapter
 from bridge.events import MessageDeleteOut, MessageOut, ReactionOut
 from bridge.gateway import Bus, ChannelRouter
@@ -193,7 +194,9 @@ class TestHandleDeleteOut:
     async def test_no_component_returns_early(self):
         adapter, _, router = _make_adapter()
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         # _component is None by default
         await adapter._handle_delete_out(evt)
         # identity should never be consulted when component is absent
@@ -204,7 +207,9 @@ class TestHandleDeleteOut:
         adapter, _, router = _make_adapter()
         adapter._component = _mock_component()
         router.get_mapping_for_discord.return_value = None
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         await adapter._handle_delete_out(evt)
         adapter._component.send_retraction_as_bridge.assert_not_called()
 
@@ -214,7 +219,9 @@ class TestHandleDeleteOut:
         comp = _mock_component(xmpp_id_for=None)
         adapter._component = comp
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         await adapter._handle_delete_out(evt)
         comp.send_retraction_as_bridge.assert_not_called()
 
@@ -225,9 +232,13 @@ class TestHandleDeleteOut:
         comp = _mock_component()
         adapter._component = comp
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         await adapter._handle_delete_out(evt)
-        comp.send_retraction_as_user.assert_awaited_once_with("u1", "room@conf.example.com", "xmpp-msg-1", "xmpp_nick")
+        comp.send_retraction_as_user.assert_awaited_once_with(
+            "u1", "room@conf.example.com", "xmpp-msg-1", "xmpp_nick"
+        )
         comp.send_retraction_as_bridge.assert_not_called()
 
     @pytest.mark.asyncio
@@ -239,7 +250,9 @@ class TestHandleDeleteOut:
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
         evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1")
         await adapter._handle_delete_out(evt)
-        comp.send_retraction_as_bridge.assert_awaited_once_with("room@conf.example.com", "xmpp-msg-1")
+        comp.send_retraction_as_bridge.assert_awaited_once_with(
+            "room@conf.example.com", "xmpp-msg-1"
+        )
         comp.send_retraction_as_user.assert_not_called()
 
 
@@ -361,7 +374,9 @@ class TestHandleReactionOut:
 # ---------------------------------------------------------------------------
 
 
-async def _run_consumer_once(adapter: XMPPAdapter, evt: MessageOut | MessageDeleteOut | ReactionOut) -> None:
+async def _run_consumer_once(
+    adapter: XMPPAdapter, evt: MessageOut | MessageDeleteOut | ReactionOut
+) -> None:
     """Put one event in the queue, run consumer until queue is drained, then cancel."""
     adapter._outbound.put_nowait(evt)
     task = asyncio.create_task(adapter._outbound_consumer())
@@ -577,10 +592,14 @@ class TestOutboundConsumer:
         adapter._component = comp
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
 
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         await _run_consumer_once(adapter, evt)
 
-        comp.send_retraction_as_user.assert_awaited_once_with("u1", "room@conf.example.com", "xmpp-msg-1", "xmpp_nick")
+        comp.send_retraction_as_user.assert_awaited_once_with(
+            "u1", "room@conf.example.com", "xmpp-msg-1", "xmpp_nick"
+        )
 
     @pytest.mark.asyncio
     async def test_reaction_out_dispatched_to_handle_reaction(self):
@@ -666,7 +685,9 @@ class TestStart:
     async def test_start_no_xmpp_mappings_returns_early(self):
         adapter, bus, router = _make_adapter()
         # Mapping with no xmpp target
-        router.all_mappings.return_value = [ChannelMapping(discord_channel_id="111", irc=None, xmpp=None)]
+        router.all_mappings.return_value = [
+            ChannelMapping(discord_channel_id="111", irc=None, xmpp=None)
+        ]
         env = {
             "BRIDGE_XMPP_COMPONENT_JID": "bridge.example.com",
             "BRIDGE_XMPP_COMPONENT_SECRET": "s3cr3t",
@@ -754,9 +775,13 @@ class TestEdgeCases:
         comp = _mock_component()
         adapter._component = comp
         router.get_mapping_for_discord.return_value = _xmpp_mapping()
-        evt = MessageDeleteOut(target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1")
+        evt = MessageDeleteOut(
+            target_origin="xmpp", channel_id="111", message_id="m1", author_id="u1"
+        )
         await adapter._handle_delete_out(evt)
-        comp.send_retraction_as_user.assert_awaited_once_with("u1", "room@conf.example.com", "xmpp-msg-1", "u1")
+        comp.send_retraction_as_user.assert_awaited_once_with(
+            "u1", "room@conf.example.com", "xmpp-msg-1", "u1"
+        )
         comp.send_retraction_as_bridge.assert_not_called()
 
     @pytest.mark.asyncio

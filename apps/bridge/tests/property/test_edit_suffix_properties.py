@@ -83,7 +83,9 @@ class TestEditSuffixAppendedForNonNative:
         **Validates: Requirement 22.1**
         """
         result = apply_edit_suffix(content, is_edit=True, target=target, edit_suffix=edit_suffix)
-        assert result.endswith(edit_suffix), f"Expected result to end with {edit_suffix!r}, got {result!r}"
+        assert result.endswith(edit_suffix), (
+            f"Expected result to end with {edit_suffix!r}, got {result!r}"
+        )
 
     @given(
         content=_CONTENT,

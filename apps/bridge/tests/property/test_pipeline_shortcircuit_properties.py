@@ -12,6 +12,9 @@ from __future__ import annotations
 
 import re
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
 from bridge.gateway.pipeline import Pipeline, TransformContext
 from bridge.gateway.steps import (
     add_reply_fallback,
@@ -21,8 +24,6 @@ from bridge.gateway.steps import (
     unwrap_spoiler,
     wrap_spoiler,
 )
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # ---------------------------------------------------------------------------
 # Strategies
@@ -33,9 +34,13 @@ _PROTOCOLS = ("discord", "irc", "xmpp")
 _PROTOCOL_PAIRS = st.sampled_from([(o, t) for o in _PROTOCOLS for t in _PROTOCOLS if o != t])
 
 # Safe literal patterns that won't cause catastrophic backtracking.
-_SAFE_LITERALS = st.sampled_from(["spam", "ads", "block", "drop", "filter", "banned", "nope", "reject"])
+_SAFE_LITERALS = st.sampled_from(
+    ["spam", "ads", "block", "drop", "filter", "banned", "nope", "reject"]
+)
 
-_PATTERN_LIST = st.lists(_SAFE_LITERALS, min_size=1, max_size=4).map(lambda pats: [re.compile(p) for p in pats])
+_PATTERN_LIST = st.lists(_SAFE_LITERALS, min_size=1, max_size=4).map(
+    lambda pats: [re.compile(p) for p in pats]
+)
 
 # Content that is guaranteed to match at least one pattern: we pick a
 # pattern literal and embed it in surrounding safe text.

@@ -11,6 +11,7 @@ from unittest.mock import MagicMock
 
 import discord
 import pytest
+
 from bridge.adapters.discord.handlers import _is_voice_message
 from bridge.gateway import Bus, ChannelRouter
 
@@ -149,7 +150,9 @@ class TestVoiceMessageWithoutAttachment:
     """Voice messages without attachments relay the placeholder text."""
 
     @pytest.mark.asyncio
-    async def test_voice_without_attachment_relays_placeholder(self, bus: Bus, router: ChannelRouter) -> None:
+    async def test_voice_without_attachment_relays_placeholder(
+        self, bus: Bus, router: ChannelRouter
+    ) -> None:
         adapter = _make_adapter(bus, router)
         published: list = []
         bus.publish = lambda s, e: published.append((s, e))  # type: ignore[method-assign]
@@ -173,7 +176,9 @@ class TestNonVoiceMessageUnaffected:
     """Non-voice messages go through the normal message handling path."""
 
     @pytest.mark.asyncio
-    async def test_regular_message_not_treated_as_voice(self, bus: Bus, router: ChannelRouter) -> None:
+    async def test_regular_message_not_treated_as_voice(
+        self, bus: Bus, router: ChannelRouter
+    ) -> None:
         adapter = _make_adapter(bus, router)
         published: list = []
         bus.publish = lambda s, e: published.append((s, e))  # type: ignore[method-assign]

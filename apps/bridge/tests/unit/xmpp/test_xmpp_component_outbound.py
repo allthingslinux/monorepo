@@ -8,6 +8,9 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from cachetools import TTLCache
+from slixmpp import JID
+
 from bridge.adapters.xmpp import (
     XMPPComponent,
     XMPPMessageIDTracker,
@@ -16,8 +19,6 @@ from bridge.adapters.xmpp import (
     _unescape_jid_node,
 )
 from bridge.adapters.xmpp.outbound import RETRACTION_FALLBACK_BODY
-from cachetools import TTLCache
-from slixmpp import JID
 
 pytestmark = pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 
@@ -56,11 +57,14 @@ class TestMucNickToBareJid:
 
     def test_escaped_jid_nick(self):
         assert (
-            _muc_nick_to_bare_jid("kaizen\\40xmpp.localhost", "general@muc.xmpp.localhost") == "kaizen@xmpp.localhost"
+            _muc_nick_to_bare_jid("kaizen\\40xmpp.localhost", "general@muc.xmpp.localhost")
+            == "kaizen@xmpp.localhost"
         )
 
     def test_plain_nick_derives_domain_from_room(self):
-        assert _muc_nick_to_bare_jid("kaizen", "general@muc.xmpp.localhost") == "kaizen@xmpp.localhost"
+        assert (
+            _muc_nick_to_bare_jid("kaizen", "general@muc.xmpp.localhost") == "kaizen@xmpp.localhost"
+        )
 
     def test_empty_nick_returns_none(self):
         assert _muc_nick_to_bare_jid("", "general@muc.xmpp.localhost") is None
@@ -235,7 +239,9 @@ class TestSendMessageAsUser:
         comp.plugin = _make_plugin_registry(xep_0106=_mock_jid_escape_plugin())
 
         # Act
-        await comp.send_message_as_user("d1", "room@conf.example.com", "hello", "Nick", xmpp_msg_id="explicit-id")
+        await comp.send_message_as_user(
+            "d1", "room@conf.example.com", "hello", "Nick", xmpp_msg_id="explicit-id"
+        )
 
         # Assert — the explicit id was set on the message stanza
         mock_msg.__setitem__.assert_any_call("id", "explicit-id")
@@ -330,7 +336,9 @@ class TestSendRetractionAsUser:
         comp = make_component()
         mock_msg = MagicMock()
         mock_fallback = MagicMock()
-        mock_msg.enable.side_effect = lambda name: mock_fallback if name == "fallback" else MagicMock()
+        mock_msg.enable.side_effect = lambda name: (
+            mock_fallback if name == "fallback" else MagicMock()
+        )
         comp.make_message.return_value = mock_msg
         comp.plugin = _make_plugin_registry(xep_0106=_mock_jid_escape_plugin())
 
@@ -378,7 +386,9 @@ class TestSendCorrectionAsUser:
         comp.plugin = _make_plugin_registry(xep_0106=_mock_jid_escape_plugin())
 
         # Act
-        await comp.send_correction_as_user("d1", "room@conf.example.com", "corrected text", "Nick", "orig-1")
+        await comp.send_correction_as_user(
+            "d1", "room@conf.example.com", "corrected text", "Nick", "orig-1"
+        )
 
         # Assert
         comp.make_message.assert_called_once()
@@ -791,7 +801,9 @@ class TestSendFileWithFallback:
         comp.send_file_as_user = AsyncMock()
 
         # Act
-        await comp.send_file_with_fallback("d1", "room@conf.example.com", b"data", "file.txt", "Nick")
+        await comp.send_file_with_fallback(
+            "d1", "room@conf.example.com", b"data", "file.txt", "Nick"
+        )
 
         # Assert — HTTP upload path taken; IBB path not reached
         comp.send_file_url_as_user.assert_awaited_once()
@@ -805,7 +817,9 @@ class TestSendFileWithFallback:
         comp.send_file_as_user = AsyncMock()
 
         # Act
-        await comp.send_file_with_fallback("d1", "room@conf.example.com", b"data", "file.txt", "Nick")
+        await comp.send_file_with_fallback(
+            "d1", "room@conf.example.com", b"data", "file.txt", "Nick"
+        )
 
         # Assert
         comp.send_file_as_user.assert_awaited_once()

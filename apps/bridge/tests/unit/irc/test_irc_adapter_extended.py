@@ -7,6 +7,7 @@ import contextlib
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
 from bridge.adapters.irc import IRCAdapter, IRCClient
 from bridge.events import MessageOut
 from bridge.gateway import Bus, ChannelRouter

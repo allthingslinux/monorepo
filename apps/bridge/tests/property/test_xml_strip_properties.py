@@ -10,9 +10,10 @@ Property CP17: Invalid XML Character Stripping
 
 from __future__ import annotations
 
-from bridge.formatting.primitives import strip_invalid_xml_chars
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.primitives import strip_invalid_xml_chars
 
 
 def is_valid_xml_char(c: str) -> bool:
@@ -22,7 +23,12 @@ def is_valid_xml_char(c: str) -> bool:
       #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
     """
     cp = ord(c)
-    return cp in {0x9, 0xA, 0xD} or (0x20 <= cp <= 0xD7FF) or (0xE000 <= cp <= 0xFFFD) or (0x10000 <= cp <= 0x10FFFF)
+    return (
+        cp in {0x9, 0xA, 0xD}
+        or (0x20 <= cp <= 0xD7FF)
+        or (0xE000 <= cp <= 0xFFFD)
+        or (0x10000 <= cp <= 0x10FFFF)
+    )
 
 
 # Strategy: arbitrary text strings covering the full Unicode range.
@@ -41,7 +47,9 @@ class TestXmlStripProperties:
         """
         result = strip_invalid_xml_chars(s)
         for i, c in enumerate(result):
-            assert is_valid_xml_char(c), f"Invalid XML 1.0 char U+{ord(c):04X} at index {i} in result (input={s!r})"
+            assert is_valid_xml_char(c), (
+                f"Invalid XML 1.0 char U+{ord(c):04X} at index {i} in result (input={s!r})"
+            )
 
     @given(s=_strings)
     @settings(max_examples=200)
@@ -52,7 +60,9 @@ class TestXmlStripProperties:
         """
         result = strip_invalid_xml_chars(s)
         expected = "".join(c for c in s if is_valid_xml_char(c))
-        assert result == expected, f"Valid chars not preserved: expected {expected!r}, got {result!r} (input={s!r})"
+        assert result == expected, (
+            f"Valid chars not preserved: expected {expected!r}, got {result!r} (input={s!r})"
+        )
 
     @given(s=_strings)
     @settings(max_examples=200)

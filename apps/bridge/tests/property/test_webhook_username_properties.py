@@ -9,9 +9,10 @@ Property CP8: Webhook Username Validity
 
 from __future__ import annotations
 
-from bridge.identity.sanitize import ensure_valid_username
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.identity.sanitize import ensure_valid_username
 
 # ---------------------------------------------------------------------------
 # Strategies — exercise the full input space

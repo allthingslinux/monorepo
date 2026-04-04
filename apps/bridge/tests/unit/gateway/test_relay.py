@@ -135,7 +135,9 @@ class TestRelay:
         bus.register(discord_adapter)
 
         # Act
-        _, evt = message_in("xmpp", "test@conference.example.com", "u1", "User", "Hello from XMPP", "msg1")
+        _, evt = message_in(
+            "xmpp", "test@conference.example.com", "u1", "User", "Hello from XMPP", "msg1"
+        )
         bus.publish("xmpp", evt)
 
         # Assert
@@ -287,7 +289,9 @@ class TestRelay:
         bus.register(irc_adapter)
 
         # Act
-        _, evt = message_in("discord", "123", "user123", "TestUser", "Test message", "msg1", reply_to_id="msg0")
+        _, evt = message_in(
+            "discord", "123", "user123", "TestUser", "Test message", "msg1", reply_to_id="msg0"
+        )
         bus.publish("discord", evt)
 
         # Assert
@@ -403,7 +407,12 @@ class TestRelay:
             "mappings": [
                 {
                     "discord_channel_id": "123",
-                    "irc": {"server": "irc.libera.chat", "channel": "#test", "port": 6667, "tls": False},
+                    "irc": {
+                        "server": "irc.libera.chat",
+                        "channel": "#test",
+                        "port": 6667,
+                        "tls": False,
+                    },
                     "xmpp": {"muc_jid": "test@muc.example.com"},
                 }
             ]
@@ -457,7 +466,9 @@ class TestRelay:
         bus.register(discord_adapter)
 
         bold = "\x02"
-        _, evt = message_in("irc", "irc.libera.chat/#test", "u1", "User", f"{bold}bold{bold}", "msg1")
+        _, evt = message_in(
+            "irc", "irc.libera.chat/#test", "u1", "User", f"{bold}bold{bold}", "msg1"
+        )
         bus.publish("irc", evt)
 
         _, out_evt = discord_adapter.received_events[0]
@@ -470,8 +481,14 @@ class TestRelay:
         relay = Relay(bus, router)
 
         # Act & Assert
-        assert relay.accept_event("discord", MessageIn("discord", "ch1", "u1", "User", "Hi", "msg1")) is True
-        assert relay.accept_event("discord", MessageOut("irc", "ch1", "u1", "User", "Hi", "msg1")) is False
+        assert (
+            relay.accept_event("discord", MessageIn("discord", "ch1", "u1", "User", "Hi", "msg1"))
+            is True
+        )
+        assert (
+            relay.accept_event("discord", MessageOut("irc", "ch1", "u1", "User", "Hi", "msg1"))
+            is False
+        )
         assert relay.accept_event("discord", "not an event") is False
 
     def test_relay_accepts_message_delete_reaction_typing(self):
@@ -479,7 +496,10 @@ class TestRelay:
         router = ChannelRouter()
         relay = Relay(bus, router)
         assert relay.accept_event("discord", MessageDelete("discord", "123", "m1", "u1")) is True
-        assert relay.accept_event("discord", ReactionIn("discord", "123", "m1", "👍", "u1", "User")) is True
+        assert (
+            relay.accept_event("discord", ReactionIn("discord", "123", "m1", "👍", "u1", "User"))
+            is True
+        )
         assert relay.accept_event("discord", TypingIn("discord", "123", "u1")) is True
 
     def test_content_filter_skips_matching_messages(self):
@@ -505,7 +525,10 @@ class TestRelay:
         bus.register(relay)
         bus.register(irc_adapter)
 
-        with patch("bridge.gateway.relay._compiled_filters", _build_content_filters([r"spam", r"\bblocked\b"])):
+        with patch(
+            "bridge.gateway.relay._compiled_filters",
+            _build_content_filters([r"spam", r"\bblocked\b"]),
+        ):
             _, evt = message_in("discord", "123", "u1", "User", "this is spam", "msg1")
             bus.publish("discord", evt)
 
@@ -563,7 +586,9 @@ class TestRelay:
         bus.publish("discord", evt)
 
         irc_deletes = [e for _, e in irc_adapter.received_events if isinstance(e, MessageDeleteOut)]
-        xmpp_deletes = [e for _, e in xmpp_adapter.received_events if isinstance(e, MessageDeleteOut)]
+        xmpp_deletes = [
+            e for _, e in xmpp_adapter.received_events if isinstance(e, MessageDeleteOut)
+        ]
         assert len(irc_deletes) == 1
         assert irc_deletes[0].message_id == "msg-999"
         assert len(xmpp_deletes) == 1
@@ -591,12 +616,18 @@ class TestRelay:
         bus.register(xmpp_adapter)
         bus.register(discord_adapter)
 
-        _, evt = message_delete("irc", "s/#c", "msg-999", author_id="admin", raw={"skip_xmpp": True})
+        _, evt = message_delete(
+            "irc", "s/#c", "msg-999", author_id="admin", raw={"skip_xmpp": True}
+        )
         bus.publish("irc", evt)
 
         irc_deletes = [e for _, e in irc_adapter.received_events if isinstance(e, MessageDeleteOut)]
-        xmpp_deletes = [e for _, e in xmpp_adapter.received_events if isinstance(e, MessageDeleteOut)]
-        discord_deletes = [e for _, e in discord_adapter.received_events if isinstance(e, MessageDeleteOut)]
+        xmpp_deletes = [
+            e for _, e in xmpp_adapter.received_events if isinstance(e, MessageDeleteOut)
+        ]
+        discord_deletes = [
+            e for _, e in discord_adapter.received_events if isinstance(e, MessageDeleteOut)
+        ]
         assert len(irc_deletes) == 0  # origin=irc, skip self
         assert len(xmpp_deletes) == 0  # skip_xmpp=True
         assert len(discord_deletes) == 1

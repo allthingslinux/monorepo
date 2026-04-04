@@ -16,11 +16,12 @@ IRC color code format:
 
 from __future__ import annotations
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
 from bridge.formatting.irc_codes import COLOR, RESET, detect_irc_spoilers
 from bridge.gateway.pipeline import TransformContext
 from bridge.gateway.steps import unwrap_spoiler
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # ---------------------------------------------------------------------------
 # Strategies
@@ -68,7 +69,9 @@ class TestIrcSpoilerDetection:
         """
         content = f"{_fmt_color(color, color)}{text}{RESET}"
         ranges = detect_irc_spoilers(content)
-        assert len(ranges) > 0, f"detect_irc_spoilers missed fg==bg spoiler: color={color}, content={content!r}"
+        assert len(ranges) > 0, (
+            f"detect_irc_spoilers missed fg==bg spoiler: color={color}, content={content!r}"
+        )
         # The detected range should cover the entire text body
         total_detected = sum(end - start for start, end in ranges)
         assert total_detected == len(text), (

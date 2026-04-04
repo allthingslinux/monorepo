@@ -39,7 +39,9 @@ _PROTOCOL = st.sampled_from(["discord", "irc", "xmpp"])
 
 # Templates that contain {nick} — the property only holds for templates
 # that actually include the nick placeholder.
-_TEMPLATE_WITH_NICK = st.from_regex(r"[^{}]*\{nick\}[^{}]*", fullmatch=True).filter(lambda t: "{nick}" in t)
+_TEMPLATE_WITH_NICK = st.from_regex(r"[^{}]*\{nick\}[^{}]*", fullmatch=True).filter(
+    lambda t: "{nick}" in t
+)
 
 
 # ---------------------------------------------------------------------------
@@ -89,7 +91,9 @@ class TestCustomTemplateContainsNick:
         **Validates: Requirement 23.1**
         """
         result = format_remote_nick(nick, protocol, template=template)
-        assert nick in result, f"Expected nick {nick!r} in result {result!r} (template={template!r})"
+        assert nick in result, (
+            f"Expected nick {nick!r} in result {result!r} (template={template!r})"
+        )
 
 
 # ---------------------------------------------------------------------------

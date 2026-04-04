@@ -9,6 +9,7 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
+
 from bridge.adapters.discord.handlers import is_bridge_echo, is_own_reaction
 from bridge.gateway import Bus, ChannelRouter
 

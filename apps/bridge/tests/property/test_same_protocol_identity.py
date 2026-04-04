@@ -11,9 +11,10 @@ Property CP14: Same-Protocol Identity Conversion
 
 from __future__ import annotations
 
-from bridge.formatting.converter import ProtocolName, convert
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.converter import ProtocolName, convert
 
 # All protocol names.
 _protocols = st.sampled_from(["discord", "irc", "xmpp"])

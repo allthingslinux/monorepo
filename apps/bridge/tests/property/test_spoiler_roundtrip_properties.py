@@ -16,11 +16,12 @@ All three protocols support spoilers:
 
 from __future__ import annotations
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
 from bridge.formatting.irc_codes import COLOR, RESET
 from bridge.gateway.pipeline import TransformContext
 from bridge.gateway.steps import format_convert, unwrap_spoiler, wrap_spoiler
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -144,8 +145,12 @@ class TestSpoilerRoundTrip:
         content, raw = _wrap_spoiler_for_origin(text, origin)
         result, _ctx = _run_spoiler_pipeline(content, origin, target, raw)
         assert result is not None
-        assert COLOR in result, f"IRC target missing color codes for {origin}→irc: result={result!r}"
-        assert result.endswith(RESET), f"IRC target missing RESET for {origin}→irc: result={result!r}"
+        assert COLOR in result, (
+            f"IRC target missing color codes for {origin}→irc: result={result!r}"
+        )
+        assert result.endswith(RESET), (
+            f"IRC target missing RESET for {origin}→irc: result={result!r}"
+        )
 
     @given(text=_safe_text, pair=_PROTOCOL_PAIRS)
     @settings(max_examples=200)

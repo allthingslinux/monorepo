@@ -10,9 +10,10 @@ Property CP1: Formatting Roundtrip Preservation
 
 from __future__ import annotations
 
-from bridge.formatting.converter import ProtocolName, convert, strip_formatting
 from hypothesis import assume, given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.converter import ProtocolName, convert, strip_formatting
 
 # Characters that act as formatting markers across all protocols.
 # Discord: * _ ~ ` |
@@ -22,7 +23,9 @@ from hypothesis import strategies as st
 # processing (U+E001–U+E006).  These codepoints are consumed and replaced with their
 # literal equivalents (_ * ` ~ | \) during parsing, so they are treated as formatting
 # markers from the converter's perspective and must be excluded from "plain text".
-_FORMATTING_MARKERS = frozenset("*_~`|\x02\x03\x0f\x11\x16\x1d\x1e\x1f\ue001\ue002\ue003\ue004\ue005\ue006")
+_FORMATTING_MARKERS = frozenset(
+    "*_~`|\x02\x03\x0f\x11\x16\x1d\x1e\x1f\ue001\ue002\ue003\ue004\ue005\ue006"
+)
 
 # All protocol names.
 _protocols = st.sampled_from(["discord", "irc", "xmpp"])
@@ -44,7 +47,9 @@ class TestFormattingRoundtripPreservation:
 
     @given(text=_plain_text, origin=_protocols, target=_protocols)
     @settings(max_examples=200)
-    def test_plain_text_roundtrip(self, text: str, origin: ProtocolName, target: ProtocolName) -> None:
+    def test_plain_text_roundtrip(
+        self, text: str, origin: ProtocolName, target: ProtocolName
+    ) -> None:
         """For plain text without formatting markers, converting from any
         origin to any target and stripping formatting yields the original text.
 

@@ -3,6 +3,7 @@
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+
 from bridge.adapters.irc import (
     IRCAdapter,
     IRCClient,

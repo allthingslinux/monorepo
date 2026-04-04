@@ -10,9 +10,10 @@ Property CP7: Channel Router Bijectivity
 
 from __future__ import annotations
 
-from bridge.gateway.router import ChannelRouter
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.gateway.router import ChannelRouter
 
 # ---------------------------------------------------------------------------
 # Strategies
@@ -98,11 +99,15 @@ class TestChannelRouterBijectivity:
             by_xmpp = router.get_mapping_for_xmpp(xmpp_cfg["muc_jid"])
 
             assert by_discord is not None, f"Discord lookup failed for {discord_id}"
-            assert by_irc is not None, f"IRC lookup failed for ({irc_cfg['server']}, {irc_cfg['channel']})"
+            assert by_irc is not None, (
+                f"IRC lookup failed for ({irc_cfg['server']}, {irc_cfg['channel']})"
+            )
             assert by_xmpp is not None, f"XMPP lookup failed for {xmpp_cfg['muc_jid']}"
 
             # All three lookups must return the exact same object (identity).
-            assert by_discord is by_irc, f"Discord and IRC lookups returned different objects for discord={discord_id}"
+            assert by_discord is by_irc, (
+                f"Discord and IRC lookups returned different objects for discord={discord_id}"
+            )
             assert by_discord is by_xmpp, (
                 f"Discord and XMPP lookups returned different objects for discord={discord_id}"
             )

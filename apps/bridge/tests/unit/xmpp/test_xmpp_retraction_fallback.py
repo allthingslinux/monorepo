@@ -12,6 +12,8 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from cachetools import TTLCache
+
 from bridge.adapters.xmpp.component import XMPPComponent
 from bridge.adapters.xmpp.msgid import XMPPMessageIDTracker
 from bridge.adapters.xmpp.outbound import (
@@ -19,7 +21,6 @@ from bridge.adapters.xmpp.outbound import (
     send_retraction_as_bridge,
     send_retraction_as_user,
 )
-from cachetools import TTLCache
 
 # ---------------------------------------------------------------------------
 # Helpers

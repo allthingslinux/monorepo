@@ -11,12 +11,13 @@ Property CP13: Formatting Parse-Emit-Parse Round-Trip
 
 from __future__ import annotations
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
 from bridge.formatting.irc_codes import emit_irc_codes, parse_irc_codes
 from bridge.formatting.markdown import emit_discord_markdown, parse_discord_markdown
 from bridge.formatting.primitives import FormattedText, Span, Style
 from bridge.formatting.xmpp_styling import emit_xep0393, parse_xep0393
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # ---------------------------------------------------------------------------
 # Constants

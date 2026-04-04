@@ -1,6 +1,9 @@
 """Test channel router and mappings."""
 
-from bridge.gateway.router import ChannelRouter
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
+from bridge.gateway.router import ChannelMapping, ChannelRouter
 
 
 class TestChannelRouter:
@@ -69,7 +72,9 @@ class TestChannelRouter:
 
     def test_xmpp_without_muc_jid_treated_as_absent(self):
         router = ChannelRouter()
-        router.load_from_config({"mappings": [{"discord_channel_id": "123", "xmpp": {"other_key": "value"}}]})
+        router.load_from_config(
+            {"mappings": [{"discord_channel_id": "123", "xmpp": {"other_key": "value"}}]}
+        )
         assert router.all_mappings()[0].xmpp is None
 
     def test_xmpp_non_dict_value_treated_as_absent(self):
@@ -307,7 +312,9 @@ class TestChannelRouterDictIndexes:
         router.load_from_config(
             self._full_config(
                 [
-                    self._mapping_entry("100", irc_server="irc.example.com", irc_channel="#general"),
+                    self._mapping_entry(
+                        "100", irc_server="irc.example.com", irc_channel="#general"
+                    ),
                     self._mapping_entry("200", irc_server="irc.example.com", irc_channel="#random"),
                 ]
             )
@@ -459,7 +466,9 @@ class TestChannelRouterDictIndexes:
 
     def test_missing_irc_key_returns_none(self):
         router = ChannelRouter()
-        router.load_from_config(self._full_config([self._mapping_entry("100", irc_server="s", irc_channel="#c")]))
+        router.load_from_config(
+            self._full_config([self._mapping_entry("100", irc_server="s", irc_channel="#c")])
+        )
         assert router.get_mapping_for_irc("s", "#other") is None
 
     def test_missing_xmpp_key_returns_none(self):
@@ -495,9 +504,6 @@ class TestChannelRouterDictIndexes:
 # Property-based tests (hypothesis)
 # ---------------------------------------------------------------------------
 
-from bridge.gateway.router import ChannelMapping
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # -- Strategies --
 
@@ -532,7 +538,9 @@ def _linear_scan_discord(mappings: list[ChannelMapping], discord_id: str) -> Cha
     return result
 
 
-def _linear_scan_irc(mappings: list[ChannelMapping], server: str, channel: str) -> ChannelMapping | None:
+def _linear_scan_irc(
+    mappings: list[ChannelMapping], server: str, channel: str
+) -> ChannelMapping | None:
     result = None
     for m in mappings:
         if m.irc and m.irc.server == server and m.irc.channel == channel:

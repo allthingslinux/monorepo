@@ -10,9 +10,10 @@ Property CP3: Message Splitting Completeness and Byte Safety
 
 from __future__ import annotations
 
-from bridge.formatting.splitter import split_irc_message
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.splitter import split_irc_message
 
 
 class TestSplitPreservesAllContent:

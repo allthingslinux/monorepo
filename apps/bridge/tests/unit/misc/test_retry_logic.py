@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock
 
 import httpx
 import pytest
+
 from bridge.identity import PortalClient, PortalIdentityResolver
 
 

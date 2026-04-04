@@ -12,9 +12,10 @@ from __future__ import annotations
 import os
 from unittest import mock
 
-from bridge.config.schema import Config
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.config.schema import Config
 
 # ---------------------------------------------------------------------------
 # Strategies for generating valid config field values
@@ -22,7 +23,11 @@ from hypothesis import strategies as st
 
 # Mapping items must have a discord_channel_id (non-empty string).
 _mapping_item = st.fixed_dictionaries(
-    {"discord_channel_id": st.text(min_size=1, max_size=30, alphabet=st.characters(categories=("L", "N")))},
+    {
+        "discord_channel_id": st.text(
+            min_size=1, max_size=30, alphabet=st.characters(categories=("L", "N"))
+        )
+    },
 )
 _mappings = st.lists(_mapping_item, min_size=1, max_size=5)
 
@@ -140,7 +145,9 @@ class TestConfigLoadRoundTrip:
         assert cfg.irc_relaymsg_clean_nicks == data["irc_relaymsg_clean_nicks"]
         assert cfg.irc_tls_verify == data["irc_tls_verify"]
         assert cfg.irc_puppet_ping_interval == data["irc_puppet_ping_interval"]
-        assert cfg.irc_puppet_prejoin_commands == [str(c) for c in data["irc_puppet_prejoin_commands"]]
+        assert cfg.irc_puppet_prejoin_commands == [
+            str(c) for c in data["irc_puppet_prejoin_commands"]
+        ]
 
         # -- IRC nested sub-config --
         assert cfg.irc.puppet_idle_timeout_hours == data["irc_puppet_idle_timeout_hours"]

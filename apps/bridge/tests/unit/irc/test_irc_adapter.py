@@ -7,6 +7,7 @@ from typing import cast
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
 from bridge.adapters.irc import IRCAdapter
 from bridge.events import MessageDeleteOut, MessageOut, ReactionOut, TypingOut
 from bridge.gateway import Bus, ChannelRouter
@@ -344,7 +345,9 @@ class TestSendTyping:
         router.get_mapping_for_discord.return_value = _irc_mapping()
         evt = TypingOut(target_origin="irc", channel_id="111")
         await adapter._send_typing(evt)
-        adapter._client.rawmsg.assert_awaited_once_with("TAGMSG", "#test", tags={"+typing": "active"})
+        adapter._client.rawmsg.assert_awaited_once_with(
+            "TAGMSG", "#test", tags={"+typing": "active"}
+        )
 
     @pytest.mark.asyncio
     async def test_no_mapping_skips(self):
@@ -480,7 +483,9 @@ class TestSendViaPuppet:
             message_id="m1",
         )
         await adapter._send_via_puppet(evt)
-        adapter._puppet_manager.send_message.assert_awaited_once_with("u", "#test", "hi", avatar_url=None)
+        adapter._puppet_manager.send_message.assert_awaited_once_with(
+            "u", "#test", "hi", avatar_url=None
+        )
 
     @pytest.mark.asyncio
     async def test_falls_back_to_client_when_no_irc_identity(self):
@@ -532,7 +537,9 @@ class TestStart:
     @pytest.mark.asyncio
     async def test_no_irc_mappings_returns_early(self):
         adapter, bus, router = _make_adapter()
-        router.all_mappings.return_value = [ChannelMapping(discord_channel_id="111", irc=None, xmpp=None)]
+        router.all_mappings.return_value = [
+            ChannelMapping(discord_channel_id="111", irc=None, xmpp=None)
+        ]
         await adapter.start()
         bus.register.assert_not_called()
 
@@ -551,7 +558,9 @@ class TestStart:
             patch("bridge.adapters.irc.adapter.IRCClient") as mock_irc_client,
             patch("bridge.adapters.irc.adapter._connect_with_backoff", side_effect=_fake_backoff),
             patch("bridge.adapters.irc.adapter.IRCPuppetManager", return_value=mock_puppet_mgr),
-            patch.dict("os.environ", {"BRIDGE_IRC_NICK": "testbot", "IRC_PUPPET_IDLE_TIMEOUT_HOURS": "12"}),
+            patch.dict(
+                "os.environ", {"BRIDGE_IRC_NICK": "testbot", "IRC_PUPPET_IDLE_TIMEOUT_HOURS": "12"}
+            ),
         ):
             mock_irc_client.return_value = MagicMock()
             await adapter.start()

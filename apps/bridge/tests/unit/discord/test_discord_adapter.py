@@ -10,6 +10,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import discord
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
+
 from bridge.adapters.discord.handlers import relay_author_display
 from bridge.events import (
     MessageDeleteOut,
@@ -19,8 +22,6 @@ from bridge.events import (
     TypingOut,
 )
 from bridge.gateway import Bus, ChannelRouter
-from hypothesis import given
-from hypothesis import strategies as st
 
 
 class TestRelayAuthorDisplay:
@@ -142,7 +143,9 @@ def test_resolve_discord_message_id_from_irc(bus: Bus, router: ChannelRouter) ->
     assert adapter._resolve_discord_message_id("unknown", "irc") is None
 
 
-def test_resolve_discord_message_id_unknown_origin_returns_none(bus: Bus, router: ChannelRouter) -> None:
+def test_resolve_discord_message_id_unknown_origin_returns_none(
+    bus: Bus, router: ChannelRouter
+) -> None:
     from bridge.adapters.discord import DiscordAdapter
 
     adapter = DiscordAdapter(bus, router, identity_resolver=None)
@@ -313,7 +316,9 @@ async def test_on_message_delete_skips_unbridged(bus: Bus, router: ChannelRouter
 
 
 @pytest.mark.asyncio
-async def test_on_message_delete_skips_when_we_initiated_delete(bus: Bus, router: ChannelRouter) -> None:
+async def test_on_message_delete_skips_when_we_initiated_delete(
+    bus: Bus, router: ChannelRouter
+) -> None:
     """When we deleted the message (relaying from XMPP/IRC), skip publishing to avoid duplicate retraction."""
     from bridge.adapters.discord import DiscordAdapter
 
@@ -377,7 +382,9 @@ async def test_queue_consumer_edits_when_resolve_succeeds(bus: Bus, router: Chan
 
 
 @pytest.mark.asyncio
-async def test_queue_consumer_fetches_media_url_and_sends_file(bus: Bus, router: ChannelRouter) -> None:
+async def test_queue_consumer_fetches_media_url_and_sends_file(
+    bus: Bus, router: ChannelRouter
+) -> None:
     """When content is media-only URL, fetch to temp file and send as discord.File."""
     from bridge.adapters.discord import DiscordAdapter
 
@@ -429,7 +436,9 @@ async def test_queue_consumer_fetches_media_url_and_sends_file(bus: Bus, router:
 
 
 @pytest.mark.asyncio
-async def test_queue_consumer_resolves_mentions_before_send(bus: Bus, router: ChannelRouter) -> None:
+async def test_queue_consumer_resolves_mentions_before_send(
+    bus: Bus, router: ChannelRouter
+) -> None:
     """@nick in content is resolved to <@userId> when guild has matching member."""
     from bridge.adapters.discord import DiscordAdapter
 
@@ -464,7 +473,9 @@ async def test_queue_consumer_resolves_mentions_before_send(bus: Bus, router: Ch
 
 
 @pytest.mark.asyncio
-async def test_queue_consumer_media_fetch_failure_falls_back_to_url(bus: Bus, router: ChannelRouter) -> None:
+async def test_queue_consumer_media_fetch_failure_falls_back_to_url(
+    bus: Bus, router: ChannelRouter
+) -> None:
     """When media fetch fails, send URL as content (fallback)."""
     from bridge.adapters.discord import DiscordAdapter
 
@@ -527,7 +538,9 @@ async def test_edit_fallback_to_send_when_resolve_fails(bus: Bus, router: Channe
 
 
 @pytest.mark.asyncio
-async def test_webhook_messages_are_skipped_to_prevent_echo(bus: Bus, router: ChannelRouter) -> None:
+async def test_webhook_messages_are_skipped_to_prevent_echo(
+    bus: Bus, router: ChannelRouter
+) -> None:
     """Messages from webhooks (our bridge output) must not be republished to prevent echo loops."""
     from bridge.adapters.discord import DiscordAdapter
 
@@ -675,7 +688,10 @@ async def test_handle_typing_out_triggers_typing(bus: Bus, router: ChannelRouter
     from bridge.adapters.discord import DiscordAdapter
     from bridge.adapters.discord import outbound as discord_outbound
 
-    with patch.object(discord_outbound, "TextChannel", MagicMock), patch("asyncio.sleep", AsyncMock()):
+    with (
+        patch.object(discord_outbound, "TextChannel", MagicMock),
+        patch("asyncio.sleep", AsyncMock()),
+    ):
         adapter = DiscordAdapter(bus, router, identity_resolver=None)
         adapter._bot = MagicMock()
         mock_channel = MagicMock()

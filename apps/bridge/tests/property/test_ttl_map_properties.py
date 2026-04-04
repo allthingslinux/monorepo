@@ -9,9 +9,10 @@ Property CP4: Bidirectional TTL Map Consistency
 
 from unittest.mock import patch
 
-from bridge.tracking.base import BidirectionalTTLMap
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.tracking.base import BidirectionalTTLMap
 
 # Strategies: generate distinct key pairs and arbitrary string values.
 # Keys are text strings of reasonable length; we filter to ensure k1 != k2
@@ -63,7 +64,9 @@ class TestBidirectionalTTLMapConsistency:
         elapsed=st.floats(min_value=0.01, max_value=14400),
     )
     @settings(max_examples=200)
-    def test_ttl_expiry_removes_both_lookups(self, k1: str, k2: str, v: str, ttl: int, elapsed: float) -> None:
+    def test_ttl_expiry_removes_both_lookups(
+        self, k1: str, k2: str, v: str, ttl: int, elapsed: float
+    ) -> None:
         """CP4c: After TTL expires, both get_forward and get_reverse return None.
 
         **Validates: Requirements 6.2, 7.1, 7.2**
@@ -79,8 +82,12 @@ class TestBidirectionalTTLMapConsistency:
 
             if elapsed > ttl:
                 # Entry should be expired
-                assert m.get_forward(k1) is None, f"get_forward({k1!r}) should be None after {elapsed}s (TTL={ttl}s)"
-                assert m.get_reverse(k2) is None, f"get_reverse({k2!r}) should be None after {elapsed}s (TTL={ttl}s)"
+                assert m.get_forward(k1) is None, (
+                    f"get_forward({k1!r}) should be None after {elapsed}s (TTL={ttl}s)"
+                )
+                assert m.get_reverse(k2) is None, (
+                    f"get_reverse({k2!r}) should be None after {elapsed}s (TTL={ttl}s)"
+                )
             else:
                 # Entry should still be alive
                 assert m.get_forward(k1) == (k2, v), (
@@ -104,7 +111,9 @@ class TestBidirectionalTTLMapAliasConsistency:
         alias=_keys,
     )
     @settings(max_examples=200)
-    def test_forward_alias_resolves_to_same_entry(self, k1: str, k2: str, v: str, alias: str) -> None:
+    def test_forward_alias_resolves_to_same_entry(
+        self, k1: str, k2: str, v: str, alias: str
+    ) -> None:
         """CP5a: A forward alias resolves to the same (k2, v) as the primary key.
 
         **Validates: Requirement 6.4**
@@ -128,7 +137,9 @@ class TestBidirectionalTTLMapAliasConsistency:
         alias=_keys,
     )
     @settings(max_examples=200)
-    def test_reverse_alias_resolves_to_same_entry(self, k1: str, k2: str, v: str, alias: str) -> None:
+    def test_reverse_alias_resolves_to_same_entry(
+        self, k1: str, k2: str, v: str, alias: str
+    ) -> None:
         """CP5b: A reverse alias resolves to the same (k1, v) as the primary key.
 
         **Validates: Requirement 6.4**
@@ -176,5 +187,9 @@ class TestBidirectionalTTLMapAliasConsistency:
             f"add_alias({alias!r}, {nonexistent!r}, forward=False) should return False for non-existent primary"
         )
 
-        assert dict(m._forward) == fwd_before, "Forward store was modified by failed reverse add_alias"
-        assert dict(m._reverse) == rev_before, "Reverse store was modified by failed reverse add_alias"
+        assert dict(m._forward) == fwd_before, (
+            "Forward store was modified by failed reverse add_alias"
+        )
+        assert dict(m._reverse) == rev_before, (
+            "Reverse store was modified by failed reverse add_alias"
+        )

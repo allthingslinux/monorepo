@@ -8,9 +8,10 @@ Property CP15: IRC Casefold Idempotence
 
 from __future__ import annotations
 
-from bridge.formatting.primitives import irc_casefold
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.primitives import irc_casefold
 
 # Strategy: arbitrary text strings covering the full Unicode range.
 # We include the IRC-special characters ([], \, ~, {}, |, ^) via the

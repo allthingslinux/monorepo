@@ -8,12 +8,13 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
+from cachetools import TTLCache
+
 from bridge.adapters.irc.handlers import (
     is_own_echo,
     is_puppet_echo,
     is_relaymsg_echo,
 )
-from cachetools import TTLCache
 
 # ---------------------------------------------------------------------------
 # Helpers

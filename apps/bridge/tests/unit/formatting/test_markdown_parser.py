@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from bridge.formatting.markdown import emit_discord_markdown, parse_discord_markdown
 from bridge.formatting.primitives import CodeBlock, FormattedText, Span, Style
 

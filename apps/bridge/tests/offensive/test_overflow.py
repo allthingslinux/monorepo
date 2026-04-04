@@ -9,6 +9,7 @@ Validates: Requirement 15.4
 from __future__ import annotations
 
 import pytest
+
 from bridge.formatting.converter import convert
 from bridge.formatting.splitter import split_irc_message
 from bridge.gateway.pipeline import Pipeline, TransformContext

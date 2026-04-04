@@ -9,6 +9,7 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
+
 from bridge.adapters.irc.handlers import handle_ctcp_action
 from bridge.gateway import Bus, ChannelRouter
 
@@ -30,7 +31,12 @@ def router() -> ChannelRouter:
             "mappings": [
                 {
                     "discord_channel_id": "123",
-                    "irc": {"server": "irc.example.com", "port": 6667, "tls": False, "channel": "#test"},
+                    "irc": {
+                        "server": "irc.example.com",
+                        "port": 6667,
+                        "tls": False,
+                        "channel": "#test",
+                    },
                 },
             ]
         }
@@ -61,7 +67,9 @@ class TestHandleCtcpAction:
     """Verify handle_ctcp_action emits MessageIn with action flag."""
 
     @pytest.mark.asyncio
-    async def test_action_emits_message_in_with_action_flag(self, bus: Bus, router: ChannelRouter) -> None:
+    async def test_action_emits_message_in_with_action_flag(
+        self, bus: Bus, router: ChannelRouter
+    ) -> None:
         client = _make_client(bus, router)
         published: list = []
         bus.publish = lambda s, e: published.append((s, e))  # type: ignore[method-assign]

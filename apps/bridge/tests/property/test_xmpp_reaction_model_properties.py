@@ -154,7 +154,9 @@ class TestXEP0444FullStateReactionModel:
         ops_user2=_OP_SEQUENCE,
     )
     @settings(max_examples=200)
-    def test_per_user_isolation(self, ops_user1: list[ReactionOp], ops_user2: list[ReactionOp]) -> None:
+    def test_per_user_isolation(
+        self, ops_user1: list[ReactionOp], ops_user2: list[ReactionOp]
+    ) -> None:
         """Reaction state is tracked per-user: operations from one user
         do not affect another user's reaction set on the same message.
 

@@ -12,24 +12,29 @@ from __future__ import annotations
 
 import re
 
-from bridge.gateway.pipeline import TransformContext
-from bridge.gateway.steps import make_content_filter
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.gateway.pipeline import TransformContext
+from bridge.gateway.steps import make_content_filter
 
 # ---------------------------------------------------------------------------
 # Strategies — generate simple regex patterns that won't cause catastrophic
 # backtracking or re.error.
 # ---------------------------------------------------------------------------
 
-_SAFE_LITERALS = st.sampled_from(["spam", "ads", "hello", "world", "foo", "bar", "test", "block", "drop", "filter"])
+_SAFE_LITERALS = st.sampled_from(
+    ["spam", "ads", "hello", "world", "foo", "bar", "test", "block", "drop", "filter"]
+)
 _WORD_BOUNDARY = _SAFE_LITERALS.map(lambda w: rf"\b{w}\b")
 _ANCHORED_START = _SAFE_LITERALS.map(lambda w: f"^{w}")
 _CHAR_CLASS = st.sampled_from([r"[a-z]+", r"[0-9]+", r"[A-Za-z]+", r"\d+", r"\w+"])
 
 _VALID_PATTERN = st.one_of(_SAFE_LITERALS, _WORD_BOUNDARY, _ANCHORED_START, _CHAR_CLASS)
 
-_PATTERN_LIST = st.lists(_VALID_PATTERN, min_size=0, max_size=5).map(lambda pats: [re.compile(p) for p in pats])
+_PATTERN_LIST = st.lists(_VALID_PATTERN, min_size=0, max_size=5).map(
+    lambda pats: [re.compile(p) for p in pats]
+)
 
 # Dummy context — content_filter doesn't inspect ctx fields.
 _CTX = st.sampled_from(

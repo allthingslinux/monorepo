@@ -13,13 +13,14 @@ Property CP9: Nick Sanitization Safety
 
 from __future__ import annotations
 
+from hypothesis import given, settings
+from hypothesis import strategies as st
+
 from bridge.identity.sanitize import (
     _FORBIDDEN_NICK_CHARS,
     _FORBIDDEN_START_CHARS,
     sanitize_nick,
 )
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 # ---------------------------------------------------------------------------
 # Strategies
@@ -58,7 +59,9 @@ class TestNickSanitizationSafety:
         **Validates: Requirement 14.2**
         """
         result = sanitize_nick(nick)
-        assert len(result) <= 23, f"sanitize_nick({nick!r}) produced {len(result)}-char string: {result!r}"
+        assert len(result) <= 23, (
+            f"sanitize_nick({nick!r}) produced {len(result)}-char string: {result!r}"
+        )
 
     @given(nick=_ARBITRARY_NICK)
     @settings(max_examples=200)
@@ -72,7 +75,9 @@ class TestNickSanitizationSafety:
         """
         result = sanitize_nick(nick)
         found = set(result) & _FORBIDDEN_NICK_CHARS
-        assert not found, f"sanitize_nick({nick!r}) = {result!r} contains forbidden chars: {found!r}"
+        assert not found, (
+            f"sanitize_nick({nick!r}) = {result!r} contains forbidden chars: {found!r}"
+        )
 
     @given(nick=_ARBITRARY_NICK)
     @settings(max_examples=200)

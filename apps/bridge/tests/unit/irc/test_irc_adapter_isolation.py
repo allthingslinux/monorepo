@@ -9,7 +9,9 @@ from __future__ import annotations
 import ast
 import pathlib
 
-_IRC_ADAPTER_DIR = pathlib.Path(__file__).resolve().parent.parent / "src" / "bridge" / "adapters" / "irc"
+_IRC_ADAPTER_DIR = (
+    pathlib.Path(__file__).resolve().parent.parent / "src" / "bridge" / "adapters" / "irc"
+)
 
 # Forbidden import prefixes
 _FORBIDDEN_PREFIXES = (

@@ -10,10 +10,11 @@ Property CP2: URL Preservation
 
 from __future__ import annotations
 
-from bridge.formatting.converter import ProtocolName, convert
-from bridge.formatting.primitives import URL_RE
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.formatting.converter import ProtocolName, convert
+from bridge.formatting.primitives import URL_RE
 
 # All protocol names.
 _protocols = st.sampled_from(["discord", "irc", "xmpp"])

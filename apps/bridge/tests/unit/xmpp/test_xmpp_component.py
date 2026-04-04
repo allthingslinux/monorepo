@@ -6,9 +6,10 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from cachetools import TTLCache
+
 from bridge.adapters.xmpp import XMPPComponent, XMPPMessageIDTracker
 from bridge.events import MessageDelete, MessageIn, ReactionIn
-from cachetools import TTLCache
 
 pytestmark = pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 
@@ -121,7 +122,9 @@ class TestOnGroupchatMessage:
         bus = MagicMock()
         comp = make_component(router=router, bus=bus)
 
-        msg = MockMsg(from_jid="room@conf.example.com/nick", body="hello", mucnick="nick", msg_id="xmpp-1")
+        msg = MockMsg(
+            from_jid="room@conf.example.com/nick", body="hello", mucnick="nick", msg_id="xmpp-1"
+        )
         asyncio.run(comp._on_groupchat_message(msg))
 
         bus.publish.assert_called_once()
@@ -161,7 +164,9 @@ class TestOnGroupchatMessage:
         bus = MagicMock()
         comp = make_component(router=router, bus=bus)
 
-        msg = MockMsg("room@conf.example.com/nick", body="secret", plugins={"spoiler": MockPlugin()})
+        msg = MockMsg(
+            "room@conf.example.com/nick", body="secret", plugins={"spoiler": MockPlugin()}
+        )
         asyncio.run(comp._on_groupchat_message(msg))
 
         _, evt = bus.publish.call_args[0]
@@ -179,7 +184,9 @@ class TestOnGroupchatMessage:
 
         spoiler_plugin.xml = SimpleNamespace(text="Plot twist")
 
-        msg = MockMsg("room@conf.example.com/nick", body="they all die", plugins={"spoiler": spoiler_plugin})
+        msg = MockMsg(
+            "room@conf.example.com/nick", body="they all die", plugins={"spoiler": spoiler_plugin}
+        )
         asyncio.run(comp._on_groupchat_message(msg))
 
         _, evt = bus.publish.call_args[0]
@@ -283,7 +290,9 @@ class TestOnGroupchatMessage:
         bus = MagicMock()
         comp = make_component(router=router, bus=bus)
 
-        ref_plugin = MockPlugin({"type": "reply", "uri": "xmpp:room@conf.example.com?id=ref-target"})
+        ref_plugin = MockPlugin(
+            {"type": "reply", "uri": "xmpp:room@conf.example.com?id=ref-target"}
+        )
 
         class MsgWithRef(MockMsg):
             def __getitem__(self, key):
@@ -555,6 +564,8 @@ class TestOnRetraction:
         comp.plugin = {"xep_0045": muc}  # type: ignore[typeddict-unknown-key]
 
         retract_plugin = MockPlugin({"id": "xmpp-1"})
-        msg = MockMsg("room@conf.example.com/1046905234200469504", plugins={"retract": retract_plugin})
+        msg = MockMsg(
+            "room@conf.example.com/1046905234200469504", plugins={"retract": retract_plugin}
+        )
         comp._on_retraction(msg)
         bus.publish.assert_not_called()

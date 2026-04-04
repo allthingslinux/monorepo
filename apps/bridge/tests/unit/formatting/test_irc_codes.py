@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from bridge.formatting.irc_codes import (
     BOLD,
     COLOR,

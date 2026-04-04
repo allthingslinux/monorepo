@@ -13,6 +13,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+
 from bridge.config.schema import Config
 from bridge.formatting.converter import convert
 from bridge.gateway.pipeline import Pipeline, TransformContext

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from bridge.formatting.primitives import (
     FENCE_RE,
     URL_RE,

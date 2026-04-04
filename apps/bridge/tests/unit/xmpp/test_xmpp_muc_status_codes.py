@@ -11,6 +11,8 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 from xml.etree.ElementTree import Element, SubElement
 
+from cachetools import TTLCache
+
 from bridge.adapters.xmpp.handlers import (
     MUC_USER_NS,
     _extract_nick_from_presence,
@@ -19,7 +21,6 @@ from bridge.adapters.xmpp.handlers import (
     _remove_puppet_entries,
     on_muc_presence,
 )
-from cachetools import TTLCache
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -45,7 +46,9 @@ def _make_comp(component_jid: str = "bridge.example.com", auto_rejoin: bool = Tr
 def _make_presence(from_jid: str, status_codes: list[int], ptype: str = "available") -> MagicMock:
     """Build a mock presence stanza with MUC status codes."""
     presence = MagicMock()
-    presence.get = MagicMock(side_effect=lambda key, default="": from_jid if key == "from" else default)
+    presence.get = MagicMock(
+        side_effect=lambda key, default="": from_jid if key == "from" else default
+    )
 
     # Build real XML for status code extraction
     root = Element("presence")
@@ -62,7 +65,9 @@ def _make_presence(from_jid: str, status_codes: list[int], ptype: str = "availab
 def _make_presence_no_x(from_jid: str) -> MagicMock:
     """Build a mock presence stanza without MUC user extension."""
     presence = MagicMock()
-    presence.get = MagicMock(side_effect=lambda key, default="": from_jid if key == "from" else default)
+    presence.get = MagicMock(
+        side_effect=lambda key, default="": from_jid if key == "from" else default
+    )
     root = Element("presence")
     root.set("from", from_jid)
     presence.xml = root

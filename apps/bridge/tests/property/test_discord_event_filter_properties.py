@@ -11,10 +11,11 @@ Property CP21: Discord Event Type Filtering
 from __future__ import annotations
 
 import discord
-from bridge.adapters.discord.handlers import should_relay_message, should_relay_reaction
 from discord.enums import ReactionType
 from hypothesis import given, settings
 from hypothesis import strategies as st
+
+from bridge.adapters.discord.handlers import should_relay_message, should_relay_reaction
 
 # ---------------------------------------------------------------------------
 # Strategies
@@ -28,7 +29,11 @@ _RELAYABLE_MESSAGE_TYPES = st.sampled_from([discord.MessageType.default, discord
 
 # Non-relayable message types (everything except default and reply)
 _NON_RELAYABLE_MESSAGE_TYPES = st.sampled_from(
-    [mt for mt in discord.MessageType if mt not in (discord.MessageType.default, discord.MessageType.reply)]
+    [
+        mt
+        for mt in discord.MessageType
+        if mt not in (discord.MessageType.default, discord.MessageType.reply)
+    ]
 )
 
 # All ReactionType enum members
@@ -53,7 +58,9 @@ class TestMessageTypeFiltering:
 
         **Validates: Requirements 9.10, 9.11**
         """
-        assert should_relay_message(message_type) is True, f"MessageType.{message_type.name} should be relayed"
+        assert should_relay_message(message_type) is True, (
+            f"MessageType.{message_type.name} should be relayed"
+        )
 
     @given(message_type=_NON_RELAYABLE_MESSAGE_TYPES)
     @settings(max_examples=200)
@@ -62,7 +69,9 @@ class TestMessageTypeFiltering:
 
         **Validates: Requirements 9.10, 9.11**
         """
-        assert should_relay_message(message_type) is False, f"MessageType.{message_type.name} should NOT be relayed"
+        assert should_relay_message(message_type) is False, (
+            f"MessageType.{message_type.name} should NOT be relayed"
+        )
 
     @given(message_type=_ALL_MESSAGE_TYPES)
     @settings(max_examples=200)

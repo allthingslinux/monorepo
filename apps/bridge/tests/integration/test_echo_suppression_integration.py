@@ -15,6 +15,7 @@ import asyncio
 from unittest.mock import MagicMock
 
 import pytest
+from cachetools import TTLCache
 
 # ---------------------------------------------------------------------------
 # Discord echo suppression imports
@@ -43,7 +44,6 @@ from bridge.adapters.xmpp.handlers import (
     should_suppress_echo,
 )
 from bridge.gateway import Bus, ChannelRouter
-from cachetools import TTLCache
 
 # ===================================================================
 # Shared helpers
@@ -58,7 +58,12 @@ def _make_bus_and_router() -> tuple[Bus, ChannelRouter]:
             "mappings": [
                 {
                     "discord_channel_id": "123",
-                    "irc": {"server": "irc.example.com", "port": 6667, "tls": False, "channel": "#bridge"},
+                    "irc": {
+                        "server": "irc.example.com",
+                        "port": 6667,
+                        "tls": False,
+                        "channel": "#bridge",
+                    },
                     "xmpp": {"muc": "room@muc.example.com"},
                 },
             ]
@@ -313,7 +318,9 @@ class TestXMPPEchoSuppressionIntegration:
         comp._msgid_tracker = MagicMock()
         return comp
 
-    def _setup_muc_plugin(self, comp: MagicMock, jid_map: dict[tuple[str, str], str | None]) -> None:
+    def _setup_muc_plugin(
+        self, comp: MagicMock, jid_map: dict[tuple[str, str], str | None]
+    ) -> None:
         muc = MagicMock()
 
         def _get_jid_property(room_jid: str, nick: str, prop: str):
@@ -469,7 +476,9 @@ class TestCrossProtocolEchoSuppression:
         comp._recent_sent_nicks = {("room@muc.example.com", "puppet"): None}
 
         muc = MagicMock()
-        muc.get_jid_property = lambda r, n, p: "puppet@bridge.example.com/res" if n == "jid_puppet" else None
+        muc.get_jid_property = lambda r, n, p: (
+            "puppet@bridge.example.com/res" if n == "jid_puppet" else None
+        )
         comp.plugin = {"xep_0045": muc}
 
         assert is_xmpp_echo(comp, "room@muc.example.com", "jid_puppet") is True

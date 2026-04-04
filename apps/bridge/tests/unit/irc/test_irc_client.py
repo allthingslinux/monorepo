@@ -6,6 +6,7 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
 from bridge.adapters.irc import IRCClient, MessageIDTracker, ReactionTracker
 
 # ---------------------------------------------------------------------------
@@ -367,7 +368,9 @@ class TestOnRawRedact:
         client.nickname = "bridge"  # Simulate connected state (pydle sets this on connect)
         router.get_mapping_for_irc.return_value = MagicMock(discord_channel_id="111")
         client._msgid_tracker.store("irc-id", "discord-id")
-        await client.on_raw_redact(_mock_message(params=["#test", "irc-id"], source="bridge!bridge@bridge.atl.chat"))
+        await client.on_raw_redact(
+            _mock_message(params=["#test", "irc-id"], source="bridge!bridge@bridge.atl.chat")
+        )
         bus.publish.assert_not_called()
 
     @pytest.mark.asyncio
@@ -766,7 +769,9 @@ class TestPuppetSendPath:
         evt.content = "hi"
         evt.avatar_url = None
         await adapter._send_via_puppet(evt)
-        adapter._puppet_manager.send_message.assert_awaited_once_with("u1", "#test", "hi", avatar_url=None)
+        adapter._puppet_manager.send_message.assert_awaited_once_with(
+            "u1", "#test", "hi", avatar_url=None
+        )
 
     @pytest.mark.asyncio
     async def test_send_via_puppet_falls_back_to_client_when_no_irc(self):
