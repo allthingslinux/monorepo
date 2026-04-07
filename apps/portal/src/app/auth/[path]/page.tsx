@@ -74,7 +74,14 @@ function shouldShowDisclaimer(path: string): boolean {
 /** Static fallback shown while AuthPageContent (connection + i18n) resolves. */
 function AuthPageSkeleton() {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+    <div
+      className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10"
+      style={{
+        backgroundImage:
+          "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+      }}
+    >
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex items-center gap-2 self-center font-medium">
           <Skeleton className="size-6 rounded-md" />
@@ -197,7 +204,14 @@ export default function AuthPage({
   params: Promise<{ path: string }>;
 }) {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+    <div
+      className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10"
+      style={{
+        backgroundImage:
+          "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+      }}
+    >
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Suspense fallback={<AuthPageSkeleton />}>
           <AuthPageContent params={params} />
