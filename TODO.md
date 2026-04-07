@@ -10,7 +10,7 @@
 - [ ] **CODEOWNERS**: Add `.github/CODEOWNERS` to assign package ownership (e.g. `packages/auth` → security team)
 - [x] **Circular dependency detection**: Run `turbo boundaries` (built-in, experimental) in CI — checks cross-package file imports and undeclared dependencies. Consider adding tag-based rules in `turbo.json` for `boundaries.tags`
 
-- [ ] **`@atl/integrations` quickbooks.ts**: 11 pre-existing `no-unsafe-*` type errors from untyped API responses — add proper types for QuickBooks API response shapes
+- [x] **`@atl/integrations` quickbooks.ts**: 11 pre-existing `no-unsafe-*` type errors from untyped API responses — add proper types for QuickBooks API response shapes
 - [x] **PR template**: Add `.github/PULL_REQUEST_TEMPLATE.md` with packages changed, type of change, and checklist
 - [ ] **ADRs**: Start `docs/adr/` with decisions like source-first exports, Turborepo selection, pnpm catalogs
 - [x] **Migrate hardcoded versions to catalogs**: `apps/portal` (43) and `apps/web` (37) still have hardcoded dependency versions — run `pnpx codemod pnpm/catalog` then manually verify
