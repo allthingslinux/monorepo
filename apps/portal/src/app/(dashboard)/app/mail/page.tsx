@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { env } from "@/env";
@@ -9,8 +10,11 @@ import { getRouteMetadata } from "@atl/seo/metadata";
 import { MailContent } from "./mail-content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/mail", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/mail",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 export default async function MailPage() {

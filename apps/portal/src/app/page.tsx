@@ -8,11 +8,12 @@ import { createPageMetadata } from "@atl/seo/metadata";
 import { Button } from "@atl/ui/components/button";
 
 import { AuthRedirect } from "./auth-redirect";
+import { portalDefaultMetadata } from "./metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
   const t = await getTranslations();
-  return createPageMetadata({
+  return createPageMetadata(portalDefaultMetadata, {
     description: t("marketing.homePage.metadataDescription"),
     title: t("marketing.homePage.metadataTitle"),
   });

@@ -5,8 +5,8 @@ import { connection } from "next/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 
+import { createPageMetadata, portalDefaultMetadata } from "@/app/metadata";
 import { DevTools } from "@/components/dev-tools";
-import { createPageMetadata } from "@atl/seo/metadata";
 
 import { geistMono, inter } from "./fonts";
 
@@ -21,7 +21,7 @@ const DEFAULT_LANG = "en";
 // With cacheComponents, layout generateMetadata runs during build-time validation;
 // connection()/getTraceData() would trigger "Uncached data outside Suspense".
 // Trace metadata can be added by request-time layers if needed.
-export const metadata: Metadata = createPageMetadata({});
+export const metadata: Metadata = createPageMetadata(portalDefaultMetadata, {});
 
 async function RootLayoutContent({
   children,

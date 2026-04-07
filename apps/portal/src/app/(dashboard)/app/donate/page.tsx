@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
@@ -15,8 +16,11 @@ import {
 import { DonateCtaSections } from "./donate-cta-sections";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/donate", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/donate",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 export default async function DonatePage() {

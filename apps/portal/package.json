@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "@atl/api": "workspace:*",
+    "@atl/auth": "workspace:*",
+    "@atl/config": "workspace:*",
     "@atl/db": "workspace:*",
     "@atl/email": "workspace:*",
     "@atl/observability": "workspace:*",

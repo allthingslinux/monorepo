@@ -95,9 +95,17 @@ export function useUpdateOAuthClient() {
       }>;
     }) => {
       // Type-safe update object
-      const typedUpdate: Parameters<
-        typeof authClient.oauth2.updateClient
-      >[0]["update"] = {
+      const typedUpdate: {
+        client_name?: string;
+        redirect_uris?: string[];
+        scope?: string;
+        grant_types?: (
+          | "refresh_token"
+          | "authorization_code"
+          | "client_credentials"
+        )[];
+        response_types?: "code"[];
+      } = {
         ...(update.name && { client_name: update.name }),
         ...(update.redirect_uris && { redirect_uris: update.redirect_uris }),
         ...(update.scopes && { scope: update.scopes.join(" ") }),
@@ -113,7 +121,7 @@ export function useUpdateOAuthClient() {
         }),
       };
 
-      const result = await authClient.oauth2.updateClient({
+      const result = await authClient.oauth2.updateOAuthClient({
         client_id,
         update: typedUpdate,
       });

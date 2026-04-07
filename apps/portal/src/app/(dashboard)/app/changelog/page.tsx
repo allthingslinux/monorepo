@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { fetchChangelog } from "@/features/changelog/lib/service";
@@ -10,8 +11,11 @@ import { getRouteMetadata } from "@atl/seo/metadata";
 import { ChangelogContent } from "./changelog-content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/changelog", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/changelog",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 export default async function ChangelogPage() {

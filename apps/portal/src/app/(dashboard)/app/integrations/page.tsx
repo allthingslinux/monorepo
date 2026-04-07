@@ -1,6 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
@@ -11,8 +12,11 @@ import { IntegrationsContent } from "./integrations-content";
 
 // Metadata is automatically generated from route config
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/integrations", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/integrations",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 // ============================================================================

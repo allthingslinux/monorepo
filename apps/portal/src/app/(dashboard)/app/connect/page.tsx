@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { COMMUNITY_LINKS, SOCIAL_MEDIA_LINKS } from "@/config/community";
@@ -43,8 +44,11 @@ const SOCIAL_ICON_MAP = {
 } as const;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/connect", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/connect",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 function ExternalLinkTile({

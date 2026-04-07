@@ -1,9 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifyAdminOrStaffSession } from "@/auth/dal";
 import { AdminDashboardOverview } from "@/features/admin/components/admin-dashboard-overview";
-import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { routeConfig } from "@/features/routing/lib";
 import { getServerQueryClient } from "@atl/api/hydration";
 import { queryKeys } from "@atl/api/query-keys";
 import { fetchAdminStatsServer } from "@atl/api/server-queries";
@@ -14,8 +15,11 @@ const ADMIN_PATH = "/app/admin" as const;
 // Metadata is automatically generated from route config.
 // Canonical URL omits query params so crawlers index the base path (nuqs “local-only state”).
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  const base = getRouteMetadata(ADMIN_PATH, routeConfig, resolver);
+  const base = getRouteMetadata(
+    ADMIN_PATH,
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
   return {
     ...base,
     alternates: {

@@ -3,6 +3,7 @@ import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { LatestUpdatesCard } from "@/features/blog/components/latest-updates-card";
@@ -18,8 +19,11 @@ import { fetchCurrentUserServer } from "@atl/api/server-queries";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 const MOCK_QUICK_LINKS = [

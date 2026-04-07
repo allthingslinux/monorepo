@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { LINUX_FEED_SOURCES } from "@/config/feed";
@@ -10,8 +11,11 @@ import { getRouteMetadata } from "@atl/seo/metadata";
 import { FeedContent } from "./feed-content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const resolver = await getServerRouteResolver();
-  return getRouteMetadata("/app/feed", routeConfig, resolver);
+  return getRouteMetadata(
+    "/app/feed",
+    [...routeConfig.protected, ...routeConfig.public],
+    portalDefaultMetadata
+  );
 }
 
 export default async function FeedPage() {

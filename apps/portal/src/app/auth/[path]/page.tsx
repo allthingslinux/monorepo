@@ -7,6 +7,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { portalDefaultMetadata } from "@/app/metadata";
 import { createPageMetadata } from "@atl/seo/metadata";
 import { Skeleton } from "@atl/ui/components/skeleton";
 
@@ -17,7 +18,7 @@ import { Skeleton } from "@atl/ui/components/skeleton";
 // use connection()/getTranslations() during build-time validation when
 // generateStaticParams returns paths. Per-path i18n titles would need a
 // layout or request-time-only mechanism.
-export const metadata: Metadata = createPageMetadata({
+export const metadata: Metadata = createPageMetadata(portalDefaultMetadata, {
   description: "Sign in or manage your account.",
   robots: {
     follow: false,

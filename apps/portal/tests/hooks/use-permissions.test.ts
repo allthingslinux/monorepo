@@ -3,9 +3,9 @@ import { createElement } from "react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useAuthSession } from "@/auth/auth-hooks";
 import { authClient } from "@/auth/client";
 import { SessionProvider } from "@/auth/session-context";
-import { useAuthSession } from "@/auth/auth-hooks";
 import { usePermissions } from "@/hooks/use-permissions";
 
 vi.mock("@/auth/client", () => ({
