@@ -12,8 +12,6 @@ import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 
-import { useListApiKeys } from "@/auth/auth-hooks";
-// import { ErrorBoundary } from "@atl/ui/error-boundary";
 import { authClient } from "@/auth/client";
 import { useBetterAuthUILocalization } from "@/auth/localization";
 import { SessionProvider } from "@/auth/session-context";
@@ -165,10 +163,6 @@ export function Providers({ children }: { children: ReactNode }) {
               //       }
               //     : undefined
               // }
-              // Normalize Better Auth 1.5 list response { apiKeys } → array for ApiKeysCard.
-              // Pending upstream fix: https://github.com/better-auth-ui/better-auth-ui/issues/345
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any -- AuthHook expects BetterFetchError; TanStack Query uses Error
-              hooks={{ useListApiKeys: useListApiKeys as any }}
               // Multiple device session management
               Link={LinkWrapper}
               // Programmatic navigation function
