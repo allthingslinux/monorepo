@@ -1,7 +1,6 @@
 import {
   BookOpen,
   Code2,
-  FileText,
   Heart,
   MessageCircle,
   Shield,
@@ -123,25 +122,21 @@ export default function About() {
   return (
     <main className="w-full">
       {/* ── Hero ────────────────────────────────────────────────────────── */}
-      <Section size="spacious" variant="muted">
-        <Container>
-          <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-16">
-            <div>
-              <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
-                About
-              </p>
-              <h1 className="font-serif text-4xl leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-                All Things Linux
-              </h1>
-            </div>
-            <div className="flex flex-col justify-end">
-              <p className="text-muted-foreground max-w-xl text-lg leading-relaxed sm:text-xl">
-                A 501(c)(3) nonprofit building Linux education, open-source
-                tools, and a community for people at every stage of their
-                journey. Entirely volunteer-run, zero paid advertising, and
-                growing every month.
-              </p>
-            </div>
+      <Section size="hero" variant="muted">
+        <Container className="max-w-3xl">
+          <div className="pt-10 md:pt-16">
+            <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
+              About
+            </p>
+            <h1 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.06] tracking-tight">
+              All Things Linux
+            </h1>
+            <p className="text-muted-foreground mt-5 max-w-xl text-lg leading-relaxed text-pretty">
+              A 501(c)(3) nonprofit building Linux education, open-source tools,
+              and a community for people at every stage of their journey.
+              Entirely volunteer-run, zero paid advertising, and growing every
+              month.
+            </p>
           </div>
         </Container>
       </Section>
@@ -246,15 +241,11 @@ export default function About() {
                   What we stand for
                 </h2>
                 <Link
-                  className="border-border/50 bg-card text-foreground/80 hover:bg-muted/50 hover:text-foreground inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[13px] font-medium transition-colors"
+                  className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm underline underline-offset-4 transition-colors"
                   href="/code-of-conduct"
                 >
-                  <FileText
-                    aria-hidden
-                    className="text-primary size-4"
-                    strokeWidth={2}
-                  />
                   Code of Conduct
+                  <TbArrowUpRight className="size-3.5" />
                 </Link>
               </div>
               <div className="space-y-6">
