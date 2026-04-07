@@ -31,7 +31,8 @@
     "verbatimModuleSyntax": true,
     // Build performance optimizations
     "assumeChangesOnlyAffectDirectDependencies": true,
-    "disableSourceOfProjectReferenceRedirect": true
+    "disableSourceOfProjectReferenceRedirect": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
