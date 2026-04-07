@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node", "@cloudflare/workers-types"]
   },
   "include": ["src/**/*.ts"]
 }

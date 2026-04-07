@@ -2,9 +2,8 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
+import type { KVNamespace } from "@cloudflare/workers-types";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-import { runtimeEnv as env } from "@/env";
 
 // Cloudflare Workers environment interface
 export interface QuickBooksCloudflareEnv {
@@ -39,7 +38,7 @@ export async function getCloudflareEnv(): Promise<
       }
     }
 
-    if (context?.env?.KV_QUICKBOOKS) {
+    if ((context?.env as QuickBooksCloudflareEnv | undefined)?.KV_QUICKBOOKS) {
       console.log(
         "[QuickBooks getCloudflareEnv] ✅ KV namespace available from getCloudflareContext()"
       );
@@ -264,7 +263,7 @@ async function getDiscoveryDocument(
       throw new Error(`Discovery document fetch failed: ${response.status}`);
     }
 
-    const doc = (await response.json()) as DiscoveryDocument;
+    const doc = await response.json();
     discoveryCache[cacheKey] = doc;
     return doc;
   } catch (error) {
@@ -330,7 +329,7 @@ function logQuickBooksInvalidGrantHelp(): void {
   console.error("");
   console.error("   1. Visit the admin setup URL to re-authenticate:");
   console.error(
-    `      http://localhost:3000/api/quickbooks/admin-setup?admin=${env.QUICKBOOKS_ADMIN_KEY || "YOUR_ADMIN_KEY"}`
+    `      http://localhost:3000/api/quickbooks/admin-setup?admin=${process.env.QUICKBOOKS_ADMIN_KEY ?? "YOUR_ADMIN_KEY"}`
   );
   console.error(
     "   2. Or visit: http://localhost:8787/api/quickbooks/admin-setup?admin=YOUR_ADMIN_KEY"
@@ -361,7 +360,7 @@ function reportQuickBooksTokenRefreshFailure(
   if (response.status === 429) {
     const retryAfter = response.headers.get("Retry-After");
     console.warn(
-      `Rate limited by QuickBooks API. Retry after: ${retryAfter || "unknown"} seconds`
+      `Rate limited by QuickBooks API. Retry after: ${retryAfter ?? "unknown"} seconds`
     );
   }
 }
@@ -435,7 +434,9 @@ export async function getAccessToken(
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, API_TIMEOUT_MS);
 
   try {
     const oauthUrl = await getQuickBooksOAuthTokenUrl(environment);
@@ -461,7 +462,7 @@ export async function getAccessToken(
       return null;
     }
 
-    const tokens = (await response.json()) as QuickBooksTokenResponse;
+    const tokens = await response.json();
 
     // Cache the token (subtract 5 minutes from expiry for safety margin)
     const expiresInMs = (tokens.expires_in - 300) * 1000; // Convert to ms, subtract 5 min
@@ -637,7 +638,9 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
   getFreshToken?: () => Promise<string | null>
 ): Promise<QuickBooksTransaction[]> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, API_TIMEOUT_MS);
 
   try {
     const response = await fetch(
@@ -689,8 +692,8 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
       return [];
     }
 
-    const data = (await response.json()) as QuickBooksQueryResponse<T>;
-    const items = data?.QueryResponse?.[entityType] || [];
+    const data = await response.json();
+    const items = data?.QueryResponse?.[entityType] ?? [];
     return items.map(mapEntity);
   } catch (error) {
     clearTimeout(timeoutId);
@@ -795,11 +798,11 @@ async function getStoredTokens(cfEnv?: QuickBooksCloudflareEnv) {
 
   // Fallback to environment variables (development or KV not available)
   const envTokens = {
-    clientId: env.QUICKBOOKS_CLIENT_ID,
-    clientSecret: env.QUICKBOOKS_CLIENT_SECRET,
-    environment: env.QUICKBOOKS_ENVIRONMENT || "sandbox",
-    realmId: env.QUICKBOOKS_REALM_ID,
-    refreshToken: env.QUICKBOOKS_REFRESH_TOKEN,
+    clientId: process.env.QUICKBOOKS_CLIENT_ID,
+    clientSecret: process.env.QUICKBOOKS_CLIENT_SECRET,
+    environment: process.env.QUICKBOOKS_ENVIRONMENT ?? "sandbox",
+    realmId: process.env.QUICKBOOKS_REALM_ID,
+    refreshToken: process.env.QUICKBOOKS_REFRESH_TOKEN,
   };
 
   console.log("[QuickBooks] Using environment variables:", {
@@ -835,9 +838,9 @@ async function trySaveQuickBooksTokensToKv(
     if (existing) {
       const parsed = JSON.parse(existing);
       mergedTokens = {
-        clientId: tokens.clientId || parsed.clientId,
-        clientSecret: tokens.clientSecret || parsed.clientSecret,
-        environment: tokens.environment || parsed.environment,
+        clientId: tokens.clientId ?? parsed.clientId,
+        clientSecret: tokens.clientSecret ?? parsed.clientSecret,
+        environment: tokens.environment ?? parsed.environment,
         realmId: tokens.realmId || parsed.realmId,
         refreshToken: tokens.refreshToken,
       };
@@ -915,7 +918,7 @@ async function persistQuickBooksTokensViaSecretsAndDevFallback(tokens: {
     return true;
   }
 
-  if (env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     try {
       const updated = await updateLocalEnvFiles(tokens);
       if (updated) {
@@ -1234,7 +1237,7 @@ export async function fetchQuickBooksTransactions(
       console.log(
         "[QuickBooks] ⏳ Token refresh already in progress, waiting..."
       );
-      return await refreshPromise;
+      return refreshPromise;
     }
 
     console.log("[QuickBooks] 🔄 Refreshing access token due to 401 error...");
@@ -1307,7 +1310,7 @@ export async function fetchQuickBooksTransactions(
         (purchase) => {
           const category =
             purchase.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
-              ?.name || "Uncategorized";
+              ?.name ?? "Uncategorized";
           return {
             amount: -Math.abs(purchase.TotalAmt),
             description: category,
@@ -1315,7 +1318,7 @@ export async function fetchQuickBooksTransactions(
             status: "reconciled" as const,
             txnDate: purchase.TxnDate,
             type: "Expense",
-            vendorName: purchase.EntityRef?.name || "Unknown Vendor",
+            vendorName: purchase.EntityRef?.name ?? "Unknown Vendor",
           };
         },
         0,
@@ -1329,10 +1332,10 @@ export async function fetchQuickBooksTransactions(
         (invoice) => {
           const category =
             invoice.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
-              ?.name || "Uncategorized";
+              ?.name ?? "Uncategorized";
           return {
             amount: invoice.TotalAmt,
-            customerName: invoice.CustomerRef?.name || "Unknown Customer",
+            customerName: invoice.CustomerRef?.name ?? "Unknown Customer",
             description: category,
             id: invoice.Id,
             status: "pending" as const,
@@ -1351,10 +1354,10 @@ export async function fetchQuickBooksTransactions(
         (payment) => {
           const category =
             payment.Line?.[0]?.AccountBasedExpenseLineDetail?.AccountRef
-              ?.name || "Uncategorized";
+              ?.name ?? "Uncategorized";
           return {
             amount: payment.TotalAmt,
-            customerName: payment.CustomerRef?.name || "Unknown Customer",
+            customerName: payment.CustomerRef?.name ?? "Unknown Customer",
             description: category,
             id: payment.Id,
             status: "cleared" as const,
@@ -1374,9 +1377,9 @@ export async function fetchQuickBooksTransactions(
           // Extract donor/entity name from deposit line details
           const depositLine = deposit.Line?.[0];
           let entityName =
-            depositLine?.DepositLineDetail?.Entity?.name ||
-            deposit.CustomerRef?.name ||
-            deposit.EntityRef?.name ||
+            depositLine?.DepositLineDetail?.Entity?.name ??
+            deposit.CustomerRef?.name ??
+            deposit.EntityRef?.name ??
             "Unknown Donor";
 
           // Remove "Individual Donation:" prefix if present
@@ -1386,8 +1389,8 @@ export async function fetchQuickBooksTransactions(
 
           // Get account category for description and strip "Income:" prefix
           let category =
-            depositLine?.DepositLineDetail?.AccountRef?.name ||
-            depositLine?.AccountBasedExpenseLineDetail?.AccountRef?.name ||
+            depositLine?.DepositLineDetail?.AccountRef?.name ??
+            depositLine?.AccountBasedExpenseLineDetail?.AccountRef?.name ??
             "Uncategorized";
 
           // Remove "Income:" prefix if present
@@ -1436,7 +1439,9 @@ export async function exchangeAuthorizationCode(
   environment: "sandbox" | "production" = "production"
 ): Promise<QuickBooksTokenResponse | null> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, API_TIMEOUT_MS);
 
   try {
     const oauthUrl = await getQuickBooksOAuthTokenUrl(environment);
@@ -1465,14 +1470,14 @@ export async function exchangeAuthorizationCode(
       if (response.status === 429) {
         const retryAfter = response.headers.get("Retry-After");
         console.warn(
-          `Rate limited during token exchange. Retry after: ${retryAfter || "unknown"} seconds`
+          `Rate limited during token exchange. Retry after: ${retryAfter ?? "unknown"} seconds`
         );
       }
 
       return null;
     }
 
-    return (await response.json()) as QuickBooksTokenResponse;
+    return await response.json();
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === "AbortError") {
@@ -1497,7 +1502,7 @@ interface ProfitLossTotals {
 
 function firstNumericColValue(colData: any[]): number {
   for (const col of colData) {
-    const parsed = Number.parseFloat(col?.value || "0");
+    const parsed = Number.parseFloat(col?.value ?? "0");
     if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
       return parsed;
     }
@@ -1532,12 +1537,12 @@ function applyTotalExpensesSubRow(row: any, totals: ProfitLossTotals): void {
     if (!subRow.Summary?.ColData) {
       continue;
     }
-    const summaryLabel = subRow.Summary.ColData[0]?.value || "";
+    const summaryLabel = subRow.Summary.ColData[0]?.value ?? "";
     if (summaryLabel !== "Total Expenses") {
       continue;
     }
     for (const col of subRow.Summary.ColData) {
-      const parsed = Number.parseFloat(col?.value || "0");
+      const parsed = Number.parseFloat(col?.value ?? "0");
       if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
         totals.expenses = Math.abs(parsed);
         return;
@@ -1610,7 +1615,7 @@ export async function fetchQuickBooksFinancialSummary(
     }
 
     const report = (await response.json()) as any;
-    const rows = report.Rows?.Row || [];
+    const rows = report.Rows?.Row ?? [];
 
     const totals: ProfitLossTotals = {
       expenses: 0,

@@ -38,7 +38,7 @@ export const APP_TITLE = `${APP_NAME} - ${ORG_NAME}`;
  */
 export function getBaseURL(): string {
   return (
-    process.env.NEXT_PUBLIC_BETTER_AUTH_URL ||
+    process.env.NEXT_PUBLIC_BETTER_AUTH_URL ??
     (process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
       : "https://portal.atl.tools")

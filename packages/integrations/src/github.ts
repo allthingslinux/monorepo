@@ -1,4 +1,4 @@
-import type { FormData, Question, Role } from "../types";
+import type { FormData, Question, Role } from "./types";
 
 // Create a function for base64 encoding that is Cloudflare-compatible
 function base64Encode(str: string): string {

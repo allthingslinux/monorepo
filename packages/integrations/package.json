@@ -19,12 +19,15 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "catalog:",
     "graphql": "catalog:",
     "graphql-request": "catalog:",
     "node-quickbooks": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

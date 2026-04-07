@@ -1,6 +1,6 @@
 import { GraphQLClient, gql } from "graphql-request";
 
-import type { FormData, Question, Role } from "../types";
+import type { FormData, Question, Role } from "./types";
 
 // Define types for Monday.com API responses
 interface MondayColumn {
@@ -326,7 +326,7 @@ async function addDetailsToItem(
             updateError as {
               response?: { errors?: { message?: string }[] };
             }
-          )?.response?.errors?.[0]?.message?.toLowerCase() || "";
+          )?.response?.errors?.[0]?.message?.toLowerCase() ?? "";
         const isLengthError =
           errorMessage.includes("limit") ||
           errorMessage.includes("length") ||

@@ -1,6 +1,6 @@
 import { setTimeout as delay } from "node:timers/promises";
 
-import type { FormData, Question, Role } from "../types";
+import type { FormData, Question, Role } from "./types";
 
 /**
  * Sends application data to Discord webhook with retries
