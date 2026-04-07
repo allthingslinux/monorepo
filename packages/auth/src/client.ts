@@ -36,7 +36,7 @@ export type { Session } from "./config";
 // Set `NEXT_PUBLIC_BETTER_AUTH_URL` if the auth API is on another origin.
 // If using a custom base path other than /api/auth, include the full path
 // (e.g., "http://localhost:3000/custom-path/auth")
-const baseURL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL || undefined;
+const baseURL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL ?? undefined;
 
 // ============================================================================
 // Fetch Options Configuration
@@ -51,7 +51,7 @@ const fetchOptions = {
     // This token is automatically included in the Authorization header for all requests
     token: () => {
       if (typeof window !== "undefined") {
-        return localStorage.getItem("bearer_token") || "";
+        return localStorage.getItem("bearer_token") ?? "";
       }
       return "";
     },

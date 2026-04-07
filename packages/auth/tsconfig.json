@@ -12,12 +12,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/features/*": ["../../apps/portal/src/features/*"],
-      "@/shared/*": ["../../apps/portal/src/shared/*"]
-    }
+    "noEmit": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

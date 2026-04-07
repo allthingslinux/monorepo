@@ -47,7 +47,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
     try {
       // Check if user can manage users (admin permission)
-      const userRole = session.user.role || "user";
+      const userRole = session.user.role ?? "user";
 
       const canManageUsers = authClient.admin.checkRolePermission({
         permissions: {

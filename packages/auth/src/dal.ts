@@ -3,9 +3,10 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { auth } from "@/auth";
-import { getUserRole, isAdmin, isAdminOrStaff } from "@/auth/check-role";
 import type { SessionData } from "@atl/types/auth";
+
+import { getUserRole, isAdmin, isAdminOrStaff } from "./check-role";
+import { auth } from "./config";
 
 // ============================================================================
 // Data Access Layer (DAL)

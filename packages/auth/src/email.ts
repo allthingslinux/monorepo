@@ -12,7 +12,7 @@ import { sendEmail } from "@atl/utils/email";
  * Fire and forget to prevent timing attacks
  * On serverless platforms, use waitUntil() to ensure email is sent
  */
-export function sendResetPasswordEmail(
+export async function sendResetPasswordEmail(
   { user, url }: { user: { email: string }; url: string },
   _request: unknown
 ): Promise<void> {
@@ -39,7 +39,7 @@ export function sendResetPasswordEmail(
  * Fire and forget to prevent timing attacks
  * On serverless platforms, use waitUntil() to ensure email is sent
  */
-export function sendVerificationEmail(
+export async function sendVerificationEmail(
   { user, url }: { user: { email: string }; url: string },
   _request: unknown
 ): Promise<void> {
@@ -66,7 +66,7 @@ export function sendVerificationEmail(
  * Returns a Promise so serverless platforms can wait for delivery before terminating.
  * Swallows errors in catch to prevent timing attacks (per sendResetPasswordEmail pattern).
  */
-export function sendOTPEmail(
+export async function sendOTPEmail(
   { user, otp }: { user: { email: string }; otp: string },
   _ctx?: unknown
 ): Promise<void> {

@@ -24,7 +24,7 @@ export async function getUserRole(userId: string): Promise<string> {
     .where(eq(user.id, userId))
     .limit(1);
 
-  return dbUser?.role || "user";
+  return dbUser?.role ?? "user";
 }
 
 /**

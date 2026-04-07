@@ -1,7 +1,7 @@
 import { apiKey } from "@better-auth/api-key";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { passkey } from "@better-auth/passkey";
-import * as Sentry from "@sentry/nextjs";
+import { captureException, startSpan } from "@sentry/nextjs";
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -22,8 +22,6 @@ import {
 import "server-only";
 import { and, eq } from "drizzle-orm";
 
-import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
-import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
 import { db } from "@atl/db/client";
 import { schema } from "@atl/db/schema";
 import { user as authUser } from "@atl/db/schema/auth";
@@ -49,7 +47,7 @@ import {
 // ============================================================================
 
 const env = keys();
-const baseURL = env.BETTER_AUTH_URL || "http://localhost:3000";
+const baseURL = env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
 // ============================================================================
 // Database Configuration
@@ -146,8 +144,8 @@ const user = {
   // Delete user configuration
   deleteUser: {
     beforeDelete: async (userToDelete: { id: string }) => {
-      // Ensure external integrations are cleaned up before user deletion.
-      await cleanupIntegrationAccounts(userToDelete.id);
+      // Delegate to host app via DI callback (registered in instrumentation.ts)
+      await authCallbacks.onBeforeUserDelete(userToDelete);
     },
     enabled: true,
     // sendDeleteAccountVerification: async ({ user, url, token }, request) => {
@@ -209,7 +207,11 @@ const socialProviders =
 // Create OAuth client via Mailcow API POST /api/v1/add/oauth2-client or UI.
 // See: references/mailcow-openapi.yaml, NextAuth discussion #9206
 
-const mailcowEnv = mailcowKeys();
+const mailcowEnv = {
+  MAILCOW_API_URL: process.env.MAILCOW_API_URL,
+  MAILCOW_OAUTH_CLIENT_ID: process.env.MAILCOW_OAUTH_CLIENT_ID,
+  MAILCOW_OAUTH_CLIENT_SECRET: process.env.MAILCOW_OAUTH_CLIENT_SECRET,
+};
 const mailcowOAuthConfig =
   mailcowEnv.MAILCOW_API_URL &&
   mailcowEnv.MAILCOW_OAUTH_CLIENT_ID &&
@@ -317,7 +319,7 @@ const oauthProviderConfig = {
 
     // Add XMPP username when 'xmpp' scope is requested
     if (scopes.includes("xmpp")) {
-      await Sentry.startSpan(
+      await startSpan(
         { name: "xmppAccount lookup", op: "db.lookup" },
         async () => {
           try {
@@ -332,7 +334,7 @@ const oauthProviderConfig = {
             }
           } catch (error) {
             // Capture error in Sentry but gracefully continue without XMPP claim
-            Sentry.captureException(error, {
+            captureException(error, {
               tags: {
                 function: "customUserInfoClaims",
                 userId: claimsUser.id,
@@ -346,7 +348,7 @@ const oauthProviderConfig = {
 
     // Add IRC nick when 'irc' scope is requested
     if (scopes.includes("irc")) {
-      await Sentry.startSpan(
+      await startSpan(
         { name: "ircAccount lookup", op: "db.lookup" },
         async () => {
           try {
@@ -365,7 +367,7 @@ const oauthProviderConfig = {
               claims.irc_nick = ircAccountRecord.nick;
             }
           } catch (error) {
-            Sentry.captureException(error, {
+            captureException(error, {
               tags: {
                 function: "customUserInfoClaims",
                 userId: claimsUser.id,
@@ -948,6 +950,14 @@ const authOptions = {
 // ============================================================================
 // Auth Instance
 // ============================================================================
+
+// Dependency injection callbacks — registered by the host app at runtime
+// (e.g. apps/portal/src/instrumentation.ts)
+export const authCallbacks = {
+  onBeforeUserDelete: async (_user: { id: string }): Promise<void> => {
+    // Default no-op; override in the host app's instrumentation
+  },
+};
 
 export const auth = betterAuth(authOptions);
 
