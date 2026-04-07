@@ -30,7 +30,7 @@ function toRelative(file) {
 /** Return true if the file should be skipped by ultracite. */
 function isUltraciteIgnored(file) {
   const rel = toRelative(file);
-  // Skip files with brackets — ultracite/oxlint treats them as glob patterns
+  // Skip files with square brackets — ultracite/oxlint treats them as glob patterns
   if (/[[\]]/.test(rel)) {
     return true;
   }
@@ -65,7 +65,28 @@ export default {
       if (filtered.length === 0) {
         return [];
       }
-      const args = filtered.map((f) => JSON.stringify(toRelative(f))).join(" ");
-      return `pnpm exec ultracite fix ${args}`;
+
+      // Ultracite can't handle parentheses in paths (e.g. Next.js route groups).
+      // Split into files ultracite can handle vs ones needing direct oxfmt+oxlint.
+      const hasParens = (f) => /[()]/.test(toRelative(f));
+      const normal = filtered.filter((f) => !hasParens(f));
+      const parenFiles = filtered.filter((f) => hasParens(f));
+
+      const cmds = [];
+
+      if (normal.length > 0) {
+        const args = normal.map((f) => JSON.stringify(toRelative(f))).join(" ");
+        cmds.push(`pnpm exec ultracite fix ${args}`);
+      }
+
+      if (parenFiles.length > 0) {
+        const args = parenFiles
+          .map((f) => JSON.stringify(toRelative(f)))
+          .join(" ");
+        cmds.push(`pnpm exec oxfmt ${args}`);
+        cmds.push(`pnpm exec oxlint --fix ${args}`);
+      }
+
+      return cmds;
     },
 };

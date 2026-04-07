@@ -9,7 +9,14 @@
 export type EventOwnerType = "atl" | "external";
 
 /** manual = EVENTS_CONFIG; remote kinds use the matching URL fields below */
-export type EventSourceKind = "manual" | "ics" | "rss" | "discourse";
+export type EventSourceKind =
+  | "manual"
+  | "ics"
+  | "rss"
+  | "discourse"
+  | "fedocal"
+  | "lf-scrape"
+  | "dev-events";
 
 export interface EventSource {
   /** Optional accent for UI (Tailwind-friendly token or hex) */
@@ -23,6 +30,13 @@ export interface EventSource {
    * Discourse may return at most ~200 events per request.
    */
   discourseEventsUrl?: string;
+  /**
+   * Fedocal JSON API base URL (e.g. `https://calendar.fedoraproject.org/api/meetings/`).
+   * Used with `?calendar=<name>&start=…&end=…`.
+   */
+  fedocalApiUrl?: string;
+  /** Fedocal calendar name (e.g. "events") */
+  fedocalCalendar?: string;
   description: string;
   enabled: boolean;
   id: string;
@@ -77,8 +91,9 @@ export const EVENT_SOURCES: EventSource[] = [
   },
   {
     calendarUrl: "webcal://events.opensuse.org/calendar.ics?full=true",
-    description: "openSUSE community events calendar (OSEM)",
-    enabled: true,
+    description:
+      "openSUSE community events calendar (OSEM) — currently blocked by proof-of-work challenge",
+    enabled: false,
     id: "opensuse-events",
     kind: "ics",
     name: "openSUSE",
@@ -107,6 +122,82 @@ export const EVENT_SOURCES: EventSource[] = [
     name: "External conference (ICS)",
     ownerType: "external",
     siteUrl: undefined,
+  },
+  {
+    calendarUrl: "https://events.gnome.org/category/0/events.ics",
+    description:
+      "GNOME community events from the Indico platform (GUADEC, hackfests, etc.)",
+    enabled: true,
+    id: "gnome-events",
+    kind: "ics",
+    name: "GNOME",
+    ownerType: "external",
+    siteUrl: "https://events.gnome.org/",
+  },
+  {
+    description: "NixOS community events from Discourse (meetups, conferences)",
+    discourseEventsUrl:
+      "https://discourse.nixos.org/discourse-post-event/events?include_expired=true&include_subcategories=true",
+    enabled: true,
+    id: "nixos-discourse",
+    kind: "discourse",
+    name: "NixOS",
+    ownerType: "external",
+    siteUrl: "https://discourse.nixos.org/",
+  },
+  {
+    description:
+      "Fedora community events from Fedocal (conferences, release parties, SCaLE talks)",
+    enabled: true,
+    fedocalApiUrl: "https://calendar.fedoraproject.org/api/meetings/",
+    fedocalCalendar: "events",
+    id: "fedora-events",
+    kind: "fedocal",
+    name: "Fedora",
+    ownerType: "external",
+    siteUrl: "https://calendar.fedoraproject.org/events/",
+  },
+  {
+    description:
+      "Linux Foundation events calendar (scraped from events.linuxfoundation.org)",
+    enabled: true,
+    id: "lf-events",
+    kind: "lf-scrape",
+    name: "Linux Foundation",
+    ownerType: "external",
+    siteUrl: "https://events.linuxfoundation.org/about/calendar/",
+  },
+  {
+    description:
+      "Linux/OS conferences from dev.events — community-curated listing of tech events",
+    enabled: true,
+    id: "dev-events-linux",
+    kind: "dev-events",
+    name: "dev.events/linux",
+    ownerType: "external",
+    siteUrl: "https://dev.events/linux",
+  },
+  {
+    description:
+      "Open Source conferences from dev.events — community-curated listing of tech events",
+    enabled: true,
+    id: "dev-events-oss",
+    kind: "dev-events",
+    name: "dev.events/oss",
+    ownerType: "external",
+    siteUrl: "https://dev.events/oss",
+  },
+  {
+    calendarUrl:
+      "https://openssf.org/?post_type=tribe_events&ical=1&eventDisplay=list&tribe_events_cat=openssf-events",
+    description:
+      "Open Source Security Foundation events (community days, summits)",
+    enabled: true,
+    id: "openssf-events",
+    kind: "ics",
+    name: "OpenSSF",
+    ownerType: "external",
+    siteUrl: "https://openssf.org/events/",
   },
 ];
 

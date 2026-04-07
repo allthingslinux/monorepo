@@ -3,7 +3,6 @@
 import {
   addDays,
   addMonths,
-  endOfMonth,
   format,
   parseISO,
   startOfDay,
@@ -23,7 +22,7 @@ import { DayDetailSidebar } from "./components/day-detail-sidebar";
 import { MonthView } from "./components/month-view";
 import type { CalendarViewMode, ListRangePreset } from "./components/types";
 
-const DEFAULT_LIST_RANGE: ListRangePreset = "forward-90d";
+const DEFAULT_LIST_RANGE: ListRangePreset = "all";
 
 interface EventsContentProps {
   events: EnrichedCalendarEvent[];
@@ -33,7 +32,6 @@ export function EventsContent({ events }: EventsContentProps) {
   const intlLocale = useLocale();
   const sourcePills = getEnabledEventSources();
 
-  // ── State ──────────────────────────────────────────────────────────────
   const [visibleMonth, setVisibleMonth] = useState(() =>
     startOfMonth(new Date())
   );
@@ -46,22 +44,9 @@ export function EventsContent({ events }: EventsContentProps) {
   const [selectedSourceIds, setSelectedSourceIds] = useState<Set<string>>(
     () => new Set()
   );
-  const [categoryDenyList, setCategoryDenyList] = useState<Set<string>>(
-    () => new Set()
-  );
   const [listRangePreset, setListRangePreset] =
     useState<ListRangePreset>(DEFAULT_LIST_RANGE);
-
-  // ── Derived ────────────────────────────────────────────────────────────
-  const allCategories = useMemo(() => {
-    const s = new Set<string>();
-    for (const e of events) {
-      s.add(e.category);
-    }
-    return [...s].toSorted((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: "base" })
-    );
-  }, [events]);
+  const [showEnded, setShowEnded] = useState(false);
 
   const filteredBase = useMemo(() => {
     let list = events;
@@ -79,46 +64,47 @@ export function EventsContent({ events }: EventsContentProps) {
           e.source.name.toLowerCase().includes(q)
       );
     }
-    if (categoryDenyList.size > 0) {
-      list = list.filter((e) => !categoryDenyList.has(e.category));
-    }
     return list;
-  }, [events, search, selectedSourceIds, categoryDenyList]);
+  }, [events, search, selectedSourceIds]);
 
-  /** Events scoped for the agenda view based on range preset. */
   const agendaEvents = useMemo(() => {
+    let list = filteredBase;
+
+    // Filter out past events unless "Ended" is toggled on
+    if (!showEnded) {
+      const now = startOfDay(new Date());
+      list = list.filter((e) => {
+        if (!e.startsAt || Number.isNaN(Date.parse(e.startsAt))) {
+          return true;
+        }
+        const end = e.endsAt ? parseISO(e.endsAt) : parseISO(e.startsAt);
+        return end >= now;
+      });
+    }
+
     if (listRangePreset === "all") {
-      return filteredBase;
+      return list;
     }
     const now = new Date();
-    if (listRangePreset === "visible-month") {
-      const start = startOfMonth(visibleMonth);
-      const end = endOfMonth(visibleMonth);
-      const dated = filteredBase.filter((e) => {
-        if (!e.startsAt) {
-          return false;
-        }
-        const d = parseISO(e.startsAt);
-        return !Number.isNaN(d.getTime()) && d >= start && d <= end;
-      });
-      const undated = filteredBase.filter(
-        (e) => !e.startsAt || Number.isNaN(Date.parse(e.startsAt))
-      );
-      return [...dated, ...undated];
-    }
-    // forward-90d
     const start = startOfDay(now);
-    const limit = addDays(start, 90);
-    return filteredBase.filter((e) => {
+    const daysMap: Record<string, number> = {
+      "forward-1y": 365,
+      "forward-30d": 30,
+      "forward-6mo": 180,
+      "forward-7d": 7,
+      "forward-90d": 90,
+    };
+    const days = daysMap[listRangePreset] ?? 90;
+    const limit = addDays(start, days);
+    return list.filter((e) => {
       if (!e.startsAt || Number.isNaN(Date.parse(e.startsAt))) {
         return true;
       }
       const d = parseISO(e.startsAt);
       return d >= start && d <= limit;
     });
-  }, [filteredBase, listRangePreset, visibleMonth]);
+  }, [filteredBase, listRangePreset, showEnded]);
 
-  // ── Handlers ───────────────────────────────────────────────────────────
   function goToday() {
     const t = new Date();
     setVisibleMonth(startOfMonth(t));
@@ -137,23 +123,11 @@ export function EventsContent({ events }: EventsContentProps) {
     });
   }
 
-  function toggleCategoryDeny(cat: string) {
-    setCategoryDenyList((prev) => {
-      const next = new Set(prev);
-      if (next.has(cat)) {
-        next.delete(cat);
-      } else {
-        next.add(cat);
-      }
-      return next;
-    });
-  }
-
   function clearFilters() {
     setSearch("");
     setSelectedSourceIds(new Set());
-    setCategoryDenyList(new Set());
     setListRangePreset(DEFAULT_LIST_RANGE);
+    setShowEnded(false);
   }
 
   function handleNavigateToEvent(startsAt: string) {
@@ -165,23 +139,14 @@ export function EventsContent({ events }: EventsContentProps) {
     setVisibleMonth(startOfMonth(d));
   }
 
-  function handleSelectDay(d: Date) {
-    setSelectedDay(d);
-  }
-
-  function handleViewChange(v: CalendarViewMode) {
-    setViewMode(v);
-  }
-
   const hasActiveFilters =
     !!search.trim() ||
     selectedSourceIds.size > 0 ||
-    categoryDenyList.size > 0 ||
-    listRangePreset !== DEFAULT_LIST_RANGE;
+    listRangePreset !== DEFAULT_LIST_RANGE ||
+    showEnded;
 
   const monthTitle = format(visibleMonth, "MMMM yyyy");
 
-  // ── Render ─────────────────────────────────────────────────────────────
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       <div
@@ -191,8 +156,6 @@ export function EventsContent({ events }: EventsContentProps) {
         )}
       >
         <CalendarHeader
-          allCategories={allCategories}
-          categoryDenyList={categoryDenyList}
           hasActiveFilters={hasActiveFilters}
           listRangePreset={listRangePreset}
           monthTitle={monthTitle}
@@ -202,11 +165,12 @@ export function EventsContent({ events }: EventsContentProps) {
           onPrevMonth={() => setVisibleMonth((m) => subMonths(m, 1))}
           onSearchChange={setSearch}
           onSetListRange={setListRangePreset}
-          onToggleCategoryDeny={toggleCategoryDeny}
+          onToggleShowEnded={() => setShowEnded((v) => !v)}
           onToggleSource={toggleSource}
-          onViewChange={handleViewChange}
+          onViewChange={setViewMode}
           search={search}
           selectedSourceIds={selectedSourceIds}
+          showEnded={showEnded}
           sourcePills={sourcePills}
           viewMode={viewMode}
         />
@@ -218,7 +182,6 @@ export function EventsContent({ events }: EventsContentProps) {
             "lg:grid-cols-[minmax(0,1fr)_22rem] lg:grid-rows-[minmax(0,1fr)]"
           )}
         >
-          {/* Main content area */}
           <div
             className={cn(
               "min-h-0 min-w-0",
@@ -228,7 +191,7 @@ export function EventsContent({ events }: EventsContentProps) {
             {viewMode === "month" && (
               <MonthView
                 events={filteredBase}
-                onSelectDay={handleSelectDay}
+                onSelectDay={setSelectedDay}
                 selectedDay={selectedDay}
                 visibleMonth={visibleMonth}
               />
@@ -248,7 +211,6 @@ export function EventsContent({ events }: EventsContentProps) {
             )}
           </div>
 
-          {/* Sidebar */}
           <DayDetailSidebar
             events={filteredBase}
             locale={intlLocale}

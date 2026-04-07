@@ -10,8 +10,11 @@ import {
   calendarUpstreamHeaders,
   resolveWebcalToHttps,
 } from "./calendar-upstream";
+import { fetchDevEventsForSource } from "./dev-events";
 import { fetchDiscourseEventsForSource } from "./discourse-events";
+import { fetchFedocalEventsForSource } from "./fedocal-events";
 import { parseVeventsFromIcs } from "./ics-parse";
+import { fetchLfEventsForSource } from "./lf-events";
 import { parseRssToEvents } from "./rss-parse";
 
 /** Kept for callers that imported the old name; same as CALENDAR_FETCH_REVALIDATE_SECONDS. */
@@ -84,6 +87,15 @@ function sourceFetchesRemotely(source: EventSource): boolean {
   if (source.kind === "discourse") {
     return Boolean(source.discourseEventsUrl);
   }
+  if (source.kind === "fedocal") {
+    return Boolean(source.fedocalApiUrl);
+  }
+  if (source.kind === "lf-scrape") {
+    return Boolean(source.siteUrl);
+  }
+  if (source.kind === "dev-events") {
+    return true;
+  }
   return false;
 }
 
@@ -96,6 +108,18 @@ async function fetchEventsForSource(
 
   if (source.kind === "discourse") {
     return fetchDiscourseEventsForSource(source);
+  }
+
+  if (source.kind === "fedocal") {
+    return fetchFedocalEventsForSource(source);
+  }
+
+  if (source.kind === "lf-scrape") {
+    return fetchLfEventsForSource(source);
+  }
+
+  if (source.kind === "dev-events") {
+    return fetchDevEventsForSource(source);
   }
 
   const merged: ManualCalendarEvent[] = [];
