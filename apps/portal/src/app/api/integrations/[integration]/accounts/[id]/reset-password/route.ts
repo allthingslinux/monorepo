@@ -3,7 +3,7 @@ import {
   handleAPIError,
   parseRouteId,
   requireAuth,
-} from "@portal/api/utils";
+} from "@atl/api/utils";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 

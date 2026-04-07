@@ -1,5 +1,5 @@
 import "server-only";
-import { APIError } from "@portal/api/utils";
+import { APIError } from "@atl/api/utils";
 import { captureException } from "@sentry/nextjs";
 
 import { keys } from "./keys";

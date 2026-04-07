@@ -1,0 +1,963 @@
+import { apiKey } from "@better-auth/api-key";
+import { oauthProvider } from "@better-auth/oauth-provider";
+import { passkey } from "@better-auth/passkey";
+import { db } from "@atl/db/client";
+import { schema } from "@atl/db/schema";
+import { user as authUser } from "@atl/db/schema/auth";
+import { ircAccount } from "@atl/db/schema/irc";
+import { xmppAccount } from "@atl/db/schema/xmpp";
+import { isValidCanonicalUsername } from "@atl/schemas/integrations/validation";
+import "server-only";
+import * as Sentry from "@sentry/nextjs";
+import type { BetterAuthOptions } from "better-auth";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
+import {
+  admin as adminPlugin,
+  bearer,
+  genericOAuth,
+  jwt,
+  lastLoginMethod,
+  multiSession,
+  oAuthProxy,
+  oneTimeToken,
+  openAPI,
+  twoFactor,
+  username,
+} from "better-auth/plugins";
+import { and, eq } from "drizzle-orm";
+
+import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
+import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
+
+import {
+  sendOTPEmail,
+  sendResetPasswordEmail,
+  sendVerificationEmail,
+} from "./email";
+import { keys } from "./keys";
+import {
+  ac,
+  admin as adminRole,
+  staff as staffRole,
+  user as userRole,
+} from "./permissions";
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const env = keys();
+const baseURL = env.BETTER_AUTH_URL || "http://localhost:3000";
+
+// ============================================================================
+// Database Configuration
+// ============================================================================
+
+const database = drizzleAdapter(db, {
+  provider: "pg",
+  schema,
+});
+
+// ============================================================================
+// Email & Password Configuration
+// ============================================================================
+
+const emailAndPassword = {
+  enabled: true,
+  maxPasswordLength: 128,
+  // Disable sign up if you only want existing users to sign in
+  // disableSignUp: false,
+  // Password length constraints
+  minPasswordLength: 8,
+  // Require email verification before allowing login (set to true in production)
+  requireEmailVerification: false,
+  // Path for password reset page
+  resetPasswordPath: "/auth/reset-password",
+  // Token expiration time for password reset (1 hour)
+  resetPasswordTokenExpiresIn: 60 * 60,
+  // Send password reset email (imported from ./email.ts)
+  sendResetPassword: sendResetPasswordEmail,
+  // Callback after password is successfully reset
+  // onPasswordReset: async ({ user }, request) => {
+  //   // Perform additional actions after password reset
+  //   console.log(`Password reset for user ${user.email}`);
+  // },
+  // Custom password hashing (optional - defaults to scrypt)
+  // password: {
+  //   hash: customHashPassword,
+  //   verify: customVerifyPassword,
+  // },
+};
+
+// ============================================================================
+// Email Verification Configuration
+// ============================================================================
+
+const emailVerification = {
+  // Send verification email (imported from ./email.ts)
+  sendVerificationEmail,
+};
+
+// ============================================================================
+// Session Configuration
+// ============================================================================
+
+const session = {
+  // Cookie cache: stores session data in signed cookie to reduce database queries
+  cookieCache: {
+    enabled: true,
+    maxAge: 5 * 60, // 5 minutes cache duration
+    // Strategy: "compact" (default, smallest), "jwt" (JWT compatible), or "jwe" (encrypted)
+    strategy: "compact" as const,
+  },
+  // Session expiration: 7 days (default)
+  expiresIn: 60 * 60 * 24 * 7, // 7 days in seconds
+  // Session freshness: sessions are considered "fresh" if created within this time
+  // Used for sensitive operations that require recent authentication
+  freshAge: 60 * 60 * 24, // 1 day in seconds (set to 0 to disable freshness check)
+  // Store sessions in database (required for OAuth provider and session management)
+  storeSessionInDatabase: true,
+  // Update session expiration when used within this time window
+  updateAge: 60 * 60 * 24, // 1 day in seconds
+  // Disable automatic session refresh (set to true to prevent session expiration updates)
+  // disableSessionRefresh: false,
+};
+
+// ============================================================================
+// User Configuration
+// ============================================================================
+
+const user = {
+  // Change email configuration
+  changeEmail: {
+    enabled: false, // Enable to allow users to change their email
+    // sendChangeEmailConfirmation: async ({ user, newEmail, url, token }, request) => {
+    //   // Send confirmation to current email before sending verification to new email
+    //   await sendEmail({
+    //     to: user.email,
+    //     subject: "Approve email change - Portal",
+    //     html: `Click the link to approve the change to ${newEmail}: ${url}`,
+    //   });
+    // },
+    // updateEmailWithoutVerification: false, // Allow immediate update if current email is unverified
+  },
+  // Delete user configuration
+  deleteUser: {
+    beforeDelete: async (userToDelete: { id: string }) => {
+      // Ensure external integrations are cleaned up before user deletion.
+      await cleanupIntegrationAccounts(userToDelete.id);
+    },
+    enabled: true,
+    // sendDeleteAccountVerification: async ({ user, url, token }, request) => {
+    //   // Send verification email before account deletion
+    //   await sendEmail({
+    //     to: user.email,
+    //     subject: "Confirm account deletion - Portal",
+    //     html: `Click the link to permanently delete your account: ${url}`,
+    //   });
+    // },
+    // beforeDelete: async (user, request) => {
+    //   // Perform cleanup or additional checks before deletion
+    //   // Throw APIError to prevent deletion if needed
+    // },
+    // afterDelete: async (user, request) => {
+    //   // Perform cleanup after deletion
+    // },
+  },
+};
+
+// ============================================================================
+// Account Configuration
+// ============================================================================
+// Configure account linking and management settings
+
+const account = {
+  // Account linking: allows users to link multiple authentication methods
+  accountLinking: {
+    enabled: true, // Enable account linking
+    // trustedProviders: ["google", "github"], // Auto-link these providers even without email verification
+    // allowDifferentEmails: false, // Allow linking accounts with different email addresses
+    // updateUserInfoOnLink: false, // Update user info when linking new account
+    // allowUnlinkingAll: false, // Allow unlinking all accounts (prevents account lockout)
+  },
+};
+
+// ============================================================================
+// Social Providers Configuration
+// ============================================================================
+// Configure OAuth providers for user authentication (Google, GitHub, etc.)
+// Users can sign in with these providers using authClient.signIn.social()
+
+const socialProviders =
+  env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
+    ? {
+        discord: {
+          clientId: env.DISCORD_CLIENT_ID,
+          clientSecret: env.DISCORD_CLIENT_SECRET,
+          // For OAuth Proxy: redirectURI must be your production app's callback URL
+          // redirectURI: "https://my-main-app.com/api/auth/callback/discord",
+        },
+      }
+    : {};
+
+// ============================================================================
+// Generic OAuth (Mailcow as sign-in provider)
+// ============================================================================
+// Mailcow exposes OAuth2 at /oauth/authorize, /oauth/token, /oauth/profile.
+// Create OAuth client via Mailcow API POST /api/v1/add/oauth2-client or UI.
+// See: references/mailcow-openapi.yaml, NextAuth discussion #9206
+
+const mailcowEnv = mailcowKeys();
+const mailcowOAuthConfig =
+  mailcowEnv.MAILCOW_API_URL &&
+  mailcowEnv.MAILCOW_OAUTH_CLIENT_ID &&
+  mailcowEnv.MAILCOW_OAUTH_CLIENT_SECRET
+    ? [
+        {
+          authorizationUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/authorize`,
+          clientId: mailcowEnv.MAILCOW_OAUTH_CLIENT_ID,
+          clientSecret: mailcowEnv.MAILCOW_OAUTH_CLIENT_SECRET,
+          mapProfileToUser: (profile: {
+            username?: string;
+            identifier?: string;
+            email?: string;
+            full_name?: string;
+            displayName?: string;
+          }) => ({
+            email: profile.email ?? "",
+            emailVerified: true,
+            id: profile.username ?? profile.identifier ?? profile.email ?? "",
+            image: null,
+            name:
+              profile.full_name ?? profile.displayName ?? profile.email ?? "",
+          }),
+          providerId: "mailcow",
+          scopes: ["profile"],
+          tokenUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/token`,
+          userInfoUrl: `${mailcowEnv.MAILCOW_API_URL.replace(/\/$/, "")}/oauth/profile`,
+        },
+      ]
+    : [];
+
+// ============================================================================
+// OAuth Provider Plugin Configuration
+// ============================================================================
+// Configure Better Auth to act as an OAuth provider for other applications
+// This allows other apps to authenticate users via your Better Auth instance
+
+const oauthProviderConfig = {
+  // Sign up configuration
+  // signUp: {
+  //   page: "/sign-up", // Sign up page for prompt=create
+  //   shouldRedirect: async ({ headers }) => {
+  //     // Return false to continue, or a path to redirect
+  //     return false;
+  //   },
+  // },
+  // Select account configuration
+  // selectAccount: {
+  //   page: "/select-account", // Account selection page
+  //   shouldRedirect: async ({ headers }) => {
+  //     // Return true to redirect, false to continue
+  //     return false;
+  //   },
+  // },
+  // Post login configuration (for organization-specific scopes)
+  // postLogin: {
+  //   page: "/select-organization", // Post login page
+  //   shouldRedirect: async ({ session, scopes, headers }) => {
+  //     // Return true to redirect, false to continue
+  //     return false;
+  //   },
+  //   consentReferenceId: ({ session, scopes }) => {
+  //     // Return reference ID (e.g., organization ID) for consent
+  //     return undefined;
+  //   },
+  // },
+  // Client registration
+  allowDynamicClientRegistration: true, // Enable dynamic client registration (RFC7591)
+  allowUnauthenticatedClientRegistration: true, // Allow unauthenticated public client registration (for MCP)
+  consentPage: "/auth/consent", // Consent page for OAuth authorization flow
+  // Cached trusted clients (first-party applications)
+  // cachedTrustedClients: new Set([
+  //   "internal-dashboard",
+  //   "mobile-app",
+  // ]),
+  // Client reference configuration (for organization plugin)
+  // clientReference: ({ session }) => {
+  //   return (session?.activeOrganizationId as string | undefined) ?? undefined;
+  // },
+  // Client privileges configuration
+  // clientPrivileges: async ({ action, headers, user, session }) => {
+  //   // Return true if user can perform action, false otherwise
+  //   return true;
+  // },
+  // Custom claims
+  // customIdTokenClaims: ({ user, scopes, metadata }) => {
+  //   return {
+  //     locale: "en-GB",
+  //   };
+  // },
+  // customAccessTokenClaims: ({ user, scopes, referenceId, resource, metadata }) => {
+  //   return {
+  //     "https://example.com/org": referenceId,
+  //     "https://example.com/roles": ["editor"],
+  //   };
+  // },
+  customUserInfoClaims: async ({
+    scopes,
+    user: claimsUser,
+  }: {
+    user: { id: string };
+    scopes: string[];
+  }) => {
+    const claims: Record<string, unknown> = {};
+
+    // Add XMPP username when 'xmpp' scope is requested
+    if (scopes.includes("xmpp")) {
+      await Sentry.startSpan(
+        { name: "xmppAccount lookup", op: "db.lookup" },
+        async () => {
+          try {
+            const [xmppAccountRecord] = await db
+              .select({ username: xmppAccount.username })
+              .from(xmppAccount)
+              .where(eq(xmppAccount.userId, claimsUser.id))
+              .limit(1);
+
+            if (xmppAccountRecord) {
+              claims.xmpp_username = xmppAccountRecord.username;
+            }
+          } catch (error) {
+            // Capture error in Sentry but gracefully continue without XMPP claim
+            Sentry.captureException(error, {
+              tags: {
+                function: "customUserInfoClaims",
+                userId: claimsUser.id,
+              },
+            });
+            // Continue without XMPP claim on error
+          }
+        }
+      );
+    }
+
+    // Add IRC nick when 'irc' scope is requested
+    if (scopes.includes("irc")) {
+      await Sentry.startSpan(
+        { name: "ircAccount lookup", op: "db.lookup" },
+        async () => {
+          try {
+            const [ircAccountRecord] = await db
+              .select({ nick: ircAccount.nick })
+              .from(ircAccount)
+              .where(
+                and(
+                  eq(ircAccount.userId, claimsUser.id),
+                  eq(ircAccount.status, "active")
+                )
+              )
+              .limit(1);
+
+            if (ircAccountRecord) {
+              claims.irc_nick = ircAccountRecord.nick;
+            }
+          } catch (error) {
+            Sentry.captureException(error, {
+              tags: {
+                function: "customUserInfoClaims",
+                userId: claimsUser.id,
+              },
+            });
+          }
+        }
+      );
+    }
+
+    return claims;
+  },
+  // Redirect screens configuration
+  loginPage: "/auth/sign-in", // Login page for OAuth authorization flow
+  // clientRegistrationClientSecretExpiration: "30d", // Expiration for dynamically registered confidential clients
+  // clientRegistrationDefaultScopes: ["openid", "profile"], // Default scopes for new clients
+  // clientRegistrationAllowedScopes: ["email", "offline_access"], // Additional allowed scopes for new clients
+  // Scopes configuration
+  scopes: ["openid", "profile", "email", "offline_access", "xmpp", "irc"], // Supported scopes
+  // Token expirations
+  // accessTokenExpiresIn: "1h", // Default: 1 hour
+  // m2mAccessTokenExpiresIn: "1h", // Default: 1 hour (machine-to-machine)
+  // idTokenExpiresIn: "10h", // Default: 10 hours
+  // refreshTokenExpiresIn: "30d", // Default: 30 days
+  // codeExpiresIn: "10m", // Default: 10 minutes
+  // Scope-based token expirations (must be lower than defaults)
+  // scopeExpirations: {
+  //   "write:payments": "5m",
+  //   "read:payments": "30m",
+  // },
+  // Storage configuration
+  // storeClientSecret: "hashed", // Default: "hashed" (or "encrypted" if disableJwtPlugin: true)
+  // storeTokens: "hashed", // Default: "hashed" (for refresh tokens and opaque access tokens)
+  // Refresh token customization
+  // formatRefreshToken: {
+  //   encrypt: (token, sessionId) => {
+  //     // Custom encryption logic
+  //     return token;
+  //   },
+  //   decrypt: (token) => {
+  //     // Custom decryption logic
+  //     return { token };
+  //   },
+  // },
+  // Advertised metadata (publicized scopes and claims)
+  // advertisedMetadata: {
+  //   scopes_supported: ["openid", "profile", "email"], // Subset of scopes
+  //   claims_supported: ["https://example.com/roles"], // Additional claims (OIDC only)
+  // },
+  // Disable JWT plugin (opaque tokens only, HS256 id tokens)
+  // disableJwtPlugin: false, // Default: false (JWT enabled by default)
+  // Token prefixes (for secret scanners)
+  // prefix: {
+  //   opaqueAccessToken: "oat_", // Prefix for opaque access tokens
+  //   refreshToken: "rt_", // Prefix for refresh tokens
+  //   clientSecret: "cs_", // Prefix for client secrets
+  // },
+  // Silence startup warning — route exists but Better Auth checks before Next.js HTTP server is ready
+  // See: https://github.com/better-auth/better-auth/issues/4540
+  silenceWarnings: {
+    oauthAuthServerConfig: true,
+  },
+  // Valid audiences (resources) for this OAuth server
+  validAudiences: [baseURL, `${baseURL}/api`],
+};
+
+// ============================================================================
+// Plugin Configuration
+// ============================================================================
+
+const plugins = [
+  username({
+    displayUsernameNormalization: (value: string) => value,
+    maxUsernameLength: 30,
+    minUsernameLength: 3,
+    usernameNormalization: (value: string) => value.toLowerCase(),
+    usernameValidator: (value: string) => isValidCanonicalUsername(value),
+  }),
+  passkey({
+    rpName: "Portal", // Shown in WebAuthn prompts (defaults to appName)
+    // rpID, origin default to baseURL hostname; override for multi-domain setups
+    // Authenticator selection criteria
+    // authenticatorSelection: {
+    //   authenticatorAttachment: "platform" | "cross-platform", // Default: not set (both allowed, platform preferred)
+    //   residentKey: "required" | "preferred" | "discouraged", // Default: "preferred"
+    //   userVerification: "required" | "preferred" | "discouraged", // Default: "preferred"
+    // },
+    // Advanced options
+    // advanced: {
+    //   webAuthnChallengeCookie: "better-auth-passkey", // Cookie name for WebAuthn challenge (default: "better-auth-passkey")
+    // },
+  }), // WebAuthn biometric authentication - requires HTTPS in production
+  apiKey(),
+  jwt({
+    // JWKS configuration
+    // jwks: {
+    //   // Custom JWKS path (default: "/jwks")
+    //   // jwksPath: "/.well-known/jwks.json",
+    //   // Remote JWKS URL (disables /jwks endpoint, uses this URL for discovery)
+    //   // remoteUrl: "https://example.com/.well-known/jwks.json",
+    //   // Key pair algorithm configuration
+    //   // keyPairConfig: {
+    //   //   alg: "EdDSA", // Default: "EdDSA"
+    //   //   crv: "Ed25519", // For EdDSA: "Ed25519" or "Ed448" (default: "Ed25519")
+    //   //   // For RSA256/PS256: modulusLength (default: 2048)
+    //   //   // For ECDH-ES: crv: "P-256" | "P-384" | "P-521" (default: "P-256")
+    //   // },
+    //   // Disable private key encryption (NOT RECOMMENDED - security risk)
+    //   // disablePrivateKeyEncryption: false, // Default: false (encrypted with AES256 GCM)
+    //   // Key rotation configuration
+    //   // rotationInterval: 60 * 60 * 24 * 30, // Rotate keys every 30 days (in seconds)
+    //   // gracePeriod: 60 * 60 * 24 * 30, // Keep old keys valid for 30 days after rotation (default: 30 days)
+    //   // Custom adapter for JWKS storage (overrides default database storage)
+    //   // adapter: {
+    //   //   getJwks: async (ctx) => await customStorage.getAllKeys(),
+    //   //   createJwk: async (ctx, webKey) => await customStorage.createKey(webKey),
+    //   // },
+    // },
+    // JWT configuration
+    // jwt: {
+    //   // Custom payload definition
+    //   // definePayload: ({ user }) => {
+    //   //   return {
+    //   //     id: user.id,
+    //   //     email: user.email,
+    //   //     role: user.role,
+    //   //   };
+    //   // },
+    //   // Issuer (defaults to baseURL)
+    //   // issuer: "https://example.com",
+    //   // Audience (defaults to baseURL)
+    //   // audience: "https://example.com",
+    //   // Expiration time (default: "15m")
+    //   // expirationTime: "1h",
+    //   // Custom subject (default: user id)
+    //   // getSubject: (session) => session.user.email,
+    //   // Custom signing function (advanced - requires remoteUrl to be set)
+    //   // sign: async (jwtPayload) => {
+    //   //   // Custom signing implementation
+    //   //   return signedJwt;
+    //   // },
+    // },
+    // Disable setting JWT header (required for OAuth provider mode)
+    // When using oauthProvider plugin, set this to true to disable JWT header in /oauth2/userinfo
+    disableSettingJwtHeader: true, // Required for OAuth provider mode
+  }), // JWT tokens for services that can't use sessions
+  openAPI(),
+  ...(mailcowOAuthConfig.length > 0
+    ? [genericOAuth({ config: mailcowOAuthConfig })]
+    : []),
+  oAuthProxy({
+    // Production URL of your main app
+    // If this matches baseURL, requests will not be proxied
+    // Defaults to BETTER_AUTH_URL environment variable
+    productionURL: baseURL,
+    // Current URL of the application (optional)
+    // Automatically inferred from request URL, hosting provider, or baseURL
+    // Only specify if URL isn't inferred correctly
+    // currentURL: "http://localhost:3000",
+    // Maximum age in seconds for encrypted cookie payloads (default: 60)
+    // Payloads older than this will be rejected to prevent replay attacks
+    // Keep this value short (30-60 seconds) to minimize replay attack window
+    // maxAge: 60,
+  }), // Proxy OAuth requests for development and preview deployments
+  multiSession({
+    // Maximum number of sessions a user can have per device (default: 5)
+    // When this limit is reached, the oldest session will be revoked
+    // maximumSessions: 5,
+  }), // Multiple active sessions across different accounts
+  bearer({
+    // Require the token to be signed (default: false)
+    // requireSignature: false,
+  }), // Bearer token authentication for API requests
+  oneTimeToken({
+    // Disable client-side token generation (default: false)
+    // If true, tokens can only be generated on the server side
+    // disableClientRequest: false,
+    // Token expiration time in minutes (default: 3)
+    // expiresIn: 3,
+    // Custom token generator function
+    // generateToken: async (session, ctx) => {
+    //   // Custom token generation logic
+    //   return customToken;
+    // },
+    // Token storage configuration
+    // storeToken: "plain", // Default: "plain" (stored as plain text)
+    // storeToken: "hashed", // Use built-in hasher
+    // storeToken: {
+    //   type: "custom-hasher",
+    //   hash: async (token) => {
+    //     return myCustomHasher(token);
+    //   },
+    // },
+  }), // Single-use tokens for cross-domain authentication
+  twoFactor({
+    issuer: "Portal", // Shown in authenticator apps (e.g. Google Authenticator)
+    otpOptions: {
+      period: 3,
+      sendOTP: sendOTPEmail, // OTP validity in minutes (default: 3)
+    },
+    // Backup codes configuration
+    // backupCodesOptions: {
+    //   amount: 10, // Number of backup codes to generate (default: 10)
+    //   length: 10, // Length of each backup code (default: 10)
+    //   storeBackupCodes: "plain", // Storage method: "plain" or "encrypted" (default: "plain")
+    // },
+  }),
+  lastLoginMethod({
+    // Cookie configuration
+    // cookieName: "better-auth.last_used_login_method", // Default: "better-auth.last_used_login_method"
+    // maxAge: 60 * 60 * 24 * 30, // Default: 30 days in seconds (2592000)
+    // Database persistence (adds lastLoginMethod field to user table)
+    // storeInDatabase: false, // Default: false
+    // Custom method resolution function
+    // customResolveMethod: (ctx) => {
+    //   // Custom logic to determine the login method
+    //   // Return null to use default resolution
+    //   if (ctx.path === "/saml/callback") {
+    //     return "saml";
+    //   }
+    //   return null;
+    // },
+    // Schema customization (when storeInDatabase is true)
+    // schema: {
+    //   user: {
+    //     lastLoginMethod: "last_auth_method", // Custom field name
+    //   },
+    // },
+  }), // Track and display the last authentication method used
+  oauthProvider(oauthProviderConfig),
+  adminPlugin({
+    // Access control system with custom permissions
+    ac,
+    // Message shown when a banned user tries to sign in
+    // Default: "You have been banned from this application. Please contact support if you believe this is an error."
+    bannedUserMessage:
+      "Your account has been suspended. Contact support for assistance.",
+    // Default ban expiration in seconds (default: undefined = never expires)
+    // Set to a number to make bans temporary
+    defaultBanExpiresIn: 60 * 60 * 24 * 7, // 1 week
+    // Array of user IDs that should be considered as admin (default: [])
+    // Users in this list can perform any admin operation regardless of role
+    // adminUserIds: ["user_id_1", "user_id_2"],
+    // Default ban reason when banning a user (default: "No reason")
+    defaultBanReason: "Violation of terms of service",
+    // Default role for new users (default: "user")
+    defaultRole: "user",
+    // Note: adminRoles is not needed when using custom access control (ac and roles)
+    // When using custom access control, roles have exactly the permissions you grant them
+    // Custom roles with specific permissions
+    roles: {
+      admin: adminRole,
+      staff: staffRole,
+      user: userRole,
+    },
+  }),
+  nextCookies(),
+];
+
+// ============================================================================
+// Verification Configuration
+// ============================================================================
+
+const verification = {
+  // Disable automatic cleanup of expired verification tokens
+  // disableCleanup: false, // Default: false (cleanup enabled)
+};
+
+// ============================================================================
+// Rate Limiting Configuration
+// ============================================================================
+
+const rateLimit = {
+  // Enable rate limiting (defaults: true in production, false in development)
+  // enabled: true,
+  // Time window in seconds for rate limiting (default: 10)
+  // window: 10,
+  // Maximum number of requests allowed within the window (default: 100)
+  // max: 100,
+  // Custom rate limit rules for specific paths
+  // customRules: {
+  //   "/sign-in/email": {
+  //     window: 60, // 1 minute
+  //     max: 5, // 5 requests per minute
+  //   },
+  // },
+  // Storage: "memory" | "database" | "secondary-storage" (default: "memory")
+  // If secondary storage is provided, rate limiting will use it
+  // storage: "memory",
+  // Table name for rate limiting if database is used (default: "rateLimit")
+  // modelName: "rateLimit",
+};
+
+// ============================================================================
+// Logger Configuration
+// ============================================================================
+
+const logger = {
+  // Disable all logging (default: false)
+  // disabled: false,
+  // Disable colors in log output (default: determined by terminal)
+  // disableColors: false,
+  // Minimum log level: "info" | "warn" | "error" | "debug" (default: "error")
+  // level: "error",
+  // Custom logging function
+  // log: (level, message, ...args) => {
+  //   // Custom logging implementation
+  //   console.log(`[${level}] ${message}`, ...args);
+  // },
+};
+
+// ============================================================================
+// Advanced Configuration
+// ============================================================================
+
+const advanced = {
+  // Cookie prefix for all Better Auth cookies
+  cookiePrefix: "portal",
+  // Disable CSRF check (⚠️ security risk - not recommended)
+  // disableCSRFCheck: false,
+  // Cross-subdomain cookie configuration
+  // crossSubDomainCookies: {
+  //   enabled: true,
+  //   domain: "example.com",
+  //   additionalCookies: ["custom_cookie"],
+  // },
+  // Customize cookie names and attributes
+  // cookies: {
+  //   session_token: {
+  //     name: "custom_session_token",
+  //     attributes: {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: "lax",
+  //     },
+  //   },
+  // },
+  // Default cookie attributes for all cookies
+  // defaultCookieAttributes: {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: "lax",
+  // },
+  // Database configuration
+  database: {
+    // Custom ID generator, false to disable, "serial" for auto-increment, "uuid" for UUID
+    // generateId: false | "serial" | "uuid" | ((options) => string),
+    // Default limit for findMany queries (default: 100)
+    // defaultFindManyLimit: 100,
+    // Enable experimental joins support (requires drizzle-orm beta)
+    experimentalJoins: false, // Disabled until drizzle-orm beta is supported
+  },
+  // IP address configuration
+  // ipAddress: {
+  //   // Headers to check for client IP address
+  //   ipAddressHeaders: ["x-client-ip", "x-forwarded-for"],
+  //   // Disable IP tracking (default: false)
+  //   disableIpTracking: false,
+  // },
+  // Use secure cookies (HTTPS only) - enabled in production
+  useSecureCookies: process.env.NODE_ENV === "production",
+};
+
+// ============================================================================
+// API Error Handling Configuration
+// ============================================================================
+
+const onAPIError = {
+  // Throw errors instead of returning error responses (default: false)
+  // throw: false,
+  // Custom error handler
+  // onError: (error, ctx) => {
+  //   // Custom error handling logic
+  //   console.error("Auth error:", error);
+  // },
+  // URL to redirect to on error (default: "/api/auth/error")
+  // errorURL: "/auth/error",
+  // Customize the default error page
+  // customizeDefaultErrorPage: {
+  //   colors: {
+  //     background: "#ffffff",
+  //     foreground: "#000000",
+  //     primary: "#0070f3",
+  //     primaryForeground: "#ffffff",
+  //     mutedForeground: "#666666",
+  //     border: "#e0e0e0",
+  //     destructive: "#ef4444",
+  //     titleBorder: "#0070f3",
+  //     titleColor: "#000000",
+  //     gridColor: "#f0f0f0",
+  //     cardBackground: "#ffffff",
+  //     cornerBorder: "#0070f3",
+  //   },
+  //   size: {
+  //     radiusSm: "0.25rem",
+  //     radiusMd: "0.5rem",
+  //     radiusLg: "1rem",
+  //     textSm: "0.875rem",
+  //     text2xl: "1.5rem",
+  //     text4xl: "2.25rem",
+  //     text6xl: "3.75rem",
+  //   },
+  //   font: {
+  //     defaultFamily: "system-ui, sans-serif",
+  //     monoFamily: "monospace",
+  //   },
+  //   disableTitleBorder: false,
+  //   disableCornerDecorations: false,
+  //   disableBackgroundGrid: false,
+  // },
+};
+
+// ============================================================================
+// Database Hooks Configuration
+// ============================================================================
+
+const databaseHooks = {
+  user: {
+    // Lock canonical username after it has been set once.
+    update: {
+      before: async (payload: {
+        data?: {
+          id?: string;
+          username?: string | null;
+          [key: string]: unknown;
+        };
+      }) => {
+        const { data } = payload;
+        const userId = typeof data?.id === "string" ? data.id : undefined;
+        const nextUsername =
+          typeof data?.username === "string" ? data.username : undefined;
+
+        if (!userId || nextUsername === undefined) {
+          return { data };
+        }
+
+        const [existing] = await db
+          .select({ username: authUser.username })
+          .from(authUser)
+          .where(eq(authUser.id, userId))
+          .limit(1);
+
+        if (existing?.username && existing.username !== nextUsername) {
+          throw new Error("Username is locked and cannot be changed");
+        }
+
+        return { data };
+      },
+    },
+  },
+  // Session lifecycle hooks
+  // session: {
+  //   create: {
+  //     before: async (session) => {
+  //       return { data: session };
+  //     },
+  //     after: async (session) => {
+  //       // Perform actions after session creation
+  //     },
+  //   },
+  // },
+  // Account lifecycle hooks
+  // account: {
+  //   create: {
+  //     before: async (account) => {
+  //       return { data: account };
+  //     },
+  //     after: async (account) => {
+  //       // Perform actions after account creation
+  //     },
+  //   },
+  // },
+  // Verification lifecycle hooks
+  // verification: {
+  //   create: {
+  //     before: async (verification) => {
+  //       return { data: verification };
+  //     },
+  //   },
+  // },
+};
+
+// ============================================================================
+// Hooks Configuration
+// ============================================================================
+// Request lifecycle hooks for Better Auth
+// To use hooks, import createAuthMiddleware: import { createAuthMiddleware } from "better-auth/api";
+
+const hooks = {
+  // Request lifecycle hooks
+  // before: createAuthMiddleware(async (ctx) => {
+  //   // Execute before processing the request
+  //   console.log("Request path:", ctx.path);
+  // }),
+  // after: createAuthMiddleware(async (ctx) => {
+  //   // Execute after processing the request
+  //   console.log("Response:", ctx.context.returned);
+  // }),
+};
+
+// ============================================================================
+// Telemetry Configuration
+// ============================================================================
+
+const telemetry = {
+  // Enable or disable Better Auth's telemetry collection (default: false)
+  enabled: false,
+};
+
+// ============================================================================
+// Trusted Origins Configuration
+// ============================================================================
+
+const trustedOrigins = [
+  // Allow any localhost port in development
+  ...(process.env.NODE_ENV === "development" ? ["http://localhost:*"] : []),
+  // Canonical app URL (http or https) — must match the origin users hit or Better Auth returns "Invalid origin"
+  ...(env.BETTER_AUTH_URL ? [env.BETTER_AUTH_URL] : []),
+  // Add additional production origins as needed
+  // "https://portal.example.com",
+  // Wildcard support for subdomains
+  // "https://*.example.com",
+];
+
+// ============================================================================
+// Auth Options
+// ============================================================================
+
+const authOptions = {
+  // Account configuration
+  account,
+  // Advanced configuration options
+  advanced,
+  // Application name (used in emails, OAuth, etc.)
+  appName: "Portal",
+  // Base URL for Better Auth (defaults to BETTER_AUTH_URL env var or inferred from request)
+  baseURL,
+  // Database adapter configuration
+  database,
+  // Database lifecycle hooks
+  databaseHooks,
+  // Disable specific auth paths
+  disabledPaths: ["/token"], // Disabled because OAuth provider handles token endpoint
+  // Email and password authentication
+  emailAndPassword,
+  // Email verification configuration
+  emailVerification,
+  // Experimental features
+  experimental: {
+    joins: false, // Disabled until drizzle-orm beta is supported
+  },
+  // Request lifecycle hooks
+  hooks,
+  // Logger configuration
+  logger,
+  // API error handling
+  onAPIError,
+  // Plugins
+  plugins,
+  // Rate limiting configuration
+  rateLimit,
+  // Base path for Better Auth routes (default: "/api/auth")
+  // basePath: "/api/auth",
+  // Secret for encryption, signing, and hashing (defaults to BETTER_AUTH_SECRET or AUTH_SECRET env var)
+  secret: env.BETTER_AUTH_SECRET,
+  // Session configuration
+  session,
+  // Social providers (OAuth)
+  socialProviders,
+  // Telemetry collection
+  telemetry,
+  // Trusted origins for CORS and CSRF protection
+  trustedOrigins,
+  // User configuration
+  user,
+  // Verification configuration
+  verification,
+} as BetterAuthOptions;
+
+// ============================================================================
+// Auth Instance
+// ============================================================================
+
+export const auth = betterAuth(authOptions);
+
+// ============================================================================
+// Type Exports
+// ============================================================================
+
+export type Session = typeof auth.$Infer.Session;
+
+/** Return type of `auth.api.getSession` (null when unauthenticated). */
+export type AuthGetSessionReturn = Awaited<
+  ReturnType<typeof auth.api.getSession>
+>;

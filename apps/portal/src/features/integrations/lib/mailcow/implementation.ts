@@ -1,16 +1,16 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
-import { APIError } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { mailcowAccount } from "@portal/db/schema/mailcow";
-import { log } from "@portal/observability/utils";
+import { APIError } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { mailcowAccount } from "@atl/db/schema/mailcow";
+import { log } from "@atl/observability/utils";
 import {
   CreateMailboxRequestSchema,
   MailcowAccountSchema,
   UpdateMailboxRequestSchema,
-} from "@portal/schemas/integrations/mailcow";
+} from "@atl/schemas/integrations/mailcow";
 import { and, eq, ne } from "drizzle-orm";
 import type { z } from "zod";
 

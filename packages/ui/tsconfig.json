@@ -14,12 +14,7 @@
     "jsx": "react-jsx",
     "noEmit": true,
     "paths": {
-      "@atl/ui/*": ["./src/*"],
-      "@/auth": ["../../apps/portal/src/features/auth/lib"],
-      "@/auth/*": ["../../apps/portal/src/features/auth/lib/*"],
-      "@/config": ["../../apps/portal/src/shared/config"],
-      "@/config/*": ["../../apps/portal/src/shared/config/*"],
-      "@/*": ["../../apps/portal/src/*"]
+      "@atl/ui/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

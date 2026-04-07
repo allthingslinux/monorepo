@@ -8,8 +8,8 @@
  * Validates: Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6
  */
 
-import type * as PortalApiUtils from "@portal/api/utils";
-import { db } from "@portal/db/client";
+import type * as PortalApiUtils from "@atl/api/utils";
+import { db } from "@atl/db/client";
 import {
   assert as fcAssert,
   asyncProperty,
@@ -41,16 +41,16 @@ const fc = {
 // Mock env keys before importing route (backup for modules that import env indirectly)
 vi.mock("@/features/integrations/lib/xmpp/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/keys", () => ({ keys: () => ({}) }));
-vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
+vi.mock("@atl/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
   keys: () => ({}),
 }));
 
 // Mock auth — requireAuth always passes
-vi.mock("@portal/api/utils", async () => {
+vi.mock("@atl/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
+    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),
@@ -62,7 +62,7 @@ vi.mock("@portal/api/utils", async () => {
 });
 
 // Mock DB
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {
     select: vi.fn(),
   },

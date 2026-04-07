@@ -3,13 +3,13 @@ import type {
   ProtectedRoute,
   PublicRoute,
   RouteConfig,
-} from "@portal/types/routes";
+} from "@atl/types/routes";
 
 import type { RouteTranslationResolver } from "./i18n";
 import { getTranslatedRouteConfig } from "./i18n";
 
 // Re-export for backward compatibility
-export type { BreadcrumbItem } from "@portal/types/routes";
+export type { BreadcrumbItem } from "@atl/types/routes";
 
 /**
  * Find route by path in config

@@ -1,7 +1,7 @@
 "use client";
 
-import type { Session } from "@portal/api/types";
-import type { SessionListResponse } from "@portal/types/api";
+import type { Session } from "@atl/api/types";
+import type { SessionListResponse } from "@atl/types/api";
 import { memo, useMemo } from "react";
 
 import {

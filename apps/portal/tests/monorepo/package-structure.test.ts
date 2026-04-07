@@ -59,7 +59,7 @@ describe("Property 4: JIT package exports point to TypeScript source", () => {
 
       for (const [_subpath, target] of Object.entries(exports)) {
         if (typeof target === "string") {
-          // Single string export (e.g. @portal/email "." → "./src/index.ts")
+          // Single string export (e.g. @atl/email "." → "./src/index.ts")
           expect(target).toMatch(/\.tsx?$/);
         } else if (typeof target === "object" && target !== null) {
           // Conditional export with types/default conditions
@@ -105,7 +105,7 @@ describe("Property 5: Package structure conformance (private: true, scripts)", (
  * Property 6: TypeScript config inheritance
  *
  * For all internal packages under packages/ (excluding typescript-config),
- * tsconfig.json extends @portal/typescript-config/library.json.
+ * tsconfig.json extends @atl/typescript-config/library.json.
  *
  * Validates: Requirements 3.4, 3.5
  */
@@ -113,7 +113,7 @@ describe("Property 6: TypeScript config inheritance (extends library.json)", () 
   const libraryPkgs = getLibraryPackageDirs();
 
   it.each(libraryPkgs)(
-    "packages/%s — tsconfig.json extends @portal/typescript-config/library.json",
+    "packages/%s — tsconfig.json extends @atl/typescript-config/library.json",
     (pkgDir) => {
       const tsconfigPath = path.join(PACKAGES_DIR, pkgDir, "tsconfig.json");
       expect(
@@ -122,7 +122,7 @@ describe("Property 6: TypeScript config inheritance (extends library.json)", () 
       ).toBe(true);
 
       const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf-8"));
-      expect(tsconfig.extends).toBe("@portal/typescript-config/library.json");
+      expect(tsconfig.extends).toBe("@atl/typescript-config/library.json");
     }
   );
 });

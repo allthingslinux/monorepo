@@ -1,4 +1,4 @@
-import type { IntegrationStatus } from "@portal/utils/constants";
+import type { IntegrationStatus } from "@atl/utils/constants";
 
 export const integrationStatusLabels: Record<IntegrationStatus, string> = {
   active: "Active",

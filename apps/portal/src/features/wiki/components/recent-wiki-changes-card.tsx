@@ -1,4 +1,4 @@
-import { formatRelativeTime } from "@portal/utils/date";
+import { formatRelativeTime } from "@atl/utils/date";
 import { ArrowUpRight, BookOpen } from "lucide-react";
 
 import { env } from "@/env";

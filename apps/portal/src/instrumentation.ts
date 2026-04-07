@@ -1,5 +1,5 @@
 import "server-only";
-import { keys } from "@portal/observability/keys";
+import { keys } from "@atl/observability/keys";
 
 /**
  * Next.js instrumentation hook

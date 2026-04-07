@@ -1,4 +1,4 @@
-import { APIError, handleAPIError, requireAuth } from "@portal/api/utils";
+import { APIError, handleAPIError, requireAuth } from "@atl/api/utils";
 import { captureException } from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { z } from "zod";

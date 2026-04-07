@@ -1,8 +1,8 @@
-import { APIError, handleAPIError } from "@portal/api/utils";
+import { APIError, handleAPIError } from "@atl/api/utils";
 import { describe, expect, it, vi } from "vitest";
 
 // Mock database and auth before importing utils
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {},
 }));
 
@@ -14,7 +14,7 @@ vi.mock("@/auth", () => ({
   },
 }));
 
-vi.mock("@portal/observability/utils", () => ({
+vi.mock("@atl/observability/utils", () => ({
   captureError: vi.fn(),
   log: {
     error: vi.fn(),

@@ -1,4 +1,4 @@
-import { getRouteMetadata } from "@portal/seo/metadata";
+import { getRouteMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";

@@ -10,7 +10,7 @@ export type {
   UpdateXmppAccountStatus,
   XmppAccount,
   XmppAccountStatus,
-} from "@portal/schemas/integrations/xmpp";
+} from "@atl/schemas/integrations/xmpp";
 
 /**
  * Prosody REST API error response.

@@ -3,8 +3,8 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import "dotenv/config";
-import { db } from "@portal/db/client";
-import { oauthClient } from "@portal/db/schema/oauth";
+import { db } from "@atl/db/client";
+import { oauthClient } from "@atl/db/schema/oauth";
 import { eq } from "drizzle-orm";
 
 // ============================================================================

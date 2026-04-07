@@ -1,6 +1,6 @@
-import { handleAPIError, parseRouteId, requireAuth } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { session } from "@portal/db/schema/auth";
+import { handleAPIError, parseRouteId, requireAuth } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { session } from "@atl/db/schema/auth";
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

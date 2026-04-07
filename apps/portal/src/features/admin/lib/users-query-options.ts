@@ -3,9 +3,9 @@
  * Shared by useUsers (client) and admin page prefetch (server); queryFn is supplied by each caller.
  */
 
-import { queryKeys } from "@portal/api/query-keys";
-import type { UserListFilters } from "@portal/api/types";
-import { QUERY_CACHE } from "@portal/utils/constants";
+import { queryKeys } from "@atl/api/query-keys";
+import type { UserListFilters } from "@atl/api/types";
+import { QUERY_CACHE } from "@atl/utils/constants";
 import { keepPreviousData } from "@tanstack/react-query";
 
 export function usersListQueryOptions(filters?: UserListFilters) {

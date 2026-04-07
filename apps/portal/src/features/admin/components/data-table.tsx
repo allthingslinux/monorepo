@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- module augmentation: type params must match upstream */
 "use client";
 
-import { cn } from "@portal/utils/utils";
+import { cn } from "@atl/utils/utils";
 import {
   flexRender,
   getCoreRowModel,

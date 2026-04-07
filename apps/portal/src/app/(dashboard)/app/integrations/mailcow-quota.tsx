@@ -1,7 +1,7 @@
 "use client";
 
-import { formatBytes } from "@portal/utils/format";
-import { cn } from "@portal/utils/utils";
+import { formatBytes } from "@atl/utils/format";
+import { cn } from "@atl/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { HardDrive } from "lucide-react";
 

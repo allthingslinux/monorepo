@@ -1,5 +1,5 @@
-import { getServerQueryClient } from "@portal/api/hydration";
-import { fetchUsersServer } from "@portal/api/server-queries";
+import { getServerQueryClient } from "@atl/api/hydration";
+import { fetchUsersServer } from "@atl/api/server-queries";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 

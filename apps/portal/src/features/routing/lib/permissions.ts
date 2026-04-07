@@ -1,11 +1,11 @@
-import type { Permission, UserPermissions } from "@portal/types/auth";
-import type { ProtectedRoute, RouteConfig } from "@portal/types/routes";
+import type { Permission, UserPermissions } from "@atl/types/auth";
+import type { ProtectedRoute, RouteConfig } from "@atl/types/routes";
 
 import type { RouteTranslationResolver } from "./i18n";
 import { getTranslatedRouteConfig } from "./i18n";
 
 // Re-export for backward compatibility
-export type { Permission, UserPermissions } from "@portal/types/auth";
+export type { Permission, UserPermissions } from "@atl/types/auth";
 
 /**
  * Check if user has required permission

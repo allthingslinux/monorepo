@@ -1,6 +1,6 @@
 "use client";
 
-import { CreateMediaWikiAccountRequestSchema } from "@portal/schemas/integrations/mediawiki";
+import { CreateMediaWikiAccountRequestSchema } from "@atl/schemas/integrations/mediawiki";
 import { BookOpen, Hash, Mail, Zap } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";

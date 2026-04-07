@@ -1,8 +1,8 @@
-import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { apikey } from "@portal/db/schema/api-keys";
-import { session, user } from "@portal/db/schema/auth";
-import { oauthClient } from "@portal/db/schema/oauth";
+import { handleAPIError, requireAdminOrStaff } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { apikey } from "@atl/db/schema/api-keys";
+import { session, user } from "@atl/db/schema/auth";
+import { oauthClient } from "@atl/db/schema/oauth";
 import { count, sql } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

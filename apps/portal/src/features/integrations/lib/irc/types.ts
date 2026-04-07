@@ -4,7 +4,7 @@
 // Shared types for IRC account management and Atheme JSON-RPC
 // Types are inferred from Zod schemas for single source of truth
 
-import type { IrcAccount } from "@portal/schemas/integrations/irc";
+import type { IrcAccount } from "@atl/schemas/integrations/irc";
 
 export type {
   CreateIrcAccountRequest,
@@ -12,7 +12,7 @@ export type {
   IrcAccountStatus,
   UpdateIrcAccountRequest,
   UpdateIrcAccountStatus,
-} from "@portal/schemas/integrations/irc";
+} from "@atl/schemas/integrations/irc";
 
 /**
  * Result of creating an IRC account. Includes one-time password for NickServ.

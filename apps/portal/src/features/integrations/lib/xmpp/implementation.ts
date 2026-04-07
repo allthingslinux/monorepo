@@ -1,15 +1,15 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
-import { APIError } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { xmppAccount } from "@portal/db/schema/xmpp";
+import { APIError } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { xmppAccount } from "@atl/db/schema/xmpp";
 import {
   CreateXmppAccountRequestSchema,
   UpdateXmppAccountRequestSchema,
   XmppAccountSchema,
-} from "@portal/schemas/integrations/xmpp";
+} from "@atl/schemas/integrations/xmpp";
 import { and, eq, ne } from "drizzle-orm";
 import type { z } from "zod";
 
@@ -32,7 +32,7 @@ import type {
 } from "./types";
 import { formatJid, isValidXmppUsername } from "./utils";
 
-// Schemas are now imported from @portal/schemas/integrations/xmpp
+// Schemas are now imported from @atl/schemas/integrations/xmpp
 
 /**
  * XMPP integration implementation.

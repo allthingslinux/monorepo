@@ -1,5 +1,5 @@
-import { getServerQueryClient } from "@portal/api/hydration";
-import { getRouteMetadata } from "@portal/seo/metadata";
+import { getServerQueryClient } from "@atl/api/hydration";
+import { getRouteMetadata } from "@atl/seo/metadata";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 

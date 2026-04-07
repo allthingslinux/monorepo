@@ -22,7 +22,7 @@ import type {
   UserListResponse,
   UserListWithIntegrationsResponse,
   XmppAccountListResponse,
-} from "@portal/api/types";
+} from "@atl/api/types";
 
 /**
  * Fetch list of users with filters

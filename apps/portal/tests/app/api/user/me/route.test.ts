@@ -1,5 +1,5 @@
-import { APIError } from "@portal/api/utils";
-import type * as PortalApiUtils from "@portal/api/utils";
+import { APIError } from "@atl/api/utils";
+import type * as PortalApiUtils from "@atl/api/utils";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -61,15 +61,15 @@ vi.mock("@/features/integrations/lib", () => ({
 
 // Mock db client and its dependencies before any imports that use them
 // This prevents the relations file from trying to access schema properties
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {},
 }));
 
-vi.mock("@portal/db/relations", () => ({
+vi.mock("@atl/db/relations", () => ({
   relations: {},
 }));
 
-vi.mock("@portal/db/schema/auth", () => ({
+vi.mock("@atl/db/schema/auth", () => ({
   account: {
     id: "id",
     userId: "userId",
@@ -98,7 +98,7 @@ vi.mock("@portal/db/schema/auth", () => ({
   verification: {},
 }));
 
-vi.mock("@portal/db/schema/api-keys", () => ({
+vi.mock("@atl/db/schema/api-keys", () => ({
   apikey: {
     id: "id",
     userId: "userId",
@@ -106,7 +106,7 @@ vi.mock("@portal/db/schema/api-keys", () => ({
   jwks: {},
 }));
 
-vi.mock("@portal/db/schema/oauth", () => ({
+vi.mock("@atl/db/schema/oauth", () => ({
   oauthAccessToken: {
     clientId: "clientId",
     id: "id",
@@ -132,19 +132,19 @@ vi.mock("@portal/db/schema/oauth", () => ({
   },
 }));
 
-vi.mock("@portal/db/schema/integrations/base", () => ({
+vi.mock("@atl/db/schema/integrations/base", () => ({
   integrationAccount: {},
 }));
 
-vi.mock("@portal/db/schema/xmpp", () => ({
+vi.mock("@atl/db/schema/xmpp", () => ({
   xmppAccount: {},
 }));
 
-vi.mock("@portal/db/schema", () => ({
+vi.mock("@atl/db/schema", () => ({
   schema: {},
 }));
 
-vi.mock("@portal/schemas/user", () => ({
+vi.mock("@atl/schemas/user", () => ({
   UpdateUserSelfSchema: {
     parse: vi.fn((data) => data),
   },
@@ -158,7 +158,7 @@ const mockFrom = vi.fn();
 const mockWhere = vi.fn();
 const mockLimit = vi.fn();
 
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {
     select: () => mockSelect(),
   },
@@ -169,9 +169,9 @@ vi.mock("@portal/db/client", () => ({
 const mockRequireAuth = vi.fn();
 const mockHandleAPIError = vi.fn();
 
-vi.mock("@portal/api/utils", async () => {
+vi.mock("@atl/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
+    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: (...args: unknown[]) => mockHandleAPIError(...args),

@@ -1,0 +1,34 @@
+pre-commit:
+  parallel: true
+  commands:
+    sherif:
+      run: pnpm run lint:repo
+
+    python-lint:
+      glob: "*.py"
+      run: uv run ruff check --fix {staged_files} && uv run ruff format {staged_files}
+    
+    shell-lint:
+      glob: "*.sh"
+      run: shellcheck {staged_files} && shfmt -ln bash -i 2 -ci -bn -sr -s -w {staged_files}
+      
+    terraform-fmt:
+      glob: "*.tf"
+      run: terraform fmt
+
+    ultracite:
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc,css,md,mdx,html,graphql,yaml,yml,toml}"
+      exclude:
+        - "apps/portal/references/"
+        - "apps/portal/drizzle/"
+        - "apps/portal/.cursor/skills/"
+        - "packages/ui/"
+        - "apps/bridge/"
+        - "services/"
+        - "references/"
+      run: pnpm exec ultracite fix {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}

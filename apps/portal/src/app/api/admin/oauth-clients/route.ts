@@ -1,7 +1,7 @@
-import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { oauthClient } from "@portal/db/schema/oauth";
+import { handleAPIError, requireAdminOrStaff } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { oauthClient } from "@atl/db/schema/oauth";
 import { and, desc, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { queryKeys } from "@portal/api/query-keys";
-import type { UpdateUserInput } from "@portal/api/types";
-import { QUERY_CACHE } from "@portal/utils/constants";
+import { queryKeys } from "@atl/api/query-keys";
+import type { UpdateUserInput } from "@atl/api/types";
+import { QUERY_CACHE } from "@atl/utils/constants";
 import {
   useMutation,
   useQueryClient,

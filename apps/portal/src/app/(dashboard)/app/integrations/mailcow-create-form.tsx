@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateMailboxRequestSchema } from "@portal/schemas/integrations/mailcow";
+import { CreateMailboxRequestSchema } from "@atl/schemas/integrations/mailcow";
 import { captureException } from "@sentry/nextjs";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";

@@ -1,8 +1,8 @@
-import { APIError, handleAPIError, requireAuth } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { account, user } from "@portal/db/schema/auth";
-import { ircAccount } from "@portal/db/schema/irc";
-import { xmppAccount } from "@portal/db/schema/xmpp";
+import { APIError, handleAPIError, requireAuth } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { account, user } from "@atl/db/schema/auth";
+import { ircAccount } from "@atl/db/schema/irc";
+import { xmppAccount } from "@atl/db/schema/xmpp";
 import { and, eq, ne } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

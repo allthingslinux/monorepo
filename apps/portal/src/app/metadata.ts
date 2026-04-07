@@ -3,6 +3,6 @@
 // ============================================================================
 // This file re-exports metadata utilities from the SEO module
 // for backwards compatibility. New code should import directly from
-// @portal/seo/metadata instead.
+// @atl/seo/metadata instead.
 
-export { createPageMetadata, defaultMetadata } from "@portal/seo/metadata";
+export { createPageMetadata, defaultMetadata } from "@atl/seo/metadata";

@@ -4,6 +4,6 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import { initializeSentry } from "@portal/observability/edge";
+import { initializeSentry } from "@atl/observability/edge";
 
 initializeSentry();

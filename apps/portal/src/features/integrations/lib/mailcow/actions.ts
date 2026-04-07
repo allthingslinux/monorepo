@@ -1,10 +1,10 @@
 "use server";
 
-import { log } from "@portal/observability/utils";
+import { log } from "@atl/observability/utils";
 import {
   CreateAliasRequestSchema,
   CreateAppPasswordRequestSchema,
-} from "@portal/schemas/integrations/mailcow";
+} from "@atl/schemas/integrations/mailcow";
 import { revalidatePath } from "next/cache";
 import type { z } from "zod";
 

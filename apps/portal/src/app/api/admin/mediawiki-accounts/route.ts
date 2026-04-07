@@ -1,7 +1,7 @@
-import { handleAPIError, requireAdminOrStaff } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { mediawikiAccount } from "@portal/db/schema/mediawiki";
+import { handleAPIError, requireAdminOrStaff } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { mediawikiAccount } from "@atl/db/schema/mediawiki";
 import { and, count, desc, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

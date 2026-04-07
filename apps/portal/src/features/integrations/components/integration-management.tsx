@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@portal/utils/utils";
+import { cn } from "@atl/utils/utils";
 import * as Sentry from "@sentry/nextjs";
 import {
   AlertCircle,

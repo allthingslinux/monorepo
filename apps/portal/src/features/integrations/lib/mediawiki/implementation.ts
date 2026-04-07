@@ -1,12 +1,12 @@
 import "server-only";
-import { APIError } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { mediawikiAccount } from "@portal/db/schema/mediawiki";
+import { APIError } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { mediawikiAccount } from "@atl/db/schema/mediawiki";
 import {
   CreateMediaWikiAccountRequestSchema,
   MediaWikiAccountSchema,
   UpdateMediaWikiAccountRequestSchema,
-} from "@portal/schemas/integrations/mediawiki";
+} from "@atl/schemas/integrations/mediawiki";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
 import type { z } from "zod";

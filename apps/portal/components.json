@@ -18,7 +18,7 @@
     "lib": "@/shared",
     "hooks": "@/hooks",
     "styles": "@/styles",
-    "db": "@portal/db",
+    "db": "@atl/db",
     "auth": "@/auth"
   },
   "menuColor": "default",

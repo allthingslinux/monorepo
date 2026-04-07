@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDate } from "@portal/utils/date";
+import { formatDate } from "@atl/utils/date";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Key, Loader2, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";

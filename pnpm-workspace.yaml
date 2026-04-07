@@ -3,7 +3,6 @@ packages:
   - apps/chat-web
   - apps/docs
   - apps/portal
-  - apps/portal/packages/*
   - apps/tools-web
   - packages/*
 

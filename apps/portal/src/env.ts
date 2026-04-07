@@ -1,5 +1,5 @@
-import { keys as database } from "@portal/db/keys";
-import { keys as observability } from "@portal/observability/keys";
+import { keys as database } from "@atl/db/keys";
+import { keys as observability } from "@atl/observability/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
 import { keys as auth } from "@/auth/keys";

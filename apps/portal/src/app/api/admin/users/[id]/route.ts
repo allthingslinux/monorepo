@@ -2,14 +2,14 @@ import {
   handleAPIError,
   parseRouteId,
   requireAdminOrStaff,
-} from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { ircAccount } from "@portal/db/schema/irc";
-import { mailcowAccount } from "@portal/db/schema/mailcow";
-import { mediawikiAccount } from "@portal/db/schema/mediawiki";
-import { xmppAccount } from "@portal/db/schema/xmpp";
-import { AdminUpdateUserSchema } from "@portal/schemas/user";
+} from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { ircAccount } from "@atl/db/schema/irc";
+import { mailcowAccount } from "@atl/db/schema/mailcow";
+import { mediawikiAccount } from "@atl/db/schema/mediawiki";
+import { xmppAccount } from "@atl/db/schema/xmpp";
+import { AdminUpdateUserSchema } from "@atl/schemas/user";
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

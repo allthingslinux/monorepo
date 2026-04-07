@@ -8,7 +8,7 @@
  * **Validates: Requirement 5.3**
  */
 
-import { db } from "@portal/db/client";
+import { db } from "@atl/db/client";
 import {
   assert as fcAssert,
   asyncProperty,
@@ -31,7 +31,7 @@ vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
   keys: () => ({}),
 }));
 vi.mock("@/features/integrations/lib/xmpp/keys", () => ({ keys: () => ({}) }));
-vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
+vi.mock("@atl/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: {
@@ -58,7 +58,7 @@ vi.mock("@sentry/nextjs", () => ({
 }));
 
 // Mock DB with chainable methods — we track delete calls
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {
     delete: vi.fn(),
     insert: vi.fn(),

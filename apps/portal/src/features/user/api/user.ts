@@ -3,7 +3,7 @@
 // ============================================================================
 // Client-side functions for calling user-facing API endpoints
 
-import type { UpdateUserInput, User } from "@portal/api/types";
+import type { UpdateUserInput, User } from "@atl/api/types";
 
 /**
  * Fetch current user's profile

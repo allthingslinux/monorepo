@@ -8,6 +8,6 @@
 
 if (process.env.NODE_ENV !== "development") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports -- avoid loading @sentry in dev (next-prerender-crypto)
-  const { initializeSentry } = require("@portal/observability/server");
+  const { initializeSentry } = require("@atl/observability/server");
   initializeSentry();
 }

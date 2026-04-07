@@ -200,7 +200,7 @@ let nextConfig: NextConfig = {
     try {
       // Import keys() helper for validated env access
       const { keys: observabilityKeys } =
-        await import("@portal/observability/keys");
+        await import("@atl/observability/keys");
       const env = observabilityKeys();
       sentryDsn = env.NEXT_PUBLIC_SENTRY_DSN;
       sentryRelease = env.SENTRY_RELEASE;

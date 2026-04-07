@@ -1,7 +1,7 @@
 "use client";
 
-import type { MediawikiAccountWithUser } from "@portal/api/types";
-import { formatDate } from "@portal/utils/date";
+import type { MediawikiAccountWithUser } from "@atl/api/types";
+import { formatDate } from "@atl/utils/date";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";

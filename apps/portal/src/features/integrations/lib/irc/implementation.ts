@@ -1,16 +1,16 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
-import { APIError } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { ircAccount } from "@portal/db/schema/irc";
+import { APIError } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { ircAccount } from "@atl/db/schema/irc";
 import {
   CreateIrcAccountRequestSchema,
   IrcAccountSchema,
   UpdateIrcAccountRequestSchema,
-} from "@portal/schemas/integrations/irc";
-import { isValidCanonicalUsername } from "@portal/schemas/integrations/validation";
+} from "@atl/schemas/integrations/irc";
+import { isValidCanonicalUsername } from "@atl/schemas/integrations/validation";
 import * as Sentry from "@sentry/nextjs";
 import { and, eq, ne } from "drizzle-orm";
 import type { z } from "zod";
@@ -30,7 +30,7 @@ import { ircConfig, isAthemeOperConfigured, isIrcConfigured } from "./config";
 import type { IrcAccount, UpdateIrcAccountRequest } from "./types";
 import { generateIrcPassword } from "./utils";
 
-// Schemas are now imported from @portal/schemas/integrations/irc
+// Schemas are now imported from @atl/schemas/integrations/irc
 
 const IRC_SERVER_PREFIX_RE = /^irc\./;
 

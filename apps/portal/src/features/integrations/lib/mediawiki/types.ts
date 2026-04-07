@@ -4,7 +4,7 @@
 // TypeScript types for MediaWiki account management and MediaWiki Action API
 // Types are inferred from Zod schemas for single source of truth
 
-import type { MediaWikiAccount } from "@portal/schemas/integrations/mediawiki";
+import type { MediaWikiAccount } from "@atl/schemas/integrations/mediawiki";
 
 export type {
   CreateMediaWikiAccountRequest,
@@ -12,7 +12,7 @@ export type {
   MediaWikiAccountStatus,
   UpdateMediaWikiAccountRequest,
   UpdateMediaWikiAccountStatus,
-} from "@portal/schemas/integrations/mediawiki";
+} from "@atl/schemas/integrations/mediawiki";
 
 /**
  * Result of creating a MediaWiki account. Includes one-time password.

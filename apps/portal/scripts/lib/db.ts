@@ -4,9 +4,9 @@
  * without pulling in Next.js server-only modules.
  */
 import "dotenv/config";
-import { keys } from "@portal/db/keys";
-import { relations } from "@portal/db/relations";
-import { schema } from "@portal/db/schema";
+import { keys } from "@atl/db/keys";
+import { relations } from "@atl/db/relations";
+import { schema } from "@atl/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 

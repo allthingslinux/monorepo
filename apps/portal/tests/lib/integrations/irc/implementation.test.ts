@@ -1,4 +1,4 @@
-import { db } from "@portal/db/client";
+import { db } from "@atl/db/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { registerNick } from "@/features/integrations/lib/irc/atheme/client";
@@ -10,7 +10,7 @@ vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
   keys: () => ({}),
 }));
 vi.mock("@/features/integrations/lib/xmpp/keys", () => ({ keys: () => ({}) }));
-vi.mock("@portal/db/keys", () => ({ keys: () => ({}) }));
+vi.mock("@atl/db/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/auth/lib/keys", () => ({ keys: () => ({}) }));
 vi.mock("@/features/integrations/lib/irc/config", () => ({
   ircConfig: { port: 6697, server: "irc.mock.chat" },
@@ -20,7 +20,7 @@ vi.mock("@/features/integrations/lib/irc/config", () => ({
 }));
 
 // Mock DB with chainable methods
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {
     delete: vi.fn(() => ({
       where: vi.fn(() => ({

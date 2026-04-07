@@ -1,4 +1,4 @@
-import { sendEmail } from "@portal/utils/email";
+import { sendEmail } from "@atl/utils/email";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 describe("sendEmail", () => {

@@ -1,5 +1,5 @@
-import type * as PortalApiUtils from "@portal/api/utils";
-import { db } from "@portal/db/client";
+import type * as PortalApiUtils from "@atl/api/utils";
+import { db } from "@atl/db/client";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -12,7 +12,7 @@ vi.mock("@/features/integrations/lib/xmpp/keys", () => ({
 vi.mock("@/features/integrations/lib/irc/keys", () => ({
   keys: () => ({}),
 }));
-vi.mock("@portal/db/keys", () => ({
+vi.mock("@atl/db/keys", () => ({
   keys: () => ({}),
 }));
 vi.mock("@/features/auth/lib/keys", () => ({
@@ -23,7 +23,7 @@ vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
 }));
 
 // Mock DB
-vi.mock("@portal/db/client", () => ({
+vi.mock("@atl/db/client", () => ({
   db: {
     select: vi.fn(() => ({
       from: vi.fn(() => ({
@@ -45,9 +45,9 @@ vi.mock("@portal/db/client", () => ({
 }));
 
 // Mock utils
-vi.mock("@portal/api/utils", async () => {
+vi.mock("@atl/api/utils", async () => {
   const actual =
-    await vi.importActual<typeof PortalApiUtils>("@portal/api/utils");
+    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),
@@ -62,7 +62,7 @@ describe("Admin IRC Accounts API", () => {
 
   it("returns unauthorized if privilege check fails", async () => {
     // Arrange
-    const { requireAdminOrStaff, APIError } = await import("@portal/api/utils");
+    const { requireAdminOrStaff, APIError } = await import("@atl/api/utils");
     (requireAdminOrStaff as any).mockRejectedValueOnce(
       new APIError("Unauthorized", 401)
     );
@@ -79,7 +79,7 @@ describe("Admin IRC Accounts API", () => {
 
   it("fetches and returns IRC accounts with pagination", async () => {
     // Arrange
-    const { requireAdminOrStaff } = await import("@portal/api/utils");
+    const { requireAdminOrStaff } = await import("@atl/api/utils");
     (requireAdminOrStaff as any).mockResolvedValueOnce({});
 
     // Mock first select (data)
@@ -125,7 +125,7 @@ describe("Admin IRC Accounts API", () => {
 
   it("allows filtering by 'pending' status", async () => {
     // Arrange
-    const { requireAdminOrStaff } = await import("@portal/api/utils");
+    const { requireAdminOrStaff } = await import("@atl/api/utils");
     (requireAdminOrStaff as any).mockResolvedValueOnce({});
 
     // Mock data select

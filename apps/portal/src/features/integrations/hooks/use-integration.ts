@@ -1,7 +1,7 @@
 "use client";
 
-import { queryKeys } from "@portal/api/query-keys";
-import { QUERY_CACHE } from "@portal/utils/constants";
+import { queryKeys } from "@atl/api/query-keys";
+import { QUERY_CACHE } from "@atl/utils/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {

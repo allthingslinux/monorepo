@@ -1,4 +1,4 @@
-import { handleAPIError, requireAuth } from "@portal/api/utils";
+import { handleAPIError, requireAuth } from "@atl/api/utils";
 import type { NextRequest } from "next/server";
 
 import { registerIntegrations } from "@/features/integrations/lib";

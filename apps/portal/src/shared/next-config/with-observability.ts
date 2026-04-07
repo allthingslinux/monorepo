@@ -1,4 +1,4 @@
-import { keys } from "@portal/observability/keys";
+import { keys } from "@atl/observability/keys";
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 

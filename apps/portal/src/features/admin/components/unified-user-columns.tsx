@@ -1,6 +1,6 @@
 "use client";
 
-import type { UserWithIntegrations } from "@portal/api/types";
+import type { UserWithIntegrations } from "@atl/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";

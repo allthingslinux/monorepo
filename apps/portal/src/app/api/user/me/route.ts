@@ -1,12 +1,12 @@
-import { handleAPIError, requireAuth } from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
+import { handleAPIError, requireAuth } from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
 import {
   enrichWideEventWithUser,
   withWideEvent,
-} from "@portal/observability/wide-events";
-import type { WideEvent } from "@portal/observability/wide-events";
-import { UpdateUserSelfSchema } from "@portal/schemas/user";
+} from "@atl/observability/wide-events";
+import type { WideEvent } from "@atl/observability/wide-events";
+import { UpdateUserSelfSchema } from "@atl/schemas/user";
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

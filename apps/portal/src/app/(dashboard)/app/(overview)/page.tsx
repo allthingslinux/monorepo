@@ -1,7 +1,7 @@
-import { getServerQueryClient } from "@portal/api/hydration";
-import { queryKeys } from "@portal/api/query-keys";
-import { fetchCurrentUserServer } from "@portal/api/server-queries";
-import { getRouteMetadata } from "@portal/seo/metadata";
+import { getServerQueryClient } from "@atl/api/hydration";
+import { queryKeys } from "@atl/api/query-keys";
+import { fetchCurrentUserServer } from "@atl/api/server-queries";
+import { getRouteMetadata } from "@atl/seo/metadata";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";

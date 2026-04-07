@@ -4,7 +4,7 @@
  */
 
 // Re-export Permission from auth types for convenience
-export type { Permission } from "@portal/types/auth";
+export type { Permission } from "@atl/types/auth";
 export type {
   BaseRoute,
   BreadcrumbConfig,
@@ -19,4 +19,4 @@ export type {
   RouteMetadata,
   SitemapConfig,
   UIDisplay,
-} from "@portal/types/routes";
+} from "@atl/types/routes";

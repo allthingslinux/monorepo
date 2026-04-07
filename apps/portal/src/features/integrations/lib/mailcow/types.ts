@@ -11,7 +11,7 @@ export type {
   MailcowAppPassword,
   UpdateMailboxRequest,
   UpdateMailboxStatus,
-} from "@portal/schemas/integrations/mailcow";
+} from "@atl/schemas/integrations/mailcow";
 
 export interface MailcowResponseEntry {
   log?: unknown;

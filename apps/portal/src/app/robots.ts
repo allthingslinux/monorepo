@@ -1,4 +1,4 @@
-import { generateRobots } from "@portal/seo/robots";
+import { generateRobots } from "@atl/seo/robots";
 import type { MetadataRoute } from "next";
 
 import { routeConfig } from "@/features/routing/lib";

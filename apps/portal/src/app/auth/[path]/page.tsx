@@ -1,6 +1,6 @@
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
-import { createPageMetadata } from "@portal/seo/metadata";
+import { createPageMetadata } from "@atl/seo/metadata";
 import { GalleryVerticalEnd } from "lucide-react";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";

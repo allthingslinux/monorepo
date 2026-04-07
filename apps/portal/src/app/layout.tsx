@@ -1,4 +1,4 @@
-import { createPageMetadata } from "@portal/seo/metadata";
+import { createPageMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";

@@ -1,4 +1,4 @@
-import { cn } from "@portal/utils/utils";
+import { cn } from "@atl/utils/utils";
 
 import { COMMIT_TYPE_COLORS } from "../lib/types";
 import type { ConventionalCommitType } from "../lib/types";

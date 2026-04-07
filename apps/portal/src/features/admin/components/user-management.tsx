@@ -1,7 +1,7 @@
 "use client";
 
-import type { User } from "@portal/api/types";
-import type { UserListResponse } from "@portal/types/api";
+import type { User } from "@atl/api/types";
+import type { UserListResponse } from "@atl/types/api";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 

@@ -2,9 +2,9 @@ import {
   handleAPIError,
   parseRouteId,
   requireAdminOrStaff,
-} from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { session, user } from "@portal/db/schema/auth";
+} from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { session, user } from "@atl/db/schema/auth";
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

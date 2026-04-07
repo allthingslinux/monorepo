@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut } from "@daveyplate/better-auth-ui";
-import { createPageMetadata } from "@portal/seo/metadata";
+import { createPageMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";

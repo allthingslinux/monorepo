@@ -1,4 +1,4 @@
-import { cn } from "@portal/utils/utils";
+import { cn } from "@atl/utils/utils";
 import { describe, expect, it } from "vitest";
 
 describe("cn", () => {

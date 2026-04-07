@@ -3,10 +3,10 @@ import {
   handleAPIError,
   parseRouteId,
   requireAdminOrStaff,
-} from "@portal/api/utils";
-import { db } from "@portal/db/client";
-import { user } from "@portal/db/schema/auth";
-import { mailcowAccount } from "@portal/db/schema/mailcow";
+} from "@atl/api/utils";
+import { db } from "@atl/db/client";
+import { user } from "@atl/db/schema/auth";
+import { mailcowAccount } from "@atl/db/schema/mailcow";
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

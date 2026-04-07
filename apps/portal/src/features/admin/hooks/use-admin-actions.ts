@@ -1,6 +1,6 @@
 "use client";
 
-import { queryKeys } from "@portal/api/query-keys";
+import { queryKeys } from "@atl/api/query-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

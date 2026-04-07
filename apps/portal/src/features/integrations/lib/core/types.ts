@@ -1,5 +1,5 @@
-import type { IntegrationStatus as IntegrationStatusType } from "@portal/utils/constants";
-import { INTEGRATION_STATUSES } from "@portal/utils/constants";
+import type { IntegrationStatus as IntegrationStatusType } from "@atl/utils/constants";
+import { INTEGRATION_STATUSES } from "@atl/utils/constants";
 import type { z } from "zod";
 
 export type IntegrationId = string;

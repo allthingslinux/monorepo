@@ -134,7 +134,7 @@ describe("Property 1: Dependency acyclicity", () => {
         ...(pkg.dependencies as Record<string, string> | undefined),
       };
       const portalDeps = Object.keys(deps).filter(
-        (d) => d.startsWith("@portal/") || d === "@atl/ui"
+        (d) => d.startsWith("@atl/") || d === "@atl/ui"
       );
       graph.set(name, portalDeps);
     }
@@ -670,15 +670,15 @@ describe("Property 9: No direct process.env access in packages", () => {
 /**
  * Property 10: Import path correctness
  *
- * For all @portal/* imports (portal stack) and @atl/ui imports (shared UI),
- * the import uses a direct subpath (e.g. @portal/utils/constants) rather
- * than a bare package name, except @portal/email (single-file module).
+ * For all @atl/* imports (portal stack) and @atl/ui imports (shared UI),
+ * the import uses a direct subpath (e.g. @atl/utils/constants) rather
+ * than a bare package name, except @atl/email (single-file module).
  *
  * Validates: Requirement 6.2
  */
 describe("Property 10: Import path correctness", () => {
-  const BARE_IMPORT_ALLOWED = new Set(["@portal/email"]);
-  const CONFIG_PACKAGE_IMPORTS = ["@portal/typescript-config"];
+  const BARE_IMPORT_ALLOWED = new Set(["@atl/email"]);
+  const CONFIG_PACKAGE_IMPORTS = ["@atl/typescript-config"];
 
   function getAllSourceFiles(): string[] {
     return [
@@ -694,7 +694,7 @@ describe("Property 10: Import path correctness", () => {
     return parts.length <= 2;
   }
 
-  it("all @portal/* and @atl/ui imports use direct subpaths (except @portal/email)", () => {
+  it("all @atl/* and @atl/ui imports use direct subpaths (except @atl/email)", () => {
     const sourceFiles = getAllSourceFiles();
     const violations: { file: string; importPath: string }[] = [];
 
@@ -703,7 +703,7 @@ describe("Property 10: Import path correctness", () => {
       const imports = extractImports(content);
 
       for (const imp of imports) {
-        const isPortal = imp.startsWith("@portal/");
+        const isPortal = imp.startsWith("@atl/");
         const isAtlUi = imp.startsWith("@atl/ui");
         if (!(isPortal || isAtlUi)) {
           continue;
@@ -742,7 +742,7 @@ describe("Property 10: Import path correctness", () => {
         const content = fs.readFileSync(file, "utf-8");
         const imports = extractImports(content);
         for (const imp of imports) {
-          const isPortal = imp.startsWith("@portal/");
+          const isPortal = imp.startsWith("@atl/");
           const isAtlUi = imp.startsWith("@atl/ui");
           if (!(isPortal || isAtlUi)) {
             continue;
@@ -782,7 +782,7 @@ describe("Property 11: App-internal alias preservation", () => {
     "@/env",
   ];
 
-  it("app-internal @/ imports are preserved and not rewritten to @portal/*", () => {
+  it("app-internal @/ imports are preserved and not rewritten to @atl/*", () => {
     const appFiles = collectSourceFiles(APP_SRC_DIR);
     let foundAppInternalImports = false;
 
@@ -816,7 +816,7 @@ describe("Property 11: App-internal alias preservation", () => {
         const imports = extractImports(content);
         for (const imp of imports) {
           for (const pattern of APP_INTERNAL_PATTERNS) {
-            const portalEquivalent = pattern.replace("@/", "@portal/");
+            const portalEquivalent = pattern.replace("@/", "@atl/");
             if (imp.startsWith(portalEquivalent)) {
               return false;
             }

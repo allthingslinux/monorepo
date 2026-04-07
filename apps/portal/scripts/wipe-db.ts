@@ -10,7 +10,7 @@
  *   pnpm db:wipe
  */
 import "dotenv/config";
-import { keys } from "@portal/db/keys";
+import { keys } from "@atl/db/keys";
 import { Pool } from "pg";
 
 const env = keys();

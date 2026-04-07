@@ -2,7 +2,7 @@
 
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
 import { AuthUIProviderTanstack } from "@daveyplate/better-auth-ui/tanstack";
-import { getQueryClient } from "@portal/api/query-client";
+import { getQueryClient } from "@atl/api/query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { Route } from "next";
 import { ThemeProvider } from "next-themes";
@@ -231,7 +231,7 @@ function SentryClientInit() {
     (async () => {
       try {
         const { initializeSentry } =
-          await import("@portal/observability/client");
+          await import("@atl/observability/client");
         initializeSentry();
       } catch {
         // Best-effort; ignore load errors (e.g. missing DSN in dev)

@@ -1,4 +1,4 @@
-import { keys } from "@portal/observability/keys";
+import { keys } from "@atl/observability/keys";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
