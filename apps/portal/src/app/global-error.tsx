@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@atl/ui/components/card";
 
-import { geistMono, geistSans, inter } from "./fonts";
+import { geistMono, inter } from "./fonts";
 
 import "@/styles/globals.css";
 
@@ -48,7 +48,7 @@ export default function GlobalError({
 
   return (
     <html
-      className={`${inter.variable} ${geistSans.variable} ${geistMono.variable}`}
+      className={`${inter.variable} ${geistMono.variable}`}
       lang="en"
       suppressHydrationWarning
     >

@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
+import { SignedIn, SignedOut } from "@daveyplate/better-auth-ui";
 import { createPageMetadata } from "@portal/seo/metadata";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -6,6 +6,8 @@ import Link from "next/link";
 import { connection } from "next/server";
 
 import { Button } from "@atl/ui/components/button";
+
+import { AuthRedirect } from "./auth-redirect";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
@@ -65,12 +67,7 @@ export default async function Page() {
       </SignedOut>
 
       <SignedIn>
-        <div className="flex flex-col items-center gap-4">
-          <UserButton size="icon" />
-          <Button nativeButton={false} render={<Link href="/app" />}>
-            {t("marketing.homePage.goToDashboard")}
-          </Button>
-        </div>
+        <AuthRedirect to="/app" />
       </SignedIn>
     </div>
   );
