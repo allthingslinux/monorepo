@@ -880,10 +880,8 @@ const telemetry = {
 // ============================================================================
 
 const trustedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://127.0.0.1:3000",
-  "http://127.0.0.1:3001",
+  // Allow any localhost port in development
+  ...(process.env.NODE_ENV === "development" ? ["http://localhost:*"] : []),
   // Canonical app URL (http or https) — must match the origin users hit or Better Auth returns "Invalid origin"
   ...(env.BETTER_AUTH_URL ? [env.BETTER_AUTH_URL] : []),
   // Add additional production origins as needed
