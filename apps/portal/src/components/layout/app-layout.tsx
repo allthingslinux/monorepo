@@ -24,7 +24,7 @@ export function AppLayout({
           <SidebarInset className="min-h-0">
             <AppHeader />
             <div className="bg-background flex min-h-0 flex-1 flex-col overflow-hidden">
-              <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+              <div className="flex min-h-0 flex-1 flex-col">{children}</div>
               <StatusBar />
             </div>
           </SidebarInset>

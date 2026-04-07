@@ -176,8 +176,25 @@ export function enrichEventsWithSources(
     if (!src?.enabled) {
       continue;
     }
+
+    // Infer location from description/title when missing
+    let location = e.location;
+    const locationEmpty =
+      !location.trim() || location.trim() === "—" || location.trim() === "-";
+    if (locationEmpty) {
+      const text = `${e.title} ${e.description}`.toLowerCase();
+      if (
+        /\bvirtual\b/iu.test(text) ||
+        /\bonline\b/iu.test(text) ||
+        /\bremote\b/iu.test(text)
+      ) {
+        location = "Virtual";
+      }
+    }
+
     out.push({
       ...e,
+      location,
       source: {
         color: src.color,
         id: src.id,
