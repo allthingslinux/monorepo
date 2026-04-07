@@ -19,10 +19,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "graphql": "^16.13.1",
-    "graphql-request": "^7.4.0",
-    "node-quickbooks": "^2.0.48",
-    "zod": "^4.3.6"
+    "graphql": "catalog:",
+    "graphql-request": "catalog:",
+    "node-quickbooks": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:"

@@ -21,9 +21,9 @@
   "dependencies": {
     "@atl/db": "workspace:*",
     "@atl/types": "workspace:*",
-    "drizzle-orm": "1.0.0-beta.15-859cf75",
-    "zod": "^4.3.6",
-    "zod-validation-error": "^5.0.0"
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:",
+    "zod-validation-error": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:"

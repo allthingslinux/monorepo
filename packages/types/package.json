@@ -18,7 +18,7 @@
     "@types/react": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
-    "react": "19.2.4",
+    "react": "catalog:",
     "typescript": "catalog:"
   }
 }
