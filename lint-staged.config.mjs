@@ -37,7 +37,9 @@ function isUltraciteIgnored(file) {
 
 /** Wrap a path in single quotes to prevent shell glob expansion of brackets. */
 function shellQuote(str) {
-  return `'${str.replaceAll("'", "'\\''")}'`;
+  // Prefix with ./ so glob-aware tools (oxlint/ultracite) treat brackets literally
+  const prefixed = str.startsWith("./") ? str : `./${str}`;
+  return `'${prefixed.replaceAll("'", "'\\''")}'`;
 }
 
 export default {
