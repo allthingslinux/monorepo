@@ -559,12 +559,25 @@
         "next-devtools-mcp",
         "@tanstack/react-query-devtools",
         "@react-grab/cursor",
-      ],
-      groupName: "dev",
+      ],      groupName: "dev",
       automerge: true,
       automergeType: "branch", // Silent automerge - no PR notifications for passing tests
       addLabels: ["deps: dev"],
       prPriority: -1, // Lower priority - process after production dependencies
+    },
+    {
+      // Cloudflare deployment tooling
+      matchPackageNames: [
+        "@cloudflare/vitest-pool-workers",
+        "@cloudflare/workers-types",
+        "@opennextjs/cloudflare",
+        "wrangler",
+        "alchemy",
+      ],
+      groupName: "cloudflare",
+      automerge: true,
+      automergeType: "branch",
+      addLabels: ["deps: cloudflare"],
     },
     {
       // Semantic release packages - grouped together
