@@ -7,10 +7,12 @@ pre-commit:
     python-lint:
       glob: "*.py"
       run: uv run ruff check --fix {staged_files} && uv run ruff format {staged_files}
+      stage_fixed: true
 
     shell-lint:
       glob: "*.sh"
       run: shellcheck {staged_files} && shfmt -ln bash -i 2 -ci -bn -sr -s -w {staged_files}
+      stage_fixed: true
 
     terraform-fmt:
       glob: "*.tf"
@@ -27,6 +29,7 @@ pre-commit:
         - "services/"
         - "references/"
       run: pnpm exec ultracite fix {staged_files}
+      stage_fixed: true
 
 commit-msg:
   commands:
