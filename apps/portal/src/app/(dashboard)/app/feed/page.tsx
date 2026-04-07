@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
-import { LINUX_FEED_SOURCES } from "@/config/feed";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { fetchAllLinuxFeeds } from "@/shared/feed";
+import { verifySession } from "@atl/auth/dal";
+import { LINUX_FEED_SOURCES } from "@atl/config/feed";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { FeedContent } from "./feed-content";

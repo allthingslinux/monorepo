@@ -11,7 +11,7 @@ import {
   startOfWeek,
 } from "date-fns";
 
-import type { EnrichedCalendarEvent } from "@/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 
 // ---------------------------------------------------------------------------
 // Types

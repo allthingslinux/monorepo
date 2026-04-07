@@ -1,14 +1,14 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 
-import { keys as auth } from "@/auth/keys";
 import { keys as bridge } from "@/features/integrations/lib/bridge/keys";
 import { keys as discord } from "@/features/integrations/lib/discord/keys";
 import { keys as irc } from "@/features/integrations/lib/irc/keys";
 import { keys as mailcow } from "@/features/integrations/lib/mailcow/keys";
 import { keys as mediawiki } from "@/features/integrations/lib/mediawiki/keys";
 import { keys as xmpp } from "@/features/integrations/lib/xmpp/keys";
-import { keys as changelog } from "@/shared/config/changelog";
 import { keys as devTools } from "@/shared/dev-tools/keys";
+import { keys as auth } from "@atl/auth/keys";
+import { keys as changelog } from "@atl/config/changelog";
 import { keys as database } from "@atl/db/keys";
 import { keys as observability } from "@atl/observability/keys";
 

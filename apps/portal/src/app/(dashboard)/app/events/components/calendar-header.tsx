@@ -7,7 +7,7 @@ import {
   X,
 } from "lucide-react";
 
-import type { EventSource } from "@/config/events";
+import type { EventSource } from "@atl/config/events";
 import { Button } from "@atl/ui/components/button";
 import { Input } from "@atl/ui/components/input";
 import { cn } from "@atl/ui/lib/utils";

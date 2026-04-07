@@ -2,9 +2,9 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { authClient } from "@/auth/client";
 import { queryKeys } from "@atl/api/query-keys";
 import type { CreateApiKeyInput, UpdateApiKeyInput } from "@atl/api/types";
+import { authClient } from "@atl/auth/client";
 import { QUERY_CACHE } from "@atl/utils/constants";
 
 // ============================================================================

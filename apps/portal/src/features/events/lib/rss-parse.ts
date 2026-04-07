@@ -3,7 +3,7 @@
  * No reliable event datetime in the feed — we omit `startsAt` so the UI sorts these last (TBD).
  */
 
-import type { EventSource, ManualCalendarEvent } from "@/config/events";
+import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 
 const ITEM_RE = /<item\b[^>]*>([\s\S]*?)<\/item>/gi;
 

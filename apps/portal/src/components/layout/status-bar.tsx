@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { APP_VERSION } from "@/config";
+import { APP_VERSION } from "@atl/config";
 
 function useLiveTime(intervalMs = 1000) {
   const [time, setTime] = useState<string>("");

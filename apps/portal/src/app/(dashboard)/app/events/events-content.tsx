@@ -12,8 +12,8 @@ import {
 import { useLocale } from "next-intl";
 import { useMemo, useState } from "react";
 
-import { getEnabledEventSources } from "@/config/events";
-import type { EnrichedCalendarEvent } from "@/config/events";
+import { getEnabledEventSources } from "@atl/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 import { cn } from "@atl/ui/lib/utils";
 
 import { AgendaView } from "./components/agenda-view";

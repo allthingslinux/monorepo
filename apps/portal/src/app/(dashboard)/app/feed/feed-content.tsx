@@ -4,9 +4,9 @@ import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
-import type { FeedCategory, FeedSource } from "@/config/feed";
-import { FEED_CATEGORY_LABELS } from "@/config/feed";
 import type { FeedArticle, FeedSourceResult } from "@/shared/feed";
+import type { FeedCategory, FeedSource } from "@atl/config/feed";
+import { FEED_CATEGORY_LABELS } from "@atl/config/feed";
 import { Button } from "@atl/ui/components/button";
 import { Input } from "@atl/ui/components/input";
 import { Separator } from "@atl/ui/components/separator";

@@ -2,10 +2,10 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { getServerQueryClient } from "@atl/api/hydration";
+import { verifySession } from "@atl/auth/dal";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { SettingsContent } from "./settings-content";

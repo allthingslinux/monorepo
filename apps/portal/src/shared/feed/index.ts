@@ -1,7 +1,10 @@
 import Parser from "rss-parser";
 
-import type { FeedSource } from "@/config/feed";
-import { FEED_ITEMS_PER_SOURCE, FEED_REVALIDATE_SECONDS } from "@/config/feed";
+import type { FeedSource } from "@atl/config/feed";
+import {
+  FEED_ITEMS_PER_SOURCE,
+  FEED_REVALIDATE_SECONDS,
+} from "@atl/config/feed";
 
 const BLOG_FEED_URL = "https://allthingslinux.org/feed";
 

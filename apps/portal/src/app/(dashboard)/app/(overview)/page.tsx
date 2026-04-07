@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { LatestUpdatesCard } from "@/features/blog/components/latest-updates-card";
 import { DiscordMemberStat } from "@/features/integrations/components/discord-member-stat";
@@ -16,6 +15,7 @@ import { WikiSiteStats } from "@/features/wiki/components/wiki-site-stats";
 import { getServerQueryClient } from "@atl/api/hydration";
 import { queryKeys } from "@atl/api/query-keys";
 import { fetchCurrentUserServer } from "@atl/api/server-queries";
+import { verifySession } from "@atl/auth/dal";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {

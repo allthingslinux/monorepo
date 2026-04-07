@@ -3,8 +3,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { authClient } from "@/auth/client";
 import { queryKeys } from "@atl/api/query-keys";
+import { authClient } from "@atl/auth/client";
 
 // ============================================================================
 // Admin Action Hooks

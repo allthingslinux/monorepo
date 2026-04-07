@@ -4,7 +4,6 @@ import { BookOpen, Hash, Mail, Zap } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 
-import { useSession } from "@/auth/session-context";
 import { IntegrationManagement } from "@/features/integrations/components/integration-management";
 import { ResetPasswordDialog } from "@/features/integrations/components/reset-password-dialog";
 import { useIntegrations } from "@/features/integrations/hooks/use-integration";
@@ -12,6 +11,7 @@ import type { IrcAccount } from "@/features/integrations/lib/irc/types";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
 import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
 import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
+import { useSession } from "@atl/auth/session-context";
 import { CreateMediaWikiAccountRequestSchema } from "@atl/schemas/integrations/mediawiki";
 
 import { IrcAccountDetails } from "./irc-account-details";

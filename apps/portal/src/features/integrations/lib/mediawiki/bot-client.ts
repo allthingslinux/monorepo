@@ -1,7 +1,7 @@
 import "server-only";
 import { captureException } from "@sentry/nextjs";
 
-import { BASE_URL } from "@/config/app";
+import { BASE_URL } from "@atl/config/app";
 
 import { keys } from "./keys";
 import type {

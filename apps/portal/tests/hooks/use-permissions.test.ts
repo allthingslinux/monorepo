@@ -3,10 +3,10 @@ import { createElement } from "react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useAuthSession } from "@/auth/auth-hooks";
-import { authClient } from "@/auth/client";
-import { SessionProvider } from "@/auth/session-context";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useAuthSession } from "@atl/auth/auth-hooks";
+import { authClient } from "@atl/auth/client";
+import { SessionProvider } from "@atl/auth/session-context";
 
 vi.mock("@/auth/client", () => ({
   authClient: {

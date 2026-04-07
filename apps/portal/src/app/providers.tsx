@@ -11,12 +11,12 @@ import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 
-import { authClient } from "@/auth/client";
-import { useBetterAuthUILocalization } from "@/auth/localization";
-import { SessionProvider } from "@/auth/session-context";
 import { CommandMenu } from "@/components/command-menu";
 import { ReactQueryDevtools } from "@/components/dev-tools";
 import { getQueryClient } from "@atl/api/query-client";
+import { authClient } from "@atl/auth/client";
+import { useBetterAuthUILocalization } from "@atl/auth/localization";
+import { SessionProvider } from "@atl/auth/session-context";
 
 // Note: We use our own QueryClientProvider for general data fetching hooks.
 // AuthQueryProvider is still needed for Better Auth's TanStack Query integration.

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { fetchChangelog } from "@/features/changelog/lib/service";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
-import { CHANGELOG_REPOS } from "@/shared/config/changelog";
+import { verifySession } from "@atl/auth/dal";
+import { CHANGELOG_REPOS } from "@atl/config/changelog";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { ChangelogContent } from "./changelog-content";

@@ -1,8 +1,8 @@
 import "server-only";
 import { captureException } from "@sentry/nextjs";
 
-import type { EventSource, ManualCalendarEvent } from "@/config/events";
-import { EVENT_SOURCES } from "@/config/events";
+import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
+import { EVENT_SOURCES } from "@atl/config/events";
 
 import {
   CALENDAR_FETCH_REVALIDATE_SECONDS,

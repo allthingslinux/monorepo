@@ -1,7 +1,7 @@
 import { oauthProviderAuthServerMetadata } from "@better-auth/oauth-provider";
 import type { NextRequest } from "next/server";
 
-import { auth } from "@/auth";
+import { auth } from "@atl/auth";
 
 // Nested well-known path required by Better Auth's oauth-provider plugin.
 // The plugin expects the metadata to be available at both:

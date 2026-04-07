@@ -376,7 +376,7 @@ export async function fetchCurrentUserServer(
   if (!userSession) {
     // Import here to avoid circular dependencies
     const { headers } = await import("next/headers");
-    const { auth } = await import("@/auth");
+    const { auth } = await import("@atl/auth");
 
     const requestHeaders = await headers();
     userSession = await auth.api.getSession({

@@ -1,7 +1,7 @@
 import { connection, NextResponse } from "next/server";
 
-import { serverClient } from "@/auth/server-client";
-import { BASE_URL } from "@/config/app";
+import { serverClient } from "@atl/auth/server-client";
+import { BASE_URL } from "@atl/config/app";
 
 // With cacheComponents, GET handlers are prerendered unless they opt out.
 // connection() defers this handler to request time (auth/server context required).

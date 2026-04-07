@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
-import { enrichEventsWithSources, getManualEvents } from "@/config/events";
 import { getIcsCalendarEvents } from "@/features/events/lib/ics-events";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { verifySession } from "@atl/auth/dal";
+import { enrichEventsWithSources, getManualEvents } from "@atl/config/events";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { EventsContent } from "./events-content";

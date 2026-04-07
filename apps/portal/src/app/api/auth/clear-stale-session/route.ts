@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/auth";
+import { auth } from "@atl/auth";
 
 /**
  * Extracts all Set-Cookie header values from a Headers object.

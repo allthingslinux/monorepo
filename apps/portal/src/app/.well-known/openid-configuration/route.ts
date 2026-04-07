@@ -1,7 +1,7 @@
 import { oauthProviderOpenIdConfigMetadata } from "@better-auth/oauth-provider";
 import type { NextRequest } from "next/server";
 
-import { auth } from "@/auth";
+import { auth } from "@atl/auth";
 
 // With cacheComponents, route handlers are dynamic by default.
 

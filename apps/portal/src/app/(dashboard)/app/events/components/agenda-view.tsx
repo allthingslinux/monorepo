@@ -1,7 +1,7 @@
 import { CalendarX2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { EnrichedCalendarEvent } from "@/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 
 import { buildAgendaGroups } from "../helpers/calendar-helpers";
 import { EventCard } from "./event-card";

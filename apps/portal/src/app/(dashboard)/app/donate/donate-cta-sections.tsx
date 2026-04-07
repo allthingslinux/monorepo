@@ -10,7 +10,7 @@ import {
   SiStripe,
 } from "react-icons/si";
 
-import { DONATION_OPTIONS } from "@/config/donate";
+import { DONATION_OPTIONS } from "@atl/config/donate";
 import { Button } from "@atl/ui/components/button";
 import {
   Card,

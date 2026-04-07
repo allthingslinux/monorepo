@@ -1,6 +1,6 @@
 import { format, isToday, startOfDay } from "date-fns";
 
-import type { EnrichedCalendarEvent } from "@/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 import { cn } from "@atl/ui/lib/utils";
 
 import {

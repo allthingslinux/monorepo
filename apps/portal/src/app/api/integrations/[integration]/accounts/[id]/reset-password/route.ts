@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
-import { isAdmin } from "@/auth/check-role";
 import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
@@ -12,6 +11,7 @@ import {
   parseRouteId,
   requireAuth,
 } from "@atl/api/utils";
+import { isAdmin } from "@atl/auth/check-role";
 
 const ResetPasswordSchema = z.object({
   password: z.string().min(1, "Password is required").max(512),

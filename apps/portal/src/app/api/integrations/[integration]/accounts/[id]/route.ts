@@ -1,6 +1,5 @@
 import type { NextRequest } from "next/server";
 
-import { isAdmin } from "@/auth/check-role";
 import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import {
@@ -9,6 +8,7 @@ import {
   parseRouteId,
   requireAuth,
 } from "@atl/api/utils";
+import { isAdmin } from "@atl/auth/check-role";
 
 // With cacheComponents, route handlers are dynamic by default.
 

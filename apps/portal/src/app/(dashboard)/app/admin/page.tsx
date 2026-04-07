@@ -2,12 +2,12 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifyAdminOrStaffSession } from "@/auth/dal";
 import { AdminDashboardOverview } from "@/features/admin/components/admin-dashboard-overview";
 import { routeConfig } from "@/features/routing/lib";
 import { getServerQueryClient } from "@atl/api/hydration";
 import { queryKeys } from "@atl/api/query-keys";
 import { fetchAdminStatsServer } from "@atl/api/server-queries";
+import { verifyAdminOrStaffSession } from "@atl/auth/dal";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 const ADMIN_PATH = "/app/admin" as const;

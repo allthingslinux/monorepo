@@ -1,7 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
-import { verifyAdminOrStaffSession } from "@/auth/dal";
 import { PageHeader } from "@/components/layout/page/page-header";
 import { UnifiedUserManagement } from "@/features/admin/components/unified-user-management";
 import { loadUsersListSearchParams } from "@/features/admin/lib/search-params";
@@ -9,6 +8,7 @@ import { usersListQueryOptions } from "@/features/admin/lib/users-query-options"
 import { getServerRouteResolver } from "@/features/routing/lib";
 import { getServerQueryClient } from "@atl/api/hydration";
 import { fetchUsersServer } from "@atl/api/server-queries";
+import { verifyAdminOrStaffSession } from "@atl/auth/dal";
 
 const USERS_PATH = "/app/admin/users" as const;
 

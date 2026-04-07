@@ -1,7 +1,7 @@
 import { oauthProviderOpenIdConfigMetadata } from "@better-auth/oauth-provider";
 import type { NextRequest } from "next/server";
 
-import { auth } from "@/auth";
+import { auth } from "@atl/auth";
 
 // Issuer-scoped OpenID Connect discovery endpoint.
 // Per the OIDC spec, openid-configuration uses path *appending*:

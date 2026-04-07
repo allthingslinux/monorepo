@@ -3,7 +3,7 @@
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
-import { APP_NAME } from "@/shared/config/app";
+import { APP_NAME } from "@atl/config/app";
 import {
   SidebarMenu,
   SidebarMenuButton,

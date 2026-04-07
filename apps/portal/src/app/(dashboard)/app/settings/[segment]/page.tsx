@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { verifySession } from "@/auth/dal";
+import { verifySession } from "@atl/auth/dal";
 
 // Map Better Auth UI account segments (from account.basePath + viewPaths) to our nuqs tab values.
 // With viewPaths: { SETTINGS: "account" }, links are /app/settings/account, /security, /api-keys.

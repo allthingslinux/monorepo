@@ -1,9 +1,9 @@
 import "server-only";
-import type { RepoConfig } from "@/shared/config/changelog";
+import type { RepoConfig } from "@atl/config/changelog";
 import {
   CHANGELOG_MAX_COMMITS_PER_REPO,
   CHANGELOG_REVALIDATE_SECONDS,
-} from "@/shared/config/changelog";
+} from "@atl/config/changelog";
 
 import type {
   ChangelogResult,

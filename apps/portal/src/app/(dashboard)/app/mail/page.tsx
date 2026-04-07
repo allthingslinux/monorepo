@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 import { portalDefaultMetadata } from "@/app/metadata";
-import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { env } from "@/env";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { verifySession } from "@atl/auth/dal";
 import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { MailContent } from "./mail-content";

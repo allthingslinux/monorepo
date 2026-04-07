@@ -1,4 +1,4 @@
-import type { EnrichedCalendarEvent } from "@/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 import { Separator } from "@atl/ui/components/separator";
 import { cn } from "@atl/ui/lib/utils";
 

@@ -3,7 +3,7 @@
 import { ArrowUpRight, ChevronDown, Clock, Link2, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import type { EnrichedCalendarEvent } from "@/config/events";
+import type { EnrichedCalendarEvent } from "@atl/config/events";
 import { Badge } from "@atl/ui/components/badge";
 import { cn } from "@atl/ui/lib/utils";
 

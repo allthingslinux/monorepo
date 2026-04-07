@@ -2,7 +2,7 @@ import { toNextJsHandler } from "better-auth/next-js";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { auth } from "@/auth";
+import { auth } from "@atl/auth";
 
 // With cacheComponents, route handlers are dynamic by default.
 

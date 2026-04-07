@@ -18,12 +18,6 @@
     "plugins": [{ "name": "next" }],
     "allowJs": true,
     "paths": {
-      "@/auth": ["../../packages/auth/src"],
-      "@/auth/*": ["../../packages/auth/src/*"],
-      "@/config": ["../../packages/config/src"],
-      "@/config/*": ["../../packages/config/src/*"],
-      "@/shared/config": ["../../packages/config/src"],
-      "@/shared/config/*": ["../../packages/config/src/*"],
       "@/*": ["./src/*"]
     }
   },

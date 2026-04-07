@@ -10,7 +10,7 @@
 
 import dynamic from "next/dynamic";
 
-import { useSession } from "@/auth/session-context";
+import { useSession } from "@atl/auth/session-context";
 import { Card } from "@atl/ui/components/card";
 import {
   Tabs,
