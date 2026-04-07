@@ -1,23 +1,18 @@
 /* oxlint-disable react/no-danger -- JSON-LD requires raw JSON in a script element */
 import type { Thing, WithContext } from "schema-dts";
 
-import { getCSPNonce } from "@/shared/security/nonce";
-
 interface JsonLdProps {
   readonly code: WithContext<Thing>;
+  readonly nonce?: string;
 }
 
 const escapeJsonForHtml = (json: string): string =>
   json
-    // Escape & first to avoid double-escaping in previously escaped sequences
     .replaceAll("&", "\\u0026")
     .replaceAll("<", "\\u003c")
     .replaceAll(">", "\\u003e");
-// Note: Unicode line separators (\u2028, \u2029) are already handled by JSON.stringify
 
-export async function JsonLd({ code }: JsonLdProps) {
-  const nonce = await getCSPNonce();
-
+export async function JsonLd({ code, nonce }: JsonLdProps) {
   return (
     <script
       dangerouslySetInnerHTML={{

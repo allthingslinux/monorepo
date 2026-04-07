@@ -1,27 +1,15 @@
 import type { MetadataRoute } from "next";
 
-import { BASE_URL } from "@/config";
-import type { RouteConfig } from "@/features/routing/lib/types";
-
-/**
- * Generate robots.txt from route configuration
- * Automatically disallows protected routes and API routes
- */
-export function generateRobots(config: RouteConfig): MetadataRoute.Robots {
-  // Collect disallowed paths from route config
+export function generateRobots(baseUrl: string): MetadataRoute.Robots {
   const disallowedPaths: string[] = [];
 
-  // Add all protected routes (they require authentication)
-  for (const route of config.protected) {
-    if (route.metadata.robots?.index === false) {
-      disallowedPaths.push(`${route.path}/`);
-    }
+  if (typeof process !== "undefined" && process.env) {
+    disallowedPaths.push("/metrics");
+    disallowedPaths.push("/health");
+    disallowedPaths.push("/ready");
   }
 
-  // Always disallow API routes
   disallowedPaths.push("/api/");
-
-  // Always disallow auth consent page
   disallowedPaths.push("/auth/consent");
 
   return {
@@ -31,12 +19,7 @@ export function generateRobots(config: RouteConfig): MetadataRoute.Robots {
         disallow: disallowedPaths,
         userAgent: "*",
       },
-      // Block specific bots if needed
-      // {
-      //   userAgent: "BadBot",
-      //   disallow: "/",
-      // },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

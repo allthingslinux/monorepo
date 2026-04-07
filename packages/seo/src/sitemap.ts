@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next";
 
-import { BASE_URL } from "@/config";
 import type {
   ProtectedRoute,
   PublicRoute,
   RouteChild,
   RouteConfig,
-} from "@/features/routing/lib/types";
+} from "@atl/types/routes";
 
 function createSitemapEntry(
   path: string,
+  baseUrl: string,
   sitemap?: {
     lastModified?: Date;
     changeFrequency?: string;
@@ -17,21 +17,22 @@ function createSitemapEntry(
   }
 ): MetadataRoute.Sitemap[0] {
   return {
-    changeFrequency: (sitemap?.changeFrequency ||
+    changeFrequency: (sitemap?.changeFrequency ??
       "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
-    lastModified: sitemap?.lastModified || new Date(),
-    priority: sitemap?.priority || 0.5,
-    url: `${BASE_URL}${path}`,
+    lastModified: sitemap?.lastModified ?? new Date(),
+    priority: sitemap?.priority ?? 0.5,
+    url: `${baseUrl}${path}`,
   };
 }
 
 function addPublicRoutes(
   routes: MetadataRoute.Sitemap,
-  publicRoutes: PublicRoute[]
+  publicRoutes: PublicRoute[],
+  baseUrl: string
 ): void {
   for (const route of publicRoutes) {
     if (route.sitemap) {
-      routes.push(createSitemapEntry(route.path, route.sitemap));
+      routes.push(createSitemapEntry(route.path, baseUrl, route.sitemap));
     }
   }
 }
@@ -39,20 +40,21 @@ function addPublicRoutes(
 function addChildRoutes(
   routes: MetadataRoute.Sitemap,
   children: RouteChild[],
-  parentMetadata: ProtectedRoute["metadata"]
+  parentMetadata: ProtectedRoute["metadata"],
+  baseUrl: string
 ): void {
   if (!children) {
     return;
   }
 
   for (const child of children) {
-    const childMetadata = child.metadata || parentMetadata;
+    const childMetadata = child.metadata ?? parentMetadata;
     if (childMetadata.robots?.index) {
       routes.push({
         changeFrequency: "monthly",
         lastModified: new Date(),
         priority: 0.4,
-        url: `${BASE_URL}${child.path}`,
+        url: `${baseUrl}${child.path}`,
       });
     }
   }
@@ -60,15 +62,21 @@ function addChildRoutes(
 
 function addProtectedRoutes(
   routes: MetadataRoute.Sitemap,
-  protectedRoutes: ProtectedRoute[]
+  protectedRoutes: ProtectedRoute[],
+  baseUrl: string
 ): void {
   for (const route of protectedRoutes) {
     if (route.metadata.robots?.index && route.sitemap) {
-      routes.push(createSitemapEntry(route.path, route.sitemap));
+      routes.push(createSitemapEntry(route.path, baseUrl, route.sitemap));
     }
 
     if (route.navigation?.children) {
-      addChildRoutes(routes, route.navigation.children, route.metadata);
+      addChildRoutes(
+        routes,
+        route.navigation.children,
+        route.metadata,
+        baseUrl
+      );
     }
   }
 }
@@ -76,11 +84,14 @@ function addProtectedRoutes(
 /**
  * Generate sitemap from route configuration
  */
-export function generateSitemap(config: RouteConfig): MetadataRoute.Sitemap {
+export function generateSitemap(
+  config: RouteConfig,
+  baseUrl: string
+): MetadataRoute.Sitemap {
   const routes: MetadataRoute.Sitemap = [];
 
-  addPublicRoutes(routes, config.public);
-  addProtectedRoutes(routes, config.protected);
+  addPublicRoutes(routes, config.public, baseUrl);
+  addProtectedRoutes(routes, config.protected, baseUrl);
 
   return routes;
 }

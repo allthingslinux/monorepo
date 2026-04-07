@@ -1,133 +1,102 @@
 import merge from "lodash/merge";
 import type { Metadata } from "next";
-import { cacheLife, cacheTag } from "next/cache";
 
-import {
-  APP_AUTHOR,
-  APP_CREATOR,
-  APP_DESCRIPTION,
-  APP_KEYWORDS,
-  APP_PUBLISHER,
-  APP_TITLE,
-  BASE_URL,
-} from "@/config";
-import { routeConfig } from "@/features/routing/lib";
-import type { RouteTranslationResolver } from "@/features/routing/lib/i18n";
-import { getTranslatedRouteConfig } from "@/features/routing/lib/i18n";
-import type { RouteConfig } from "@/features/routing/lib/types";
+import type { ProtectedRoute, PublicRoute } from "@atl/types/routes";
 
 // ============================================================================
-// Default Metadata Configuration
+// Default Metadata Configuration Builder
 // ============================================================================
-// Base metadata used across the application
-// Can be extended or overridden in specific pages/layouts
+
+export interface AppMetadataConfig {
+  author: string;
+  creator: string;
+  description: string;
+  keywords: string[];
+  publisher: string;
+  title: string;
+  baseUrl: string;
+}
 
 /**
- * Default metadata for the application
- * Used as fallback and base for all pages
+ * Build default metadata for the application
  */
-export const defaultMetadata: Metadata = {
-  authors: [APP_AUTHOR],
-  creator: APP_CREATOR,
-  description: APP_DESCRIPTION,
-  formatDetection: {
-    address: false,
-    email: false,
-    telephone: false,
-  },
-  icons: {
-    apple: "/favicon.ico",
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-  },
-  keywords: APP_KEYWORDS,
-  metadataBase: new URL(BASE_URL),
-  openGraph: {
-    description: APP_DESCRIPTION,
-    // Locale is set to 'en_US' for English (default locale)
-    // For locale-aware metadata, use generateMetadata in individual pages
-    // and call getLocale() from 'next-intl/server' to get the current locale
-    locale: "en_US",
-    siteName: APP_TITLE,
-    title: APP_TITLE,
-    type: "website",
-    url: BASE_URL,
-    // Planned: Add Open Graph image when available
-    // images: [
-    //   {
-    //     url: "/og-image.png",
-    //     width: 1200,
-    //     height: 630,
-    //     alt: "Portal - All Things Linux",
-    //   },
-    // ],
-  },
-  publisher: APP_PUBLISHER,
-  robots: {
-    follow: true,
-    googleBot: {
-      follow: true,
-      index: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+export function buildDefaultMetadata(config: AppMetadataConfig): Metadata {
+  return {
+    authors: [{ name: config.author }],
+    creator: config.creator,
+    description: config.description,
+    formatDetection: {
+      address: false,
+      email: false,
+      telephone: false,
     },
-    index: true,
-  },
-  title: {
-    default: APP_TITLE,
-    template: `%s | ${APP_TITLE}`,
-  },
-  twitter: {
-    card: "summary_large_image",
-    description: APP_DESCRIPTION,
-    title: APP_TITLE,
-    // Planned: Add Twitter image when available
-    // images: ["/twitter-image.png"],
-    // creator: "@allthingslinux",
-  },
-};
+    icons: {
+      apple: "/favicon.ico",
+      icon: "/favicon.ico",
+      shortcut: "/favicon.ico",
+    },
+    keywords: config.keywords,
+    metadataBase: new URL(config.baseUrl),
+    openGraph: {
+      description: config.description,
+      locale: "en_US",
+      siteName: config.title,
+      title: config.title,
+      type: "website",
+      url: config.baseUrl,
+    },
+    publisher: config.publisher,
+    robots: {
+      follow: true,
+      googleBot: {
+        follow: true,
+        index: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+      index: true,
+    },
+    title: {
+      default: config.title,
+      template: `%s | ${config.title}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      description: config.description,
+      title: config.title,
+    },
+  };
+}
 
 /**
  * Helper function to create page-specific metadata
  * Merges overrides with default metadata, preserving nested objects
- * Uses lodash.merge for deep merging of nested properties
  */
-export function createPageMetadata(overrides: Metadata): Metadata {
+export function createPageMetadata(
+  defaultMetadata: Metadata,
+  overrides: Metadata
+): Metadata {
   return merge({}, defaultMetadata, overrides);
 }
 
 /**
  * Get metadata for a route (for SEO, Open Graph, etc.)
- * Uses metadata field, not UI display
- *
- * @param pathname - The pathname to look up
- * @param config - The route configuration
- * @param resolver - Optional translation resolver for i18n support
  */
 export function getRouteMetadata(
   pathname: string,
-  config: RouteConfig,
-  resolver?: RouteTranslationResolver
+  routes: (PublicRoute | ProtectedRoute)[],
+  defaultMetadata: Metadata
 ): Metadata {
   const cleanPath = pathname.split("?")[0].split("#")[0];
 
-  // Resolve translations if resolver provided
-  const resolvedConfig = resolver
-    ? getTranslatedRouteConfig(config, resolver)
-    : config;
-
-  // Find route in config
-  const allRoutes = [...resolvedConfig.public, ...resolvedConfig.protected];
-  const route = allRoutes.find((r) => r.path === cleanPath);
+  const route = routes.find((r) => r.path === cleanPath);
 
   if (!route) {
-    // Fallback to default metadata
     return defaultMetadata;
   }
 
-  // Build metadata from route config (always uses metadata, not UI)
-  return createPageMetadata({
+  return createPageMetadata(defaultMetadata, {
     description: route.metadata.description,
     keywords: route.metadata.keywords,
     openGraph: route.metadata.openGraph,
@@ -135,20 +104,4 @@ export function getRouteMetadata(
     title: route.metadata.title,
     twitter: route.metadata.twitter,
   });
-}
-
-/**
- * Cached route metadata for a pathname (no i18n resolver).
- * Use when locale-agnostic metadata is enough (e.g. robots, structural SEO).
- * For translated metadata, use getRouteMetadata(pathname, config, resolver).
- *
- * Requires cacheComponents: true in next.config.
- */
-export async function getStaticRouteMetadataCached(
-  pathname: string
-): Promise<Metadata> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("route-metadata", pathname);
-  return await Promise.resolve(getRouteMetadata(pathname, routeConfig));
 }
