@@ -35,29 +35,21 @@ function isUltraciteIgnored(file) {
   );
 }
 
-/** Escape shell glob characters (brackets in Next.js dynamic routes, etc.). */
-function escapeGlob(str) {
-  return str
-    .replaceAll("[", "\\[")
-    .replaceAll("]", "\\]")
-    .replaceAll("{", "\\{")
-    .replaceAll("}", "\\}");
+/** Wrap a path in single quotes to prevent shell glob expansion of brackets. */
+function shellQuote(str) {
+  return `'${str.replaceAll("'", "'\\''")}'`;
 }
 
 export default {
   // Python — ruff check + format (uv handles its own path resolution)
   "*.py": (files) => {
-    const args = files
-      .map((f) => JSON.stringify(escapeGlob(toRelative(f))))
-      .join(" ");
+    const args = files.map((f) => shellQuote(toRelative(f))).join(" ");
     return [`uv run ruff check --fix ${args}`, `uv run ruff format ${args}`];
   },
 
   // Shell — shellcheck + shfmt
   "*.sh": (files) => {
-    const args = files
-      .map((f) => JSON.stringify(escapeGlob(toRelative(f))))
-      .join(" ");
+    const args = files.map((f) => shellQuote(toRelative(f))).join(" ");
     return [
       `shellcheck ${args}`,
       `shfmt -ln bash -i 2 -ci -bn -sr -s -w ${args}`,
@@ -74,9 +66,7 @@ export default {
       if (filtered.length === 0) {
         return [];
       }
-      const args = filtered
-        .map((f) => JSON.stringify(escapeGlob(toRelative(f))))
-        .join(" ");
+      const args = filtered.map((f) => shellQuote(toRelative(f))).join(" ");
       return `pnpm exec ultracite fix ${args}`;
     },
 };
