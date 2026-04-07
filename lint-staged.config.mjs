@@ -30,28 +30,25 @@ function toRelative(file) {
 /** Return true if the file should be skipped by ultracite. */
 function isUltraciteIgnored(file) {
   const rel = toRelative(file);
+  // Skip files with brackets — ultracite/oxlint treats them as glob patterns
+  if (/[[\]]/.test(rel)) {
+    return true;
+  }
   return ULTRACITE_IGNORE_PREFIXES.some(
     (prefix) => rel.startsWith(prefix) || rel.includes(`/${prefix}`)
   );
 }
 
-/** Wrap a path in single quotes to prevent shell glob expansion of brackets. */
-function shellQuote(str) {
-  // Prefix with ./ so glob-aware tools (oxlint/ultracite) treat brackets literally
-  const prefixed = str.startsWith("./") ? str : `./${str}`;
-  return `'${prefixed.replaceAll("'", "'\\''")}'`;
-}
-
 export default {
   // Python — ruff check + format (uv handles its own path resolution)
   "*.py": (files) => {
-    const args = files.map((f) => shellQuote(toRelative(f))).join(" ");
+    const args = files.map((f) => JSON.stringify(toRelative(f))).join(" ");
     return [`uv run ruff check --fix ${args}`, `uv run ruff format ${args}`];
   },
 
   // Shell — shellcheck + shfmt
   "*.sh": (files) => {
-    const args = files.map((f) => shellQuote(toRelative(f))).join(" ");
+    const args = files.map((f) => JSON.stringify(toRelative(f))).join(" ");
     return [
       `shellcheck ${args}`,
       `shfmt -ln bash -i 2 -ci -bn -sr -s -w ${args}`,
@@ -68,7 +65,7 @@ export default {
       if (filtered.length === 0) {
         return [];
       }
-      const args = filtered.map((f) => shellQuote(toRelative(f))).join(" ");
+      const args = filtered.map((f) => JSON.stringify(toRelative(f))).join(" ");
       return `pnpm exec ultracite fix ${args}`;
     },
 };
