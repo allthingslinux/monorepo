@@ -24,6 +24,9 @@ out/
 
 # Production
 build/
+packages/*/dist/
+apps/portal/src/**/*.d.ts
+apps/portal/src/**/*.d.ts.map
 
 # Contentlayer (web)
 .contentlayer/
