@@ -1,7 +1,5 @@
 "use client";
 
-import { queryKeys } from "@atl/api/query-keys";
-import { QUERY_CACHE } from "@atl/utils/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -13,6 +11,8 @@ import {
   resetIntegrationPassword,
   updateIntegrationAccount,
 } from "@/features/integrations/api/integrations";
+import { queryKeys } from "@atl/api/query-keys";
+import { QUERY_CACHE } from "@atl/utils/constants";
 
 /**
  * Fetch available integrations.

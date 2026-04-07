@@ -1,3 +1,7 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { xmppIntegration } from "@/features/integrations/lib/xmpp/implementation";
 import {
   APIError,
   handleAPIError,
@@ -7,10 +11,6 @@ import {
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
 import { xmppAccount } from "@atl/db/schema/xmpp";
-import { eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { xmppIntegration } from "@/features/integrations/lib/xmpp/implementation";
 
 // With cacheComponents, route handlers are dynamic by default.
 

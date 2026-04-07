@@ -1,4 +1,3 @@
-import { cn } from "@atl/utils/utils";
 import {
   Bot,
   Disc,
@@ -13,6 +12,8 @@ import {
   Terminal,
   Wrench,
 } from "lucide-react";
+
+import { cn } from "@atl/utils/utils";
 
 /**
  * Map of repo identifiers to their unique icons.

@@ -1,6 +1,5 @@
 "use client";
 
-import { formatDate } from "@atl/utils/date";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Key, Loader2, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -23,6 +22,7 @@ import {
   DialogTrigger,
 } from "@atl/ui/components/dialog";
 import { Input } from "@atl/ui/components/input";
+import { formatDate } from "@atl/utils/date";
 
 interface AppPasswordManagerProps {
   accountId: string;

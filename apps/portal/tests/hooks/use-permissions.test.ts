@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { authClient } from "@/auth/client";
 import { SessionProvider } from "@/auth/session-context";
-import { useAuthSession } from "@/features/auth/lib/auth-hooks";
+import { useAuthSession } from "@/auth/auth-hooks";
 import { usePermissions } from "@/hooks/use-permissions";
 
 vi.mock("@/auth/client", () => ({
@@ -16,7 +16,7 @@ vi.mock("@/auth/client", () => ({
   },
 }));
 
-vi.mock("@/features/auth/lib/auth-hooks", () => ({
+vi.mock("@/auth/auth-hooks", () => ({
   useAuthSession: vi.fn(),
 }));
 

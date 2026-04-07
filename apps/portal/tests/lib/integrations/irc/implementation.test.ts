@@ -1,8 +1,8 @@
-import { db } from "@atl/db/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { registerNick } from "@/features/integrations/lib/irc/atheme/client";
 import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
+import { db } from "@atl/db/client";
 
 // Mock keys and config
 vi.mock("@/features/integrations/lib/irc/keys", () => ({ keys: () => ({}) }));

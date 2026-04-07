@@ -1,8 +1,8 @@
-import { handleAPIError, requireAuth } from "@atl/api/utils";
 import type { NextRequest } from "next/server";
 
 import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
+import { handleAPIError, requireAuth } from "@atl/api/utils";
 
 // With cacheComponents, route handlers are dynamic by default.
 

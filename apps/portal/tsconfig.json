@@ -18,10 +18,12 @@
     "plugins": [{ "name": "next" }],
     "allowJs": true,
     "paths": {
-      "@/auth": ["./src/features/auth/lib"],
-      "@/auth/*": ["./src/features/auth/lib/*"],
-      "@/config": ["./src/shared/config"],
-      "@/config/*": ["./src/shared/config/*"],
+      "@/auth": ["../../packages/auth/src"],
+      "@/auth/*": ["../../packages/auth/src/*"],
+      "@/config": ["../../packages/config/src"],
+      "@/config/*": ["../../packages/config/src/*"],
+      "@/shared/config": ["../../packages/config/src"],
+      "@/shared/config/*": ["../../packages/config/src/*"],
       "@/*": ["./src/*"]
     }
   },

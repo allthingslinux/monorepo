@@ -4,11 +4,12 @@
  * without pulling in Next.js server-only modules.
  */
 import "dotenv/config";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+
 import { keys } from "@atl/db/keys";
 import { relations } from "@atl/db/relations";
 import { schema } from "@atl/db/schema";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
 
 const env = keys();
 const connectionString = env.DATABASE_URL;

@@ -1,8 +1,9 @@
 import "dotenv/config";
+import { sql } from "drizzle-orm";
+
 import { user } from "@atl/db/schema/auth";
 import { ircAccount } from "@atl/db/schema/irc";
 import { xmppAccount } from "@atl/db/schema/xmpp";
-import { sql } from "drizzle-orm";
 
 import { db } from "./lib/db";
 

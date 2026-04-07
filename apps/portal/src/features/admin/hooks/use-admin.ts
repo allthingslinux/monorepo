@@ -1,13 +1,5 @@
 "use client";
 
-import { queryKeys } from "@atl/api/query-keys";
-import type {
-  AdminUserDetailResponse,
-  SessionListFilters,
-  UpdateUserInput,
-  UserListFilters,
-} from "@atl/api/types";
-import { QUERY_CACHE } from "@atl/utils/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -31,6 +23,14 @@ import {
   updateUser,
 } from "@/features/admin/api/admin";
 import { usersListQueryOptions } from "@/features/admin/lib/users-query-options";
+import { queryKeys } from "@atl/api/query-keys";
+import type {
+  AdminUserDetailResponse,
+  SessionListFilters,
+  UpdateUserInput,
+  UserListFilters,
+} from "@atl/api/types";
+import { QUERY_CACHE } from "@atl/utils/constants";
 
 // ============================================================================
 // Admin Hooks

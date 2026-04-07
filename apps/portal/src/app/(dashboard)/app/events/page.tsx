@@ -1,4 +1,3 @@
-import { getRouteMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 
 import { verifySession } from "@/auth/dal";
@@ -6,6 +5,7 @@ import { PageContent, PageHeader } from "@/components/layout/page";
 import { enrichEventsWithSources, getManualEvents } from "@/config/events";
 import { getIcsCalendarEvents } from "@/features/events/lib/ics-events";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { getRouteMetadata } from "@atl/seo/metadata";
 
 import { EventsContent } from "./events-content";
 

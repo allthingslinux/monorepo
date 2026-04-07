@@ -1,12 +1,12 @@
+import { and, eq, ne } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { env } from "@/env";
 import { APIError, handleAPIError, requireAuth } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { account, user } from "@atl/db/schema/auth";
 import { ircAccount } from "@atl/db/schema/irc";
 import { xmppAccount } from "@atl/db/schema/xmpp";
-import { and, eq, ne } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { env } from "@/env";
 
 // With cacheComponents, route handlers are dynamic by default.
 

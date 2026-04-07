@@ -1,4 +1,3 @@
-import { createPageMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -7,6 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 
 import { DevTools } from "@/components/dev-tools";
+import { createPageMetadata } from "@atl/seo/metadata";
 
 import { geistMono, inter } from "./fonts";
 

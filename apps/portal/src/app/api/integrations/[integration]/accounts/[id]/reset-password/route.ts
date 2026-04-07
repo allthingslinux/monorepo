@@ -1,9 +1,3 @@
-import {
-  APIError,
-  handleAPIError,
-  parseRouteId,
-  requireAuth,
-} from "@atl/api/utils";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -12,6 +6,12 @@ import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
 import { xmppIntegration } from "@/features/integrations/lib/xmpp/implementation";
+import {
+  APIError,
+  handleAPIError,
+  parseRouteId,
+  requireAuth,
+} from "@atl/api/utils";
 
 const ResetPasswordSchema = z.object({
   password: z.string().min(1, "Password is required").max(512),

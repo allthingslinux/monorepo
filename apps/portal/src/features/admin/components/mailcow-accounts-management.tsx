@@ -1,13 +1,12 @@
 "use client";
 
-import type { MailcowAccountWithUser } from "@atl/api/types";
-import { formatDate } from "@atl/utils/date";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 
 import { useAdminMailcowAccounts } from "@/features/admin/hooks/use-admin";
 import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
+import type { MailcowAccountWithUser } from "@atl/api/types";
 import { Badge } from "@atl/ui/components/badge";
 import {
   Card,
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@atl/ui/components/select";
+import { formatDate } from "@atl/utils/date";
 
 import { DataTable } from "./data-table";
 

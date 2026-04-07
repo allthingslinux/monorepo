@@ -1,13 +1,13 @@
 "use client";
 
-import type { Session } from "@atl/api/types";
-import type { SessionListResponse } from "@atl/types/api";
 import { memo, useMemo } from "react";
 
 import {
   useDeleteSession,
   useSessions,
 } from "@/features/admin/hooks/use-admin";
+import type { Session } from "@atl/api/types";
+import type { SessionListResponse } from "@atl/types/api";
 import {
   Card,
   CardContent,

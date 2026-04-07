@@ -1,6 +1,7 @@
-import { user } from "@atl/db/schema/auth";
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod";
+
+import { user } from "@atl/db/schema/auth";
 
 /**
  * Base User Schema from Database

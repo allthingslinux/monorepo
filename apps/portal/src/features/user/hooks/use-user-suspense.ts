@@ -1,8 +1,5 @@
 "use client";
 
-import { queryKeys } from "@atl/api/query-keys";
-import type { UpdateUserInput } from "@atl/api/types";
-import { QUERY_CACHE } from "@atl/utils/constants";
 import {
   useMutation,
   useQueryClient,
@@ -14,6 +11,9 @@ import {
   fetchMySessions,
   updateCurrentUser,
 } from "@/features/user/api/user";
+import { queryKeys } from "@atl/api/query-keys";
+import type { UpdateUserInput } from "@atl/api/types";
+import { QUERY_CACHE } from "@atl/utils/constants";
 
 // ============================================================================
 // User Hooks with Suspense

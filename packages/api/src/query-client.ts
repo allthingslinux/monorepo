@@ -1,9 +1,10 @@
-import { QUERY_CACHE } from "@atl/utils/constants";
 import {
   defaultShouldDehydrateQuery,
   isServer,
   QueryClient,
 } from "@tanstack/react-query";
+
+import { QUERY_CACHE } from "@atl/utils/constants";
 
 /**
  * Create a new QueryClient instance with default options for SSR

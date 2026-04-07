@@ -1,8 +1,8 @@
 "use client";
 
-import type { BreadcrumbItem as BreadcrumbItemType } from "@atl/types/routes";
 import { Fragment } from "react";
 
+import type { BreadcrumbItem as BreadcrumbItemType } from "@atl/types/routes";
 import {
   Breadcrumb,
   BreadcrumbItem,

@@ -7,11 +7,11 @@ pre-commit:
     python-lint:
       glob: "*.py"
       run: uv run ruff check --fix {staged_files} && uv run ruff format {staged_files}
-    
+
     shell-lint:
       glob: "*.sh"
       run: shellcheck {staged_files} && shfmt -ln bash -i 2 -ci -bn -sr -s -w {staged_files}
-      
+
     terraform-fmt:
       glob: "*.tf"
       run: terraform fmt

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- module augmentation: type params must match upstream */
 "use client";
 
-import { cn } from "@atl/utils/utils";
 import {
   flexRender,
   getCoreRowModel,
@@ -42,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "@atl/ui/components/table";
+import { cn } from "@atl/utils/utils";
 
 // Type augmentation for TanStack Table column meta
 declare module "@tanstack/react-table" {

@@ -1,7 +1,7 @@
-import { generateRobots } from "@atl/seo/robots";
 import type { MetadataRoute } from "next";
 
 import { routeConfig } from "@/features/routing/lib";
+import { generateRobots } from "@atl/seo/robots";
 
 // ============================================================================
 // Robots.txt Generation

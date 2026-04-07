@@ -1,6 +1,3 @@
-import { getServerQueryClient } from "@atl/api/hydration";
-import { queryKeys } from "@atl/api/query-keys";
-import { fetchSessionsServer } from "@atl/api/server-queries";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 
@@ -8,6 +5,9 @@ import { verifyAdminOrStaffSession } from "@/auth/dal";
 import { PageHeader } from "@/components/layout/page/page-header";
 import { SessionManagement } from "@/features/admin/components/session-management";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { getServerQueryClient } from "@atl/api/hydration";
+import { queryKeys } from "@atl/api/query-keys";
+import { fetchSessionsServer } from "@atl/api/server-queries";
 
 const SESSIONS_PATH = "/app/admin/sessions" as const;
 

@@ -1,4 +1,3 @@
-import { handleAPIError, requireAuth } from "@atl/api/utils";
 import { captureException } from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 
@@ -6,6 +5,7 @@ import { registerIntegrations } from "@/features/integrations/lib";
 import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import { mediawikiBotClient } from "@/features/integrations/lib/mediawiki/bot-client";
 import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
+import { handleAPIError, requireAuth } from "@atl/api/utils";
 
 /**
  * GET /api/integrations/mediawiki/user-stats

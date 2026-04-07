@@ -1,3 +1,6 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
 import { handleAPIError, requireAuth } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
@@ -7,8 +10,6 @@ import {
 } from "@atl/observability/wide-events";
 import type { WideEvent } from "@atl/observability/wide-events";
 import { UpdateUserSelfSchema } from "@atl/schemas/user";
-import { eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 

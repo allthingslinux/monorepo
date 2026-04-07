@@ -1,5 +1,6 @@
-import { APIError, handleAPIError } from "@atl/api/utils";
 import { describe, expect, it, vi } from "vitest";
+
+import { APIError, handleAPIError } from "@atl/api/utils";
 
 // Mock database and auth before importing utils
 vi.mock("@atl/db/client", () => ({

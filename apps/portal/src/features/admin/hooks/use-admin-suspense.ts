@@ -1,13 +1,5 @@
 "use client";
 
-import { queryKeys } from "@atl/api/query-keys";
-import type {
-  AdminUserDetailResponse,
-  SessionListFilters,
-  UpdateUserInput,
-  UserListFilters,
-} from "@atl/api/types";
-import { QUERY_CACHE } from "@atl/utils/constants";
 import {
   useMutation,
   useQueryClient,
@@ -28,6 +20,14 @@ import {
   fetchUsers,
   updateUser,
 } from "@/features/admin/api/admin";
+import { queryKeys } from "@atl/api/query-keys";
+import type {
+  AdminUserDetailResponse,
+  SessionListFilters,
+  UpdateUserInput,
+  UserListFilters,
+} from "@atl/api/types";
+import { QUERY_CACHE } from "@atl/utils/constants";
 
 // ============================================================================
 // Admin Hooks with Suspense

@@ -1,8 +1,8 @@
-import { formatRelativeTime } from "@atl/utils/date";
 import { ArrowUpRight, BookOpen } from "lucide-react";
 
 import { env } from "@/env";
 import { fetchRecentWikiChanges } from "@/shared/wiki";
+import { formatRelativeTime } from "@atl/utils/date";
 
 const API_PATH_REGEX = /\/w\/api\.php$/;
 const ROOT_API_REGEX = /\/api\.php$/;

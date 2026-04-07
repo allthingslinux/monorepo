@@ -1,6 +1,5 @@
 "use client";
 
-import { CreateMediaWikiAccountRequestSchema } from "@atl/schemas/integrations/mediawiki";
 import { BookOpen, Hash, Mail, Zap } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
@@ -13,6 +12,7 @@ import type { IrcAccount } from "@/features/integrations/lib/irc/types";
 import type { MailcowAccount } from "@/features/integrations/lib/mailcow/types";
 import type { MediaWikiAccount } from "@/features/integrations/lib/mediawiki/types";
 import type { XmppAccount } from "@/features/integrations/lib/xmpp/types";
+import { CreateMediaWikiAccountRequestSchema } from "@atl/schemas/integrations/mediawiki";
 
 import { IrcAccountDetails } from "./irc-account-details";
 import { IrcPasswordDialog } from "./irc-password-dialog";

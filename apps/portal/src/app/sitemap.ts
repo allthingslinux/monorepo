@@ -1,7 +1,7 @@
-import { generateSitemap } from "@atl/seo/sitemap";
 import type { MetadataRoute } from "next";
 
 import { routeConfig } from "@/features/routing/lib";
+import { generateSitemap } from "@atl/seo/sitemap";
 
 // ============================================================================
 // Sitemap Generation

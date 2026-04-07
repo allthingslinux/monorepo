@@ -1,3 +1,7 @@
+import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
 import {
   APIError,
   handleAPIError,
@@ -7,10 +11,6 @@ import {
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
 import { ircAccount } from "@atl/db/schema/irc";
-import { and, eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { ircIntegration } from "@/features/integrations/lib/irc/implementation";
 
 // With cacheComponents, route handlers are dynamic by default.
 

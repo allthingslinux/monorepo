@@ -1,13 +1,6 @@
 import { apiKey } from "@better-auth/api-key";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { passkey } from "@better-auth/passkey";
-import { db } from "@atl/db/client";
-import { schema } from "@atl/db/schema";
-import { user as authUser } from "@atl/db/schema/auth";
-import { ircAccount } from "@atl/db/schema/irc";
-import { xmppAccount } from "@atl/db/schema/xmpp";
-import { isValidCanonicalUsername } from "@atl/schemas/integrations/validation";
-import "server-only";
 import * as Sentry from "@sentry/nextjs";
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
@@ -26,10 +19,17 @@ import {
   twoFactor,
   username,
 } from "better-auth/plugins";
+import "server-only";
 import { and, eq } from "drizzle-orm";
 
 import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
 import { keys as mailcowKeys } from "@/features/integrations/lib/mailcow/keys";
+import { db } from "@atl/db/client";
+import { schema } from "@atl/db/schema";
+import { user as authUser } from "@atl/db/schema/auth";
+import { ircAccount } from "@atl/db/schema/irc";
+import { xmppAccount } from "@atl/db/schema/xmpp";
+import { isValidCanonicalUsername } from "@atl/schemas/integrations/validation";
 
 import {
   sendOTPEmail,

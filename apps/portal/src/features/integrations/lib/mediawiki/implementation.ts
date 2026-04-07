@@ -1,4 +1,11 @@
 import "server-only";
+import * as Sentry from "@sentry/nextjs";
+import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
+
+import { IntegrationBase } from "@/features/integrations/lib/core/base";
+import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
+import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 import { APIError } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { mediawikiAccount } from "@atl/db/schema/mediawiki";
@@ -7,13 +14,6 @@ import {
   MediaWikiAccountSchema,
   UpdateMediaWikiAccountRequestSchema,
 } from "@atl/schemas/integrations/mediawiki";
-import * as Sentry from "@sentry/nextjs";
-import { and, eq, ne } from "drizzle-orm";
-import type { z } from "zod";
-
-import { IntegrationBase } from "@/features/integrations/lib/core/base";
-import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
-import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 
 import { mediawikiBotClient } from "./bot-client";
 import { isMediaWikiConfigured } from "./keys";

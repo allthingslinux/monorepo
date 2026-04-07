@@ -1,6 +1,7 @@
 import "server-only";
-import { APIError } from "@atl/api/utils";
 import { captureException } from "@sentry/nextjs";
+
+import { APIError } from "@atl/api/utils";
 
 import { keys } from "./keys";
 

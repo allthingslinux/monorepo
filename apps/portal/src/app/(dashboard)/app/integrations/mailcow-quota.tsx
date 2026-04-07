@@ -1,11 +1,11 @@
 "use client";
 
-import { formatBytes } from "@atl/utils/format";
-import { cn } from "@atl/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { HardDrive } from "lucide-react";
 
 import { getMailboxUsage } from "@/features/integrations/lib/mailcow/actions";
+import { formatBytes } from "@atl/utils/format";
+import { cn } from "@atl/utils/utils";
 
 interface MailboxQuotaProps {
   accountId: string;

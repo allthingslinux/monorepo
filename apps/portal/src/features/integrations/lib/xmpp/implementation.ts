@@ -1,6 +1,11 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
+
+import { IntegrationBase } from "@/features/integrations/lib/core/base";
+import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 import { APIError } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
@@ -10,11 +15,6 @@ import {
   UpdateXmppAccountRequestSchema,
   XmppAccountSchema,
 } from "@atl/schemas/integrations/xmpp";
-import { and, eq, ne } from "drizzle-orm";
-import type { z } from "zod";
-
-import { IntegrationBase } from "@/features/integrations/lib/core/base";
-import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
 
 import {
   checkProsodyAccountExists,

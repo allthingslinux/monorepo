@@ -1,12 +1,13 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import type { z } from "zod";
+
 import { log } from "@atl/observability/utils";
 import {
   CreateAliasRequestSchema,
   CreateAppPasswordRequestSchema,
 } from "@atl/schemas/integrations/mailcow";
-import { revalidatePath } from "next/cache";
-import type { z } from "zod";
 
 import { mailcowIntegration } from "./implementation";
 import type { MailcowAlias, MailcowAppPassword } from "./types";

@@ -10,8 +10,9 @@
  *   pnpm db:wipe
  */
 import "dotenv/config";
-import { keys } from "@atl/db/keys";
 import { Pool } from "pg";
+
+import { keys } from "@atl/db/keys";
 
 const env = keys();
 const connectionString = env.DATABASE_URL;

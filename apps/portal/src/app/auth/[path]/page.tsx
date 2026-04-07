@@ -1,6 +1,5 @@
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
-import { createPageMetadata } from "@atl/seo/metadata";
 import { GalleryVerticalEnd } from "lucide-react";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -8,6 +7,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { createPageMetadata } from "@atl/seo/metadata";
 import { Skeleton } from "@atl/ui/components/skeleton";
 
 // ============================================================================

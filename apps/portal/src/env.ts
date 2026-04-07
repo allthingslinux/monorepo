@@ -1,5 +1,3 @@
-import { keys as database } from "@atl/db/keys";
-import { keys as observability } from "@atl/observability/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
 import { keys as auth } from "@/auth/keys";
@@ -11,6 +9,8 @@ import { keys as mediawiki } from "@/features/integrations/lib/mediawiki/keys";
 import { keys as xmpp } from "@/features/integrations/lib/xmpp/keys";
 import { keys as changelog } from "@/shared/config/changelog";
 import { keys as devTools } from "@/shared/dev-tools/keys";
+import { keys as database } from "@atl/db/keys";
+import { keys as observability } from "@atl/observability/keys";
 
 export const env = createEnv({
   client: {},

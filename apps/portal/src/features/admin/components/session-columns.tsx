@@ -1,12 +1,12 @@
 "use client";
 
-import type { Session } from "@atl/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import type { Session } from "@atl/api/types";
 import { Button } from "@atl/ui/components/button";
 
 function getSortIcon(sorted: false | "asc" | "desc") {

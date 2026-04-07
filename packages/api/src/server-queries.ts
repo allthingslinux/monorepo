@@ -5,6 +5,9 @@
 // These directly query the database instead of making HTTP requests
 
 import "server-only";
+import { and, count, desc, eq, gt, ilike, ne, or, sql } from "drizzle-orm";
+
+import type { AuthGetSessionReturn } from "@/auth";
 import { db } from "@atl/db/client";
 import { apikey } from "@atl/db/schema/api-keys";
 import { session, user } from "@atl/db/schema/auth";
@@ -13,9 +16,6 @@ import { mailcowAccount } from "@atl/db/schema/mailcow";
 import { mediawikiAccount } from "@atl/db/schema/mediawiki";
 import { oauthClient } from "@atl/db/schema/oauth";
 import { xmppAccount } from "@atl/db/schema/xmpp";
-import { and, count, desc, eq, gt, ilike, ne, or, sql } from "drizzle-orm";
-
-import type { AuthGetSessionReturn } from "@/auth";
 
 import type {
   AdminStats,

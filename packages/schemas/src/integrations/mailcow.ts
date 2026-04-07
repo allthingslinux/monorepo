@@ -3,8 +3,9 @@
 // ============================================================================
 // Zod schemas for Mailcow integration API validation
 
-import { selectMailcowAccountSchema } from "@atl/db/schema/mailcow";
 import { z } from "zod";
+
+import { selectMailcowAccountSchema } from "@atl/db/schema/mailcow";
 
 import { metadataSchema } from "../utils";
 import { isValidMailcowLocalPart } from "./validation";

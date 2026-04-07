@@ -1,5 +1,6 @@
-import { cn } from "@atl/utils/utils";
 import { describe, expect, it } from "vitest";
+
+import { cn } from "@atl/utils/utils";
 
 describe("cn", () => {
   it("should merge class names correctly", () => {

@@ -1,9 +1,9 @@
-import type * as PortalApiUtils from "@atl/api/utils";
-import { db } from "@atl/db/client";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "@/app/api/admin/irc-accounts/route";
+import type * as PortalApiUtils from "@atl/api/utils";
+import { db } from "@atl/db/client";
 
 // Mock keys before anything else to avoid T3-Env validation
 vi.mock("@/features/integrations/lib/xmpp/keys", () => ({
@@ -46,8 +46,7 @@ vi.mock("@atl/db/client", () => ({
 
 // Mock utils
 vi.mock("@atl/api/utils", async () => {
-  const actual =
-    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
+  const actual = await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),

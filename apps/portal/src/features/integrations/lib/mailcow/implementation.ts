@@ -1,6 +1,9 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
+
 import { APIError } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
@@ -11,8 +14,6 @@ import {
   MailcowAccountSchema,
   UpdateMailboxRequestSchema,
 } from "@atl/schemas/integrations/mailcow";
-import { and, eq, ne } from "drizzle-orm";
-import type { z } from "zod";
 
 import { IntegrationBase } from "../core/base";
 import { getIntegrationRegistry } from "../core/registry";

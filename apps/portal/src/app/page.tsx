@@ -1,10 +1,10 @@
 import { SignedIn, SignedOut } from "@daveyplate/better-auth-ui";
-import { createPageMetadata } from "@atl/seo/metadata";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { connection } from "next/server";
 
+import { createPageMetadata } from "@atl/seo/metadata";
 import { Button } from "@atl/ui/components/button";
 
 import { AuthRedirect } from "./auth-redirect";

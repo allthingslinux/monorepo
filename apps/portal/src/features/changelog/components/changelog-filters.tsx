@@ -1,5 +1,6 @@
-import { cn } from "@atl/utils/utils";
 import { GitCommitHorizontal, Tag, X } from "lucide-react";
+
+import { cn } from "@atl/utils/utils";
 
 import { COMMIT_TYPE_COLORS } from "../lib/types";
 import type { ConventionalCommitType, RepoSummary } from "../lib/types";

@@ -1,4 +1,3 @@
-import { getRouteMetadata } from "@atl/seo/metadata";
 import {
   ArrowUpRight,
   BookOpen,
@@ -20,6 +19,7 @@ import { verifySession } from "@/auth/dal";
 import { PageContent, PageHeader } from "@/components/layout/page";
 import { COMMUNITY_LINKS, SOCIAL_MEDIA_LINKS } from "@/config/community";
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
+import { getRouteMetadata } from "@atl/seo/metadata";
 
 const ICON_MAP = {
   discord: MessageCircle,

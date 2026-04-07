@@ -1,6 +1,5 @@
 "use client";
 
-import type { User } from "@atl/api/types";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import type { User } from "@atl/api/types";
 import {
   AlertDialog,
   AlertDialogAction,

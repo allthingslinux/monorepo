@@ -1,7 +1,5 @@
 "use client";
 
-import type { User } from "@atl/api/types";
-import type { UserListResponse } from "@atl/types/api";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 
@@ -13,6 +11,8 @@ import {
 } from "@/features/admin/hooks/use-admin-actions";
 import { useUsersListSearchParams } from "@/features/admin/hooks/use-users-list-search-params";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import type { User } from "@atl/api/types";
+import type { UserListResponse } from "@atl/types/api";
 import {
   Card,
   CardContent,

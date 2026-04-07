@@ -1,3 +1,7 @@
+import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { mailcowIntegration } from "@/features/integrations/lib/mailcow/implementation";
 import {
   APIError,
   handleAPIError,
@@ -7,10 +11,6 @@ import {
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
 import { mailcowAccount } from "@atl/db/schema/mailcow";
-import { and, eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { mailcowIntegration } from "@/features/integrations/lib/mailcow/implementation";
 
 export async function GET(
   request: NextRequest,

@@ -1,6 +1,13 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 
+import * as Sentry from "@sentry/nextjs";
+import { and, eq, ne } from "drizzle-orm";
+import type { z } from "zod";
+
+import { IntegrationBase } from "@/features/integrations/lib/core/base";
+import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
+import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 import { APIError } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
@@ -11,13 +18,6 @@ import {
   UpdateIrcAccountRequestSchema,
 } from "@atl/schemas/integrations/irc";
 import { isValidCanonicalUsername } from "@atl/schemas/integrations/validation";
-import * as Sentry from "@sentry/nextjs";
-import { and, eq, ne } from "drizzle-orm";
-import type { z } from "zod";
-
-import { IntegrationBase } from "@/features/integrations/lib/core/base";
-import { getIntegrationRegistry } from "@/features/integrations/lib/core/registry";
-import type { IntegrationCreateInput } from "@/features/integrations/lib/core/types";
 
 import {
   AthemeFaultError,

@@ -3,8 +3,9 @@
 // ============================================================================
 // Zod schemas for MediaWiki integration API validation
 
-import { selectMediawikiAccountSchema } from "@atl/db/schema/mediawiki";
 import { z } from "zod";
+
+import { selectMediawikiAccountSchema } from "@atl/db/schema/mediawiki";
 
 import { brandedString, metadataSchema } from "../utils";
 import { isValidWikiUsername, WIKI_USERNAME_MAX_LENGTH } from "./validation";

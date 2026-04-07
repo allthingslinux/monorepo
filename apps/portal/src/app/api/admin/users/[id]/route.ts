@@ -1,3 +1,7 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
 import {
   handleAPIError,
   parseRouteId,
@@ -10,10 +14,6 @@ import { mailcowAccount } from "@atl/db/schema/mailcow";
 import { mediawikiAccount } from "@atl/db/schema/mediawiki";
 import { xmppAccount } from "@atl/db/schema/xmpp";
 import { AdminUpdateUserSchema } from "@atl/schemas/user";
-import { eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { cleanupIntegrationAccounts } from "@/features/integrations/lib/core/user-deletion";
 
 // With cacheComponents, route handlers are dynamic by default.
 

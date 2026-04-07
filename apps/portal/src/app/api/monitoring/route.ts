@@ -1,6 +1,7 @@
-import { keys } from "@atl/observability/keys";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+
+import { keys } from "@atl/observability/keys";
 
 /**
  * Sentry Tunnel Route Handler

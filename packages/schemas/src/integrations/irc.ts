@@ -3,8 +3,9 @@
 // ============================================================================
 // Zod schemas for IRC integration API validation
 
-import { selectIrcAccountSchema } from "@atl/db/schema/irc";
 import { z } from "zod";
+
+import { selectIrcAccountSchema } from "@atl/db/schema/irc";
 
 import { brandedString, metadataSchema } from "../utils";
 import { IRC_NICK_MAX_LENGTH, isValidIrcNick } from "./validation";
@@ -52,7 +53,7 @@ export const CreateIrcAccountRequestSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password must be 128 characters or less")
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .or(z.literal("").transform(() => {})),
 });
 
 /**
@@ -66,7 +67,7 @@ export const UpdateIrcAccountRequestSchema = z
       .min(8, "Password must be at least 8 characters")
       .max(128, "Password must be 128 characters or less")
       .optional()
-      .or(z.literal("").transform(() => undefined)),
+      .or(z.literal("").transform(() => {})),
   })
   .extend({
     metadata: metadataSchema,

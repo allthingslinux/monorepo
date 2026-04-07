@@ -3,9 +3,10 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import "dotenv/config";
+import { eq } from "drizzle-orm";
+
 import { db } from "@atl/db/client";
 import { oauthClient } from "@atl/db/schema/oauth";
-import { eq } from "drizzle-orm";
 
 // ============================================================================
 // Create Prosody OAuth Client Script

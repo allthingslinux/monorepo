@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@atl/utils/utils";
 import * as Sentry from "@sentry/nextjs";
 import {
   AlertCircle,
@@ -49,6 +48,7 @@ import {
 } from "@atl/ui/components/dialog";
 import { Input } from "@atl/ui/components/input";
 import { Label } from "@atl/ui/components/label";
+import { cn } from "@atl/utils/utils";
 
 // ---------------------------------------------------------------------------
 // Protocol icon defaults — keyed by integrationId, overridable via prop

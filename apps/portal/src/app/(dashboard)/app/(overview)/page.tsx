@@ -1,7 +1,3 @@
-import { getServerQueryClient } from "@atl/api/hydration";
-import { queryKeys } from "@atl/api/query-keys";
-import { fetchCurrentUserServer } from "@atl/api/server-queries";
-import { getRouteMetadata } from "@atl/seo/metadata";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
@@ -16,6 +12,10 @@ import { XmppMemberStat } from "@/features/integrations/components/xmpp-member-s
 import { getServerRouteResolver, routeConfig } from "@/features/routing/lib";
 import { RecentWikiChangesCard } from "@/features/wiki/components/recent-wiki-changes-card";
 import { WikiSiteStats } from "@/features/wiki/components/wiki-site-stats";
+import { getServerQueryClient } from "@atl/api/hydration";
+import { queryKeys } from "@atl/api/query-keys";
+import { fetchCurrentUserServer } from "@atl/api/server-queries";
+import { getRouteMetadata } from "@atl/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const resolver = await getServerRouteResolver();

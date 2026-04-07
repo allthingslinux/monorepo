@@ -1,9 +1,9 @@
-import { APIError } from "@atl/api/utils";
-import type * as PortalApiUtils from "@atl/api/utils";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "@/app/api/user/me/route";
+import { APIError } from "@atl/api/utils";
+import type * as PortalApiUtils from "@atl/api/utils";
 
 // Mock env.ts first to prevent all keys from loading
 vi.mock("@/env", () => ({
@@ -170,8 +170,7 @@ const mockRequireAuth = vi.fn();
 const mockHandleAPIError = vi.fn();
 
 vi.mock("@atl/api/utils", async () => {
-  const actual =
-    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
+  const actual = await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: (...args: unknown[]) => mockHandleAPIError(...args),

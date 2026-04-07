@@ -1,7 +1,8 @@
-import { APIError, handleAPIError, requireAuth } from "@atl/api/utils";
 import { captureException } from "@sentry/nextjs";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
+
+import { APIError, handleAPIError, requireAuth } from "@atl/api/utils";
 
 import { registerIntegrations } from "../../../../../features/integrations/lib";
 import { getIntegrationRegistry } from "../../../../../features/integrations/lib/core/registry";

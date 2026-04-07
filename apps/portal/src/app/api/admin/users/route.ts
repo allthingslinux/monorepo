@@ -1,3 +1,6 @@
+import { and, desc, eq, ilike, ne, or } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
 import { handleAPIError, requireAdminOrStaff } from "@atl/api/utils";
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
@@ -6,8 +9,6 @@ import { mailcowAccount } from "@atl/db/schema/mailcow";
 import { mediawikiAccount } from "@atl/db/schema/mediawiki";
 import { xmppAccount } from "@atl/db/schema/xmpp";
 import { UserSearchSchema } from "@atl/schemas/user";
-import { and, desc, eq, ilike, ne, or } from "drizzle-orm";
-import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 

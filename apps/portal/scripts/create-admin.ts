@@ -2,8 +2,9 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import "dotenv/config";
-import { user } from "@atl/db/schema/auth";
 import { eq } from "drizzle-orm";
+
+import { user } from "@atl/db/schema/auth";
 
 import { auth } from "./lib/auth-for-script";
 import { db } from "./lib/db";

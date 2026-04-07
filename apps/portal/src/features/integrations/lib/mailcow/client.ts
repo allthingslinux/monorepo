@@ -1,6 +1,7 @@
 import "server-only";
-import { log } from "@atl/observability/utils";
 import { startSpan } from "@sentry/nextjs";
+
+import { log } from "@atl/observability/utils";
 
 import { mailcowConfig, validateMailcowConfig } from "./config";
 import type {

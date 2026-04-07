@@ -8,8 +8,6 @@
  * Validates: Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6
  */
 
-import type * as PortalApiUtils from "@atl/api/utils";
-import { db } from "@atl/db/client";
 import {
   assert as fcAssert,
   asyncProperty,
@@ -22,6 +20,8 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "@/app/api/bridge/identity/route";
+import type * as PortalApiUtils from "@atl/api/utils";
+import { db } from "@atl/db/client";
 
 // Mock env to avoid full key chain; route needs BRIDGE_SERVICE_TOKEN (optional)
 vi.mock("@/env", () => ({
@@ -49,8 +49,7 @@ vi.mock("@/features/integrations/lib/mailcow/keys", () => ({
 
 // Mock auth — requireAuth always passes
 vi.mock("@atl/api/utils", async () => {
-  const actual =
-    await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
+  const actual = await vi.importActual<typeof PortalApiUtils>("@atl/api/utils");
   return {
     ...actual,
     handleAPIError: vi.fn(actual.handleAPIError),

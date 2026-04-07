@@ -8,7 +8,6 @@
  * **Validates: Requirement 5.3**
  */
 
-import { db } from "@atl/db/client";
 import {
   assert as fcAssert,
   asyncProperty,
@@ -22,6 +21,7 @@ import {
   registerNick,
 } from "@/features/integrations/lib/irc/atheme/client";
 import { IrcIntegration } from "@/features/integrations/lib/irc/implementation";
+import { db } from "@atl/db/client";
 
 // Namespace-compatible aliases for fast-check usage
 const fc = { assert: fcAssert, asyncProperty, constantFrom, string: fcString };

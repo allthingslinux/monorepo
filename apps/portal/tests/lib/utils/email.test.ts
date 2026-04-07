@@ -1,5 +1,6 @@
-import { sendEmail } from "@atl/utils/email";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { sendEmail } from "@atl/utils/email";
 
 describe("sendEmail", () => {
   afterEach(() => {

@@ -1,6 +1,7 @@
-import { keys } from "@atl/observability/keys";
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
+
+import { keys } from "@atl/observability/keys";
 
 /**
  * Add observability configuration to Next.js config

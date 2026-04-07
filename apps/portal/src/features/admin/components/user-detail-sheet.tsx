@@ -1,10 +1,8 @@
 "use client";
 
-import type { AdminUserDetailResponse } from "@atl/api/types";
-import { formatDate } from "@atl/utils/date";
-
 import { useUser } from "@/features/admin/hooks/use-admin";
 import { integrationStatusLabels } from "@/features/integrations/lib/core/constants";
+import type { AdminUserDetailResponse } from "@atl/api/types";
 import { Badge } from "@atl/ui/components/badge";
 import { Separator } from "@atl/ui/components/separator";
 import {
@@ -14,6 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@atl/ui/components/sheet";
+import { formatDate } from "@atl/utils/date";
 
 interface UserDetailSheetProps {
   onOpenChange: (open: boolean) => void;

@@ -1,3 +1,6 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
 import {
   handleAPIError,
   parseRouteId,
@@ -6,8 +9,6 @@ import {
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
 import { oauthClient } from "@atl/db/schema/oauth";
-import { eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
 
 // With cacheComponents, route handlers are dynamic by default.
 

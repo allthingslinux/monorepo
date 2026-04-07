@@ -4,9 +4,10 @@
  * Only includes what signUpEmail needs: database adapter, basePath, baseURL, secret.
  */
 import "dotenv/config";
-import { schema } from "@atl/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+
+import { schema } from "@atl/db/schema";
 
 import { db } from "./db";
 

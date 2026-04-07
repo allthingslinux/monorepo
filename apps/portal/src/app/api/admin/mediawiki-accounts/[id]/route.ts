@@ -1,3 +1,7 @@
+import { and, eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+
+import { mediawikiIntegration } from "@/features/integrations/lib/mediawiki/implementation";
 import {
   APIError,
   handleAPIError,
@@ -7,10 +11,6 @@ import {
 import { db } from "@atl/db/client";
 import { user } from "@atl/db/schema/auth";
 import { mediawikiAccount } from "@atl/db/schema/mediawiki";
-import { and, eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-
-import { mediawikiIntegration } from "@/features/integrations/lib/mediawiki/implementation";
 
 export async function GET(
   request: NextRequest,
