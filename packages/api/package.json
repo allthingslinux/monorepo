@@ -20,7 +20,7 @@
     "@atl/observability": "workspace:*",
     "@atl/types": "workspace:*",
     "@atl/utils": "workspace:*",
-    "@tanstack/react-query": "^5.95.2",
+    "@tanstack/react-query": "catalog:",
     "drizzle-orm": "catalog:",
     "zod": "catalog:",
     "zod-validation-error": "catalog:"

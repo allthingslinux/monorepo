@@ -11,7 +11,7 @@
     "broken-links": "mint broken-links"
   },
   "devDependencies": {
-    "mint": "^4.2.447",
+    "mint": "catalog:",
     "typescript": "catalog:"
   }
 }

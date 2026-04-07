@@ -17,7 +17,7 @@
   "dependencies": {
     "@atl/types": "workspace:*",
     "next": "catalog:",
-    "schema-dts": "^2.0.0"
+    "schema-dts": "catalog:"
   },
   "devDependencies": {
     "@types/lodash": "catalog:",
