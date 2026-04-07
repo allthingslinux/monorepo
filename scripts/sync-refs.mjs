@@ -189,10 +189,6 @@ for (const dir of packageDirs) {
 
   tsconfig.compilerOptions ??= {};
 
-  if (!isApp) {
-    tsconfig.compilerOptions["outDir"] = "dist";
-  }
-
   if (Object.keys(tsconfig.compilerOptions).length === 0) {
     delete tsconfig.compilerOptions;
   }

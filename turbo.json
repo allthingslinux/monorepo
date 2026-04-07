@@ -46,8 +46,7 @@
     "clean": { "cache": false },
     "typegen": {
       "inputs": ["src/app/**"],
-      "outputs": [".next/types/**"],
-      "cache": false
+      "outputs": [".next/types/**"]
     },
 
     "//#check": {},

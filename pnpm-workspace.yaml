@@ -1,9 +1,5 @@
 packages:
-  - apps/web
-  - apps/chat-web
-  - apps/docs
-  - apps/portal
-  - apps/tools-web
+  - apps/*
   - packages/*
 
 catalog:
