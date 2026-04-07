@@ -6,7 +6,7 @@
   "editor.linkedEditing": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
-  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.enabled": false,
   "editor.inlayHints.enabled": "onUnlessPressed",
   "editor.suggest.preview": true,
   "editor.suggest.localityBonus": true,
