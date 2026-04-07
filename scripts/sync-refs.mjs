@@ -47,7 +47,9 @@ function findPackages(dir, results = []) {
     const full = join(dir, entry);
     try {
       const stat = lstatSync(full);
-      if (stat.isSymbolicLink()) {continue;}
+      if (stat.isSymbolicLink()) {
+        continue;
+      }
       if (stat.isDirectory()) {
         findPackages(full, results);
       } else if (entry === "package.json") {
@@ -131,7 +133,9 @@ for (const dir of packageDirs) {
   try {
     tsconfig = JSON.parse(readFileSync(tsconfigPath, "utf-8"));
   } catch {
-    if (dir.endsWith("tsconfig")) {continue;}
+    if (dir.endsWith("tsconfig")) {
+      continue;
+    }
     tsconfig = {};
   }
 
