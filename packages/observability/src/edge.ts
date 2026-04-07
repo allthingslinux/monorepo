@@ -144,7 +144,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     // Integrations for console logging and error data
     integrations,
 
-    release: env.SENTRY_RELEASE || "unknown",
+    release: env.SENTRY_RELEASE ?? "unknown",
 
     // Lower sample rate in production to reduce costs
     // In production: 10% of transactions

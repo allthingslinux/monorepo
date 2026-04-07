@@ -144,9 +144,9 @@ const processApiError = (
   exception: SentryHint["originalException"]
 ): boolean => {
   if (exception?.name === "ApiError" || exception?.statusCode) {
-    const endpoint = exception.endpoint || exception.url || "unknown";
-    const method = exception.method || "unknown";
-    const statusCode = exception.statusCode || exception.status || 0;
+    const endpoint = exception.endpoint ?? exception.url ?? "unknown";
+    const method = exception.method ?? "unknown";
+    const statusCode = exception.statusCode ?? exception.status ?? 0;
     event.fingerprint = ["api-error", endpoint, method, String(statusCode)];
     return true;
   }
@@ -164,8 +164,8 @@ const processDatabaseError = (
     exception?.name?.includes("Database") ||
     exception?.code?.startsWith("P")
   ) {
-    const operation = exception.operation || "unknown";
-    const table = exception.table || exception.model || "unknown";
+    const operation = exception.operation ?? "unknown";
+    const table = exception.table ?? exception.model ?? "unknown";
     event.fingerprint = ["database-error", operation, table];
     return true;
   }
@@ -180,8 +180,8 @@ const processAuthError = (
   exception: SentryHint["originalException"]
 ): boolean => {
   if (exception?.name?.includes("Auth") || exception?.provider) {
-    const provider = exception.provider || "unknown";
-    const errorType = exception.type || exception.code || "unknown";
+    const provider = exception.provider ?? "unknown";
+    const errorType = exception.type ?? exception.code ?? "unknown";
     event.fingerprint = ["auth-error", provider, errorType];
     return true;
   }
@@ -196,8 +196,8 @@ const processValidationError = (
   exception: SentryHint["originalException"]
 ): boolean => {
   if (exception?.name?.includes("Validation") || exception?.field) {
-    const field = exception.field || exception.path || "unknown";
-    const rule = exception.rule || exception.constraint || "unknown";
+    const field = exception.field ?? exception.path ?? "unknown";
+    const rule = exception.rule ?? exception.constraint ?? "unknown";
     event.fingerprint = ["validation-error", field, rule];
     return true;
   }
@@ -416,8 +416,8 @@ const createTracesSampler =
         return Math.random() < fallbackRate ? 1 : 0;
       },
       name:
-        samplingContext?.transactionContext?.name ||
-        samplingContext?.name ||
+        samplingContext?.transactionContext?.name ??
+        samplingContext?.name ??
         "",
       parentSampleRate: samplingContext?.parentSampleRate,
       parentSampled: samplingContext?.parentSampled,
@@ -594,7 +594,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     // Browser profiling sample rate
     profileSessionSampleRate: isProduction ? 0.1 : 1,
     // Use NEXT_PUBLIC_SENTRY_RELEASE for client-side, fallback to unknown
-    release: env.NEXT_PUBLIC_SENTRY_RELEASE || "unknown",
+    release: env.NEXT_PUBLIC_SENTRY_RELEASE ?? "unknown",
     // Configure trace propagation for distributed tracing
     tracePropagationTargets: [
       "localhost",

@@ -63,14 +63,14 @@ export interface WideEvent extends Record<string, unknown> {
 export function createWideEvent(request: NextRequest): WideEvent {
   const url = new URL(request.url);
   const requestId =
-    request.headers.get("x-request-id") ||
-    request.headers.get("x-correlation-id") ||
+    request.headers.get("x-request-id") ??
+    request.headers.get("x-correlation-id") ??
     randomUUID();
 
   return {
     ip:
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      request.headers.get("x-real-ip") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
       undefined,
     method: request.method,
     path: request.url,
@@ -78,7 +78,7 @@ export function createWideEvent(request: NextRequest): WideEvent {
     request_id: requestId,
     search: url.search || undefined,
     timestamp: new Date().toISOString(),
-    user_agent: request.headers.get("user-agent") || undefined,
+    user_agent: request.headers.get("user-agent") ?? undefined,
   };
 }
 

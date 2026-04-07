@@ -122,9 +122,9 @@ export const setDeploymentContext = (): void => {
       buildId: process.env.BUILD_ID,
       deployTime: process.env.DEPLOY_TIME,
       gitHash: process.env.GIT_HASH,
-      region: process.env.VERCEL_REGION || process.env.AWS_REGION,
+      region: process.env.VERCEL_REGION ?? process.env.AWS_REGION,
     });
-    const region = process.env.VERCEL_REGION || process.env.AWS_REGION;
+    const region = process.env.VERCEL_REGION ?? process.env.AWS_REGION;
     if (region) {
       setTag("deployment.region", region);
     }
@@ -367,7 +367,7 @@ export const instrumentCacheSet = async <T>(
       setter
     );
   } catch {
-    return await setter();
+    return setter();
   }
 };
 
@@ -398,7 +398,7 @@ export const instrumentCacheGet = async <T>(
       }
     );
   } catch {
-    return await getter();
+    return getter();
   }
 };
 
@@ -494,11 +494,11 @@ export const instrumentQueueProducer = async <T>(
       },
       async () => {
         const traceHeaders = getTraceData();
-        return await producer(traceHeaders);
+        return producer(traceHeaders);
       }
     );
   } catch {
-    return await producer({});
+    return producer({});
   }
 };
 
@@ -531,7 +531,7 @@ export const instrumentQueueConsumer = async <T>(
                   name: "queue_consumer",
                   op: "queue.process",
                 },
-                () => {
+                async () => {
                   consumerExecuted = true;
                   return consumer();
                 }
@@ -547,7 +547,7 @@ export const instrumentQueueConsumer = async <T>(
     );
   } catch (error) {
     if (!consumerExecuted) {
-      return await consumer();
+      return consumer();
     }
     throw error;
   }
@@ -660,7 +660,7 @@ export const instrumentHttpRequest = async <T>(
       }
     );
   } catch {
-    return await requester();
+    return requester();
   }
 };
 
@@ -668,16 +668,16 @@ export const instrumentHttpRequest = async <T>(
  * HTTP client with automatic Sentry instrumentation
  */
 export const httpClient = {
-  delete: <T>(url: string, fetcher: () => Promise<T>) =>
+  delete: async <T>(url: string, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("DELETE", url), fetcher),
 
-  get: <T>(url: string, fetcher: () => Promise<T>) =>
+  get: async <T>(url: string, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("GET", url), fetcher),
 
-  post: <T>(url: string, body: unknown, fetcher: () => Promise<T>) =>
+  post: async <T>(url: string, body: unknown, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("POST", url, body), fetcher),
 
-  put: <T>(url: string, body: unknown, fetcher: () => Promise<T>) =>
+  put: async <T>(url: string, body: unknown, fetcher: () => Promise<T>) =>
     instrumentHttpRequest(buildHttpOptions("PUT", url, body), fetcher),
 };
 
@@ -945,10 +945,11 @@ export const portalMetrics = {
   authEvent: (
     event: "login" | "logout" | "signup" | "failed_login",
     provider?: string
-  ) =>
+  ) => {
     incrementCounter("auth.event", 1, {
       attributes: { event, ...(provider && { provider }) },
-    }),
+    });
+  },
 
   businessEvent: (
     event: string,
@@ -965,10 +966,11 @@ export const portalMetrics = {
     }
   },
 
-  cacheOperation: (operation: "hit" | "miss" | "set", key: string) =>
+  cacheOperation: (operation: "hit" | "miss" | "set", key: string) => {
     incrementCounter(`cache.${operation}`, 1, {
       attributes: { cache_key: key },
-    }),
+    });
+  },
 
   dbQuery: (
     table: string,
@@ -990,13 +992,15 @@ export const portalMetrics = {
     }
   },
 
-  systemMetric: (metric: string, value: number, unit?: string) =>
-    setGauge(`system.${metric}`, value, { unit }),
+  systemMetric: (metric: string, value: number, unit?: string) => {
+    setGauge(`system.${metric}`, value, { unit });
+  },
 
-  userAction: (action: string, userId?: string) =>
+  userAction: (action: string, userId?: string) => {
     incrementCounter("user.action", 1, {
       attributes: { action, ...(userId && { user_id: userId }) },
-    }),
+    });
+  },
 };
 
 // ============================================================================
@@ -1054,9 +1058,19 @@ export const captureExceptionWithLevel = (
  * Common level patterns for Portal
  */
 export const levelPatterns = {
-  debug: (message: string) => captureMessageWithLevel(message, "debug"),
-  error: (error: unknown) => captureExceptionWithLevel(error, "error"),
-  fatal: (error: unknown) => captureExceptionWithLevel(error, "fatal"),
-  info: (message: string) => captureMessageWithLevel(message, "info"),
-  warning: (message: string) => captureMessageWithLevel(message, "warning"),
+  debug: (message: string) => {
+    captureMessageWithLevel(message, "debug");
+  },
+  error: (error: unknown) => {
+    captureExceptionWithLevel(error, "error");
+  },
+  fatal: (error: unknown) => {
+    captureExceptionWithLevel(error, "fatal");
+  },
+  info: (message: string) => {
+    captureMessageWithLevel(message, "info");
+  },
+  warning: (message: string) => {
+    captureMessageWithLevel(message, "warning");
+  },
 };

@@ -214,7 +214,7 @@ export const initializeSentry = (): ReturnType<typeof init> => {
     // Lower in production to balance performance monitoring with cost
     profileSessionSampleRate: isProduction ? 0.1 : 1,
 
-    release: env.SENTRY_RELEASE || "unknown",
+    release: env.SENTRY_RELEASE ?? "unknown",
 
     // Lower sample rate in production to reduce costs
     // In production: 10% of transactions (90% cost reduction)
