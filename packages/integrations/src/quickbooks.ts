@@ -263,7 +263,7 @@ async function getDiscoveryDocument(
       throw new Error(`Discovery document fetch failed: ${response.status}`);
     }
 
-    const doc = await response.json();
+    const doc = (await response.json()) as DiscoveryDocument;
     discoveryCache[cacheKey] = doc;
     return doc;
   } catch (error) {
@@ -462,7 +462,7 @@ export async function getAccessToken(
       return null;
     }
 
-    const tokens = await response.json();
+    const tokens = (await response.json()) as QuickBooksTokenResponse;
 
     // Cache the token (subtract 5 minutes from expiry for safety margin)
     const expiresInMs = (tokens.expires_in - 300) * 1000; // Convert to ms, subtract 5 min
@@ -692,8 +692,8 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
       return [];
     }
 
-    const data = await response.json();
-    const items = data?.QueryResponse?.[entityType] ?? [];
+    const data = (await response.json()) as QuickBooksQueryResponse<T>;
+    const items = (data?.QueryResponse?.[entityType] ?? []) as T[];
     return items.map(mapEntity);
   } catch (error) {
     clearTimeout(timeoutId);
@@ -1477,7 +1477,7 @@ export async function exchangeAuthorizationCode(
       return null;
     }
 
-    return await response.json();
+    return (await response.json()) as QuickBooksTokenResponse;
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === "AbortError") {
@@ -1494,13 +1494,25 @@ export async function exchangeAuthorizationCode(
  */
 export { saveTokens };
 
+interface QuickBooksReportRow {
+  ColData?: { value?: string }[];
+  Rows?: { Row?: QuickBooksReportRow[] };
+  Summary?: { ColData?: { value?: string }[] };
+  group?: string;
+  type?: string;
+}
+
+interface QuickBooksReport {
+  Rows?: { Row?: QuickBooksReportRow[] };
+}
+
 interface ProfitLossTotals {
   expenses: number;
   income: number;
   netIncome: number;
 }
 
-function firstNumericColValue(colData: any[]): number {
+function firstNumericColValue(colData: { value?: string }[]): number {
   for (const col of colData) {
     const parsed = Number.parseFloat(col?.value ?? "0");
     if (!Number.isNaN(parsed) && col?.value && col.value !== "") {
@@ -1511,7 +1523,7 @@ function firstNumericColValue(colData: any[]): number {
 }
 
 function applyProfitLossSectionSummary(
-  row: any,
+  row: QuickBooksReportRow,
   totals: ProfitLossTotals
 ): void {
   if (!row.Summary?.ColData) {
@@ -1529,7 +1541,10 @@ function applyProfitLossSectionSummary(
   }
 }
 
-function applyTotalExpensesSubRow(row: any, totals: ProfitLossTotals): void {
+function applyTotalExpensesSubRow(
+  row: QuickBooksReportRow,
+  totals: ProfitLossTotals
+): void {
   if (!row.Rows?.Row) {
     return;
   }
@@ -1551,7 +1566,10 @@ function applyTotalExpensesSubRow(row: any, totals: ProfitLossTotals): void {
   }
 }
 
-function processProfitLossReportRow(row: any, totals: ProfitLossTotals): void {
+function processProfitLossReportRow(
+  row: QuickBooksReportRow,
+  totals: ProfitLossTotals
+): void {
   if (row.type === "Section" && row.group) {
     applyProfitLossSectionSummary(row, totals);
     applyTotalExpensesSubRow(row, totals);
@@ -1614,7 +1632,7 @@ export async function fetchQuickBooksFinancialSummary(
       return null;
     }
 
-    const report = (await response.json()) as any;
+    const report = (await response.json()) as QuickBooksReport;
     const rows = report.Rows?.Row ?? [];
 
     const totals: ProfitLossTotals = {
