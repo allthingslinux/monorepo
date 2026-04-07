@@ -499,6 +499,9 @@ importers:
       '@atl/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@atl/discord':
+        specifier: workspace:*
+        version: link:../../packages/discord
       '@atl/email':
         specifier: workspace:*
         version: link:../../packages/email
@@ -1172,6 +1175,22 @@ importers:
       drizzle-kit:
         specifier: 'catalog:'
         version: 1.0.0-beta.15-859cf75
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.2
+
+  packages/discord:
+    dependencies:
+      discord-api-types:
+        specifier: 'catalog:'
+        version: 0.38.42
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2

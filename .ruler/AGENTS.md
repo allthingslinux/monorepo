@@ -25,7 +25,8 @@
   - `config` — shared static config (community, events, donate)
   - `seo` — metadata, JSON-LD, robots, sitemap helpers
   - `utils` — shared utility functions
-  - `integrations` — third-party API clients (Discord, GitHub, Fibery)
+  - `discord` — Discord REST API client (guild, members, channels, roles)
+  - `integrations` — third-party API clients (GitHub, Fibery, webhooks)
   - `fibery` — Fibery SDK (portal admin, career applications)
   - `observability` — Sentry / OpenTelemetry helpers
   - `tools-manifest` — tool definitions consumed by tools-web

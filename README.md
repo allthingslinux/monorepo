@@ -25,7 +25,8 @@ packages/
 ├── config         @atl/config — shared static config (community, events, donate)
 ├── seo            @atl/seo — metadata, JSON-LD, robots, sitemap helpers
 ├── utils          @atl/utils — shared utility functions (date, format, error)
-├── integrations   @atl/integrations — third-party API clients (Discord, GitHub, Fibery)
+├── discord        @atl/discord — Discord REST API client (guild, members, channels, roles)
+├── integrations   @atl/integrations — third-party API clients (GitHub, Fibery, webhooks)
 ├── fibery         @atl/fibery — Fibery SDK (portal admin, career applications)
 ├── observability  @atl/observability — Sentry / OpenTelemetry helpers
 ├── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools-web

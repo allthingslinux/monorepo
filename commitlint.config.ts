@@ -38,6 +38,7 @@ const config: UserConfig = {
         "tools-web",
         // Packages
         "ui",
+        "discord",
         "fibery",
         "tools-manifest",
         // Services

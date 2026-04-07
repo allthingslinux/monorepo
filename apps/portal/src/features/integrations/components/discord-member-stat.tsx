@@ -3,10 +3,11 @@ import { Suspense } from "react";
 
 import { env } from "@/env";
 import { discord } from "@/features/integrations/lib/discord/client";
+import { toSnowflake } from "@atl/discord";
 import { Skeleton } from "@atl/ui/components/skeleton";
 
 async function DiscordMemberStatContent() {
-  if (!env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
+  if (!discord || !env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
     return (
       <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
@@ -27,35 +28,12 @@ async function DiscordMemberStatContent() {
     );
   }
 
-  try {
-    const guild = await discord.getGuild(
-      env.NEXT_PUBLIC_DISCORD_GUILD_ID,
-      true
-    );
-    const total = guild.approximate_member_count ?? 0;
-    const online = guild.approximate_presence_count ?? 0;
+  const result = await discord.getGuild(
+    toSnowflake(env.NEXT_PUBLIC_DISCORD_GUILD_ID),
+    true
+  );
 
-    return (
-      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary/10 flex size-9 shrink-0 items-center justify-center rounded-lg">
-            <Users className="text-primary size-4" />
-          </div>
-          <span className="text-muted-foreground text-sm font-medium">
-            Discord Members
-          </span>
-        </div>
-        <div className="mt-3">
-          <div className="text-foreground text-2xl font-bold tabular-nums">
-            {total.toLocaleString()}
-          </div>
-          <p className="text-muted-foreground mt-0.5 text-xs">
-            {online.toLocaleString()} online
-          </p>
-        </div>
-      </div>
-    );
-  } catch {
+  if (!result.ok) {
     return (
       <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
         <div className="flex items-center gap-2">
@@ -75,6 +53,31 @@ async function DiscordMemberStatContent() {
       </div>
     );
   }
+
+  const guild = result.value;
+  const total = guild.approximate_member_count ?? 0;
+  const online = guild.approximate_presence_count ?? 0;
+
+  return (
+    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border p-4">
+      <div className="flex items-center gap-2">
+        <div className="bg-primary/10 flex size-9 shrink-0 items-center justify-center rounded-lg">
+          <Users className="text-primary size-4" />
+        </div>
+        <span className="text-muted-foreground text-sm font-medium">
+          Discord Members
+        </span>
+      </div>
+      <div className="mt-3">
+        <div className="text-foreground text-2xl font-bold tabular-nums">
+          {total.toLocaleString()}
+        </div>
+        <p className="text-muted-foreground mt-0.5 text-xs">
+          {online.toLocaleString()} online
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export function DiscordMemberStat() {

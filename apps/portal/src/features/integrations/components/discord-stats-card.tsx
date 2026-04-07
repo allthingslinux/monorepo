@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { env } from "@/env";
 import { discord } from "@/features/integrations/lib/discord/client";
+import { toSnowflake } from "@atl/discord";
 import {
   Card,
   CardContent,
@@ -12,7 +13,7 @@ import {
 import { Skeleton } from "@atl/ui/components/skeleton";
 
 async function DiscordStatsCardContent() {
-  if (!env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
+  if (!discord || !env.NEXT_PUBLIC_DISCORD_GUILD_ID) {
     return (
       <CardContent>
         <div className="text-muted-foreground text-sm">
@@ -22,40 +23,12 @@ async function DiscordStatsCardContent() {
     );
   }
 
-  try {
-    const guild = await discord.getGuild(
-      env.NEXT_PUBLIC_DISCORD_GUILD_ID,
-      true
-    );
+  const result = await discord.getGuild(
+    toSnowflake(env.NEXT_PUBLIC_DISCORD_GUILD_ID),
+    true
+  );
 
-    return (
-      <CardContent>
-        <div className="flex items-center gap-4">
-          {guild.icon && (
-            <Image
-              alt={`${guild.name} icon`}
-              className="h-12 w-12 rounded-full"
-              height={48}
-              src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-              width={48}
-            />
-          )}
-          <div>
-            <div className="text-2xl font-bold">
-              {guild.approximate_presence_count || 0}
-            </div>
-            <p className="text-muted-foreground text-xs">Members Online</p>
-          </div>
-          <div className="ml-auto">
-            <div className="text-muted-foreground/50 text-2xl font-bold">
-              {guild.approximate_member_count || 0}
-            </div>
-            <p className="text-muted-foreground text-right text-xs">Total</p>
-          </div>
-        </div>
-      </CardContent>
-    );
-  } catch {
+  if (!result.ok) {
     return (
       <CardContent>
         <div className="text-destructive text-sm">
@@ -64,6 +37,36 @@ async function DiscordStatsCardContent() {
       </CardContent>
     );
   }
+
+  const guild = result.value;
+
+  return (
+    <CardContent>
+      <div className="flex items-center gap-4">
+        {guild.icon && (
+          <Image
+            alt={`${guild.name} icon`}
+            className="h-12 w-12 rounded-full"
+            height={48}
+            src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
+            width={48}
+          />
+        )}
+        <div>
+          <div className="text-2xl font-bold">
+            {guild.approximate_presence_count ?? 0}
+          </div>
+          <p className="text-muted-foreground text-xs">Members Online</p>
+        </div>
+        <div className="ml-auto">
+          <div className="text-muted-foreground/50 text-2xl font-bold">
+            {guild.approximate_member_count ?? 0}
+          </div>
+          <p className="text-muted-foreground text-right text-xs">Total</p>
+        </div>
+      </div>
+    </CardContent>
+  );
 }
 
 export function DiscordStatsCard() {

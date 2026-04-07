@@ -43,6 +43,7 @@
     "@atl/auth": "workspace:*",
     "@atl/config": "workspace:*",
     "@atl/db": "workspace:*",
+    "@atl/discord": "workspace:*",
     "@atl/email": "workspace:*",
     "@atl/observability": "workspace:*",
     "@atl/schemas": "workspace:*",
