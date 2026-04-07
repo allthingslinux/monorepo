@@ -1006,7 +1006,7 @@ function updateLocalEnvFiles(tokens: {
     // Update .env.local (for Next.js dev on port 3000)
     if (existsSync(envLocalPath)) {
       try {
-        const content = readFileSync(envLocalPath, "utf8");
+        const content = readFileSync(envLocalPath, "utf-8");
         const lines = content.split("\n");
         const updatedLines = lines.map((line) => {
           if (line.startsWith("QUICKBOOKS_REFRESH_TOKEN=")) {
@@ -1033,7 +1033,7 @@ function updateLocalEnvFiles(tokens: {
           updatedLines.push(`QUICKBOOKS_REALM_ID=${tokens.realmId}`);
         }
 
-        writeFileSync(envLocalPath, updatedLines.join("\n"), "utf8");
+        writeFileSync(envLocalPath, updatedLines.join("\n"), "utf-8");
         updatedAny = true;
         console.log("[QuickBooks] ✅ Updated .env.local");
       } catch (error) {
@@ -1044,7 +1044,7 @@ function updateLocalEnvFiles(tokens: {
     // Update .dev.vars (for Wrangler dev on port 8787)
     if (existsSync(devVarsPath)) {
       try {
-        const content = readFileSync(devVarsPath, "utf8");
+        const content = readFileSync(devVarsPath, "utf-8");
         const lines = content.split("\n");
         const updatedLines = lines.map((line) => {
           if (line.startsWith("QUICKBOOKS_REFRESH_TOKEN=")) {
@@ -1071,7 +1071,7 @@ function updateLocalEnvFiles(tokens: {
           updatedLines.push(`QUICKBOOKS_REALM_ID=${tokens.realmId}`);
         }
 
-        writeFileSync(devVarsPath, updatedLines.join("\n"), "utf8");
+        writeFileSync(devVarsPath, updatedLines.join("\n"), "utf-8");
         updatedAny = true;
         console.log("[QuickBooks] ✅ Updated .dev.vars");
       } catch (error) {

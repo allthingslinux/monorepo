@@ -48,7 +48,7 @@ let lastUpdated;
 
 try {
   // Read and process the README.md content
-  readmeContent = processMarkdownContent(fs.readFileSync(readmePath, "utf8"));
+  readmeContent = processMarkdownContent(fs.readFileSync(readmePath, "utf-8"));
 
   // Get the last updated date
   const gitCommand = `git -C ${path.join(

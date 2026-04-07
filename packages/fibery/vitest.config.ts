@@ -6,7 +6,7 @@ import { defineConfig } from "vitest/config";
 function loadEnv(dir: string): Record<string, string> {
   const env: Record<string, string> = {};
   try {
-    const contents = readFileSync(resolve(dir, ".env"), "utf8");
+    const contents = readFileSync(resolve(dir, ".env"), "utf-8");
     for (const line of contents.split("\n")) {
       const eqIdx = line.indexOf("=");
       if (eqIdx === -1) {

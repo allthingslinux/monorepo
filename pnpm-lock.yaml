@@ -108,8 +108,8 @@ importers:
         specifier: 'catalog:'
         version: 6.0.2
       ultracite:
-        specifier: 7.3.2
-        version: 7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
+        specifier: 7.4.3
+        version: 7.4.3(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
 
   apps/chat-web:
     dependencies:
@@ -449,8 +449,8 @@ importers:
         specifier: 'catalog:'
         version: 6.0.2
       ultracite:
-        specifier: 7.3.2
-        version: 7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
+        specifier: 7.4.3
+        version: 7.4.3(oxlint@1.56.0(oxlint-tsgolint@0.17.2))
       vitest:
         specifier: ^4.1.1
         version: 4.1.1(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.14(@types/node@25.5.0)(typescript@6.0.2))(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
@@ -14382,8 +14382,8 @@ packages:
     resolution: {integrity: sha512-fIRiVTJNcSRmXKPZtGzFQv9WRrZ3M9eoptl/teFJvjOzmpU+/K/JH6HZ8deBfb5vMEpicJcLn7JmvdknlMq7Zg==}
     hasBin: true
 
-  ultracite@7.3.2:
-    resolution: {integrity: sha512-JV2TdeBDc1aaj3wFzXLjRcBlUZkXBdShMLAjHh9YLK0rXPSK42CzHqfWXUfibFUAUiUGNwoOFnIpS45EaJAcdg==}
+  ultracite@7.4.3:
+    resolution: {integrity: sha512-HMnd21OpSSwi/YtNqXUP/798dlTQ2GlXh0wR+8rIVY9uCTTQiOiRthdLlRaAo6IqUT0l29hiRl+ShsO0r81LtQ==}
     hasBin: true
     peerDependencies:
       oxlint: ^1.0.0
@@ -31024,10 +31024,11 @@ snapshots:
 
   ulid@2.4.0: {}
 
-  ultracite@7.3.2(oxlint@1.56.0(oxlint-tsgolint@0.17.2)):
+  ultracite@7.4.3(oxlint@1.56.0(oxlint-tsgolint@0.17.2)):
     dependencies:
       '@clack/prompts': 1.1.0
       commander: 14.0.3
+      cross-spawn: 7.0.6
       deepmerge: 4.3.1
       glob: 13.0.6
       jsonc-parser: 3.3.1

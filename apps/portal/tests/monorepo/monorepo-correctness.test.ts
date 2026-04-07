@@ -48,7 +48,7 @@ function getLibraryPackageDirs(): string[] {
 /** Read and parse a package's package.json */
 function readPackageJson(pkgDir: string): Record<string, unknown> {
   const filePath = path.join(PACKAGES_DIR, pkgDir, "package.json");
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
 /** Recursively collect all .ts/.tsx files under a directory */
@@ -254,7 +254,7 @@ describe("Property 2: No stale imports remain", () => {
     const violations: { file: string; line: string; pattern: string }[] = [];
 
     for (const file of sourceFiles) {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, "utf-8");
       const lines = content.split("\n");
 
       for (const line of lines) {
@@ -286,7 +286,7 @@ describe("Property 2: No stale imports remain", () => {
 
     assert(
       property(constantFrom(...sourceFiles), (file) => {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         return STALE_PATTERNS.every((p) => !p.test(content));
       }),
       { numRuns: Math.min(sourceFiles.length, 100) }
@@ -347,7 +347,7 @@ describe("Property 3: Package boundary enforcement", () => {
     const violations: { pkg: string; file: string; line: string }[] = [];
 
     for (const { pkgDir, file } of files) {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, "utf-8");
       const lines = content.split("\n");
       for (const line of lines) {
         if (/(?:from|import)\s+["']@\//.test(line)) {
@@ -373,7 +373,7 @@ describe("Property 3: Package boundary enforcement", () => {
     const violations: { pkg: string; file: string; line: string }[] = [];
 
     for (const { pkgDir, file } of files) {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, "utf-8");
       const imports = extractImports(content);
       for (const imp of imports) {
         if (imp.startsWith("../") || imp.startsWith("../../")) {
@@ -406,7 +406,7 @@ describe("Property 3: Package boundary enforcement", () => {
 
     assert(
       property(constantFrom(...files), ({ pkgDir, file }) => {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         if (/(?:from|import)\s+["']@\//.test(content)) {
           return false;
         }
@@ -440,7 +440,7 @@ describe("Property 3: Package boundary enforcement", () => {
 describe("Property 8: Environment variable completeness", () => {
   /** Extract env var names from a keys.ts file's runtimeEnv block */
   function extractEnvVarsFromKeysFile(filePath: string): string[] {
-    const content = fs.readFileSync(filePath, "utf8");
+    const content = fs.readFileSync(filePath, "utf-8");
     const vars: string[] = [];
     const processEnvRegex = /process\.env\.([A-Z_][A-Z0-9_]*)/g;
     let match: RegExpExecArray | null;
@@ -467,7 +467,7 @@ describe("Property 8: Environment variable completeness", () => {
   /** Get all declared env vars from turbo.json (all task env + globalEnv) */
   function getTurboEnvVars(): { exact: Set<string>; wildcards: string[] } {
     const turboJson = JSON.parse(
-      fs.readFileSync(MONOREPO_TURBO_JSON_PATH, "utf8")
+      fs.readFileSync(MONOREPO_TURBO_JSON_PATH, "utf-8")
     );
     const exact = new Set<string>();
     const wildcards: string[] = [];
@@ -611,7 +611,7 @@ describe("Property 9: No direct process.env access in packages", () => {
           continue;
         }
 
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         const strippedContent = stripComments(content);
         const lines = strippedContent.split("\n");
         for (let i = 0; i < lines.length; i += 1) {
@@ -657,7 +657,7 @@ describe("Property 9: No direct process.env access in packages", () => {
 
     assert(
       property(constantFrom(...nonKeysFiles), (file) => {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         const stripped = stripComments(content);
         const lines = stripped.split("\n");
         return lines.every((line) => !hasRealProcessEnvAccess(line));
@@ -699,7 +699,7 @@ describe("Property 10: Import path correctness", () => {
     const violations: { file: string; importPath: string }[] = [];
 
     for (const file of sourceFiles) {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, "utf-8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
@@ -739,7 +739,7 @@ describe("Property 10: Import path correctness", () => {
 
     assert(
       property(constantFrom(...sourceFiles), (file) => {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         const imports = extractImports(content);
         for (const imp of imports) {
           const isPortal = imp.startsWith("@portal/");
@@ -787,7 +787,7 @@ describe("Property 11: App-internal alias preservation", () => {
     let foundAppInternalImports = false;
 
     for (const file of appFiles) {
-      const content = fs.readFileSync(file, "utf8");
+      const content = fs.readFileSync(file, "utf-8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
@@ -812,7 +812,7 @@ describe("Property 11: App-internal alias preservation", () => {
 
     assert(
       property(constantFrom(...appFiles), (file) => {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         const imports = extractImports(content);
         for (const imp of imports) {
           for (const pattern of APP_INTERNAL_PATTERNS) {
@@ -924,7 +924,7 @@ describe("Property 14: Package dependency completeness", () => {
       // dependencies since they resolve through the app's bundler
       if (PACKAGES_WITH_APP_IMPORTS.has(pkgDir)) {
         const appPkgPath = path.join(ROOT_DIR, "package.json");
-        const appPkg = JSON.parse(fs.readFileSync(appPkgPath, "utf8"));
+        const appPkg = JSON.parse(fs.readFileSync(appPkgPath, "utf-8"));
         for (const dep of Object.keys(
           (appPkg.dependencies ?? {}) as Record<string, string>
         )) {
@@ -942,7 +942,7 @@ describe("Property 14: Package dependency completeness", () => {
       const undeclared: { file: string; importPkg: string }[] = [];
 
       for (const file of files) {
-        const content = fs.readFileSync(file, "utf8");
+        const content = fs.readFileSync(file, "utf-8");
         // Use strict imports (ES only) to skip optional require() in try/catch
         const imports = extractStrictImports(content);
 

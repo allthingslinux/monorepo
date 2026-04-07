@@ -19,7 +19,7 @@ function getAppVersion(): string {
   }
   try {
     const pkg = JSON.parse(
-      readFileSync(join(process.cwd(), "package.json"), "utf8")
+      readFileSync(join(process.cwd(), "package.json"), "utf-8")
     );
     const ver = pkg.version as string | undefined;
     if (ver) {
@@ -30,7 +30,7 @@ function getAppVersion(): string {
   }
   try {
     const result = execSync("git describe --tags --always", {
-      encoding: "utf8",
+      encoding: "utf-8",
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
     if (result) {
@@ -135,7 +135,7 @@ let nextConfig: NextConfig = {
     // Try to get git commit hash directly
     try {
       const gitHash = execSync("git rev-parse --short HEAD", {
-        encoding: "utf8",
+        encoding: "utf-8",
         stdio: ["ignore", "pipe", "ignore"],
       }).trim();
 

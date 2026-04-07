@@ -8,6 +8,7 @@
  * behaviour matches `pnpm lint`.
  */
 
+/** @type {string[]} */
 const ULTRACITE_IGNORE_PREFIXES = [
   "apps/portal/references/",
   "apps/portal/drizzle/",
@@ -18,7 +19,11 @@ const ULTRACITE_IGNORE_PREFIXES = [
   "references/",
 ];
 
-/** Normalise a path and strip the cwd prefix to get a repo-relative path. */
+/**
+ * Normalise a path and strip the cwd prefix to get a repo-relative path.
+ * @param {string} file Absolute file path
+ * @returns {string} Repo-relative path
+ */
 function toRelative(file) {
   const normalised = file.replaceAll("\\", "/");
   const cwd = process.cwd().replaceAll("\\", "/");
@@ -27,13 +32,13 @@ function toRelative(file) {
     : normalised;
 }
 
-/** Return true if the file should be skipped by ultracite. */
+/**
+ * Return true if the file should be skipped by ultracite.
+ * @param {string} file Absolute file path
+ * @returns {boolean} Whether the file should be skipped
+ */
 function isUltraciteIgnored(file) {
   const rel = toRelative(file);
-  // Skip files with square brackets — ultracite/oxlint treats them as glob patterns
-  if (/[[\]]/.test(rel)) {
-    return true;
-  }
   return ULTRACITE_IGNORE_PREFIXES.some(
     (prefix) => rel.startsWith(prefix) || rel.includes(`/${prefix}`)
   );
@@ -41,13 +46,13 @@ function isUltraciteIgnored(file) {
 
 export default {
   // Python — ruff check + format (uv handles its own path resolution)
-  "*.py": (files) => {
+  "*.py": (/** @type {string[]} */ files) => {
     const args = files.map((f) => JSON.stringify(toRelative(f))).join(" ");
     return [`uv run ruff check --fix ${args}`, `uv run ruff format ${args}`];
   },
 
   // Shell — shellcheck + shfmt
-  "*.sh": (files) => {
+  "*.sh": (/** @type {string[]} */ files) => {
     const args = files.map((f) => JSON.stringify(toRelative(f))).join(" ");
     return [
       `shellcheck ${args}`,
@@ -60,33 +65,12 @@ export default {
 
   // JS/TS/JSON/CSS/MD — run ultracite fix (oxfmt + oxlint) on relative paths
   "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc,css,md,mdx,html,graphql,yaml,yml,toml}":
-    (files) => {
+    (/** @type {string[]} */ files) => {
       const filtered = files.filter((f) => !isUltraciteIgnored(f));
       if (filtered.length === 0) {
         return [];
       }
-
-      // Ultracite can't handle parentheses in paths (e.g. Next.js route groups).
-      // Split into files ultracite can handle vs ones needing direct oxfmt+oxlint.
-      const hasParens = (f) => /[()]/.test(toRelative(f));
-      const normal = filtered.filter((f) => !hasParens(f));
-      const parenFiles = filtered.filter((f) => hasParens(f));
-
-      const cmds = [];
-
-      if (normal.length > 0) {
-        const args = normal.map((f) => JSON.stringify(toRelative(f))).join(" ");
-        cmds.push(`pnpm exec ultracite fix ${args}`);
-      }
-
-      if (parenFiles.length > 0) {
-        const args = parenFiles
-          .map((f) => JSON.stringify(toRelative(f)))
-          .join(" ");
-        cmds.push(`pnpm exec oxfmt ${args}`);
-        cmds.push(`pnpm exec oxlint --fix ${args}`);
-      }
-
-      return cmds;
+      const args = filtered.map((f) => JSON.stringify(toRelative(f))).join(" ");
+      return `pnpm exec ultracite fix ${args}`;
     },
 };

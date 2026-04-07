@@ -128,7 +128,7 @@
     "tsx": "^4.21.0",
     "turbo": "^2.8.20",
     "typescript": "catalog:",
-    "ultracite": "7.3.2",
+    "ultracite": "7.4.3",
     "vitest": "^4.1.1"
   },
   "engines": {

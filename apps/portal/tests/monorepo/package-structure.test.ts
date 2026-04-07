@@ -26,7 +26,7 @@ function getPackageDirs(): string[] {
 /** Read and parse a package's package.json */
 function readPackageJson(pkgDir: string): Record<string, unknown> {
   const filePath = path.join(PACKAGES_DIR, pkgDir, "package.json");
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
 /** Non-config packages that should follow the standard library pattern */
@@ -121,7 +121,7 @@ describe("Property 6: TypeScript config inheritance (extends library.json)", () 
         `tsconfig.json should exist in packages/${pkgDir}`
       ).toBe(true);
 
-      const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
+      const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf-8"));
       expect(tsconfig.extends).toBe("@portal/typescript-config/library.json");
     }
   );
