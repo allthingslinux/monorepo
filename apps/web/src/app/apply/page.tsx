@@ -77,7 +77,7 @@ export default function ApplyPage() {
             <span className="text-muted-foreground text-sm font-medium">
               Filter
             </span>
-            <Select value={filter} onValueChange={setFilter}>
+            <Select value={filter} onValueChange={(v) => setFilter(v ?? "")}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="All Departments" />
               </SelectTrigger>
