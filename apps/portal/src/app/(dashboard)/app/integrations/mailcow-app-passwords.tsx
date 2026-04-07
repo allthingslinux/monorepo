@@ -98,8 +98,8 @@ export function AppPasswordManager({ accountId }: AppPasswordManagerProps) {
             </DialogHeader>
             {generatedPassword ? (
               <div className="space-y-4 py-4">
-                <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-4">
-                  <p className="mb-2 text-sm font-medium text-green-600 dark:text-green-400">
+                <div className="border-success/20 bg-success/10 rounded-lg border p-4">
+                  <p className="text-success mb-2 text-sm font-medium">
                     Password generated successfully!
                   </p>
                   <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export function AppPasswordManager({ accountId }: AppPasswordManagerProps) {
                 <div className="flex items-center gap-2">
                   {pw.active === 1 ? (
                     <Badge
-                      className="border-green-500/20 bg-green-500/10 text-green-600"
+                      className="border-success/20 bg-success/10 text-success"
                       variant="secondary"
                     >
                       Active

@@ -52,8 +52,8 @@ export function MailboxQuota({ accountId }: MailboxQuotaProps) {
     indicatorColor = "bg-destructive";
     textColor = "text-destructive font-bold";
   } else if (percentage > 80) {
-    indicatorColor = "bg-yellow-500";
-    textColor = "text-yellow-600 dark:text-yellow-400";
+    indicatorColor = "bg-warning";
+    textColor = "text-warning";
   }
 
   return (

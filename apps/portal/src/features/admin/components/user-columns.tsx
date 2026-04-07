@@ -91,7 +91,7 @@ function UserActionsCell({
         >
           <MoreHorizontal className="h-4 w-4" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="min-w-44">
           {mutations.onViewDetails && (
             <>
               <DropdownMenuItem

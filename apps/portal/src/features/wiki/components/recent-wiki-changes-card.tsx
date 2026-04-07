@@ -74,8 +74,8 @@ export async function RecentWikiChangesCard() {
                   <span
                     className={
                       item.diff > 0
-                        ? "ml-1 text-green-600 dark:text-green-500"
-                        : "ml-1 text-red-600 dark:text-red-500"
+                        ? "text-success ml-1"
+                        : "text-destructive ml-1"
                     }
                   >
                     · {formatDiff(item.diff)}

@@ -40,8 +40,8 @@ export function DonateCtaSections() {
       <Card className="border-2 transition-shadow hover:shadow-lg">
         <CardHeader>
           <div className="mb-2 flex items-center gap-3">
-            <div className="rounded-lg bg-green-500/10 p-2">
-              <BarChart3 className="size-6 text-green-600 dark:text-green-500" />
+            <div className="bg-success/10 rounded-lg p-2">
+              <BarChart3 className="text-success size-6" />
             </div>
             <CardTitle className="text-xl sm:text-2xl">
               Donate financially

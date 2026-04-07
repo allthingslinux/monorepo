@@ -191,7 +191,7 @@ export function AliasManager({ accountId, email: _email }: AliasManagerProps) {
                 <div className="flex items-center gap-2">
                   {alias.active === 1 ? (
                     <Badge
-                      className="border-green-500/20 bg-green-500/10 text-green-600"
+                      className="border-success/20 bg-success/10 text-success"
                       variant="secondary"
                     >
                       Active

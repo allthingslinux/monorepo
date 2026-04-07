@@ -32,7 +32,7 @@ export function StatusBar() {
     >
       <div className="flex items-center gap-3">
         {isDev && (
-          <span className="rounded bg-amber-500/20 px-1.5 py-0.5 font-medium text-amber-600 dark:text-amber-500">
+          <span className="bg-warning/20 text-warning rounded px-1.5 py-0.5 font-medium">
             dev
           </span>
         )}

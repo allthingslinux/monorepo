@@ -52,6 +52,9 @@
   /* === RADIUS ============================================================== */
   --radius: 0.5rem;
 
+  /* === CANVAS — content area between sidebar and cards ==================== */
+  --canvas: oklch(0.975 0.001 280);
+
   /* === SHADOWS — Light Mode ================================================ */
   --shadow-2xs: 0px 2px 10px 0px hsl(0, 0%, 0% / 0.03);
   --shadow-xs: 0px 2px 10px 0px hsl(0, 0%, 0% / 0.03);
@@ -101,7 +104,7 @@
   --foreground: oklch(0.8456 0.0611 274.7629);
   --card: oklch(0.204 0.0158 284.9095);
   --card-foreground: oklch(0.8456 0.0611 274.7629);
-  --popover: oklch(0.204 0.0158 284.9095);
+  --popover: oklch(0.235 0.02 282);
   --popover-foreground: oklch(0.8456 0.0611 274.7629);
   --primary: oklch(0.7515 0.1344 299.4992);
   --primary-foreground: oklch(0.2263 0.0214 280.4871);
@@ -114,6 +117,8 @@
   /* === NAV SURFACE ========================================================= */
   --nav: oklch(0.255 0.028 278);
   --nav-foreground: oklch(0.8456 0.0611 274.7629);
+  /* === CANVAS — content area between sidebar and cards ==================== */
+  --canvas: oklch(0.2 0.018 280);
   --accent-foreground: oklch(0.8561 0.0943 225.8662);
   --destructive: oklch(0.7227 0.1589 10.2758);
   --destructive-foreground: oklch(0.2263 0.0214 280.4871);
@@ -147,7 +152,7 @@
   --sidebar-ring: oklch(0.7515 0.1344 299.4992);
 
   /* === RADIUS — Dark Mode ================================================== */
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 
   /* === SHADOWS — Dark Mode ================================================= */
   --shadow-2xs: 0px 10px 20px 0px hsl(0, 0%, 0% / 0.25);
@@ -192,6 +197,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-nav: var(--nav);
   --color-nav-foreground: var(--nav-foreground);
+  --color-canvas: var(--canvas);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);

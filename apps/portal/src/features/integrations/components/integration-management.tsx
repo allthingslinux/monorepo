@@ -66,26 +66,28 @@ const INTEGRATION_ICONS: Record<
 
 // Brand color classes per integration (bg for icon container)
 const INTEGRATION_COLORS: Record<string, string> = {
-  irc: "bg-indigo-500",
-  mailcow: "bg-blue-500",
-  mediawiki: "bg-emerald-500",
-  xmpp: "bg-amber-500",
+  irc: "bg-indigo-500/15 text-indigo-400",
+  mailcow: "bg-blue-500/15 text-blue-400",
+  mediawiki: "bg-emerald-500/15 text-emerald-400",
+  xmpp: "bg-amber-500/15 text-amber-400",
 };
 
 // Subtle tint for the card top section background
 const INTEGRATION_TINTS: Record<string, string> = {
-  irc: "bg-indigo-500/10",
-  mailcow: "bg-blue-500/10",
-  mediawiki: "bg-emerald-500/10",
-  xmpp: "bg-amber-500/10",
+  irc: "bg-slate-300/[0.06]",
+  mailcow: "bg-sky-300/[0.06]",
+  mediawiki: "bg-teal-300/[0.06]",
+  xmpp: "bg-rose-300/[0.06]",
 };
 
 function getIntegrationColor(integrationId: string): string {
-  return INTEGRATION_COLORS[integrationId] ?? "bg-violet-500";
+  return (
+    INTEGRATION_COLORS[integrationId] ?? "bg-violet-500/15 text-violet-400"
+  );
 }
 
 function getIntegrationTint(integrationId: string): string {
-  return INTEGRATION_TINTS[integrationId] ?? "bg-violet-500/10";
+  return INTEGRATION_TINTS[integrationId] ?? "bg-zinc-300/[0.06]";
 }
 
 // ---------------------------------------------------------------------------
@@ -120,10 +122,10 @@ function EmptyCard({
             colorClass
           )}
         >
-          <Icon className="h-6 w-6 text-white" />
+          <Icon className="h-6 w-6" />
         </div>
         <span className="border-muted-foreground/30 bg-muted-foreground/10 text-muted-foreground rounded-full border px-3 py-1 text-xs font-semibold tracking-widest uppercase">
-          Not Connected
+          Inactive
         </span>
       </div>
       {/* Body */}
@@ -137,7 +139,7 @@ function EmptyCard({
       <div className="border-border/40 border-t px-6 pt-4 pb-5">
         <Button className="w-full" onClick={onConfigure} variant="secondary">
           <Plus className="mr-2 h-4 w-4" />
-          Connect {title}
+          Create Account
         </Button>
       </div>
     </div>
@@ -201,17 +203,17 @@ function AccountCard<TAccount extends { id: string }>({
             colorClass
           )}
         >
-          <Icon className="h-6 w-6 text-white" />
+          <Icon className="h-6 w-6" />
         </div>
         <span
           className={cn(
             "rounded-full border px-3 py-1 text-xs font-semibold tracking-widest uppercase",
             isActive
-              ? "border-green-500/40 bg-green-500/10 text-green-400"
+              ? "border-success/40 bg-success/10 text-success"
               : "border-muted-foreground/30 bg-muted-foreground/10 text-muted-foreground"
           )}
         >
-          {isActive ? "Connected" : (status ?? "Unknown")}
+          {isActive ? "Active" : (status ?? "Unknown")}
         </span>
       </div>
 

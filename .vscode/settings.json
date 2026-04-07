@@ -31,37 +31,37 @@
   "javascript.suggest.autoImports": true,
   // ── Formatters ──────────────────────────────────────────────────────────────
   "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[json]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[html]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[css]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[graphql]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[mdx]": {
     "editor.defaultFormatter": "oxc.oxc-vscode",
     "editor.formatOnSave": true,
     "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 80
+    "editor.wordWrapColumn": 80,
   },
   "[markdown]": {
     "editor.defaultFormatter": "oxc.oxc-vscode",
@@ -69,31 +69,31 @@
     "editor.quickSuggestions": {
       "other": "off",
       "comments": "off",
-      "strings": "off"
-    }
+      "strings": "off",
+    },
   },
   "[github-actions-workflow]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[yaml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSaveMode": "file",
     "editor.codeActionsOnSave": {
       "source.fixAll.ruff": "explicit",
-      "source.organizeImports.ruff": "explicit"
-    }
+      "source.organizeImports.ruff": "explicit",
+    },
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "mkhl.shfmt"
+    "editor.defaultFormatter": "mkhl.shfmt",
   },
   "[dockercompose]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   "[toml]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
   },
   // ── Ruff (Python LSP) ───────────────────────────────────────────────────────
   "ruff.nativeServer": "on",
@@ -103,7 +103,7 @@
   "oxc.fmt.configPath": ".oxfmtrc.jsonc",
   // ── Code actions ────────────────────────────────────────────────────────────
   "editor.codeActionsOnSave": {
-    "source.fixAll.oxc": "explicit"
+    "source.fixAll.oxc": "explicit",
   },
   // ── Performance: file watching ──────────────────────────────────────────────
   "files.watcherExclude": {
@@ -121,7 +121,7 @@
     "**/__pycache__/**": true,
     "**/.ruff_cache/**": true,
     "**/.pytest_cache/**": true,
-    "**/coverage/**": true
+    "**/coverage/**": true,
   },
   // ── Performance: search ─────────────────────────────────────────────────────
   "search.exclude": {
@@ -136,7 +136,7 @@
     "**/.venv": true,
     "**/__pycache__": true,
     "**/coverage": true,
-    "**/.ruff_cache": true
+    "**/.ruff_cache": true,
   },
   // ── Performance: explorer sidebar ──────────────────────────────────────────
   "files.exclude": {
@@ -145,7 +145,7 @@
     "**/__pycache__": true,
     "**/.ruff_cache": true,
     "**/.pytest_cache": true,
-    "services/chat/irc-client-obsidian/upstream": true
+    "services/chat/irc-client-obsidian/upstream": true,
   },
   "files.insertFinalNewline": true,
   "files.refactoring.autoSave": true,
@@ -166,7 +166,7 @@
     "clsx",
     "tw",
     "twMerge",
-    "twJoin"
+    "twJoin",
   ],
   // classRegex for patterns not covered by classFunctions
   "tailwindCSS.experimental.classRegex": [
@@ -179,15 +179,15 @@
     // DOM classList.add/remove/toggle
     [
       "classList.(?:add|remove|toggle)\\(([^)]*)\\)",
-      "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"
+      "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)",
     ],
     // Variables ending with Style/ClassName/ClassNames
     ["\\b\\w*Style\\b\\s*=\\s*\"'`[\"'`]"],
     ["\\b\\w*ClassName\\b\\s*=\\s*\"'`[\"'`]"],
-    ["\\b\\w*ClassNames\\b\\s*=\\s*\"'`[\"'`]"]
+    ["\\b\\w*ClassNames\\b\\s*=\\s*\"'`[\"'`]"],
   ],
   "tailwindCSS.includeLanguages": {
-    "typescriptreact": "html"
+    "typescriptreact": "html",
   },
   "tailwindCSS.files.exclude": [
     "**/.git/**",
@@ -198,7 +198,7 @@
     "services/**",
     "scripts/**",
     "org/**",
-    "packages/tools-manifest/**"
+    "packages/tools-manifest/**",
   ],
   // ── Emmet ───────────────────────────────────────────────────────────────────
   "emmet.showExpandedAbbreviation": "never",
@@ -212,7 +212,7 @@
     "Containerfile.*": "dockerfile",
     "compose.yaml": "dockercompose",
     "compose.yml": "dockercompose",
-    "compose.*.yaml": "dockercompose"
+    "compose.*.yaml": "dockercompose",
   },
   // ── i18n-ally (portal) ──────────────────────────────────────────────────────
   "i18n-ally.localesPaths": ["apps/portal/locale", "apps/portal/src/i18n"],
@@ -233,6 +233,6 @@
     "node_modules/**",
     ".next/**",
     "dist/**",
-    "apps/**/node_modules/**"
-  ]
+    "apps/**/node_modules/**",
+  ],
 }
