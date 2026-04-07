@@ -6,13 +6,30 @@
   - `web` (@atl/web) — marketing site, Next.js 16, Cloudflare
   - `portal` (@atl/portal) — identity/admin, Next.js 16, PostgreSQL
   - `chat-web` (@atl/chat-web) — atl.chat landing page, Next.js 16
+  - `tools-web` (@atl/tools-web) — atl.tools directory, Next.js 16, Cloudflare
   - `docs` (@atl/docs) — Mintlify docs
   - `bridge` — Discord↔IRC↔XMPP bridge, Python/uv (NOT in pnpm workspace)
 - `services/` — External software we extend, configure, and operate
   - `chat/` — IRC (UnrealIRCd + Atheme), XMPP (Prosody), web clients
   - `network/` — DNS (Blocky), TURN (coturn), uptime (Gatus), SFTP
   - `observability/` — Grafana, Loki, Mimir, Alloy, Alloy Agent, Blackbox
-- `packages/ui` — @atl/ui shared design system
+- `packages/` — Shared JS/TS libraries (all under `@atl/*` namespace)
+  - `ui` — shared design system (shadcn/ui + @base-ui/react)
+  - `auth` — Better Auth config, client, hooks, and DAL
+  - `db` — shared Drizzle schema, client, and relations
+  - `api` — TanStack Query keys, server queries, hydration helpers
+  - `schemas` — shared Zod schemas
+  - `types` — shared TypeScript types
+  - `email` — email sending utilities (React Email)
+  - `env` — shared environment variable validation (t3-env)
+  - `config` — shared static config (community, events, donate)
+  - `seo` — metadata, JSON-LD, robots, sitemap helpers
+  - `utils` — shared utility functions
+  - `integrations` — third-party API clients (Discord, GitHub, Fibery)
+  - `fibery` — Fibery SDK (portal admin, career applications)
+  - `observability` — Sentry / OpenTelemetry helpers
+  - `tools-manifest` — tool definitions consumed by tools-web
+  - `tsconfig` — shared TypeScript configurations
 - `infra/chat/` — Docker Compose fragments for chat services (chat-irc.yaml, chat-xmpp.yaml, chat-bridge.yaml, etc.)
 - `infra/network/` — Docker Compose fragments for network services (network.yaml)
 - `infra/observability/` — Docker Compose fragments for observability services (observability.yaml)
@@ -24,11 +41,14 @@
 
 - `just setup` — full bootstrap (pnpm + uv + init.sh)
 - `just dev` — JS apps via Turbo
+- `just check` / `just fix` — Oxlint + Oxfmt across all packages
+- `just typecheck` — TypeScript validation across all packages
 - `just chat-dev` — Docker chat services
 - `just bridge-test` — Python bridge tests
 - `just pubnix-deploy <target>` — Ansible deploy to dev/staging/prod
 - `just pubnix-molecule-test <role>` — Molecule test for an Ansible role
-- `pnpm check` / `pnpm fix` — Oxlint + Oxfmt
+- `just pubnix-tf-plan` / `just pubnix-tf-apply` — Terraform plan / apply
+- `just docker-push-all` — Push all Docker images to registry
 
 # CI / GitHub Actions
 

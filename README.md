@@ -15,7 +15,21 @@ apps/
 
 packages/
 ├── ui             @atl/ui — shared design system (shadcn/ui + @base-ui/react)
-└── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools-web
+├── auth           @atl/auth — Better Auth config, client, hooks, and DAL
+├── db             @atl/db — shared Drizzle schema, client, and relations
+├── api            @atl/api — TanStack Query keys, server queries, hydration helpers
+├── schemas        @atl/schemas — shared Zod schemas (user, integrations)
+├── types          @atl/types — shared TypeScript types (auth, API, email, routes)
+├── email          @atl/email — email sending utilities (React Email)
+├── env            @atl/env — shared environment variable validation (t3-env)
+├── config         @atl/config — shared static config (community, events, donate)
+├── seo            @atl/seo — metadata, JSON-LD, robots, sitemap helpers
+├── utils          @atl/utils — shared utility functions (date, format, error)
+├── integrations   @atl/integrations — third-party API clients (Discord, GitHub, Fibery)
+├── fibery         @atl/fibery — Fibery SDK (portal admin, career applications)
+├── observability  @atl/observability — Sentry / OpenTelemetry helpers
+├── tools-manifest @atl/tools-manifest — tool definitions consumed by apps/tools-web
+└── tsconfig       @atl/tsconfig — shared TypeScript configurations
 
 services/
 ├── chat/          IRC (UnrealIRCd + Atheme), XMPP (Prosody), web clients
@@ -90,29 +104,34 @@ Run `just` to see all available recipes grouped by domain.
 | `just clean`             | Remove build artifacts                     |
 | `just renovate-validate` | Validate Renovate config                   |
 | `just docker-clean`      | Prune unused Docker images and volumes     |
+| `just docker-push-all`   | Push all Docker images to registry         |
 
 ### Apps
 
-| Command                   | Purpose                          |
-| ------------------------- | -------------------------------- |
-| `just web-dev`            | Marketing site dev server        |
-| `just web-build`          | Build marketing site             |
-| `just web-deploy`         | Deploy to Cloudflare Workers     |
-| `just chat-web-dev`       | atl.chat dev server              |
-| `just chat-web-build`     | Build atl.chat site              |
-| `just portal-dev`         | Portal dev server                |
-| `just portal-build`       | Build portal                     |
-| `just portal-start`       | Start portal (production mode)   |
-| `just portal-db-up`       | Start PostgreSQL (Docker)        |
-| `just portal-db-down`     | Stop PostgreSQL                  |
-| `just portal-db-generate` | Generate Drizzle migration files |
-| `just portal-db-migrate`  | Run pending migrations           |
-| `just portal-db-push`     | Push schema to dev DB            |
-| `just portal-db-seed`     | Seed the database                |
-| `just portal-db-studio`   | Open Drizzle Studio              |
-| `just docs-dev`           | Mintlify docs preview            |
-| `just docs-build`         | Build docs                       |
-| `just docs-check-links`   | Check for broken links           |
+| Command                      | Purpose                                |
+| ---------------------------- | -------------------------------------- |
+| `just web-dev`               | Marketing site dev server              |
+| `just web-build`             | Build marketing site                   |
+| `just web-deploy`            | Deploy to Cloudflare Workers           |
+| `just web-destroy`           | Destroy Cloudflare Workers deployment  |
+| `just web-shadcn-add [args]` | Add shadcn/ui component to web         |
+| `just chat-web-dev`          | atl.chat dev server                    |
+| `just chat-web-build`        | Build atl.chat site                    |
+| `just chat-web-deploy`       | Deploy atl.chat to Cloudflare Workers  |
+| `just portal-dev`            | Portal dev server                      |
+| `just portal-build`          | Build portal                           |
+| `just portal-start`          | Start portal (production mode)         |
+| `just portal-db-up`          | Start PostgreSQL (Docker)              |
+| `just portal-db-down`        | Stop PostgreSQL                        |
+| `just portal-db-generate`    | Generate Drizzle migration files       |
+| `just portal-db-migrate`     | Run pending migrations                 |
+| `just portal-db-push`        | Push schema to dev DB                  |
+| `just portal-db-seed`        | Seed the database                      |
+| `just portal-db-studio`      | Open Drizzle Studio                    |
+| `just portal-shadcn-add [args]` | Add shadcn/ui component to portal   |
+| `just docs-dev`              | Mintlify docs preview                  |
+| `just docs-build`            | Build docs                             |
+| `just docs-check-links`      | Check for broken links                 |
 
 ### Tools (atl.tools)
 
@@ -130,18 +149,19 @@ Run `just` to see all available recipes grouped by domain.
 
 ### Chat services (Docker)
 
-| Command               | Purpose                                      |
-| --------------------- | -------------------------------------------- |
-| `just chat-init`      | Initialize chat data directories and config  |
-| `just chat-dev`       | Start all chat services (dev profile)        |
-| `just chat-prod`      | Start all chat services (production profile) |
-| `just chat-down`      | Stop chat services (dev)                     |
-| `just chat-down-prod` | Stop chat services (production)              |
-| `just chat-logs`      | Tail logs (optionally filter by name)        |
-| `just chat-status`    | Show running containers                      |
-| `just chat-build`     | Build all service images                     |
-| `just prosody-token`  | Generate a Prosody API token                 |
-| `just gencloak`       | Generate IRC cloaking key                    |
+| Command                       | Purpose                                      |
+| ----------------------------- | -------------------------------------------- |
+| `just chat-init`              | Initialize chat data directories and config  |
+| `just chat-dev`               | Start all chat services (dev profile)        |
+| `just chat-prod`              | Start all chat services (production profile) |
+| `just chat-down`              | Stop chat services (dev)                     |
+| `just chat-down-prod`         | Stop chat services (production)              |
+| `just chat-logs`              | Tail logs (optionally filter by name)        |
+| `just chat-status`            | Show running containers                      |
+| `just chat-build`             | Build all service images                     |
+| `just chat-build-clean [svc]` | Build service images (no cache)              |
+| `just prosody-token`          | Generate a Prosody API token                 |
+| `just gencloak`               | Generate IRC cloaking key                    |
 
 ### Bridge (Python)
 
@@ -156,17 +176,30 @@ Run `just` to see all available recipes grouped by domain.
 
 ### Pubnix (atl.sh)
 
-| Command                                 | Purpose                             |
-| --------------------------------------- | ----------------------------------- |
-| `just pubnix-setup`                     | Install Ansible deps + galaxy roles |
-| `just pubnix-deploy <target>`           | Ansible deploy (dev/staging/prod)   |
-| `just pubnix-deploy-tag <target> <tag>` | Deploy specific roles by tag        |
-| `just pubnix-deploy-check <target>`     | Dry run (check mode)                |
-| `just pubnix-molecule-test <role>`      | Molecule test for an Ansible role   |
-| `just pubnix-smoke-test <target>`       | End-to-end smoke test               |
-| `just pubnix-tf-plan`                   | Terraform plan                      |
-| `just pubnix-dev-up`                    | Start Vagrant dev VM                |
-| `just pubnix-lint`                      | ansible-lint + pre-commit           |
+| Command                                        | Purpose                             |
+| ---------------------------------------------- | ----------------------------------- |
+| `just pubnix-setup`                            | Install Ansible deps + galaxy roles |
+| `just pubnix-install`                          | Install Ansible collections         |
+| `just pubnix-deploy <target>`                  | Ansible deploy (dev/staging/prod)   |
+| `just pubnix-deploy-tag <target> <tag>`        | Deploy specific roles by tag        |
+| `just pubnix-deploy-check <target>`            | Dry run (check mode)                |
+| `just pubnix-deploy-list-tags`                 | List available deploy tags          |
+| `just pubnix-ping <target>`                    | Ping Ansible hosts                  |
+| `just pubnix-syntax-check`                     | Ansible syntax check                |
+| `just pubnix-create-user <user> <key> <target>` | Create user on pubnix server       |
+| `just pubnix-remove-user <user> <target>`      | Remove user from pubnix server      |
+| `just pubnix-molecule-test <role>`             | Molecule test for an Ansible role   |
+| `just pubnix-molecule-converge <role>`         | Molecule converge (apply role)      |
+| `just pubnix-molecule-verify <role>`           | Molecule verify                     |
+| `just pubnix-molecule-destroy <role>`          | Molecule destroy                    |
+| `just pubnix-smoke-test [target]`              | End-to-end smoke test               |
+| `just pubnix-tf-init`                          | Terraform init                      |
+| `just pubnix-tf-plan`                          | Terraform plan                      |
+| `just pubnix-tf-apply`                         | Terraform apply                     |
+| `just pubnix-vault-edit`                       | Edit Ansible vault secrets          |
+| `just pubnix-dev-up`                           | Start Vagrant dev VM                |
+| `just pubnix-dev-down`                         | Stop Vagrant dev VM                 |
+| `just pubnix-lint`                             | ansible-lint + pre-commit           |
 
 ## Environment variables
 
