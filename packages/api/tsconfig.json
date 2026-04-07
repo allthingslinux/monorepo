@@ -14,11 +14,8 @@
     "jsx": "react-jsx",
     "noEmit": true,
     "paths": {
-      "@/auth": ["../../src/features/auth/lib"],
-      "@/auth/*": ["../../src/features/auth/lib/*"],
-      "@/config": ["../../src/shared/config"],
-      "@/config/*": ["../../src/shared/config/*"],
-      "@/*": ["../../src/*"]
+      "@/auth": ["../../packages/auth/src"],
+      "@/auth/*": ["../../packages/auth/src/*"]
     }
   },
   "include": ["src/**/*.ts"]

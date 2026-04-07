@@ -7,7 +7,7 @@
 import "server-only";
 import { and, count, desc, eq, gt, ilike, ne, or, sql } from "drizzle-orm";
 
-import type { AuthGetSessionReturn } from "@/auth";
+import type { AuthGetSessionReturn } from "@atl/auth";
 import { db } from "@atl/db/client";
 import { apikey } from "@atl/db/schema/api-keys";
 import { session, user } from "@atl/db/schema/auth";
@@ -209,7 +209,7 @@ export async function fetchSessionsServer(
   const offset = filters?.offset ?? 0;
 
   // Build where conditions
-  const conditions: ReturnType<typeof eq | typeof gt>[] = [];
+  const conditions: ReturnType<typeof eq>[] = [];
   if (userIdParam) {
     conditions.push(eq(session.userId, userIdParam));
   }

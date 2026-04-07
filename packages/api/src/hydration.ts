@@ -49,5 +49,5 @@ export function dehydrateQueryClient(
 export async function prefetchQueries<T>(
   prefetchers: (() => Promise<T>)[]
 ): Promise<void> {
-  await Promise.all(prefetchers.map((prefetch) => prefetch()));
+  await Promise.all(prefetchers.map(async (prefetch) => prefetch()));
 }
