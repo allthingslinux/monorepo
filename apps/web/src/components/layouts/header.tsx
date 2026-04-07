@@ -4,7 +4,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   ChevronRight,
-  Code2,
   FileText,
   Globe,
   Heart,
@@ -133,6 +132,20 @@ const DROPDOWN_MENUS: DropdownMenu[] = [
     label: "Community",
     links: [
       {
+        title: "About",
+        href: "/about",
+        description: "Our story & mission",
+        icon: Globe,
+        color: "#3b82f6",
+      },
+      {
+        title: "Blog",
+        href: "/blog",
+        description: "News & updates",
+        icon: Newspaper,
+        color: "#f97316",
+      },
+      {
         title: "Contribute",
         href: "/contribute",
         description: "Support our mission",
@@ -147,33 +160,11 @@ const DROPDOWN_MENUS: DropdownMenu[] = [
         color: "#10b981",
       },
       {
-        title: "GitHub",
-        href: "https://github.com/allthingslinux",
-        description: "All our repos",
-        icon: Code2,
-        color: "#a78bfa",
-        external: true,
-      },
-      {
-        title: "About",
-        href: "/about",
-        description: "Our story & mission",
-        icon: Globe,
-        color: "#3b82f6",
-      },
-      {
         title: "Open",
         href: "/open",
         description: "Transparency dashboard",
         icon: FileText,
         color: "#f59e0b",
-      },
-      {
-        title: "Blog",
-        href: "/blog",
-        description: "News & updates",
-        icon: Newspaper,
-        color: "#f97316",
       },
       {
         title: "Code of Conduct",
@@ -274,7 +265,7 @@ function DesktopNavigation() {
               {menu.label}
             </NavigationMenuTrigger>
             <NavigationMenuContent className="p-0!">
-              <ul className="grid w-[32rem] grid-cols-2 gap-1 p-2.5">
+              <ul className="grid w-lg grid-cols-2 gap-1 p-2.5">
                 {menu.links.map((link) => (
                   <li key={link.title}>
                     <MenuSubLink link={link} />
