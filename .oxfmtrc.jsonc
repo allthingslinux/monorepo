@@ -38,6 +38,7 @@
     "apps/portal/.cursor/skills/**",
     "apps/bridge/**",
     "services/**",
+    ".vscode/**",
     "pnpm-lock.yaml",
   ],
 }
