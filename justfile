@@ -42,7 +42,7 @@ dev:
 
 [group('workspace')]
 check:
-    pnpm run check
+    pnpm run lint
 
 [group('workspace')]
 fix:
@@ -67,11 +67,11 @@ clean:
 # ── Web (apps/web — allthingslinux.org) ───────────────────────────────────────
 [group('web')]
 web-dev:
-    pnpm --filter @atl/web dev
+    pnpm --filter @atl/web run dev
 
 [group('web')]
 web-build:
-    pnpm --filter @atl/web run build:all
+    pnpm --filter @atl/web run build
 
 [group('web')]
 web-deploy:
@@ -88,7 +88,7 @@ web-shadcn-add *ARGS:
 # ── Chat Web (apps/chat-web — atl.chat marketing) ─────────────────────────────
 [group('web')]
 chat-web-dev:
-    pnpm --filter @atl/chat-web dev
+    pnpm --filter @atl/chat-web run dev
 
 [group('web')]
 chat-web-build:
@@ -101,15 +101,15 @@ chat-web-deploy:
 # ── Portal (apps/portal) ──────────────────────────────────────────────────────
 [group('portal')]
 portal-dev:
-    pnpm --filter @atl/portal dev
+    pnpm --filter @atl/portal run dev
 
 [group('portal')]
 portal-build:
-    pnpm --filter @atl/portal build
+    pnpm --filter @atl/portal run build
 
 [group('portal')]
 portal-start:
-    pnpm --filter @atl/portal start
+    pnpm --filter @atl/portal run start
 
 [group('portal')]
 portal-db-up:
@@ -242,7 +242,7 @@ bridge-logs:
 # ── Docs (apps/docs) ──────────────────────────────────────────────────────────
 [group('docs')]
 docs-dev:
-    pnpm --filter @atl/docs dev
+    pnpm --filter @atl/docs run dev
 
 [group('docs')]
 docs-build:
@@ -282,11 +282,11 @@ tools-build:
 
 [group('tools')]
 tools-web-dev:
-    pnpm --filter @atl/tools-web dev
+    pnpm --filter @atl/tools-web run dev
 
 [group('tools')]
 tools-web-build:
-    pnpm --filter @atl/tools-web build
+    pnpm --filter @atl/tools-web run build
 
 [group('tools')]
 tools-web-deploy:
