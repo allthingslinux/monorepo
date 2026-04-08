@@ -17,13 +17,6 @@
       ]
     },
     "apps/portal": {
-      "entry": [
-        "src/app/**/page.tsx",
-        "src/app/**/layout.tsx",
-        "src/app/**/route.ts",
-        "src/app/providers.tsx",
-        "src/instrumentation.ts"
-      ],
       "ignoreDependencies": [
         "@semantic-release/changelog",
         "@semantic-release/exec",
@@ -33,20 +26,8 @@
       ]
     },
     "apps/web": {
-      "entry": [
-        "src/app/**/page.tsx",
-        "src/app/**/layout.tsx",
-        "src/app/**/route.ts",
-        "src/trigger/**/*.ts",
-        "contentlayer.config.ts"
-      ],
+      "entry": ["contentlayer.config.ts"],
       "ignore": ["src/lib/integrations/**"]
-    },
-    "apps/chat-web": {
-      "entry": ["app/**/page.tsx", "app/**/layout.tsx"]
-    },
-    "apps/tools-web": {
-      "entry": ["src/app/**/page.tsx", "src/app/**/layout.tsx"]
     },
     "apps/docs": {
       "ignore": ["**/*"]
