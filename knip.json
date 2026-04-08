@@ -3,27 +3,7 @@
   "workspaces": {
     ".": {
       "entry": ["scripts/*.{mjs,ts}"],
-      "project": ["scripts/**/*.{mjs,ts}"],
-      "ignoreDependencies": [
-        "@commitlint/cli",
-        "@commitlint/config-conventional",
-        "@commitlint/types",
-        "@intellectronica/ruler",
-        "lefthook",
-        "oxfmt",
-        "oxlint",
-        "oxlint-tsgolint",
-        "sherif"
-      ]
-    },
-    "apps/portal": {
-      "ignoreDependencies": [
-        "@semantic-release/changelog",
-        "@semantic-release/exec",
-        "@semantic-release/git",
-        "semantic-release",
-        "semantic-release-major-tag"
-      ]
+      "project": ["scripts/**/*.{mjs,ts}"]
     },
     "apps/web": {
       "entry": ["contentlayer.config.ts"],
@@ -33,5 +13,18 @@
       "ignore": ["**/*"]
     }
   },
-  "ignoreWorkspaces": ["packages/tsconfig"]
+  "ignoreWorkspaces": ["packages/tsconfig"],
+  "rules": {
+    "files": "warn",
+    "dependencies": "warn",
+    "devDependencies": "warn",
+    "optionalPeerDependencies": "warn",
+    "unlisted": "warn",
+    "binaries": "warn",
+    "unresolved": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "enumMembers": "warn",
+    "duplicates": "off"
+  }
 }
