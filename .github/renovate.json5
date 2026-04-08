@@ -559,7 +559,8 @@
         "next-devtools-mcp",
         "@tanstack/react-query-devtools",
         "@react-grab/cursor",
-      ],      groupName: "dev",
+      ],
+      groupName: "dev",
       automerge: true,
       automergeType: "branch", // Silent automerge - no PR notifications for passing tests
       addLabels: ["deps: dev"],
