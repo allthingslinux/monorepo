@@ -1,28 +1,11 @@
 {
+  "extends": "@atl/tsconfig/nextjs.json",
   "compilerOptions": {
-    "lib": ["dom", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "noUncheckedSideEffectImports": false,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
       "@/*": ["./*"]
     },
-    "target": "ES2017",
-    "types": ["@cloudflare/workers-types", "./types/env.d.ts"]
+    "types": ["node", "@cloudflare/workers-types", "./types/env.d.ts"],
+    "noUncheckedSideEffectImports": false
   },
   "include": [
     "next-env.d.ts",

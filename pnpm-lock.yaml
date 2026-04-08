@@ -451,6 +451,9 @@ importers:
         specifier: 'catalog:'
         version: 1.4.0
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 4.20260317.1

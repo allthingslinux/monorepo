@@ -28,6 +28,7 @@
     "tw-animate-css": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
     "@cloudflare/workers-types": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
