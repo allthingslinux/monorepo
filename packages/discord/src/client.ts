@@ -81,20 +81,20 @@ export class DiscordClient {
   // Guild
   // ---------------------------------------------------------------------------
 
-  getGuild(
+  async getGuild(
     guildId: Snowflake,
     withCounts = true
   ): Promise<Result<RESTGetAPIGuildResult>> {
     return this.fetch(`/guilds/${guildId}?with_counts=${withCounts}`);
   }
 
-  getGuildPreview(
+  async getGuildPreview(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildPreviewResult>> {
     return this.fetch(`/guilds/${guildId}/preview`);
   }
 
-  getGuildWidget(
+  async getGuildWidget(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildWidgetJSONResult>> {
     return this.fetch(`/guilds/${guildId}/widget.json`);
@@ -104,7 +104,7 @@ export class DiscordClient {
   // Channels
   // ---------------------------------------------------------------------------
 
-  getGuildChannels(
+  async getGuildChannels(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildChannelsResult>> {
     return this.fetch(`/guilds/${guildId}/channels`);
@@ -114,7 +114,7 @@ export class DiscordClient {
   // Roles
   // ---------------------------------------------------------------------------
 
-  getGuildRoles(
+  async getGuildRoles(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildRolesResult>> {
     return this.fetch(`/guilds/${guildId}/roles`);
@@ -124,7 +124,7 @@ export class DiscordClient {
   // Members
   // ---------------------------------------------------------------------------
 
-  getGuildMember(
+  async getGuildMember(
     guildId: Snowflake,
     userId: Snowflake
   ): Promise<Result<RESTGetAPIGuildMemberResult>> {
@@ -159,7 +159,7 @@ export class DiscordClient {
     });
   }
 
-  searchGuildMembers(
+  async searchGuildMembers(
     guildId: Snowflake,
     options: SearchMembersOptions
   ): Promise<Result<RESTGetAPIGuildMembersSearchResult>> {
@@ -204,11 +204,13 @@ export class DiscordClient {
   // Bans
   // ---------------------------------------------------------------------------
 
-  getGuildBans(guildId: Snowflake): Promise<Result<RESTGetAPIGuildBansResult>> {
+  async getGuildBans(
+    guildId: Snowflake
+  ): Promise<Result<RESTGetAPIGuildBansResult>> {
     return this.fetch(`/guilds/${guildId}/bans`);
   }
 
-  getGuildBan(
+  async getGuildBan(
     guildId: Snowflake,
     userId: Snowflake
   ): Promise<Result<RESTGetAPIGuildBanResult>> {
@@ -219,7 +221,7 @@ export class DiscordClient {
   // Audit Log
   // ---------------------------------------------------------------------------
 
-  getAuditLog(
+  async getAuditLog(
     guildId: Snowflake,
     options: ListAuditLogOptions = {}
   ): Promise<Result<RESTGetAPIAuditLogResult>> {
@@ -250,7 +252,7 @@ export class DiscordClient {
   // Invites
   // ---------------------------------------------------------------------------
 
-  getGuildInvites(
+  async getGuildInvites(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildInvitesResult>> {
     return this.fetch(`/guilds/${guildId}/invites`);
@@ -260,13 +262,13 @@ export class DiscordClient {
   // Emojis & Stickers
   // ---------------------------------------------------------------------------
 
-  getGuildEmojis(
+  async getGuildEmojis(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildEmojisResult>> {
     return this.fetch(`/guilds/${guildId}/emojis`);
   }
 
-  getGuildStickers(
+  async getGuildStickers(
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildStickersResult>> {
     return this.fetch(`/guilds/${guildId}/stickers`);
@@ -276,7 +278,7 @@ export class DiscordClient {
   // Scheduled Events
   // ---------------------------------------------------------------------------
 
-  getGuildScheduledEvents(
+  async getGuildScheduledEvents(
     guildId: Snowflake,
     withUserCount = false
   ): Promise<Result<RESTGetAPIGuildScheduledEventsResult>> {
