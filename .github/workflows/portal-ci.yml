@@ -235,7 +235,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Run Knip
-        run: pnpm knip --reporter compact
+        run: pnpm ts:knip -- --reporter github-actions
 
   release:
     name: Release
