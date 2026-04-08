@@ -29,6 +29,8 @@
   "typescript.tsserver.experimental.enableProjectDiagnostics": false,
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "javascript.suggest.autoImports": true,
+  // ── Python ──────────────────────────────────────────────────────────────────
+  "python.languageServer": "None",
   // ── Formatters ──────────────────────────────────────────────────────────────
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode",

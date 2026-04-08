@@ -16,6 +16,7 @@
     "detachhead.basedpyright",
     "vitest.explorer",
     "hashicorp.terraform",
-    "timonwong.shellcheck"
+    "timonwong.shellcheck",
+    "webpro.vscode-knip"
   ]
 }
