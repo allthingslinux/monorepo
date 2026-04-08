@@ -44,10 +44,6 @@
 
     "transit": { "dependsOn": ["^transit"] },
     "clean": { "cache": false },
-    "typegen": {
-      "inputs": ["src/app/**"],
-      "outputs": [".next/types/**"]
-    },
 
     "//#check": {},
     "//#fix": { "cache": false },

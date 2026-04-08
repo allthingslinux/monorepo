@@ -14,7 +14,11 @@ import type { ServiceDefinition } from "@atl/tools-manifest";
 
 const iconMap: Record<
   string,
-  React.ComponentType<{ size?: number; strokeWidth?: number }>
+  React.ComponentType<{
+    size?: number;
+    strokeWidth?: number;
+    className?: string;
+  }>
 > = {
   ArrowLeftRight,
   Braces,

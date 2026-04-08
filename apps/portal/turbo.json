@@ -4,12 +4,6 @@
   "tasks": {
     "dev": {
       "dependsOn": []
-    },
-    "type-check": {
-      "dependsOn": ["transit", "typegen"]
-    },
-    "build": {
-      "dependsOn": ["^build", "typegen"]
     }
   }
 }

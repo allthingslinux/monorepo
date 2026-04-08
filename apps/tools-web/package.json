@@ -8,11 +8,12 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next typegen && next build",
     "start": "next start",
     "deploy": "alchemy deploy --app tools-web",
     "destroy": "alchemy destroy --app tools-web",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "type-check": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@atl/tools-manifest": "workspace:*",

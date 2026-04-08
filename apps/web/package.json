@@ -11,7 +11,7 @@
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "trigger": "npx trigger.dev@latest dev",
-    "build": "next build",
+    "build": "next typegen && next build",
     "deploy": "pnpm exec alchemy deploy --app web",
     "destroy": "pnpm exec alchemy destroy --app web",
     "secrets:dev": "bash ../../.github/scripts/web/secrets.sh dev",
@@ -20,7 +20,7 @@
     "check": "pnpm run type-check && pnpm exec ultracite check",
     "fix": "pnpm exec ultracite fix",
     "test": "vitest",
-    "type-check": "pnpm exec contentlayer2 build && tsc --noEmit",
+    "type-check": "next typegen && pnpm exec contentlayer2 build && tsc --noEmit",
     "analyze:bundle": "echo 'After building, check .open-next/server-functions/default/handler.mjs.meta.json with https://esbuild.github.io/analyze/'",
     "coc:generate": "node scripts/generate-code-of-conduct.mjs",
     "shadcn:add": "shadcn add"

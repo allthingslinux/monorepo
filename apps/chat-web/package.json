@@ -8,10 +8,11 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next typegen && next build",
     "start": "next start",
     "deploy": "alchemy deploy --app chat-web",
-    "destroy": "alchemy destroy --app chat-web"
+    "destroy": "alchemy destroy --app chat-web",
+    "type-check": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@atl/ui": "workspace:*",
