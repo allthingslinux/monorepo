@@ -133,4 +133,3 @@ infra/sh/terraform/.terraform.lock.hcl
 /CLAUDE.md.bak
 # END Ruler Generated Files
 typescript_migration_status.md
-.knip_cache
