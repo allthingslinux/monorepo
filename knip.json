@@ -1,0 +1,56 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.{mjs,ts}"],
+      "project": ["scripts/**/*.{mjs,ts}"],
+      "ignoreDependencies": [
+        "@commitlint/cli",
+        "@commitlint/config-conventional",
+        "@commitlint/types",
+        "@intellectronica/ruler",
+        "lefthook",
+        "oxfmt",
+        "oxlint",
+        "oxlint-tsgolint",
+        "sherif"
+      ]
+    },
+    "apps/portal": {
+      "entry": [
+        "src/app/**/page.tsx",
+        "src/app/**/layout.tsx",
+        "src/app/**/route.ts",
+        "src/app/providers.tsx",
+        "src/instrumentation.ts"
+      ],
+      "ignoreDependencies": [
+        "@semantic-release/changelog",
+        "@semantic-release/exec",
+        "@semantic-release/git",
+        "semantic-release",
+        "semantic-release-major-tag"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "src/app/**/page.tsx",
+        "src/app/**/layout.tsx",
+        "src/app/**/route.ts",
+        "src/trigger/**/*.ts",
+        "contentlayer.config.ts"
+      ],
+      "ignore": ["src/lib/integrations/**"]
+    },
+    "apps/chat-web": {
+      "entry": ["app/**/page.tsx", "app/**/layout.tsx"]
+    },
+    "apps/tools-web": {
+      "entry": ["src/app/**/page.tsx", "src/app/**/layout.tsx"]
+    },
+    "apps/docs": {
+      "ignore": ["**/*"]
+    }
+  },
+  "ignoreWorkspaces": ["packages/tsconfig"]
+}
