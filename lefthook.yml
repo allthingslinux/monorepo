@@ -19,7 +19,7 @@ pre-commit:
       run: terraform fmt
 
     ultracite:
-      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc,css,md,mdx,html,graphql,yaml,yml,toml}"
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,json5,jsonc,css,md,mdx,html,graphql,yaml,yml,toml}"
       exclude:
         - "apps/portal/references/"
         - "apps/portal/drizzle/"
