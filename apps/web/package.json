@@ -76,6 +76,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
     "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@opennextjs/cloudflare": "catalog:",

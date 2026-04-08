@@ -967,6 +967,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@cloudflare/vitest-pool-workers':
         specifier: 'catalog:'
         version: 0.13.3(@cloudflare/workers-types@4.20260317.1)(@vitest/runner@4.1.1)(@vitest/snapshot@4.1.1)(vitest@4.1.1(@opentelemetry/api@1.9.0)(@types/node@25.5.2)(jsdom@29.0.1(@noble/hashes@2.0.1))(msw@2.12.14(@types/node@25.5.2)(typescript@6.0.2))(vite@7.3.1(@types/node@25.5.2)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))

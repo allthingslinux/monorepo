@@ -1,50 +1,25 @@
 {
+  "extends": "@atl/tsconfig/nextjs.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["dom", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "noUncheckedSideEffectImports": false,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    // `baseUrl` removed in TS6 — paths are now relative to tsconfig location
     "paths": {
       "@/*": ["./src/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "types": ["@cloudflare/workers-types", "./types/env.d.ts"],
-    "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
+    "types": ["node", "@cloudflare/workers-types", "./types/env.d.ts"],
     "verbatimModuleSyntax": true,
-    // Build performance optimizations
-    "assumeChangesOnlyAffectDirectDependencies": true,
-    "disableSourceOfProjectReferenceRedirect": true,
-    "incremental": true
+    "noUncheckedSideEffectImports": false
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".contentlayer/generated",
-    "src/types/**/*.d.ts",
     "**/*.mjs",
     "**/*.cjs",
-    "trigger.config.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    ".contentlayer/generated",
+    "src/types/**/*.d.ts",
+    "trigger.config.ts"
   ],
   "exclude": ["node_modules", "open-next.config.ts"]
 }
