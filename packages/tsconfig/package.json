@@ -13,7 +13,7 @@
     "./nextjs.json": "./nextjs.json",
     "./library.json": "./library.json"
   },
-  "dependencies": {
+  "devDependencies": {
     "@types/node": "catalog:"
   }
 }
