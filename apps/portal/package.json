@@ -105,6 +105,7 @@
     "zod-validation-error": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
     "@react-grab/cursor": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/exec": "catalog:",
