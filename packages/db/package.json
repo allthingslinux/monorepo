@@ -18,13 +18,13 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
-    "type-check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate --config src/config.ts",
     "db:migrate": "drizzle-kit migrate --config src/config.ts",
     "db:push": "drizzle-kit push --config src/config.ts",
-    "db:studio": "drizzle-kit studio --config src/config.ts"
+    "db:studio": "drizzle-kit studio --config src/config.ts",
+    "transit": "true",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@atl/types": "workspace:*",
@@ -35,6 +35,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "dotenv": "catalog:",
     "drizzle-kit": "catalog:",

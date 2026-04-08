@@ -10,11 +10,15 @@
     }
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
+    "clean": "true",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "transit": "true",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

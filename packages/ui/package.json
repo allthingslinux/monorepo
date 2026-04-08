@@ -19,8 +19,8 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
+    "transit": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -41,6 +41,8 @@
     "vaul": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "next-themes": "catalog:",

@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
     "noUncheckedIndexedAccess": true
-  }
+  },
+  "extends": "@atl/tsconfig/base.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

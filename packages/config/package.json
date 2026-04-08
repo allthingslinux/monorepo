@@ -14,8 +14,8 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
+    "transit": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"
   }

@@ -1052,6 +1052,12 @@ importers:
         specifier: 'catalog:'
         version: 5.0.0(zod@4.3.6)
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       next:
         specifier: 'catalog:'
         version: 16.2.1(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1119,6 +1125,12 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
@@ -1138,6 +1150,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 25.5.2
@@ -1166,6 +1181,12 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       '@types/pg':
         specifier: 'catalog:'
         version: 8.20.0
@@ -1188,6 +1209,9 @@ importers:
         specifier: 'catalog:'
         version: 0.0.1
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 25.5.2
@@ -1201,6 +1225,12 @@ importers:
         specifier: workspace:*
         version: link:../types
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -1214,12 +1244,24 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
 
   packages/fibery:
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -1245,6 +1287,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 4.20260317.1
@@ -1267,6 +1312,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 25.5.2
@@ -1298,6 +1346,12 @@ importers:
         specifier: 'catalog:'
         version: 5.0.0(zod@4.3.6)
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -1314,9 +1368,15 @@ importers:
         specifier: 'catalog:'
         version: 2.0.0(typescript@6.0.2)
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/lodash':
         specifier: 'catalog:'
         version: 4.17.24
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
@@ -1332,6 +1392,12 @@ importers:
 
   packages/tools-manifest:
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -1344,6 +1410,12 @@ importers:
 
   packages/types:
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
@@ -1420,6 +1492,12 @@ importers:
         specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
@@ -1448,6 +1526,12 @@ importers:
         specifier: 'catalog:'
         version: 3.5.0
     devDependencies:
+      '@atl/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.2
       typescript:
         specifier: 'catalog:'
         version: 6.0.2

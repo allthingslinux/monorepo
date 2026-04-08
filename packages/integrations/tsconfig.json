@@ -1,19 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext", "dom"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
     "jsx": "react-jsx",
     "noEmit": true,
     "types": ["node", "@cloudflare/workers-types"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "extends": "@atl/tsconfig/base.json"
 }

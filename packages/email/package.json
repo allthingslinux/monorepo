@@ -10,14 +10,16 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
+    "transit": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@atl/types": "workspace:*"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

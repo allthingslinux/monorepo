@@ -10,8 +10,8 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
+    "transit": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -26,6 +26,8 @@
     "zod-validation-error": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "next": "catalog:",
     "server-only": "catalog:",
     "typescript": "catalog:"

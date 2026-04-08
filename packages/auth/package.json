@@ -8,45 +8,9 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./auth-hooks": {
-      "types": "./src/auth-hooks.ts",
-      "default": "./src/auth-hooks.ts"
-    },
-    "./check-role": {
-      "types": "./src/check-role.ts",
-      "default": "./src/check-role.ts"
-    },
-    "./client": {
-      "types": "./src/client.ts",
-      "default": "./src/client.ts"
-    },
-    "./config": {
-      "types": "./src/config.ts",
-      "default": "./src/config.ts"
-    },
-    "./dal": {
-      "types": "./src/dal.ts",
-      "default": "./src/dal.ts"
-    },
-    "./email": {
-      "types": "./src/email.ts",
-      "default": "./src/email.ts"
-    },
-    "./keys": {
-      "types": "./src/keys.ts",
-      "default": "./src/keys.ts"
-    },
-    "./localization": {
-      "types": "./src/localization.ts",
-      "default": "./src/localization.ts"
-    },
-    "./permissions": {
-      "types": "./src/permissions.ts",
-      "default": "./src/permissions.ts"
-    },
-    "./server-client": {
-      "types": "./src/server-client.ts",
-      "default": "./src/server-client.ts"
+    "./*": {
+      "types": "./src/*.ts",
+      "default": "./src/*.ts"
     },
     "./session-context": {
       "types": "./src/session-context.tsx",
@@ -54,8 +18,8 @@
     }
   },
   "scripts": {
-    "transit": "true",
     "clean": "true",
+    "transit": "true",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -79,6 +43,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "typescript": "catalog:"
   }

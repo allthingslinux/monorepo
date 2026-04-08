@@ -6,7 +6,14 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "clean": "true",
+    "transit": "true",
+    "type-check": "tsc --noEmit"
+  },
   "devDependencies": {
+    "@atl/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }
