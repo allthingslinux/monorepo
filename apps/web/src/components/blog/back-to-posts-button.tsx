@@ -53,6 +53,7 @@ export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
         <p class="text-neutral-200">Loading posts...</p>
       </div>
     `;
+    // oxlint-disable-next-line unicorn/prefer-dom-node-append -- .append() conflicts with @cloudflare/workers-types
     document.body.appendChild(overlay);
 
     // Fade in the overlay
