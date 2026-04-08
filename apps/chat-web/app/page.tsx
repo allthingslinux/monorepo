@@ -9,6 +9,7 @@ import {
   Network,
   Share2,
 } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -286,7 +287,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <Button asChild className="w-full" variant="secondary">
-                    <Link href={client.href}>Open {client.name}</Link>
+                    <Link href={client.href as Route}>Open {client.name}</Link>
                   </Button>
                 </CardContent>
               </Card>

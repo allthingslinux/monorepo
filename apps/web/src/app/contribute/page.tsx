@@ -7,7 +7,7 @@ import {
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 import {
   SiBitcoin,
@@ -233,7 +233,7 @@ export default function ContributePage() {
                   <Button
                     render={
                       <Link
-                        href={way.href}
+                        href={way.href as Route}
                         rel={way.external ? "noopener noreferrer" : undefined}
                         target={way.external ? "_blank" : undefined}
                       />

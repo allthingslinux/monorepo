@@ -14,6 +14,7 @@ import "./src/env";
 const monorepoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 const nextConfig: NextConfig = {
+  typedRoutes: true,
   compiler: {
     // Remove console logs for better performance in production
     // removeConsole:
@@ -158,7 +159,7 @@ const nextConfig: NextConfig = {
   },
 
   typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === "production",
+    ignoreBuildErrors: false,
   },
 };
 

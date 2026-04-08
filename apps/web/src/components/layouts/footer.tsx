@@ -1,3 +1,4 @@
+import type { Route } from "next";
 import Link from "next/link";
 import { BsOpencollective } from "react-icons/bs";
 import {
@@ -74,7 +75,7 @@ function FooterLink({ name, href }: { name: string; href: string }) {
       {isExternal ? (
         <a
           className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          href={href}
+          href={href as Route}
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -83,7 +84,7 @@ function FooterLink({ name, href }: { name: string; href: string }) {
       ) : (
         <Link
           className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          href={href}
+          href={href as Route}
         >
           {name}
         </Link>

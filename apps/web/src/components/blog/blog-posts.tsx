@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -187,12 +188,12 @@ export default function BlogPosts({
       setShouldScrollTop(true); // Set flag to scroll on next content update
 
       // Prefetch the new page
-      router.prefetch(`${pathname}?page=${newPage}`);
+      router.prefetch(`${pathname}?page=${newPage}` as Route);
 
       // Use a slight delay to ensure prefetching happens
       setTimeout(() => {
         // Preserve the current URL path and only update the page parameter
-        router.push(`${pathname}?page=${newPage}`, { scroll: false });
+        router.push(`${pathname}?page=${newPage}` as Route, { scroll: false });
       }, 50);
     },
     [pathname, router]

@@ -17,6 +17,7 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PiLinuxLogoBold } from "react-icons/pi";
@@ -192,7 +193,7 @@ function MenuSubLink({
   return (
     <Link
       className="hover:bg-muted flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-colors"
-      href={link.href}
+      href={link.href as Route}
       onClick={onClick}
       rel={isExternal ? "noopener noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
@@ -283,7 +284,7 @@ function DesktopNavigation() {
                 navigationMenuTriggerStyle(),
                 "text-muted-foreground bg-transparent px-3 py-1.5 text-sm font-normal"
               )}
-              render={<Link href={link.href} />}
+              render={<Link href={link.href as Route} />}
             >
               {link.label}
             </NavigationMenuLink>
