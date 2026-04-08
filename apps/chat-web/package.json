@@ -7,11 +7,13 @@
     "./alchemy": "./alchemy.run.ts"
   },
   "scripts": {
-    "dev": "next dev",
     "build": "next typegen && next build",
-    "start": "next start",
+    "clean": "rm -rf .next .turbo",
     "deploy": "alchemy deploy --app chat-web",
     "destroy": "alchemy destroy --app chat-web",
+    "dev": "next dev",
+    "start": "next start",
+    "transit": "true",
     "type-check": "next typegen && tsc --noEmit"
   },
   "dependencies": {
