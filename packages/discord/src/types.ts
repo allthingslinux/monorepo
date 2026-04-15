@@ -1,6 +1,6 @@
 import type { APIGuildMember } from "discord-api-types/v10";
 
-import type { DiscordHttpError } from "./errors.js";
+import type { DiscordHttpError } from "./errors";
 
 export type {
   APIGuildMember,

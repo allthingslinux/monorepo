@@ -1,4 +1,4 @@
-export { DiscordClient, DiscordHttpError } from "./client.js";
+export { DiscordClient, DiscordHttpError } from "./client";
 export {
   err,
   ok,
@@ -28,4 +28,4 @@ export {
   type Result,
   type SearchMembersOptions,
   type Snowflake,
-} from "./types.js";
+} from "./types";

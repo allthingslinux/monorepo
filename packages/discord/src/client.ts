@@ -18,8 +18,8 @@ import type {
   RESTGetAPIGuildWidgetJSONResult,
 } from "discord-api-types/v10";
 
-import { DiscordHttpError } from "./errors.js";
-import { err, ok, toSnowflake } from "./types.js";
+import { DiscordHttpError } from "./errors";
+import { err, ok, toSnowflake } from "./types";
 import type {
   CacheOptions,
   DiscordClientConfig,
@@ -29,7 +29,7 @@ import type {
   Result,
   SearchMembersOptions,
   Snowflake,
-} from "./types.js";
+} from "./types";
 
 const DISCORD_API = "https://discord.com/api/v10";
 
@@ -288,4 +288,4 @@ export class DiscordClient {
   }
 }
 
-export { DiscordHttpError } from "./errors.js";
+export { DiscordHttpError } from "./errors";
