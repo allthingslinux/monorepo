@@ -40,8 +40,8 @@ export const CHANGELOG_REPOS: RepoConfig[] = [
   { displayName: "iso.atl.dev", owner: "allthingslinux", repo: "iso.atl.dev" },
 ];
 
-/** Revalidate GitHub data every 10 minutes */
-export const CHANGELOG_REVALIDATE_SECONDS = 600;
+/** Revalidate GitHub fetch cache (Next.js Data Cache). Lower = fresher UI; watch API rate limits. */
+export const CHANGELOG_REVALIDATE_SECONDS = 120;
 
 /** Maximum commits to fetch per repository */
 export const CHANGELOG_MAX_COMMITS_PER_REPO = 100;

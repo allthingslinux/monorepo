@@ -40,8 +40,8 @@ export interface FeedSource {
   siteUrl: string;
 }
 
-/** Revalidate feeds every 10 minutes */
-export const FEED_REVALIDATE_SECONDS = 600;
+/** Revalidate RSS/Atom fetch cache (Next.js Data Cache). Lower = fresher UI, more upstream load. */
+export const FEED_REVALIDATE_SECONDS = 120;
 
 /** Maximum articles to fetch per source */
 export const FEED_ITEMS_PER_SOURCE = 20;
