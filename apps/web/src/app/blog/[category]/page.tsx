@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getDynamicMetadata } from "@/app/metadata";
-import { getAllCategories, getPostsByCategory } from "@/lib/blog";
+import { BlogListView } from "@/components/blog/blog-list-view";
+import {
+  getAllCategories,
+  getAllCategorySlugs,
+  getPostsByCategory,
+} from "@/lib/blog";
+import { categorySlugToTitle } from "@/lib/blog-utils";
 import { getBaseUrl } from "@/lib/utils";
-import { Badge } from "@atl/ui/components/badge";
-import { Button } from "@atl/ui/components/button";
 
 export const revalidate = 3600;
 
@@ -16,45 +19,31 @@ interface CategoryPageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  const slugs = await getAllCategorySlugs();
+  return slugs.map((category) => ({ category }));
+}
+
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const { category } = await params;
-
-  // Format the category name for display (capitalize first letter of each word)
-  const categoryTitle = category
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  // Build dynamic OG image URL with query parameters
-  // const ogImageUrl = new URL(getApiUrl('/api/og'));
-  // ogImageUrl.searchParams.append('title', `${categoryTitle} Articles`);
-  // ogImageUrl.searchParams.append('category', 'Blog');
+  const categoryTitle = categorySlugToTitle(category);
 
   return {
     ...getDynamicMetadata({
-      description: `Browse all our articles on ${categoryTitle}`,
-      title: `${categoryTitle} Articles`,
+      description: `Browse all our articles in ${categoryTitle}.`,
+      title: `${categoryTitle} — Blog`,
     }),
     openGraph: {
-      description: `Browse all our articles on ${categoryTitle}`,
-      title: `${categoryTitle} Articles`,
+      description: `Browse all our articles in ${categoryTitle}.`,
+      title: `${categoryTitle} — Blog`,
       url: `${getBaseUrl()}/blog/${category}`,
-      // images: [
-      //   {
-      //     url: ogImageUrl.toString(),
-      //     width: 1200,
-      //     height: 630,
-      //     alt: `${categoryTitle} Articles`,
-      //   },
-      // ],
     },
     twitter: {
       card: "summary_large_image",
-      description: `Browse all our articles on ${categoryTitle}`,
-      title: `${categoryTitle} Articles`,
-      // images: [ogImageUrl.toString()],
+      description: `Browse all our articles in ${categoryTitle}.`,
+      title: `${categoryTitle} — Blog`,
     },
   };
 }
@@ -62,107 +51,21 @@ export async function generateMetadata({
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
 
-  // Get all posts and categories
   const allCategories = await getAllCategories();
   const posts = await getPostsByCategory(category);
+  const categoryTitle = categorySlugToTitle(category);
 
-  // Format the category name for display (capitalize first letter of each word)
-  const categoryTitle = category
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  if (!posts || posts.length === 0) {
+  if (posts.length === 0) {
     notFound();
   }
 
   return (
-    <section className="py-16 md:py-24 lg:py-32">
-      <div className="container">
-        <div className="mb-12 flex flex-col items-center gap-4 text-center md:mb-16 md:gap-6">
-          <Badge className="px-3 py-1" variant="secondary">
-            {categoryTitle}
-          </Badge>
-          <h1 className="text-3xl font-bold md:text-5xl lg:text-6xl">
-            {categoryTitle} Articles
-          </h1>
-          <p className="text-muted-foreground max-w-3xl text-balance md:text-lg lg:text-xl">
-            Stay up to date with the latest news, tutorials, and updates from
-            the All Things Linux community. Our contributors share their
-            knowledge to help you master Linux and open source.
-          </p>
-        </div>
-
-        {/* Categories navigation */}
-        {allCategories.length > 0 && (
-          <div className="mb-10 flex flex-wrap justify-center gap-2">
-            <Button
-              className="rounded-full"
-              nativeButton={false}
-              render={<Link href="/blog">All</Link>}
-              variant="ghost"
-            />
-            {allCategories.map((cat) => {
-              const catSlug = cat.toLowerCase().replaceAll(" ", "-");
-              return (
-                <Button
-                  className="rounded-full"
-                  key={catSlug}
-                  nativeButton={false}
-                  render={<Link href={`/blog/${catSlug}`}>{cat}</Link>}
-                  variant={catSlug === category ? "secondary" : "ghost"}
-                />
-              );
-            })}
-          </div>
-        )}
-
-        {/* Posts grid */}
-        {posts.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-muted-foreground text-lg">No posts found.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            {posts.map((post) => (
-              <Link
-                className="group bg-card flex flex-col overflow-hidden rounded-lg border shadow-sm transition-all hover:shadow-md"
-                href={`/blog/${post.categorySlug}/${post.slug}`}
-                key={post.slug}
-              >
-                {/* <div className="relative h-48 overflow-hidden bg-muted">
-                    <Image
-                      src={postImageUrl.toString()}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  </div> */}
-                <div className="flex flex-grow flex-col p-5">
-                  <Badge className="mb-2 w-fit" variant="outline">
-                    {post.category}
-                  </Badge>
-                  <h3 className="group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
-                    {post.title}
-                  </h3>
-                  {post.description && (
-                    <p className="text-muted-foreground mb-4 line-clamp-3 text-sm">
-                      {post.description}
-                    </p>
-                  )}
-                  <div className="mt-auto flex items-center gap-2 border-t pt-3 text-sm">
-                    <span className="font-medium">{post.author}</span>
-                    <span className="text-muted-foreground">
-                      • {post.dateFormatted}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+    <BlogListView
+      activeCategorySlug={category}
+      categories={allCategories}
+      eyebrow={categoryTitle}
+      posts={posts}
+      title={`${categoryTitle} articles`}
+    />
   );
 }

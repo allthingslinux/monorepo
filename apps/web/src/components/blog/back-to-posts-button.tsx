@@ -1,100 +1,29 @@
-"use client";
-
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { Route } from "next";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@atl/ui/components/button";
 
-interface BackToAllPostsButtonProps {
+/** Mirrors `@atl/ui` Button `variant="ghost"` + default `size` (must not import from `button.tsx` — it is `"use client"`). */
+const ghostButtonClasses =
+  "group/button focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50";
+
+type BackToAllPostsButtonProps = {
   className?: string;
-}
+  /** Defaults to the main blog index. */
+  href?: Route;
+  label?: string;
+};
 
-export function BackToAllPostsButton({ className }: BackToAllPostsButtonProps) {
-  const router = useRouter();
-  const [isNavigating, setIsNavigating] = useState(false);
-
-  // Effect to force scroll to top after each render when needed
-  useEffect(() => {
-    // This ensures the page is at the top after navigating to blog list
-    const path = window.location.pathname;
-    if (path === "/blog") {
-      window.scrollTo(0, 0);
-    }
-  }, []);
-
-  const handleGoBack = () => {
-    if (isNavigating) {
-      return;
-    }
-
-    setIsNavigating(true);
-
-    // Force immediate scroll to top before anything else
-    window.scrollTo(0, 0);
-
-    // Prefetch the destination first
-    router.prefetch("/blog");
-
-    // Use a fixed overlay during transition
-    const overlay = document.createElement("div");
-    overlay.className =
-      "fixed inset-0 bg-background/70 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-300";
-    overlay.style.opacity = "0";
-
-    // Add spinner directly to overlay without a container
-    overlay.innerHTML = `
-      <div class="flex flex-col items-center">
-        <svg class="animate-spin h-10 w-10 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p class="text-neutral-200">Loading posts...</p>
-      </div>
-    `;
-    // oxlint-disable-next-line unicorn/prefer-dom-node-append -- .append() conflicts with @cloudflare/workers-types
-    document.body.appendChild(overlay);
-
-    // Fade in the overlay
-    setTimeout(() => {
-      overlay.style.opacity = "1";
-    }, 10);
-
-    // Navigate after a short delay with the overlay visible
-    setTimeout(() => {
-      // Navigate with scroll:true to start at the top
-      router.push("/blog", { scroll: true });
-
-      // After navigation, ensure we're at the top again and clean up
-      setTimeout(() => {
-        // Force scroll to top again after navigation completes
-        window.scrollTo(0, 0);
-
-        // Begin fading out the overlay
-        overlay.style.opacity = "0";
-
-        // Remove overlay after fade completes
-        setTimeout(() => {
-          overlay.remove();
-          setIsNavigating(false);
-        }, 300);
-      }, 300); // Increased timeout for navigation to complete
-    }, 50);
-  };
-
+export function BackToAllPostsButton({
+  className,
+  href = "/blog",
+  label = "All posts",
+}: BackToAllPostsButtonProps) {
   return (
-    <Button
-      className={cn(
-        isNavigating && "pointer-events-none opacity-70",
-        className
-      )}
-      disabled={isNavigating}
-      onClick={handleGoBack}
-      variant="ghost"
-    >
-      <ChevronLeft className="mr-2 h-4 w-4" />
-      See all posts
-    </Button>
+    <Link className={cn(ghostButtonClasses, "gap-2", className)} href={href}>
+      <ChevronLeft aria-hidden className="size-4 shrink-0" />
+      {label}
+    </Link>
   );
 }

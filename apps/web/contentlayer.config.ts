@@ -1,4 +1,9 @@
 import { defineDocumentType, makeSource } from "contentlayer2/source-files";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
+
+import { slugifyCategory } from "./src/lib/blog-utils";
 
 // Define the Blog Post document type
 export const BlogPost = defineDocumentType(() => ({
@@ -6,7 +11,7 @@ export const BlogPost = defineDocumentType(() => ({
     categorySlug: {
       resolve: (doc) => {
         const category = doc.category || "Uncategorized";
-        return category.toLowerCase().replaceAll(" ", "-");
+        return slugifyCategory(category);
       },
       type: "string",
     },
@@ -14,7 +19,6 @@ export const BlogPost = defineDocumentType(() => ({
       resolve: (doc) => {
         try {
           const date = new Date(doc.date);
-          // Use a more stable approach for date formatting
           const months = [
             "January",
             "February",
@@ -44,7 +48,7 @@ export const BlogPost = defineDocumentType(() => ({
     url: {
       resolve: (doc) => {
         const categorySlug = doc.category
-          ? doc.category.toLowerCase().replaceAll(" ", "-")
+          ? slugifyCategory(doc.category)
           : "uncategorized";
         const slug = doc._raw.sourceFileName.replace(/\.mdx$/, "");
         return `/blog/${categorySlug}/${slug}`;
@@ -71,6 +75,17 @@ export const BlogPost = defineDocumentType(() => ({
       required: true,
       type: "string",
     },
+    /** When true, hidden from listings and feeds in production builds. */
+    draft: {
+      default: false,
+      required: false,
+      type: "boolean",
+    },
+    /** Featured / OG image: absolute URL or path under site root (e.g. /images/foo.png). */
+    image: {
+      required: false,
+      type: "string",
+    },
     title: {
       required: true,
       type: "string",
@@ -83,10 +98,22 @@ export const BlogPost = defineDocumentType(() => ({
 // Create the contentlayer source
 export default makeSource({
   contentDirPath: "content",
+  date: {
+    timezone: "UTC",
+  },
   disableImportAliasWarning: true,
   documentTypes: [BlogPost],
   mdx: {
-    // Use default MDX processing without custom esbuild options
-    // This should avoid the malformed code generation issue
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "wrap",
+          properties: { className: ["anchor"] },
+        },
+      ],
+    ],
+    remarkPlugins: [remarkGfm],
   },
 });

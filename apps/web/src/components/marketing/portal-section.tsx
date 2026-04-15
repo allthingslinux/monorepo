@@ -45,7 +45,11 @@ export function PortalSection({
   signUpUrl: string;
 }) {
   return (
-    <Section size="spacious" variant="default" className="bg-card">
+    <Section
+      size="spacious"
+      variant="default"
+      className="bg-card border-b-0 !pb-0"
+    >
       <Container>
         <div className="flex flex-col items-center text-center" id="portal">
           <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
@@ -118,26 +122,26 @@ function BrowserMockup({
       )}
     >
       {/* Title bar */}
-      <div className="bg-muted/50 flex items-center justify-between gap-10 px-5 py-3 md:px-8 md:py-4 lg:gap-24">
-        <div className="flex items-center gap-2">
-          <div className="size-2.5 rounded-full bg-red-500 md:size-3" />
-          <div className="size-2.5 rounded-full bg-yellow-500 md:size-3" />
-          <div className="size-2.5 rounded-full bg-green-500 md:size-3" />
-          <div className="ml-4 hidden items-center gap-2 opacity-40 lg:flex">
-            <ChevronLeft className="size-4" />
-            <ChevronRight className="size-4" />
+      <div className="bg-muted/50 flex items-center justify-between gap-6 px-4 py-2 md:gap-16 md:px-6 md:py-2.5 lg:gap-24">
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <div className="size-2 rounded-full bg-red-500 md:size-2.5" />
+          <div className="size-2 rounded-full bg-yellow-500 md:size-2.5" />
+          <div className="size-2 rounded-full bg-green-500 md:size-2.5" />
+          <div className="ml-2 hidden items-center gap-1 opacity-40 lg:ml-3 lg:flex lg:gap-1.5">
+            <ChevronLeft className="size-3.5" />
+            <ChevronRight className="size-3.5" />
           </div>
         </div>
         <div className="flex w-full items-center justify-center">
-          <p className="bg-background/60 text-muted-foreground relative hidden w-full max-w-xs rounded-full px-4 py-1 text-center text-sm tracking-tight md:block">
+          <p className="bg-background/60 text-muted-foreground relative hidden w-full max-w-xs rounded-full px-3 py-0.5 text-center text-xs tracking-tight md:block md:text-sm">
             {url}
-            <RotateCw className="absolute top-2 right-3 size-3.5" />
+            <RotateCw className="absolute top-1/2 right-2.5 size-3 -translate-y-1/2 md:right-3 md:size-3.5" />
           </p>
         </div>
-        <div className="flex items-center gap-3 opacity-40 md:gap-4">
-          <Share className="size-3.5 md:size-4" />
-          <Plus className="size-3.5 md:size-4" />
-          <Copy className="size-3.5 md:size-4" />
+        <div className="flex items-center gap-2 opacity-40 md:gap-3">
+          <Share className="size-3 md:size-3.5" />
+          <Plus className="size-3 md:size-3.5" />
+          <Copy className="size-3 md:size-3.5" />
         </div>
       </div>
       {/* Dashboard image */}

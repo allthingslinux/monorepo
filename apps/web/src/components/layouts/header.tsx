@@ -69,6 +69,53 @@ interface DropdownMenu {
 
 const DROPDOWN_MENUS: DropdownMenu[] = [
   {
+    label: "Resources",
+    links: [
+      {
+        title: "About",
+        href: "/about",
+        description: "Our story & mission",
+        icon: Globe,
+        color: "#3b82f6",
+      },
+      {
+        title: "Blog",
+        href: "/blog",
+        description: "News & updates",
+        icon: Newspaper,
+        color: "#f97316",
+      },
+      {
+        title: "Contribute",
+        href: "/contribute",
+        description: "Support our mission",
+        icon: Heart,
+        color: "#ef4444",
+      },
+      {
+        title: "Apply",
+        href: "/apply",
+        description: "Join the team",
+        icon: Users,
+        color: "#10b981",
+      },
+      {
+        title: "Open",
+        href: "/open",
+        description: "Transparency dashboard",
+        icon: FileText,
+        color: "#f59e0b",
+      },
+      {
+        title: "Code of Conduct",
+        href: "/code-of-conduct",
+        description: "Community guidelines",
+        icon: BookOpen,
+        color: "#8b5cf6",
+      },
+    ],
+  },
+  {
     label: "Projects",
     links: [
       {
@@ -129,53 +176,6 @@ const DROPDOWN_MENUS: DropdownMenu[] = [
       },
     ],
   },
-  {
-    label: "Community",
-    links: [
-      {
-        title: "About",
-        href: "/about",
-        description: "Our story & mission",
-        icon: Globe,
-        color: "#3b82f6",
-      },
-      {
-        title: "Blog",
-        href: "/blog",
-        description: "News & updates",
-        icon: Newspaper,
-        color: "#f97316",
-      },
-      {
-        title: "Contribute",
-        href: "/contribute",
-        description: "Support our mission",
-        icon: Heart,
-        color: "#ef4444",
-      },
-      {
-        title: "Apply",
-        href: "/apply",
-        description: "Join the team",
-        icon: Users,
-        color: "#10b981",
-      },
-      {
-        title: "Open",
-        href: "/open",
-        description: "Transparency dashboard",
-        icon: FileText,
-        color: "#f59e0b",
-      },
-      {
-        title: "Code of Conduct",
-        href: "/code-of-conduct",
-        description: "Community guidelines",
-        icon: BookOpen,
-        color: "#8b5cf6",
-      },
-    ],
-  },
 ];
 
 const PLAIN_LINKS: { label: string; href: string }[] = [];
@@ -184,17 +184,18 @@ const PLAIN_LINKS: { label: string; href: string }[] = [];
 
 function MenuSubLink({
   link,
-  onClick,
+  onNavigate,
 }: {
   link: MenuLink;
-  onClick?: () => void;
+  /** Called after choosing a destination; use to close parent overlays (e.g. desktop nav menu). */
+  onNavigate?: () => void;
 }) {
   const isExternal = link.external;
   return (
     <Link
       className="hover:bg-muted flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-colors"
       href={link.href as Route}
-      onClick={onClick}
+      onClick={onNavigate}
       rel={isExternal ? "noopener noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
     >
@@ -257,11 +258,23 @@ function ThemeToggle() {
 /* ─── Desktop Navigation ────────────────────────────────────────────────────── */
 
 function DesktopNavigation() {
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
+  const closeMenu = () => {
+    setOpenMenu(null);
+  };
+
   return (
-    <NavigationMenu className="hidden lg:flex">
+    <NavigationMenu
+      className="hidden lg:flex"
+      onValueChange={(value) => {
+        setOpenMenu(value ?? null);
+      }}
+      value={openMenu}
+    >
       <NavigationMenuList>
         {DROPDOWN_MENUS.map((menu) => (
-          <NavigationMenuItem key={menu.label}>
+          <NavigationMenuItem key={menu.label} value={menu.label}>
             <NavigationMenuTrigger className="text-muted-foreground hover:bg-muted! hover:text-foreground! data-popup-open:bg-muted! data-open:bg-muted! bg-transparent px-3 py-1.5 text-sm font-normal">
               {menu.label}
             </NavigationMenuTrigger>
@@ -269,7 +282,7 @@ function DesktopNavigation() {
               <ul className="grid w-lg grid-cols-2 gap-1 p-2.5">
                 {menu.links.map((link) => (
                   <li key={link.title}>
-                    <MenuSubLink link={link} />
+                    <MenuSubLink link={link} onNavigate={closeMenu} />
                   </li>
                 ))}
               </ul>
@@ -332,7 +345,7 @@ function MobileNavigation() {
                       <MenuSubLink
                         key={link.title}
                         link={link}
-                        onClick={handleClose}
+                        onNavigate={handleClose}
                       />
                     ))}
                   </div>

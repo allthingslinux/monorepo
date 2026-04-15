@@ -1,13 +1,23 @@
-import type { Metadata } from "next";
+import { ChevronLeft } from "lucide-react";
+import type { Metadata, Route } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getDynamicMetadata } from "@/app/metadata";
-import { BackToAllPostsButton } from "@/components/blog/back-to-posts-button";
+import { BlogArticleBreadcrumbs } from "@/components/blog/blog-article-breadcrumbs";
+import { BlogArticleMetaAside } from "@/components/blog/blog-article-meta-aside";
+import { BlogArticleToc } from "@/components/blog/blog-article-toc";
+import { BlogRelatedPosts } from "@/components/blog/blog-related-posts";
+import { blogContainerClassName } from "@/components/blog/blog-shell";
 import ClientScrollToTop from "@/components/blog/client-scroll-to-top";
 import { Mdx } from "@/components/mdx/mdx-components";
 import { ArticleSchema } from "@/components/seo/structured-data";
-import { getPost } from "@/lib/blog";
+import { Container } from "@/components/shell";
+import { getAllPostRouteParams, getPost, getRelatedPosts } from "@/lib/blog";
+import { resolvePostImageUrl } from "@/lib/blog-utils";
 import { getBaseUrl } from "@/lib/utils";
+import { Button } from "@atl/ui/components/button";
 
 interface PostPageProps {
   params: Promise<{
@@ -16,7 +26,12 @@ interface PostPageProps {
   }>;
 }
 
-// Generate metadata for the post
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  return getAllPostRouteParams();
+}
+
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
@@ -30,19 +45,8 @@ export async function generateMetadata({
     });
   }
 
-  // Convert category slug to proper name for display
-  // const categoryName =
-  //   post.category ||
-  //   category
-  //     .split('-')
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join(' ');
-
-  // Build dynamic OG image URL with query parameters
-  // const ogImageUrl = new URL(getApiUrl('/api/og'));
-  // ogImageUrl.searchParams.append('title', post.title);
-  // ogImageUrl.searchParams.append('category', categoryName);
-  // ogImageUrl.searchParams.append('date', post.date);
+  const imageUrl = resolvePostImageUrl(post.image);
+  const pageUrl = `${getBaseUrl()}/blog/${category}/${slug}`;
 
   return {
     ...getDynamicMetadata({
@@ -52,52 +56,20 @@ export async function generateMetadata({
     openGraph: {
       authors: [post.author || "All Things Linux"],
       description: post.description || `Read our post about ${post.title}`,
+      images: [{ alt: post.title, height: 630, url: imageUrl, width: 1200 }],
       modifiedTime: post.date,
-      // images: [
-      //   {
-      //     url: ogImageUrl.toString(),
-      //     width: 1200,
-      //     height: 630,
-      //     alt: post.title,
-      //   },
-      // ],
       publishedTime: post.date,
       title: post.title,
       type: "article",
-      url: `${getBaseUrl()}/blog/${category}/${slug}`,
+      url: pageUrl,
     },
     twitter: {
       card: "summary_large_image",
       description: post.description || `Read our post about ${post.title}`,
+      images: [imageUrl],
       title: post.title,
-      // images: [ogImageUrl.toString()],
     },
   };
-}
-
-// Simple date formatter function
-function formatDate(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return dateString;
-  }
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -109,54 +81,100 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
+  const imageUrl = resolvePostImageUrl(post.image);
+  const related = await getRelatedPosts(post, 4);
+  const postKey = `${category}/${slug}`;
+  const categoryHref = `/blog/${post.categorySlug}` as Route;
+  const showImage = Boolean(post.image);
+
   return (
-    <article className="relative container max-w-4xl py-6 lg:py-10">
+    <>
       <ArticleSchema
         authorName={post.author || "All Things Linux"}
         dateModified={post.date}
         datePublished={post.date}
         description={post.description || `Read our post about ${post.title}`}
-        imageUrl="https://allthingslinux.org/images/og.png"
+        imageUrl={imageUrl}
         title={post.title}
       />
-      <div className="absolute top-14 left-[-200px] hidden xl:block">
-        <BackToAllPostsButton />
-      </div>
+      <article className="border-border/40 bg-background border-b pt-20 pb-10 md:pt-24 md:pb-14 lg:pt-28 lg:pb-20">
+        <Container className={blogContainerClassName}>
+          <div className="mx-auto w-full max-w-4xl text-center">
+            <BlogArticleBreadcrumbs post={post} />
 
-      <div>
-        <h1 className="mt-2 scroll-m-20 text-4xl font-bold tracking-tight text-balance">
-          {post.title}
-        </h1>
-        {post.description && (
-          <p className="text-md text-muted-foreground my-4 text-balance">
-            {post.description}
-          </p>
-        )}
+            <h1 className="text-foreground mt-8 scroll-m-20 font-serif text-3xl font-bold tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-6xl">
+              {post.title}
+            </h1>
 
-        {/* Author and date with card aesthetic */}
-        <div className="bg-card/50 text-muted-foreground mt-4 inline-flex items-center space-x-2 rounded-md px-3 py-1 text-sm">
-          {post.author && (
-            <>
-              <div className="font-medium">{post.author}</div>
-              <div>·</div>
-            </>
-          )}
-          <div>
-            <time dateTime={post.date}>
-              {post.dateFormatted || formatDate(post.date)}
-            </time>
+            {post.description ? (
+              <p className="text-muted-foreground mx-auto mt-5 max-w-2xl text-lg leading-relaxed font-medium text-pretty md:text-xl">
+                {post.description}
+              </p>
+            ) : null}
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button
+                nativeButton={false}
+                render={<Link href="/blog" />}
+                size="lg"
+              >
+                <ChevronLeft aria-hidden className="mr-2 size-4" />
+                All posts
+              </Button>
+              <Button
+                nativeButton={false}
+                render={<Link href={categoryHref} />}
+                size="lg"
+                variant="outline"
+              >
+                More in {post.category}
+              </Button>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="mt-8">
-        <Mdx code={post.body.code} />
-      </div>
+          <div className="relative mt-12 flex flex-col gap-8 lg:mt-20 lg:flex-row lg:items-start lg:gap-6 xl:gap-7">
+            <BlogArticleMetaAside post={post} />
 
-      <div className="flex items-center justify-center gap-4 py-6 lg:py-10">
-        <BackToAllPostsButton />
-        <ClientScrollToTop />
-      </div>
-    </article>
+            <div className="order-1 min-w-0 flex-1 space-y-8 lg:order-none">
+              {showImage ? (
+                <div className="border-border relative aspect-video w-full overflow-hidden rounded-2xl border">
+                  <Image
+                    alt=""
+                    className="object-cover"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    src={post.image as string}
+                    unoptimized
+                  />
+                </div>
+              ) : null}
+
+              <div className="px-4 sm:px-6 lg:pr-6 lg:pl-4 xl:pr-9 xl:pl-7">
+                <div className="mx-auto w-full max-w-prose" id="blog-post-body">
+                  <Mdx code={post.body.code} />
+                </div>
+              </div>
+            </div>
+
+            <BlogArticleToc key={postKey} postKey={postKey} />
+          </div>
+
+          <BlogRelatedPosts categoryLabel={post.category} posts={related} />
+
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t pt-10 sm:flex-row">
+            <Button
+              nativeButton={false}
+              render={<Link href="/blog" />}
+              variant="ghost"
+            >
+              <ChevronLeft aria-hidden className="mr-2 size-4" />
+              All posts
+            </Button>
+            <ClientScrollToTop />
+          </div>
+        </Container>
+      </article>
+    </>
   );
 }

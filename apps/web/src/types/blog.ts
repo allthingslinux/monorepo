@@ -6,7 +6,9 @@ export interface Post {
   date: string;
   dateFormatted: string;
   description: string;
-  image?: string; // Optional featured image URL
+  /** Omitted when false / from older generated types. */
+  draft?: boolean;
+  image?: string;
   slug: string;
   title: string;
 }

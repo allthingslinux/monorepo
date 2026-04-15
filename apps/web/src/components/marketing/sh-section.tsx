@@ -5,8 +5,6 @@ import {
   MessageCircle,
   Terminal,
 } from "lucide-react";
-import Link from "next/link";
-import { TbArrowUpRight } from "react-icons/tb";
 
 import { Section } from "@/components/shell";
 import { cn } from "@/lib/utils";
@@ -160,17 +158,13 @@ export function ShSection() {
           </h2>
         </div>
         <Button
-          render={
-            <Link
-              href="https://atl.sh"
-              rel="noopener noreferrer"
-              target="_blank"
-            />
-          }
+          className="bg-muted text-muted-foreground rounded-full px-6 shadow-none"
+          disabled
           size="lg"
+          type="button"
+          variant="secondary"
         >
-          Get a shell account
-          <TbArrowUpRight className="ml-1.5 size-4" />
+          Coming soon
         </Button>
       </div>
 

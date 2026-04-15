@@ -425,7 +425,7 @@ export function Mdx({ code }: MdxProps) {
   // Use the proper error boundary
   return (
     <MDXErrorBoundary>
-      <div className="mdx prose prose-invert prose-code:bg-muted prose-pre:bg-black prose-headings:font-semibold prose-a:text-primary prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-code:before:content-none prose-code:after:content-none max-w-none">
+      <div className="mdx prose prose-neutral dark:prose-invert prose-code:bg-muted prose-pre:bg-black prose-headings:scroll-mt-24 prose-headings:font-semibold prose-a:text-primary prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-h4:text-xl prose-code:before:content-none prose-code:after:content-none [&_a.anchor]:text-muted-foreground max-w-none [&_a.anchor]:no-underline [&_a.anchor]:opacity-70 [&_a.anchor]:transition-opacity hover:[&_a.anchor]:opacity-100">
         <Component components={components} />
       </div>
     </MDXErrorBoundary>
