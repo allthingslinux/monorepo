@@ -7,6 +7,13 @@ import { OrbitingCircles } from "@atl/ui/components/orbiting-circles";
 
 import { HomeActions } from "./home-actions";
 
+/** Tightest orbit — fills the open space inside the Arch/Fedora ring in the hero arc */
+const core = [
+  { alt: "Void", src: "/images/hero/void.webp" },
+  { alt: "Artix", src: "/images/hero/artix.webp" },
+  { alt: "Asahi", src: "/images/hero/asahi.webp" },
+];
+
 const inner = [
   { alt: "Arch Linux", src: "/images/hero/arch.webp" },
   { alt: "Fedora", src: "/images/hero/fedora.webp" },
@@ -120,6 +127,19 @@ export function HeroSection() {
                     src={d.src}
                     width={44}
                     height={44}
+                  />
+                </div>
+              ))}
+            </OrbitingCircles>
+            <OrbitingCircles iconSize={40} radius={150} reverse speed={2.1}>
+              {core.map((d) => (
+                <div className="size-10 rounded-full p-1" key={d.alt}>
+                  <Image
+                    alt={d.alt}
+                    className="size-full object-contain"
+                    src={d.src}
+                    width={40}
+                    height={40}
                   />
                 </div>
               ))}

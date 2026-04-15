@@ -28,7 +28,7 @@ import { PortalActions } from "./portal-actions";
 const HIGHLIGHTS = [
   { Icon: Shield, text: "Self-provision accounts and services" },
   { Icon: KeyRound, text: "Manage your community presence" },
-  { Icon: Users, text: "Access unique resources and features" },
+  { Icon: Users, text: "Access special resources and features" },
 ] as const;
 
 const AVATARS = [
@@ -36,6 +36,33 @@ const AVATARS = [
   { src: "/images/avatars/avatar-2.webp", fallback: "U2" },
   { src: "/images/avatars/avatar-3.webp", fallback: "U3" },
 ] as const;
+
+/**
+ * Extends into {@link Section} top padding only. Bottom stays `bottom-0` so the
+ * backdrop matches the section when portal uses `!pb-0` (browser flush to edge).
+ */
+const PORTAL_BACKDROP_VERTICAL = "-top-20 bottom-0 md:-top-28 lg:-top-32";
+
+/** Full-bleed layer: centered `w-screen` so the glow isn’t clipped to `max-w-6xl`. */
+const PORTAL_BACKDROP_FULL_BLEED =
+  "left-1/2 w-screen max-w-none -translate-x-1/2";
+
+/** Soft top spotlight + fine dot grid (no blurred blobs). */
+function PortalSectionBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "pointer-events-none absolute -z-10 overflow-hidden",
+        PORTAL_BACKDROP_FULL_BLEED,
+        PORTAL_BACKDROP_VERTICAL
+      )}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_68%_45%_at_50%_0%,var(--primary)_0%,transparent_48%)] opacity-[0.09]" />
+      <div className="absolute inset-0 bg-[radial-gradient(var(--border)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black_0%,black_70%,transparent_100%)] bg-size-[22px_22px] opacity-[0.28]" />
+    </div>
+  );
+}
 
 export function PortalSection({
   signInUrl,
@@ -48,10 +75,14 @@ export function PortalSection({
     <Section
       size="spacious"
       variant="default"
-      className="bg-card border-b-0 !pb-0"
+      className="bg-card overflow-x-hidden border-b-0 !pb-0"
     >
       <Container>
-        <div className="flex flex-col items-center text-center" id="portal">
+        <PortalSectionBackdrop />
+        <div
+          className="relative z-0 flex w-full min-w-0 flex-col items-center text-center"
+          id="portal"
+        >
           <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
             Portal
           </p>
@@ -65,19 +96,21 @@ export function PortalSection({
 
           <Badge
             variant="outline"
-            className="mt-10 flex h-auto cursor-default gap-3 p-1.5 pr-4 text-base font-normal"
+            className="mt-10 flex h-auto cursor-default gap-2 p-1 pr-3 font-normal"
           >
             <AvatarGroup>
               {AVATARS.map((a) => (
-                <Avatar className="size-8 md:size-10" key={a.fallback}>
+                <Avatar className="size-7 md:size-8" key={a.fallback}>
                   <AvatarImage src={a.src} alt="" />
-                  <AvatarFallback>{a.fallback}</AvatarFallback>
+                  <AvatarFallback className="text-[10px]">
+                    {a.fallback}
+                  </AvatarFallback>
                 </Avatar>
               ))}
             </AvatarGroup>
-            <p className="tracking-tight capitalize md:text-lg">
-              Trusted by <span className="text-foreground font-bold">20K+</span>{" "}
-              members.
+            <p className="text-[11px] leading-snug tracking-tight sm:text-xs md:text-sm">
+              Join <span className="text-foreground font-bold">126+</span> other
+              members
             </p>
           </Badge>
 
@@ -100,9 +133,9 @@ export function PortalSection({
             <PortalActions signInUrl={signInUrl} signUpUrl={signUpUrl} />
           </div>
 
-          <div className="relative mt-14 flex w-full flex-col items-center justify-center">
+          <div className="relative mt-14 flex w-full max-w-3xl flex-col items-center justify-center md:max-w-4xl">
             <BrowserMockup url="portal.allthingslinux.org" />
-            <div className="from-background absolute bottom-0 h-2/3 w-full bg-linear-to-t to-transparent" />
+            <div className="from-background pointer-events-none absolute bottom-0 h-3/4 w-full bg-linear-to-t to-transparent" />
           </div>
         </div>
       </Container>
@@ -144,23 +177,15 @@ function BrowserMockup({
           <Copy className="size-3 md:size-3.5" />
         </div>
       </div>
-      {/* Dashboard image */}
-      <div className="relative w-full">
+      {/* Dashboard image — capped height, top-weighted crop */}
+      <div className="relative h-[min(38vh,280px)] w-full overflow-hidden md:h-[min(44vh,360px)]">
         <Image
           alt="Portal dashboard preview"
-          className="hidden aspect-video h-full w-full object-cover object-top md:block"
+          className="h-full w-full object-cover object-top"
+          height={800}
           src="https://i.imgur.com/iEZMd8j.png"
+          unoptimized
           width={1200}
-          height={800}
-          unoptimized
-        />
-        <Image
-          alt="Portal dashboard preview"
-          className="block h-full w-full object-cover md:hidden"
-          src="https://i.imgur.com/iEZMd8j.png"
-          width={600}
-          height={800}
-          unoptimized
         />
       </div>
       {/* Mobile URL bar */}

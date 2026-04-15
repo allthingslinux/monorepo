@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PiLinuxLogoBold } from "react-icons/pi";
 import { TbBrandDiscord } from "react-icons/tb";
 
@@ -179,6 +179,9 @@ const DROPDOWN_MENUS: DropdownMenu[] = [
 ];
 
 const PLAIN_LINKS: { label: string; href: string }[] = [];
+
+/** Past this offset (matches bar height) we allow hide-on-scroll-down. */
+const HEADER_SCROLL_TOP_THRESHOLD_PX = 56;
 
 /* ─── Shared sub-link ───────────────────────────────────────────────────────── */
 
@@ -374,9 +377,42 @@ function MobileNavigation() {
 /* ─── Header ────────────────────────────────────────────────────────────────── */
 
 export default function Header() {
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const prev = lastScrollY.current;
+
+      if (y < HEADER_SCROLL_TOP_THRESHOLD_PX) {
+        setHidden(false);
+      } else if (y > prev) {
+        setHidden(true);
+      } else if (y < prev) {
+        setHidden(false);
+      }
+
+      lastScrollY.current = y;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <header className="pointer-events-none fixed top-0 right-0 left-0 z-50 flex justify-center">
-      <div className="border-border/20 bg-nav pointer-events-auto flex h-14 w-full max-w-4xl items-center justify-between rounded-b-2xl border-x border-b px-5 sm:px-6">
+      <div
+        className={cn(
+          "border-border/20 bg-nav flex h-14 w-full max-w-4xl items-center justify-between rounded-b-2xl border-x border-b px-5 sm:px-6",
+          "transition-transform duration-300 ease-out motion-reduce:transition-none",
+          hidden
+            ? "pointer-events-none -translate-y-full"
+            : "pointer-events-auto translate-y-0"
+        )}
+      >
         <div className="flex items-center gap-8">
           <Logo />
           <DesktopNavigation />

@@ -407,7 +407,7 @@ export function ChatSection() {
       id="atl-chat"
       className="py-28 md:py-36 lg:py-44"
     >
-      <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
+      <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-x-24 lg:gap-y-12 xl:gap-x-32">
         {/* Left — illustration */}
         <BridgeIllustration />
 
