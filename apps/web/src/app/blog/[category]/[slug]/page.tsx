@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { Metadata, Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -118,7 +118,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 render={<Link href="/blog" />}
                 size="lg"
               >
-                <ChevronLeft aria-hidden className="mr-2 size-4" />
+                <ArrowLeft aria-hidden className="mr-2 size-4 shrink-0" />
                 All posts
               </Button>
               <Button
@@ -168,7 +168,7 @@ export default async function PostPage({ params }: PostPageProps) {
               render={<Link href="/blog" />}
               variant="ghost"
             >
-              <ChevronLeft aria-hidden className="mr-2 size-4" />
+              <ArrowLeft aria-hidden className="mr-2 size-4 shrink-0" />
               All posts
             </Button>
             <ClientScrollToTop />
