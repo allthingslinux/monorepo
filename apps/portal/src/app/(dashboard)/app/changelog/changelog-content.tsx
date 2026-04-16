@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { ChangelogFilters } from "@/features/changelog/components/changelog-filters";
 import type { EntryTypeFilterValue } from "@/features/changelog/components/changelog-filters";
 import { TimelineView } from "@/features/changelog/components/timeline-view";
+import { useChangelogLiveQuery } from "@/features/changelog/hooks/use-changelog-live-query";
 import { parseConventionalCommit } from "@/features/changelog/lib/parser";
 import type {
   ConventionalCommitType,
@@ -27,6 +28,13 @@ export function ChangelogContent({
   errors,
   repos,
 }: ChangelogContentProps) {
+  const live = useChangelogLiveQuery({ entries, errors, repos });
+  const {
+    entries: liveEntries,
+    errors: liveErrors,
+    repos: liveRepos,
+  } = live.data;
+
   const [selectedRepos, setSelectedRepos] = useState<Set<string>>(new Set());
   const [entryTypeFilter, setEntryTypeFilter] =
     useState<EntryTypeFilterValue>("all");
@@ -36,7 +44,7 @@ export function ChangelogContent({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filteredEntries = useMemo(() => {
-    let list = entries;
+    let list = liveEntries;
     if (selectedRepos.size > 0) {
       list = list.filter((e) => selectedRepos.has(e.repoId));
     }
@@ -55,7 +63,7 @@ export function ChangelogContent({
       });
     }
     return list;
-  }, [entries, selectedRepos, entryTypeFilter, selectedCommitTypes]);
+  }, [liveEntries, selectedRepos, entryTypeFilter, selectedCommitTypes]);
 
   function toggleRepo(repoId: string) {
     setSelectedRepos((prev) => {
@@ -99,7 +107,7 @@ export function ChangelogContent({
     setVisibleCount((prev) => prev + PAGE_SIZE);
   }, []);
 
-  if (entries.length === 0 && errors.length > 0) {
+  if (liveEntries.length === 0 && liveErrors.length > 0) {
     return (
       <div className="border-destructive/30 bg-destructive/5 flex flex-col items-center justify-center rounded-xl border py-16">
         <AlertTriangle className="text-destructive/60 mb-3 size-8" />
@@ -115,13 +123,21 @@ export function ChangelogContent({
 
   return (
     <div className="space-y-5">
+      {live.isError ? (
+        <div className="border-warning/30 bg-warning/5 rounded-lg border px-4 py-2.5">
+          <p className="text-warning text-xs">
+            Could not refresh the changelog. Showing the last loaded timeline.
+          </p>
+        </div>
+      ) : null}
+
       <ChangelogFilters
         entryType={entryTypeFilter}
         onCommitTypeToggle={toggleCommitType}
         onEntryTypeChange={handleEntryTypeChange}
         onRepoToggle={toggleRepo}
         onReset={resetFilters}
-        repos={repos}
+        repos={liveRepos}
         selectedCommitTypes={selectedCommitTypes}
         selectedRepos={selectedRepos}
       />

@@ -41,6 +41,11 @@ export interface FeedSourceResult {
   sourceName: string;
 }
 
+/** When `bypassNextDataCache` is true, RSS fetches skip the Next.js Data Cache (for on-demand refresh). */
+export interface FetchLinuxFeedsOptions {
+  bypassNextDataCache?: boolean;
+}
+
 const parser = new Parser({
   customFields: {
     item: [
@@ -194,12 +199,22 @@ export async function fetchLatestBlogPosts(limit = 4): Promise<BlogPost[]> {
   }
 }
 
+function feedUpstreamFetchInit(
+  bypassNextDataCache: boolean | undefined
+): Pick<RequestInit, "cache" | "next"> {
+  if (bypassNextDataCache) {
+    return { cache: "no-store" };
+  }
+  return { next: { revalidate: FEED_REVALIDATE_SECONDS } };
+}
+
 /**
  * Fetch articles from a single RSS/Atom feed source.
- * Cached via Next.js ISR (revalidates per FEED_REVALIDATE_SECONDS).
+ * Cached via Next.js ISR (revalidates per FEED_REVALIDATE_SECONDS) unless bypassed.
  */
 export async function fetchLinuxFeedSource(
-  source: FeedSource
+  source: FeedSource,
+  options?: FetchLinuxFeedsOptions
 ): Promise<FeedSourceResult> {
   try {
     const response = await fetch(source.feedUrl, {
@@ -208,7 +223,7 @@ export async function fetchLinuxFeedSource(
           "application/rss+xml, application/atom+xml, application/xml, text/xml",
         "User-Agent": "Portal/1.0 (https://portal.atl.tools)",
       },
-      next: { revalidate: FEED_REVALIDATE_SECONDS },
+      ...feedUpstreamFetchInit(options?.bypassNextDataCache),
     });
 
     if (!response.ok) {
@@ -269,11 +284,12 @@ export async function fetchLinuxFeedSource(
  * Returns a flat, date-sorted list of articles alongside per-source results.
  */
 export async function fetchAllLinuxFeeds(
-  sources: FeedSource[]
+  sources: FeedSource[],
+  options?: FetchLinuxFeedsOptions
 ): Promise<{ articles: FeedArticle[]; results: FeedSourceResult[] }> {
   const enabledSources = sources.filter((s) => s.enabled);
   const results = await Promise.all(
-    enabledSources.map((s) => fetchLinuxFeedSource(s))
+    enabledSources.map((s) => fetchLinuxFeedSource(s, options))
   );
 
   const articles = results

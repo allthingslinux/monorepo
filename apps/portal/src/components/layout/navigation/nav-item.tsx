@@ -32,6 +32,7 @@ export function NavItem({ route }: NavItemProps) {
           <Link
             {...props}
             href={route.path as Parameters<typeof Link>[0]["href"]}
+            prefetch={route.navigation?.prefetch ?? true}
           >
             {Icon && <Icon />}
             <span>{route.label}</span>

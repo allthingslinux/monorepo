@@ -98,6 +98,7 @@ export const routeConfig = {
       navigation: {
         group: "platform",
         order: 4,
+        prefetch: false,
       },
       path: "/app/events",
     },
@@ -132,6 +133,7 @@ export const routeConfig = {
       navigation: {
         group: "platform",
         order: 6,
+        prefetch: false,
       },
       path: "/app/feed",
     },
@@ -145,6 +147,7 @@ export const routeConfig = {
       navigation: {
         group: "platform",
         order: 7,
+        prefetch: false,
       },
       path: "/app/changelog",
     },

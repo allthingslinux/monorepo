@@ -12,6 +12,7 @@ import {
 import { useLocale } from "next-intl";
 import { useMemo, useState } from "react";
 
+import { useEventsLiveQuery } from "@/features/events/hooks/use-events-live-query";
 import { getEnabledEventSources } from "@atl/config/events";
 import type { EnrichedCalendarEvent } from "@atl/config/events";
 import { cn } from "@atl/ui/lib/utils";
@@ -29,6 +30,8 @@ interface EventsContentProps {
 }
 
 export function EventsContent({ events }: EventsContentProps) {
+  const live = useEventsLiveQuery({ events });
+  const liveEvents = live.data.events;
   const intlLocale = useLocale();
   const sourcePills = getEnabledEventSources();
 
@@ -49,7 +52,7 @@ export function EventsContent({ events }: EventsContentProps) {
   const [showEnded, setShowEnded] = useState(false);
 
   const filteredBase = useMemo(() => {
-    let list = events;
+    let list = liveEvents;
     if (selectedSourceIds.size > 0) {
       list = list.filter((e) => selectedSourceIds.has(e.sourceId));
     }
@@ -65,7 +68,7 @@ export function EventsContent({ events }: EventsContentProps) {
       );
     }
     return list;
-  }, [events, search, selectedSourceIds]);
+  }, [liveEvents, search, selectedSourceIds]);
 
   const agendaEvents = useMemo(() => {
     let list = filteredBase;
@@ -155,6 +158,14 @@ export function EventsContent({ events }: EventsContentProps) {
           "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border shadow-xs"
         )}
       >
+        {live.isError ? (
+          <div className="border-warning/30 bg-warning/5 mx-3 mt-3 rounded-lg border px-4 py-2.5 sm:mx-4 md:mx-6">
+            <p className="text-warning text-xs">
+              Could not refresh events. Showing the last loaded calendar.
+            </p>
+          </div>
+        ) : null}
+
         <CalendarHeader
           hasActiveFilters={hasActiveFilters}
           listRangePreset={listRangePreset}

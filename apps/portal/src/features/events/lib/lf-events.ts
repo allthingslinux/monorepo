@@ -4,10 +4,11 @@ import { captureException } from "@sentry/nextjs";
 import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 
 import {
-  CALENDAR_FETCH_REVALIDATE_SECONDS,
+  calendarFetchCacheInit,
   CALENDAR_FETCH_TIMEOUT_MS,
   calendarUpstreamHeaders,
 } from "./calendar-upstream";
+import type { CalendarFetchOptions } from "./calendar-upstream";
 
 /**
  * Parse a Linux Foundation date string like "Apr 7–8, 2026" or "Sep 30–Oct 1, 2026"
@@ -74,7 +75,8 @@ function stripHtml(s: string): string {
  * Each event is in an h5 > a block followed by p.event-meta with date/location spans.
  */
 export async function fetchLfEventsForSource(
-  source: EventSource
+  source: EventSource,
+  options?: CalendarFetchOptions
 ): Promise<ManualCalendarEvent[]> {
   const url =
     source.siteUrl ?? "https://events.linuxfoundation.org/about/calendar/";
@@ -82,7 +84,7 @@ export async function fetchLfEventsForSource(
   try {
     const res = await fetch(url, {
       headers: calendarUpstreamHeaders("text/html"),
-      next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+      ...calendarFetchCacheInit(options),
       signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
     });
 

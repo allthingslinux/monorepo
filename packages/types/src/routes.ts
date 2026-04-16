@@ -47,6 +47,8 @@ export interface NavigationConfig {
   children?: RouteChild[];
   group: string;
   order: number;
+  /** When false, Next.js does not prefetch this route (avoids stale client payloads). */
+  prefetch?: boolean;
   permissions?: Permission[];
 }
 

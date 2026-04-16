@@ -5,11 +5,13 @@ import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 import { EVENT_SOURCES } from "@atl/config/events";
 
 import {
+  calendarFetchCacheInit,
   CALENDAR_FETCH_REVALIDATE_SECONDS,
   CALENDAR_FETCH_TIMEOUT_MS,
   calendarUpstreamHeaders,
   resolveWebcalToHttps,
 } from "./calendar-upstream";
+import type { CalendarFetchOptions } from "./calendar-upstream";
 import { fetchDevEventsForSource } from "./dev-events";
 import { fetchDiscourseEventsForSource } from "./discourse-events";
 import { fetchFedocalEventsForSource } from "./fedocal-events";
@@ -29,11 +31,14 @@ function normalizeBrokenCalHeader(body: string): string {
   );
 }
 
-async function fetchIcsText(url: string): Promise<string> {
+async function fetchIcsText(
+  url: string,
+  options?: CalendarFetchOptions
+): Promise<string> {
   const fetchUrl = resolveWebcalToHttps(url);
   const res = await fetch(fetchUrl, {
     headers: calendarUpstreamHeaders("text/calendar,text/plain,*/*"),
-    next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+    ...calendarFetchCacheInit(options),
     signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
   });
   if (!res.ok) {
@@ -42,12 +47,15 @@ async function fetchIcsText(url: string): Promise<string> {
   return normalizeBrokenCalHeader(await res.text());
 }
 
-async function fetchRssText(url: string): Promise<string> {
+async function fetchRssText(
+  url: string,
+  options?: CalendarFetchOptions
+): Promise<string> {
   const res = await fetch(url, {
     headers: calendarUpstreamHeaders(
       "application/rss+xml,application/xml,text/xml,text/plain,*/*"
     ),
-    next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+    ...calendarFetchCacheInit(options),
     signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
   });
   if (!res.ok) {
@@ -100,26 +108,27 @@ function sourceFetchesRemotely(source: EventSource): boolean {
 }
 
 async function fetchEventsForSource(
-  source: EventSource
+  source: EventSource,
+  options?: CalendarFetchOptions
 ): Promise<ManualCalendarEvent[]> {
   if (!sourceFetchesRemotely(source)) {
     return [];
   }
 
   if (source.kind === "discourse") {
-    return fetchDiscourseEventsForSource(source);
+    return fetchDiscourseEventsForSource(source, options);
   }
 
   if (source.kind === "fedocal") {
-    return fetchFedocalEventsForSource(source);
+    return fetchFedocalEventsForSource(source, options);
   }
 
   if (source.kind === "lf-scrape") {
-    return fetchLfEventsForSource(source);
+    return fetchLfEventsForSource(source, options);
   }
 
   if (source.kind === "dev-events") {
-    return fetchDevEventsForSource(source);
+    return fetchDevEventsForSource(source, options);
   }
 
   const merged: ManualCalendarEvent[] = [];
@@ -127,7 +136,7 @@ async function fetchEventsForSource(
 
   if (source.kind === "ics" && source.calendarUrl) {
     try {
-      const text = await fetchIcsText(source.calendarUrl);
+      const text = await fetchIcsText(source.calendarUrl, options);
       for (const ev of parseIcsToEvents(text, source)) {
         merged.push(ev);
         if (ev.url) {
@@ -144,7 +153,7 @@ async function fetchEventsForSource(
 
   if (source.feedUrl && (source.kind === "ics" || source.kind === "rss")) {
     try {
-      const xml = await fetchRssText(source.feedUrl);
+      const xml = await fetchRssText(source.feedUrl, options);
       for (const ev of parseRssToEvents(xml, source)) {
         if (ev.url && seenUrls.has(ev.url)) {
           continue;
@@ -166,10 +175,12 @@ async function fetchEventsForSource(
 }
 
 /** Remote calendar rows: ICS, RSS, Discourse JSON (Next fetch revalidate). */
-export async function getIcsCalendarEvents(): Promise<ManualCalendarEvent[]> {
+export async function getIcsCalendarEvents(
+  options?: CalendarFetchOptions
+): Promise<ManualCalendarEvent[]> {
   const sources = EVENT_SOURCES.filter((s) => sourceFetchesRemotely(s));
   const batches = await Promise.all(
-    sources.map((s) => fetchEventsForSource(s))
+    sources.map((s) => fetchEventsForSource(s, options))
   );
   return batches.flat();
 }

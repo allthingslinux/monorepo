@@ -4,10 +4,11 @@ import { captureException } from "@sentry/nextjs";
 import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 
 import {
-  CALENDAR_FETCH_REVALIDATE_SECONDS,
+  calendarFetchCacheInit,
   CALENDAR_FETCH_TIMEOUT_MS,
   calendarUpstreamHeaders,
 } from "./calendar-upstream";
+import type { CalendarFetchOptions } from "./calendar-upstream";
 
 /**
  * Shape of a single meeting from the Fedocal JSON API.
@@ -132,7 +133,8 @@ function meetingToEvent(
  * both recent and upcoming events.
  */
 export async function fetchFedocalEventsForSource(
-  source: EventSource
+  source: EventSource,
+  options?: CalendarFetchOptions
 ): Promise<ManualCalendarEvent[]> {
   if (!source.fedocalApiUrl || !source.fedocalCalendar) {
     return [];
@@ -151,7 +153,7 @@ export async function fetchFedocalEventsForSource(
   try {
     const res = await fetch(url, {
       headers: calendarUpstreamHeaders("application/json"),
-      next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+      ...calendarFetchCacheInit(options),
       signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
     });
 

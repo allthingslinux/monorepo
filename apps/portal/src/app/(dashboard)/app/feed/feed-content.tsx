@@ -4,6 +4,7 @@ import { ArrowUpRight, Globe, Rss, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
+import { useFeedLiveQuery } from "@/features/feed/hooks/use-feed-live-query";
 import type { FeedArticle, FeedSourceResult } from "@/shared/feed";
 import type { FeedCategory, FeedSource } from "@atl/config/feed";
 import { FEED_CATEGORY_LABELS } from "@atl/config/feed";
@@ -273,6 +274,9 @@ interface FeedContentProps {
 }
 
 export function FeedContent({ articles, results, sources }: FeedContentProps) {
+  const live = useFeedLiveQuery({ articles, results });
+  const { articles: liveArticles, results: liveResults } = live.data;
+
   const [search, setSearch] = useState("");
   const [selectedSources, setSelectedSources] = useState<Set<string>>(
     new Set()
@@ -297,7 +301,7 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
   }, [enabledSources]);
 
   const filteredArticles = useMemo(() => {
-    let list = articles;
+    let list = liveArticles;
 
     if (selectedSources.size > 0) {
       list = list.filter((a) => selectedSources.has(a.sourceId));
@@ -324,9 +328,15 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
     }
 
     return list;
-  }, [articles, selectedSources, selectedCategories, search, enabledSources]);
+  }, [
+    liveArticles,
+    selectedSources,
+    selectedCategories,
+    search,
+    enabledSources,
+  ]);
 
-  const erroredSources = results.filter((r) => r.error);
+  const erroredSources = liveResults.filter((r) => r.error);
 
   function toggleSource(id: string) {
     setSelectedSources((prev) => {
@@ -363,6 +373,14 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
 
   return (
     <div className="space-y-5">
+      {live.isError ? (
+        <div className="border-warning/30 bg-warning/5 rounded-lg border px-4 py-2.5">
+          <p className="text-warning text-xs">
+            Could not refresh the feed. Showing the last loaded articles.
+          </p>
+        </div>
+      ) : null}
+
       <FilterPanel
         availableCategories={availableCategories}
         enabledSources={enabledSources}
@@ -386,9 +404,9 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
       )}
 
       <p className="text-muted-foreground text-sm">
-        {filteredArticles.length === articles.length
-          ? `${articles.length} articles from ${results.length} sources`
-          : `${filteredArticles.length} of ${articles.length} articles`}
+        {filteredArticles.length === liveArticles.length
+          ? `${liveArticles.length} articles from ${liveResults.length} sources`
+          : `${filteredArticles.length} of ${liveArticles.length} articles`}
       </p>
 
       {filteredArticles.length > 0 ? (

@@ -89,20 +89,30 @@ interface CompareStats {
   deletions: number;
 }
 
+function githubFetchInit(bypassNextDataCache: boolean | undefined) {
+  const headers = buildGitHubHeaders();
+  const signal = AbortSignal.timeout(10_000);
+  if (bypassNextDataCache) {
+    return { cache: "no-store" as const, headers, signal };
+  }
+  return {
+    headers,
+    next: { revalidate: CHANGELOG_REVALIDATE_SECONDS },
+    signal,
+  };
+}
+
 async function fetchCompareStats(
   owner: string,
   repo: string,
   base: string,
-  head: string
+  head: string,
+  bypassNextDataCache?: boolean
 ): Promise<CompareStats | null> {
   try {
     const response = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/compare/${base}...${head}`,
-      {
-        headers: buildGitHubHeaders(),
-        next: { revalidate: CHANGELOG_REVALIDATE_SECONDS },
-        signal: AbortSignal.timeout(10_000),
-      }
+      githubFetchInit(bypassNextDataCache)
     );
 
     if (!response.ok) {
@@ -145,7 +155,8 @@ async function fetchCompareStats(
 
 async function enrichReleasesWithStats(
   releases: ReleaseEntry[],
-  repo: RepoConfig
+  repo: RepoConfig,
+  bypassNextDataCache?: boolean
 ): Promise<void> {
   if (releases.length < 2) {
     return;
@@ -170,7 +181,15 @@ async function enrichReleasesWithStats(
   }
 
   const results = await Promise.allSettled(
-    pairs.map((p) => fetchCompareStats(repo.owner, repo.repo, p.base, p.head))
+    pairs.map((p) =>
+      fetchCompareStats(
+        repo.owner,
+        repo.repo,
+        p.base,
+        p.head,
+        bypassNextDataCache
+      )
+    )
   );
 
   for (let i = 0; i < results.length; i += 1) {
@@ -194,17 +213,14 @@ async function enrichReleasesWithStats(
 // ---------------------------------------------------------------------------
 
 async function fetchRepoReleases(
-  repo: RepoConfig
+  repo: RepoConfig,
+  bypassNextDataCache?: boolean
 ): Promise<RepoFetchResult<ReleaseEntry>> {
   const repoId = `${repo.owner}/${repo.repo}`;
   try {
     const response = await fetch(
       `https://api.github.com/repos/${repo.owner}/${repo.repo}/releases`,
-      {
-        headers: buildGitHubHeaders(),
-        next: { revalidate: CHANGELOG_REVALIDATE_SECONDS },
-        signal: AbortSignal.timeout(10_000),
-      }
+      githubFetchInit(bypassNextDataCache)
     );
 
     if (!response.ok) {
@@ -218,7 +234,9 @@ async function fetchRepoReleases(
 
     const data = await response.json();
     const entries = normalizeReleases(data, repo);
-    await enrichReleasesWithStats(entries, repo);
+    if (!bypassNextDataCache) {
+      await enrichReleasesWithStats(entries, repo, bypassNextDataCache);
+    }
     return {
       entries,
       repoDisplayName: repo.displayName,
@@ -235,17 +253,14 @@ async function fetchRepoReleases(
 }
 
 async function fetchRepoCommits(
-  repo: RepoConfig
+  repo: RepoConfig,
+  bypassNextDataCache?: boolean
 ): Promise<RepoFetchResult<CommitEntry>> {
   const repoId = `${repo.owner}/${repo.repo}`;
   try {
     const response = await fetch(
       `https://api.github.com/repos/${repo.owner}/${repo.repo}/commits`,
-      {
-        headers: buildGitHubHeaders(),
-        next: { revalidate: CHANGELOG_REVALIDATE_SECONDS },
-        signal: AbortSignal.timeout(10_000),
-      }
+      githubFetchInit(bypassNextDataCache)
     );
 
     if (!response.ok) {
@@ -277,15 +292,25 @@ async function fetchRepoCommits(
 // Public API
 // ---------------------------------------------------------------------------
 
+/** When `bypassNextDataCache` is true, GitHub fetches skip the Next.js Data Cache. */
+export interface FetchChangelogOptions {
+  bypassNextDataCache?: boolean;
+}
+
 /**
  * Fetch releases and commits from all configured repositories in parallel.
  * Failed repos are excluded from entries and reported in `errors`.
  */
 export async function fetchChangelog(
-  repos: RepoConfig[]
+  repos: RepoConfig[],
+  options?: FetchChangelogOptions
 ): Promise<ChangelogResult> {
+  const bypass = options?.bypassNextDataCache;
   const results = await Promise.allSettled(
-    repos.flatMap((repo) => [fetchRepoReleases(repo), fetchRepoCommits(repo)])
+    repos.flatMap((repo) => [
+      fetchRepoReleases(repo, bypass),
+      fetchRepoCommits(repo, bypass),
+    ])
   );
 
   const allEntries: TimelineEntry[] = [];

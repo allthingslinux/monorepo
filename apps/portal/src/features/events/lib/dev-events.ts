@@ -4,10 +4,11 @@ import { captureException } from "@sentry/nextjs";
 import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 
 import {
-  CALENDAR_FETCH_REVALIDATE_SECONDS,
+  calendarFetchCacheInit,
   CALENDAR_FETCH_TIMEOUT_MS,
   calendarUpstreamHeaders,
 } from "./calendar-upstream";
+import type { CalendarFetchOptions } from "./calendar-upstream";
 
 const DEV_EVENTS_LINUX_URL = "https://dev.events/linux";
 const DEV_EVENTS_ICAL_BASE = "https://dev.events/ical/";
@@ -101,11 +102,14 @@ function parseIcsEvent(
   };
 }
 
-async function fetchIcsForSlug(slug: string): Promise<string | null> {
+async function fetchIcsForSlug(
+  slug: string,
+  options?: CalendarFetchOptions
+): Promise<string | null> {
   try {
     const res = await fetch(`${DEV_EVENTS_ICAL_BASE}${slug}`, {
       headers: calendarUpstreamHeaders("text/calendar"),
-      next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+      ...calendarFetchCacheInit(options),
       signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
     });
     if (!res.ok) {
@@ -124,14 +128,15 @@ async function fetchIcsForSlug(slug: string): Promise<string | null> {
  * 3. Parse into ManualCalendarEvent[]
  */
 export async function fetchDevEventsForSource(
-  source: EventSource
+  source: EventSource,
+  options?: CalendarFetchOptions
 ): Promise<ManualCalendarEvent[]> {
   try {
     // Step 1: Get the slugs from the listing page
     const listUrl = source.siteUrl ?? DEV_EVENTS_LINUX_URL;
     const listRes = await fetch(listUrl, {
       headers: calendarUpstreamHeaders("text/html"),
-      next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+      ...calendarFetchCacheInit(options),
       signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
     });
 
@@ -155,7 +160,7 @@ export async function fetchDevEventsForSource(
       const batch = slugs.slice(i, i + MAX_CONCURRENT_FETCHES);
       const results = await Promise.all(
         batch.map(async (slug) => {
-          const ics = await fetchIcsForSlug(slug);
+          const ics = await fetchIcsForSlug(slug, options);
           if (!ics) {
             return null;
           }

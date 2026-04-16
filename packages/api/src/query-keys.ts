@@ -89,6 +89,14 @@ export const queryKeys = {
       [...queryKeys.oauthClients.all, "user", userId] as const,
   },
 
+  // Dashboard (portal app) — client refetch after navigation
+  portal: {
+    all: ["portal"] as const,
+    changelog: () => [...queryKeys.portal.all, "changelog"] as const,
+    events: () => [...queryKeys.portal.all, "events"] as const,
+    feed: () => [...queryKeys.portal.all, "feed"] as const,
+  },
+
   // Session queries
   sessions: {
     all: ["sessions"] as const,

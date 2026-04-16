@@ -4,10 +4,11 @@ import { captureException } from "@sentry/nextjs";
 import type { EventSource, ManualCalendarEvent } from "@atl/config/events";
 
 import {
-  CALENDAR_FETCH_REVALIDATE_SECONDS,
+  calendarFetchCacheInit,
   CALENDAR_FETCH_TIMEOUT_MS,
   calendarUpstreamHeaders,
 } from "./calendar-upstream";
+import type { CalendarFetchOptions } from "./calendar-upstream";
 
 /** Cap post.json fetches per calendar sync (bulk events JSON has no post body). */
 const MAX_DISCOURSE_POST_BODY_FETCHES = 72;
@@ -268,12 +269,13 @@ interface DiscoursePostEnrichment {
 
 async function fetchPostEnrichment(
   origin: string,
-  postId: number
+  postId: number,
+  options?: CalendarFetchOptions
 ): Promise<DiscoursePostEnrichment | null> {
   const url = `${origin.replace(/\/$/u, "")}/posts/${postId}.json`;
   const res = await fetch(url, {
     headers: calendarUpstreamHeaders("application/json"),
-    next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+    ...calendarFetchCacheInit(options),
     signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
   });
   if (!res.ok) {
@@ -324,7 +326,8 @@ async function runPool<T>(
 async function enrichRowsWithPostBodies(
   origin: string,
   source: EventSource,
-  rows: DiscourseEventRow[]
+  rows: DiscourseEventRow[],
+  options?: CalendarFetchOptions
 ): Promise<void> {
   const targetIds = postIdsByEarliestStart(rows);
   const fetchSet = new Set(targetIds);
@@ -332,7 +335,7 @@ async function enrichRowsWithPostBodies(
 
   await runPool(targetIds, DISCOURSE_POST_FETCH_CONCURRENCY, async (postId) => {
     try {
-      const enriched = await fetchPostEnrichment(origin, postId);
+      const enriched = await fetchPostEnrichment(origin, postId, options);
       if (enriched) {
         enrichments.set(postId, enriched);
       }
@@ -377,7 +380,8 @@ export function parseDiscourseEventsResponse(
 }
 
 export async function fetchDiscourseEventsForSource(
-  source: EventSource
+  source: EventSource,
+  options?: CalendarFetchOptions
 ): Promise<ManualCalendarEvent[]> {
   const url = source.discourseEventsUrl?.trim();
   if (!url || source.kind !== "discourse") {
@@ -394,7 +398,7 @@ export async function fetchDiscourseEventsForSource(
   try {
     const res = await fetch(url, {
       headers: calendarUpstreamHeaders("application/json"),
-      next: { revalidate: CALENDAR_FETCH_REVALIDATE_SECONDS },
+      ...calendarFetchCacheInit(options),
       signal: AbortSignal.timeout(CALENDAR_FETCH_TIMEOUT_MS),
     });
     if (!res.ok) {
@@ -402,7 +406,7 @@ export async function fetchDiscourseEventsForSource(
     }
     const data: unknown = await res.json();
     const rows = parseDiscourseEventRows(data, origin, source);
-    await enrichRowsWithPostBodies(origin, source, rows);
+    await enrichRowsWithPostBodies(origin, source, rows, options);
     return rows.map((r) => r.event);
   } catch (error) {
     captureException(error, {
