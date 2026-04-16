@@ -1,5 +1,5 @@
-import "server-only";
 import type {
+  RESTGetAPIChannelMessagesResult,
   APIGuildMember,
   RESTGetAPIAuditLogResult,
   RESTGetAPIGuildBanResult,
@@ -24,6 +24,7 @@ import type {
   CacheOptions,
   DiscordClientConfig,
   ListAuditLogOptions,
+  ListChannelMessagesOptions,
   ListMembersOptions,
   MembersPage,
   Result,
@@ -108,6 +109,27 @@ export class DiscordClient {
     guildId: Snowflake
   ): Promise<Result<RESTGetAPIGuildChannelsResult>> {
     return this.fetch(`/guilds/${guildId}/channels`);
+  }
+
+  async getChannelMessages(
+    channelId: Snowflake,
+    options: ListChannelMessagesOptions = {}
+  ): Promise<Result<RESTGetAPIChannelMessagesResult>> {
+    const params = new URLSearchParams();
+    if (options.around !== undefined) {
+      params.set("around", options.around);
+    }
+    if (options.before !== undefined) {
+      params.set("before", options.before);
+    }
+    if (options.after !== undefined) {
+      params.set("after", options.after);
+    }
+    if (options.limit !== undefined) {
+      params.set("limit", String(Math.min(options.limit, 100)));
+    }
+    const qs = params.size > 0 ? `?${params.toString()}` : "";
+    return this.fetch(`/channels/${channelId}/messages${qs}`, options.cache);
   }
 
   // ---------------------------------------------------------------------------

@@ -3,8 +3,10 @@ import type { APIGuildMember } from "discord-api-types/v10";
 import type { DiscordHttpError } from "./errors";
 
 export type {
+  APIMessage,
   APIGuildMember,
   AuditLogEvent,
+  RESTGetAPIChannelMessagesResult,
   RESTGetAPIAuditLogResult,
   RESTGetAPIGuildBanResult,
   RESTGetAPIGuildBansResult,
@@ -94,6 +96,19 @@ export interface SearchMembersOptions {
   query: string;
   /** Max results. Discord cap is 1000. Defaults to 1. */
   limit?: number;
+}
+
+export interface ListChannelMessagesOptions {
+  /** One of `around`, `before`, or `after` can be used for pagination anchors. */
+  around?: Snowflake;
+  /** Return messages before this message id. */
+  before?: Snowflake;
+  /** Return messages after this message id. */
+  after?: Snowflake;
+  /** Max messages to return. Discord cap is 100. Defaults to 50. */
+  limit?: number;
+  /** Per-request Next.js cache controls. */
+  cache?: CacheOptions;
 }
 
 // ---------------------------------------------------------------------------
