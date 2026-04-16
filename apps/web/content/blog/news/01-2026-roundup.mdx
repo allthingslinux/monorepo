@@ -1,0 +1,51 @@
+---
+title: "January 2026 Roundup"
+description: "A major month for ATL infrastructure: 10 million messages, Tux v0.1.0, and mail platform migration."
+author: "All Things Linux"
+date: "2026-01-31"
+category: "News"
+---
+
+# January 2026 Roundup
+
+January kicked off with significant platform upgrades across ATL. From crossing 10 million community messages to shipping a major Tux release and completing core mail migration work, this month set the tone for the year ahead.
+
+## Community Milestones
+
+- We officially crossed **10 million total messages**.
+- Community engagement remained strong while we rolled out multiple backend changes.
+
+## Tux v0.1.0 Release and Migration
+
+This month we completed a major migration for Tux, including new database work and release deployment for **v0.1.0**.
+
+Highlights shared with the community:
+
+- **110K+ lines of code** (including docs)
+- **3,892 commits**
+- **45 contributors**
+- **767 pull requests** (including dependency updates)
+
+We also published a public changelog and continued patching post-release issues as expected for a major rollout.
+
+## Mail Platform Migration
+
+We migrated mail infrastructure from `mail.atl.tools` service endpoints to `mail.atl.network` for protocol access while keeping webmail on `mail.atl.tools`.
+
+What changed:
+
+- New IMAP/SMTP host configuration for client access
+- Planned maintenance windows and migration notices
+- Temporary proxy-related disruption handled with fallback recovery
+- Final migration completed successfully with updated client configuration guidance
+
+## Security and Reliability Notes
+
+January also included security advisories and reliability hardening:
+
+- Shared notice regarding **CVE-2026-24061** (`telnetd` auth bypass)
+- Continued service tuning and scaling work after early-month outages
+
+## Looking Ahead
+
+January was a foundational operations month. With Tux v0.1.0 live, mail migration complete, and service architecture updates underway, the team is focused on stabilizing, refining, and expanding core ATL services throughout Q1.
