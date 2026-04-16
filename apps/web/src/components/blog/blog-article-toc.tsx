@@ -5,6 +5,11 @@ import { useEffect, useLayoutEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+import {
+  blogArticleSidePanelClassName,
+  blogArticleSideRailWidthClassName,
+} from "./blog-shell";
+
 export type BlogArticleTocProps = {
   /** Stable key when switching posts (e.g. `category/slug`). */
   postKey: string;
@@ -66,12 +71,16 @@ function scrollToTop() {
   window.scrollTo({ behavior: "smooth", top: 0 });
 }
 
-/** Keeps the flex column width aligned with the real TOC (avoids layout shift when the nav is empty). */
-const TOC_COLUMN_WIDTH_CLASS =
-  "hidden w-full max-w-full shrink-0 lg:block lg:w-52 lg:max-w-none xl:w-60 2xl:w-64";
+/** Keeps the flex column width aligned with the meta aside and real TOC (avoids layout shift when empty). */
+const TOC_COLUMN_WIDTH_CLASS = cn(
+  "hidden lg:block",
+  blogArticleSideRailWidthClassName
+);
 
-const tocNavShellClassName =
-  "border-border/50 bg-card/30 order-3 rounded-lg border p-4 backdrop-blur-sm lg:sticky lg:top-24 lg:order-none lg:flex lg:h-fit lg:max-h-[min(100dvh-7rem,36rem)] lg:flex-col lg:self-start lg:overflow-hidden";
+const tocNavShellClassName = cn(
+  blogArticleSidePanelClassName,
+  "order-3 lg:sticky lg:top-24 lg:order-none lg:flex lg:h-fit lg:max-h-[min(100dvh-7rem,36rem)] lg:flex-col lg:self-start lg:overflow-hidden"
+);
 
 function TocSkeleton() {
   return (

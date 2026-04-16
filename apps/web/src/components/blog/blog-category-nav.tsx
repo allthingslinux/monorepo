@@ -4,13 +4,16 @@ import Link from "next/link";
 import { slugifyCategory } from "@/lib/blog-utils";
 import { cn } from "@/lib/utils";
 
+import {
+  blogCategoryPillActiveClassName,
+  blogCategoryPillBaseClassName,
+  blogCategoryPillMutedClassName,
+} from "./blog-shell";
+
 type BlogCategoryNavProps = {
   activeCategorySlug: string | null;
   categories: string[];
 };
-
-const pillBase =
-  "inline-flex items-center justify-center rounded-full border px-4 py-2.5 text-sm font-medium transition-colors duration-200 focus-visible:ring-ring focus-visible:ring-offset-background outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 
 export function BlogCategoryNav({
   categories,
@@ -27,10 +30,10 @@ export function BlogCategoryNav({
     >
       <Link
         className={cn(
-          pillBase,
+          blogCategoryPillBaseClassName,
           activeCategorySlug === null
-            ? "border-primary/45 bg-primary/12 text-foreground shadow-sm"
-            : "border-border/70 bg-muted/35 text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground"
+            ? blogCategoryPillActiveClassName
+            : blogCategoryPillMutedClassName
         )}
         href="/blog"
       >
@@ -42,10 +45,10 @@ export function BlogCategoryNav({
         return (
           <Link
             className={cn(
-              pillBase,
+              blogCategoryPillBaseClassName,
               active
-                ? "border-primary/45 bg-primary/12 text-foreground shadow-sm"
-                : "border-border/70 bg-muted/35 text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground"
+                ? blogCategoryPillActiveClassName
+                : blogCategoryPillMutedClassName
             )}
             href={`/blog/${catSlug}` as Route}
             key={catSlug}
