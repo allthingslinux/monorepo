@@ -17,7 +17,7 @@ export function HomeView({
   signUpUrl: string;
 }) {
   return (
-    <main className="w-full">
+    <main className="w-full" id="main-content">
       <HeroSection />
       <StatsSection />
       <PortalSection signInUrl={signInUrl} signUpUrl={signUpUrl} />

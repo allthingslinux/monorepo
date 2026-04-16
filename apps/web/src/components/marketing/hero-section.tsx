@@ -38,16 +38,6 @@ const midOuter = [
   { alt: "Asahi", src: "/images/hero/asahi.webp" },
 ];
 
-const outer = [
-  { alt: "Bazzite", src: "/images/hero/bazzite.webp" },
-  { alt: "Bedrock", src: "/images/hero/bedrock.webp" },
-  { alt: "Fedora", src: "/images/hero/fedora.webp" },
-  { alt: "Debian", src: "/images/hero/debian.webp" },
-  { alt: "NixOS", src: "/images/hero/nixos.webp" },
-  { alt: "Gentoo", src: "/images/hero/gentoo.webp" },
-  { alt: "CachyOS", src: "/images/hero/cachy.webp" },
-];
-
 export function HeroSection() {
   return (
     <Section
@@ -76,7 +66,7 @@ export function HeroSection() {
       </Container>
 
       {/* Orbiting circles below text — only top half visible */}
-      <div className="relative h-[200px] md:h-[260px]">
+      <div className="relative -mt-5 h-[200px] md:-mt-7 md:h-[260px]">
         <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
           <div className="relative flex size-[1200px] items-center justify-center">
             <OrbitingCircles iconSize={56} radius={240} speed={1.8}>
@@ -114,19 +104,6 @@ export function HeroSection() {
                     src={d.src}
                     width={48}
                     height={48}
-                  />
-                </div>
-              ))}
-            </OrbitingCircles>
-            <OrbitingCircles iconSize={44} radius={540} reverse speed={0.8}>
-              {outer.map((d) => (
-                <div className="size-11 rounded-full p-1" key={d.alt}>
-                  <Image
-                    alt={d.alt}
-                    className="size-full object-contain"
-                    src={d.src}
-                    width={44}
-                    height={44}
                   />
                 </div>
               ))}

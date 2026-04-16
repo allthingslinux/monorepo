@@ -86,9 +86,9 @@ export function PortalSection({
           <p className="text-primary mb-3 text-xs font-medium tracking-[0.2em] uppercase">
             Portal
           </p>
-          <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Your portal for all things, All Things Linux.
-          </h1>
+          </h2>
           <p className="text-muted-foreground mt-7 max-w-xl text-lg leading-relaxed text-pretty md:text-xl">
             One account to access every ATL service — from the wiki and tools to
             chat and our pubnix.
@@ -183,8 +183,7 @@ function BrowserMockup({
           alt="Portal dashboard preview"
           className="h-full w-full object-cover object-top"
           height={800}
-          src="https://i.imgur.com/iEZMd8j.png"
-          unoptimized
+          src="/images/marketing/portal-dashboard-preview.png"
           width={1200}
         />
       </div>

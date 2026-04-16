@@ -28,6 +28,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen font-sans antialiased">
+        <a
+          className="bg-background text-foreground focus:ring-ring sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:ring-2 focus:outline-none"
+          href="#main-content"
+        >
+          Skip to main content
+        </a>
         {/* Runs before React hydrates — sets dark/light class to prevent FOUC */}
         <script
           // biome-ignore lint/security/noDangerouslyInnerHtmlWithChildren: intentional SSR theme init

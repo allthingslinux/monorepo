@@ -37,11 +37,6 @@ export function WebsiteSchema() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "All Things Linux",
-    potentialAction: {
-      "@type": "SearchAction",
-      "query-input": "required name=search_term_string",
-      target: "https://allthingslinux.org/search?q={search_term_string}",
-    },
     url: "https://allthingslinux.org",
   };
 
