@@ -83,19 +83,47 @@ const MILESTONES = [
       "Server founded by Kaizen, acquired discord.gg/linux — 100K messages in 12 days",
     year: "Nov 2023",
   },
-  { event: "1,000 members; IRC and XMPP servers launched", year: "Jan 2024" },
   {
-    event: "atl.wiki domain acquired, MediaWiki server launched",
+    event: "Reached Top.gg front page during first-month growth",
+    year: "Nov 2023",
+  },
+  {
+    event: "1,000 members; v1 IRC and XMPP servers launched",
+    year: "Jan 2024",
+  },
+  {
+    event: "Reached 2,000 members and surpassed 1M messages",
+    year: "Mar 2024",
+  },
+  {
+    event:
+      "atl.wiki launched to build a community Linux and FOSS knowledge base",
+    year: "May 2024",
+  },
+  {
+    event: "Reached 3,000 members during rapid early growth",
+    year: "May 2024",
+  },
+  {
+    event: "allthingslinux.com acquired as a major long-term brand domain",
+    year: "Jun 2024",
+  },
+  {
+    event:
+      "IRC/XMPP relaunched on atl.chat with upgraded service infrastructure",
     year: "Jun 2024",
   },
   { event: "501(c)(3) nonprofit status achieved", year: "Nov 2024" },
+  { event: "allthingslinux.org acquired as primary domain", year: "Dec 2024" },
   {
     event:
       "Google, GitHub, Cloudflare, Canva & Okta partnerships secured — $50K+/yr in donated services",
     year: "Dec 2024",
   },
+  { event: "Official ATL blog launched", year: "Feb 2025" },
   { event: "Featured by Brodie Robertson — 25K+ views", year: "Apr 2025" },
   { event: "10,000 members — five months ahead of goal", year: "May 2025" },
+  { event: "TuxGPT launched for community members", year: "May 2025" },
   {
     event: "atl.wiki 1.0 launched — 326 pages, 265 contributors",
     year: "Aug 2025",
@@ -109,11 +137,24 @@ const MILESTONES = [
     year: "Oct 2025",
   },
   {
+    event: "Two-year anniversary milestone with 9M+ total messages",
+    year: "Nov 2025",
+  },
+  {
     event: "Tux v0.1.0 released — 110K+ LOC, 3.9K commits, 45 contributors",
     year: "Jan 2026",
   },
+  { event: "Community crossed 10 million total messages", year: "Jan 2026" },
   {
     event: "20,000+ members — 10,000% growth in just over two years",
+    year: "Feb 2026",
+  },
+  {
+    event: "First 990-N filed and /open public financial ledger launched",
+    year: "Feb 2026",
+  },
+  {
+    event: "Official ATL mirror network launched for distros and projects",
     year: "Feb 2026",
   },
 ] as const;
@@ -134,8 +175,6 @@ export default function About() {
             <p className="text-muted-foreground mt-5 max-w-xl text-lg leading-relaxed text-pretty">
               A 501(c)(3) nonprofit building Linux education, open-source tools,
               and a community for people at every stage of their journey.
-              Entirely volunteer-run, zero paid advertising, and growing every
-              month.
             </p>
           </div>
         </Container>
