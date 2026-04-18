@@ -104,6 +104,20 @@
       "label": "Feed"
     }
   },
+  "mailing-lists": {
+    "label": "Lists",
+    "metadata": {
+      "title": "Mailing lists",
+      "description": "Read public Linux and distro mailing list archives in one place"
+    },
+    "ui": {
+      "title": "Mailing lists",
+      "description": "Browse threads from kernel, distro, and project mailing lists. Sync pulls recent posts from public feeds."
+    },
+    "breadcrumb": {
+      "label": "Mailing lists"
+    }
+  },
   "changelog": {
     "label": "Changelog",
     "metadata": {

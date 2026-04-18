@@ -1,0 +1,1 @@
+CREATE INDEX "ml_message_source_external_url_idx" ON "ml_message" ("source_id","external_url");

@@ -108,6 +108,7 @@ catalog:
   recharts: 3.8.0
   rehype-autolink-headings: ^7.1.0
   rehype-slug: ^6.0.0
+  remark-breaks: ^4.0.0
   remark-gfm: ^4.0.1
   rss-parser: ^3.13.0
   schema-dts: ^2.0.0

@@ -10,6 +10,16 @@ import {
 import { integrationAccount } from "./integrations/base";
 import { ircAccount } from "./irc";
 import { mailcowAccount } from "./mailcow";
+import {
+  mlBookmark,
+  mlMessage,
+  mlPatchMeta,
+  mlSource,
+  mlThread,
+  mlUserFollowSource,
+  mlUserFollowThread,
+  mlUserReadState,
+} from "./mailing-lists";
 import { mediawikiAccount } from "./mediawiki";
 import {
   oauthAccessToken,
@@ -26,6 +36,14 @@ export const schema = {
   jwks,
   mailcowAccount,
   mediawikiAccount,
+  mlBookmark,
+  mlMessage,
+  mlPatchMeta,
+  mlSource,
+  mlThread,
+  mlUserFollowSource,
+  mlUserFollowThread,
+  mlUserReadState,
   oauthAccessToken,
   oauthClient,
   oauthConsent,

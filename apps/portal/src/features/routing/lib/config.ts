@@ -7,6 +7,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  List,
   Rss,
   Settings2,
   Shield,
@@ -139,6 +140,20 @@ export const routeConfig = {
     },
     {
       breadcrumb: {},
+      icon: List,
+      id: "mailing-lists",
+      metadata: {
+        robots: { follow: false, index: false },
+      },
+      navigation: {
+        group: "platform",
+        order: 7,
+        prefetch: false,
+      },
+      path: "/app/mailing-lists",
+    },
+    {
+      breadcrumb: {},
       icon: History,
       id: "changelog",
       metadata: {
@@ -146,7 +161,7 @@ export const routeConfig = {
       },
       navigation: {
         group: "platform",
-        order: 7,
+        order: 8,
         prefetch: false,
       },
       path: "/app/changelog",
@@ -159,7 +174,7 @@ export const routeConfig = {
       },
       navigation: {
         group: "platform",
-        order: 8,
+        order: 9,
       },
       path: "/app/integrations",
     },
@@ -172,7 +187,7 @@ export const routeConfig = {
       },
       navigation: {
         group: "platform",
-        order: 9,
+        order: 10,
       },
       path: "/app/donate",
     },
@@ -188,7 +203,7 @@ export const routeConfig = {
           { id: "admin-sessions", path: "/app/admin/sessions" },
         ],
         group: "platform",
-        order: 10,
+        order: 11,
         permissions: ["canViewAdmin"],
       },
       path: "/app/admin",

@@ -21,6 +21,7 @@
     "clean": "true",
     "db:generate": "drizzle-kit generate --config src/config.ts",
     "db:migrate": "drizzle-kit migrate --config src/config.ts",
+    "db:reset": "node scripts/reset-dev-db.mjs",
     "db:push": "drizzle-kit push --config src/config.ts",
     "db:studio": "drizzle-kit studio --config src/config.ts",
     "transit": "true",

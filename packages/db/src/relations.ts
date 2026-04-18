@@ -46,6 +46,108 @@ export const relations = defineRelations(schema, (r) => ({
       to: r.user.id,
     }),
   },
+  mlBookmark: {
+    thread: r.one.mlThread({
+      from: r.mlBookmark.threadId,
+      to: r.mlThread.id,
+    }),
+    user: r.one.user({
+      from: r.mlBookmark.userId,
+      to: r.user.id,
+    }),
+  },
+  mlMessage: {
+    patchMeta: r.one.mlPatchMeta({
+      from: r.mlMessage.id,
+      optional: true,
+      to: r.mlPatchMeta.messageId,
+    }),
+    source: r.one.mlSource({
+      from: r.mlMessage.sourceId,
+      to: r.mlSource.id,
+    }),
+    thread: r.one.mlThread({
+      from: r.mlMessage.threadId,
+      to: r.mlThread.id,
+    }),
+  },
+  mlPatchMeta: {
+    message: r.one.mlMessage({
+      from: r.mlPatchMeta.messageId,
+      to: r.mlMessage.id,
+    }),
+  },
+  mlSource: {
+    followSources: r.many.mlUserFollowSource({
+      from: r.mlSource.id,
+      to: r.mlUserFollowSource.sourceId,
+    }),
+    messages: r.many.mlMessage({
+      from: r.mlSource.id,
+      to: r.mlMessage.sourceId,
+    }),
+    threads: r.many.mlThread({
+      from: r.mlSource.id,
+      to: r.mlThread.sourceId,
+    }),
+  },
+  mlThread: {
+    bookmarks: r.many.mlBookmark({
+      from: r.mlThread.id,
+      to: r.mlBookmark.threadId,
+    }),
+    followThreads: r.many.mlUserFollowThread({
+      from: r.mlThread.id,
+      to: r.mlUserFollowThread.threadId,
+    }),
+    messages: r.many.mlMessage({
+      from: r.mlThread.id,
+      to: r.mlMessage.threadId,
+    }),
+    readStates: r.many.mlUserReadState({
+      from: r.mlThread.id,
+      to: r.mlUserReadState.threadId,
+    }),
+    source: r.one.mlSource({
+      from: r.mlThread.sourceId,
+      to: r.mlSource.id,
+    }),
+  },
+  mlUserFollowSource: {
+    source: r.one.mlSource({
+      from: r.mlUserFollowSource.sourceId,
+      to: r.mlSource.id,
+    }),
+    user: r.one.user({
+      from: r.mlUserFollowSource.userId,
+      to: r.user.id,
+    }),
+  },
+  mlUserFollowThread: {
+    thread: r.one.mlThread({
+      from: r.mlUserFollowThread.threadId,
+      to: r.mlThread.id,
+    }),
+    user: r.one.user({
+      from: r.mlUserFollowThread.userId,
+      to: r.user.id,
+    }),
+  },
+  mlUserReadState: {
+    lastReadMessage: r.one.mlMessage({
+      from: r.mlUserReadState.lastReadMessageId,
+      optional: true,
+      to: r.mlMessage.id,
+    }),
+    thread: r.one.mlThread({
+      from: r.mlUserReadState.threadId,
+      to: r.mlThread.id,
+    }),
+    user: r.one.user({
+      from: r.mlUserReadState.userId,
+      to: r.user.id,
+    }),
+  },
   // OAuth Access Token relations (many-to-one, one-to-one)
   // An access token belongs to one client, one user, one session, and one refresh token
   oauthAccessToken: {
@@ -181,6 +283,22 @@ export const relations = defineRelations(schema, (r) => ({
     apiKeys: r.many.apikey({
       from: r.user.id,
       to: r.apikey.referenceId,
+    }),
+    mlBookmarks: r.many.mlBookmark({
+      from: r.user.id,
+      to: r.mlBookmark.userId,
+    }),
+    mlFollowSources: r.many.mlUserFollowSource({
+      from: r.user.id,
+      to: r.mlUserFollowSource.userId,
+    }),
+    mlFollowThreads: r.many.mlUserFollowThread({
+      from: r.user.id,
+      to: r.mlUserFollowThread.userId,
+    }),
+    mlReadStates: r.many.mlUserReadState({
+      from: r.user.id,
+      to: r.mlUserReadState.userId,
     }),
     // User OAuth access tokens (one user, many access tokens)
     oauthAccessTokens: r.many.oauthAccessToken({
