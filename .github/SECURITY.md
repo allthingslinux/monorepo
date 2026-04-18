@@ -1,13 +1,7 @@
-# Security Policy
-
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| Default | :white_check_mark: |
-
-## Reporting a Vulnerability
-
-Please do not report security vulnerabilities through public GitHub issues.
-
-Instead, please report them directly to the repository maintainers via private channels or emails as specified by the team. We evaluate and address security reports promptly.
+Contact: https://allthingslinux.org/security
+Expires: 2030-01-01T12:00:00Z
+Encryption: https://allthingslinux.org/security@allthingslinux.org-pubkey.asc
+Acknowledgements: https://allthingslinux.org/security
+Hiring: https://allthingslinux.org/apply
+Policy: https://allthingslinux.org/security
+Preferred-Languages: en
