@@ -1,7 +1,13 @@
 Contact: https://allthingslinux.org/security
+
 Expires: 2030-01-01T12:00:00Z
+
 Encryption: https://allthingslinux.org/security@allthingslinux.org-pubkey.asc
+
 Acknowledgements: https://allthingslinux.org/security
+
 Hiring: https://allthingslinux.org/apply
+
 Policy: https://allthingslinux.org/security
+
 Preferred-Languages: en
