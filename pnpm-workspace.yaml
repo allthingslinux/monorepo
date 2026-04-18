@@ -28,7 +28,7 @@ catalog:
   graphql-request: ^7.4.0
   lodash: ^4.17.23
   lucide-react: ^0.564.0
-  next: 16.2.1
+  next: 16.2.3
   next-intl: ^4.8.3
   node-quickbooks: ^2.0.48
   pg: ^8.20.0
