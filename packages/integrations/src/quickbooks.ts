@@ -263,7 +263,7 @@ async function getDiscoveryDocument(
       throw new Error(`Discovery document fetch failed: ${response.status}`);
     }
 
-    const doc = (await response.json()) as DiscoveryDocument;
+    const doc = await response.json();
     discoveryCache[cacheKey] = doc;
     return doc;
   } catch (error) {
@@ -462,7 +462,7 @@ export async function getAccessToken(
       return null;
     }
 
-    const tokens = (await response.json()) as QuickBooksTokenResponse;
+    const tokens = await response.json();
 
     // Cache the token (subtract 5 minutes from expiry for safety margin)
     const expiresInMs = (tokens.expires_in - 300) * 1000; // Convert to ms, subtract 5 min
@@ -692,8 +692,8 @@ async function fetchQuickBooksEntities<T extends QuickBooksEntity>(
       return [];
     }
 
-    const data = (await response.json()) as QuickBooksQueryResponse<T>;
-    const items = (data?.QueryResponse?.[entityType] ?? []) as T[];
+    const data = await response.json();
+    const items = data?.QueryResponse?.[entityType] ?? [];
     return items.map(mapEntity);
   } catch (error) {
     clearTimeout(timeoutId);
@@ -1477,7 +1477,7 @@ export async function exchangeAuthorizationCode(
       return null;
     }
 
-    return (await response.json()) as QuickBooksTokenResponse;
+    return await response.json();
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === "AbortError") {
@@ -1500,10 +1500,6 @@ interface QuickBooksReportRow {
   Summary?: { ColData?: { value?: string }[] };
   group?: string;
   type?: string;
-}
-
-interface QuickBooksReport {
-  Rows?: { Row?: QuickBooksReportRow[] };
 }
 
 interface ProfitLossTotals {
@@ -1632,7 +1628,7 @@ export async function fetchQuickBooksFinancialSummary(
       return null;
     }
 
-    const report = (await response.json()) as QuickBooksReport;
+    const report = await response.json();
     const rows = report.Rows?.Row ?? [];
 
     const totals: ProfitLossTotals = {
