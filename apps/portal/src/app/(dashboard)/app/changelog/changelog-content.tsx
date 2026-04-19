@@ -109,7 +109,7 @@ export function ChangelogContent({
 
   if (liveEntries.length === 0 && liveErrors.length > 0) {
     return (
-      <div className="border-destructive/30 bg-destructive/5 flex flex-col items-center justify-center rounded-xl border py-16">
+      <div className="border-destructive/35 bg-destructive/10 ring-destructive/10 flex flex-col items-center justify-center rounded-xl border py-16 shadow-sm ring-1 backdrop-blur-sm">
         <AlertTriangle className="text-destructive/60 mb-3 size-8" />
         <p className="text-foreground font-medium">
           Changelog data is temporarily unavailable
@@ -122,9 +122,9 @@ export function ChangelogContent({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="min-h-0 flex-1 space-y-5 overflow-y-auto">
       {live.isError ? (
-        <div className="border-warning/30 bg-warning/5 rounded-lg border px-4 py-2.5">
+        <div className="border-warning/35 bg-warning/10 rounded-lg border px-4 py-2.5">
           <p className="text-warning text-xs">
             Could not refresh the changelog. Showing the last loaded timeline.
           </p>

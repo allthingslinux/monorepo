@@ -57,9 +57,9 @@ export function ChangelogFilters({
     selectedCommitTypes.size > 0;
 
   return (
-    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 rounded-xl border">
+    <div className="border-border/70 bg-card/95 text-card-foreground ring-foreground/10 rounded-xl border shadow-sm ring-1 backdrop-blur-sm">
       {/* Top row: entry type tabs + count + reset */}
-      <div className="border-border/60 dark:border-border/40 flex items-center justify-between border-b px-4 py-3">
+      <div className="border-border/50 bg-muted/15 dark:bg-muted/10 flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-1.5">
           <button
             className={cn(
@@ -107,7 +107,7 @@ export function ChangelogFilters({
         </div>
       </div>
       {/* Middle row: repos */}
-      <div className="border-border/60 dark:border-border/40 grid grid-cols-5 gap-1.5 border-b px-4 py-3">
+      <div className="border-border/50 bg-muted/10 grid grid-cols-5 gap-1.5 border-b px-4 py-3">
         {repos.map((repo) => {
           const active = selectedRepos.has(repo.repoId);
           return (
@@ -129,7 +129,7 @@ export function ChangelogFilters({
         })}
       </div>
       {/* Bottom row: commit types */}
-      <div className="grid grid-cols-10 gap-1.5 px-4 py-3">
+      <div className="bg-muted/5 grid grid-cols-10 gap-1.5 px-4 py-3">
         {COMMIT_TYPES.map((ct) => {
           const active = selectedCommitTypes.has(ct);
           return (

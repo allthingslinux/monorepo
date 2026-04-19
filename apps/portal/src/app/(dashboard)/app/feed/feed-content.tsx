@@ -156,9 +156,9 @@ function FilterPanel({
   onClear,
 }: FilterPanelProps) {
   return (
-    <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 overflow-hidden rounded-xl border">
+    <div className="border-border/70 bg-card/95 text-card-foreground ring-foreground/10 overflow-hidden rounded-xl border shadow-sm ring-1 backdrop-blur-sm">
       {/* Search */}
-      <div className="relative">
+      <div className="border-border/50 bg-muted/15 dark:bg-muted/10 relative border-b">
         <Search className="text-muted-foreground absolute top-1/2 left-4 size-4 -translate-y-1/2" />
         <Input
           className="rounded-none border-0 bg-transparent pl-11 shadow-none focus-visible:ring-0"
@@ -219,13 +219,13 @@ function ArticleCard({ article }: { article: FeedArticle }) {
 
   return (
     <a
-      className="group border-border/60 bg-card/50 hover:border-primary/40 dark:border-border/40 dark:bg-card/30 dark:hover:border-primary/30 flex flex-col overflow-hidden rounded-xl border transition-all duration-150 hover:shadow-md"
+      className="group border-border/70 bg-card/95 text-card-foreground ring-foreground/10 hover:border-primary/45 hover:ring-primary/15 flex flex-col overflow-hidden rounded-xl border shadow-sm ring-1 backdrop-blur-sm transition-all duration-150 hover:shadow-md"
       href={article.link}
       rel="noopener noreferrer"
       target="_blank"
     >
       {/* Source row */}
-      <div className="border-border/40 dark:border-border/30 flex items-center gap-2 border-b px-4 py-2.5">
+      <div className="border-border/50 bg-muted/10 flex items-center gap-2 border-b px-4 py-2.5">
         <SourceFavicon siteUrl={article.siteUrl} />
         <span className="text-muted-foreground text-xs font-medium">
           {article.sourceName}
@@ -372,9 +372,9 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
     !!search.trim() || selectedSources.size > 0 || selectedCategories.size > 0;
 
   return (
-    <div className="space-y-5">
+    <div className="min-h-0 flex-1 space-y-5 overflow-y-auto">
       {live.isError ? (
-        <div className="border-warning/30 bg-warning/5 rounded-lg border px-4 py-2.5">
+        <div className="border-warning/35 bg-warning/10 rounded-lg border px-4 py-2.5">
           <p className="text-warning text-xs">
             Could not refresh the feed. Showing the last loaded articles.
           </p>
@@ -395,7 +395,7 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
       />
 
       {erroredSources.length > 0 && (
-        <div className="border-warning/30 bg-warning/5 rounded-lg border px-4 py-2.5">
+        <div className="border-warning/35 bg-warning/10 rounded-lg border px-4 py-2.5">
           <p className="text-warning text-xs">
             Could not load: {erroredSources.map((r) => r.sourceName).join(", ")}
             . These feeds may be temporarily unavailable.
@@ -416,7 +416,7 @@ export function FeedContent({ articles, results, sources }: FeedContentProps) {
           ))}
         </div>
       ) : (
-        <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 flex flex-col items-center justify-center rounded-xl border py-16">
+        <div className="border-border/70 bg-card/95 text-card-foreground ring-foreground/10 flex flex-col items-center justify-center rounded-xl border py-16 shadow-sm ring-1 backdrop-blur-sm">
           <Rss className="text-muted-foreground/40 mb-3 size-8" />
           <p className="text-foreground font-medium">No articles found</p>
           <p className="text-muted-foreground mt-1 text-sm">

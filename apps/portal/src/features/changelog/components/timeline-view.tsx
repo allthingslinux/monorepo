@@ -40,7 +40,7 @@ export function TimelineView({
 
   if (entries.length === 0) {
     return (
-      <div className="border-border/60 bg-card/50 dark:border-border/40 dark:bg-card/30 flex flex-col items-center justify-center rounded-xl border py-16">
+      <div className="border-border/70 bg-card/95 text-card-foreground ring-foreground/10 flex flex-col items-center justify-center rounded-xl border py-16 shadow-sm ring-1 backdrop-blur-sm">
         <History className="text-muted-foreground/40 mb-3 size-8" />
         <p className="text-foreground font-medium">No activity found</p>
         <p className="text-muted-foreground mt-1 text-sm">

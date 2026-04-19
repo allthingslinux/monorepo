@@ -20,7 +20,7 @@ export function CommitRow({ entry }: CommitRowProps) {
   });
 
   return (
-    <div className="border-border/60 dark:border-border/40 flex items-center gap-2 rounded-lg border px-3 py-2">
+    <div className="border-border/70 bg-card/80 hover:bg-muted/25 dark:bg-card/60 flex items-center gap-2 rounded-lg border px-3 py-2 shadow-xs transition-colors">
       {/* 1. Repo */}
       <span className="border-border/60 dark:border-border/40 mr-2 inline-flex w-32 shrink-0 items-center gap-1.5 border-r pr-3">
         <RepoIcon repoId={entry.repoId} />
