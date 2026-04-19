@@ -1,4 +1,7 @@
 const SUBJECT_PREFIX_RE = /^(re|aw|fwd|fw)\s*:\s*/i;
+const REPLY_SUBJECT_CHAIN_RE = /^((re|aw|fwd|fw)\s*:\s*)+/i;
+const PATCH_STYLE_TAG_RE =
+  /\[(?:[^\]]*?(?:patch|rfc|resend|v\d+|\d+\/\d+)[^\]]*)\]\s*/gi;
 
 /**
  * Arch-style `epoch:version-pkgrel` (e.g. `1:3.0.3-2`). Replies often bump only pkgrel;
@@ -40,6 +43,25 @@ export function stripSubjectReplyPrefixesForDisplay(subject: string): string {
 export function normalizeThreadSubjectKey(subject: string): string {
   let key = normalizeSubjectKey(subject);
   key = key.replace(ARCH_EPOCH_VER_PKGREL_RE, "__pkg__");
+  return key.replaceAll(/\s+/g, " ").trim();
+}
+
+/**
+ * Reply marker for subjects where feed metadata lacks explicit parent references.
+ */
+export function isReplyLikeSubject(subject: string): boolean {
+  return REPLY_SUBJECT_CHAIN_RE.test(subject.trim());
+}
+
+/**
+ * Looser thread key used as a fallback when explicit reply metadata is absent.
+ * It removes common patch-series bracket tags so `Re: [PATCH v2 08/10] ...`
+ * can still join `[PATCH 08/10] ...` in the same source.
+ */
+export function normalizeLooseThreadSubjectKey(subject: string): string {
+  let key = normalizeThreadSubjectKey(subject);
+  key = key.replace(PATCH_STYLE_TAG_RE, "");
+  key = key.replaceAll(/\b(?:v\d+)\b/gi, "");
   return key.replaceAll(/\s+/g, " ").trim();
 }
 

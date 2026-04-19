@@ -36,9 +36,7 @@ function stripHtmlToText(html: string): string {
   const withBoundaryBreaks = html
     // public-inbox/lore often emits `</a><span class="head">diff --git ...`;
     // preserve a line break so URLs and diff headers do not glue together.
-    .replaceAll(/<\/a>\s*<span\b/gi, "</a>\n<span")
-    // keep adjacent syntax-highlighting spans from collapsing tokens.
-    .replaceAll(/<\/span>\s*<span\b/gi, "</span>\n<span");
+    .replaceAll(/<\/a>\s*<span\b/gi, "</a>\n<span");
 
   const withoutTags = withBoundaryBreaks
     .replaceAll(/<br\s*\/?>/gi, "\n")
@@ -81,7 +79,9 @@ function htmlToPlainWithPres(html: string): string {
 
 /** If any tag-like sequence remains (stale data / odd nesting), strip again. */
 function stripResidualHtmlIfAny(text: string): string {
-  if (!/<[a-zA-Z][a-zA-Z0-9]*\b/.test(text)) {
+  // Require an actual tag boundary (`<tag ...>` / `</tag>`), not just angle-
+  // bracket literals like `<name@example.com>` found in Signed-off-by lines.
+  if (!/<\/?[a-zA-Z][a-zA-Z0-9:-]*(?:\s[^>]*)?>/.test(text)) {
     return text;
   }
   return stripHtmlToText(text);

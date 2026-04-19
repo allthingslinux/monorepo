@@ -82,6 +82,9 @@ export const GET = withWideEvent(
       if (query.sourceId) {
         whereParts.push(eq(mlThread.sourceId, query.sourceId));
       }
+      if (query.sourceGroup) {
+        whereParts.push(eq(mlSource.sourceLabel, query.sourceGroup));
+      }
       if (query.volumeClass) {
         whereParts.push(eq(mlSource.volumeClass, query.volumeClass));
       }

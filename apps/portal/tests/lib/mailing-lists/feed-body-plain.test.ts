@@ -120,4 +120,20 @@ After should not appear if between markers only.`;
       "https://lore.kernel.org/all/20260416093150.13853-1-rmxpzlb@gmail.com/\ndiff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c"
     );
   });
+
+  it("preserves signed-off-by angle-bracket email addresses", () => {
+    const html =
+      "<pre>Signed-off-by: Guangshuo Li &lt;lgs201920130244@gmail.com&gt;</pre>";
+    const out = feedBodyToPlainText(html);
+    expect(out).toContain(
+      "Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>"
+    );
+  });
+
+  it("does not insert synthetic blank lines between adjacent syntax spans", () => {
+    const html =
+      '<pre><span class="head">--- a/file.c</span><span class="head">+++ b/file.c</span></pre>';
+    const out = feedBodyToPlainText(html);
+    expect(out).toBe("--- a/file.c+++ b/file.c");
+  });
 });

@@ -8,6 +8,14 @@ import {
 import { feedBodyToPlainText } from "../feed-body-plain";
 import type { NormalizedFeedItem } from "../types";
 
+function pad2(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+function hasMessageIdHint(value: string): boolean {
+  return value.includes("@");
+}
+
 const parser = new Parser({
   customFields: {
     item: [
@@ -19,6 +27,55 @@ const parser = new Parser({
     ],
   },
 });
+
+export interface FetchRssAtomItemsOptions {
+  beforeTimeCursor?: string | null;
+  bypassNextDataCache?: boolean;
+}
+
+export interface FetchRssAtomPage {
+  items: NormalizedFeedItem[];
+  nextTimeCursor: string | null;
+  supportsTimeCursor: boolean;
+}
+
+function formatPublicInboxTimeCursor(date: Date): string {
+  return `${date.getUTCFullYear()}${pad2(date.getUTCMonth() + 1)}${pad2(date.getUTCDate())}${pad2(date.getUTCHours())}${pad2(date.getUTCMinutes())}${pad2(date.getUTCSeconds())}`;
+}
+
+export function toPublicInboxTimeCursor(raw: string | Date | null | undefined) {
+  if (!raw) {
+    return null;
+  }
+  if (raw instanceof Date) {
+    if (Number.isNaN(raw.getTime())) {
+      return null;
+    }
+    return formatPublicInboxTimeCursor(raw);
+  }
+
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return null;
+  }
+  if (/^\d{14}$/.test(trimmed)) {
+    return trimmed;
+  }
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+  return formatPublicInboxTimeCursor(parsed);
+}
+
+export function supportsPublicInboxTimeCursor(feedUrl: string): boolean {
+  try {
+    const url = new URL(feedUrl);
+    return url.pathname.endsWith("/new.atom");
+  } catch {
+    return false;
+  }
+}
 
 function decodeBasicXmlEntities(text: string): string {
   return text
@@ -154,9 +211,20 @@ function extractInReplyTo(item: Parser.Item): string | null {
   const ext = item as Record<string, unknown>;
   const thr = ext.thrInReplyTo;
   if (thr && typeof thr === "object" && thr !== null && "$" in thr) {
-    const ref = (thr as { $?: { ref?: string } }).$?.ref;
-    if (typeof ref === "string" && ref.trim()) {
-      return ref.trim();
+    const attrs = (thr as { $?: { href?: string; ref?: string } }).$;
+    const href = typeof attrs?.href === "string" ? attrs.href.trim() : "";
+    const ref = typeof attrs?.ref === "string" ? attrs.ref.trim() : "";
+    if (href && hasMessageIdHint(href)) {
+      return href;
+    }
+    if (ref && hasMessageIdHint(ref)) {
+      return ref;
+    }
+    if (href) {
+      return href;
+    }
+    if (ref) {
+      return ref;
     }
   }
   const ir = ext.inReplyTo;
@@ -193,20 +261,37 @@ function extractBody(item: Parser.Item, rawBodyFromXml?: string): string {
  */
 export async function fetchRssAtomItems(
   feedUrl: string,
-  options?: { bypassNextDataCache?: boolean }
+  options?: FetchRssAtomItemsOptions
 ): Promise<NormalizedFeedItem[]> {
+  const page = await fetchRssAtomPage(feedUrl, options);
+  return page.items;
+}
+
+// eslint-disable-next-line complexity -- Atom/RSS normalization + time cursor extraction
+export async function fetchRssAtomPage(
+  feedUrl: string,
+  options?: FetchRssAtomItemsOptions
+): Promise<FetchRssAtomPage> {
   const cacheInit =
     options?.bypassNextDataCache === true
       ? { cache: "no-store" as const }
       : { next: { revalidate: MAILING_LIST_FETCH_REVALIDATE_SECONDS } };
+  const supportsTimeCursor = supportsPublicInboxTimeCursor(feedUrl);
+  const feedUrlObj = new URL(feedUrl);
+  if (supportsTimeCursor && options?.beforeTimeCursor) {
+    const cursor = toPublicInboxTimeCursor(options.beforeTimeCursor);
+    if (cursor) {
+      feedUrlObj.searchParams.set("t", cursor);
+    }
+  }
 
-  const res = await fetch(feedUrl, {
+  const res = await fetch(feedUrlObj.toString(), {
     headers: {
       Accept:
         "application/atom+xml, application/rss+xml, application/xml, text/xml, */*",
       // Browser-like UA: lore.kernel.org returns 403 for minimal/bot-like agents.
       "User-Agent":
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 ATL-Portal-MailingLists/1.0 (+https://atl.tools)",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 ATL-Portal-MailingLists/1.0 (+https://allthingslinux.org; admin@allthingslinux.org)",
     },
     ...cacheInit,
   });
@@ -264,5 +349,28 @@ export async function fetchRssAtomItems(
     });
   }
 
-  return out;
+  let nextTimeCursor: string | null = null;
+  if (supportsTimeCursor && out.length > 0) {
+    let oldestPublishedAtMs: number | null = null;
+    for (const item of out) {
+      const t = item.publishedAt?.getTime();
+      if (typeof t !== "number" || Number.isNaN(t)) {
+        continue;
+      }
+      if (oldestPublishedAtMs === null || t < oldestPublishedAtMs) {
+        oldestPublishedAtMs = t;
+      }
+    }
+    if (oldestPublishedAtMs !== null) {
+      nextTimeCursor = formatPublicInboxTimeCursor(
+        new Date(oldestPublishedAtMs - 1000)
+      );
+    }
+  }
+
+  return {
+    items: out,
+    nextTimeCursor,
+    supportsTimeCursor,
+  };
 }

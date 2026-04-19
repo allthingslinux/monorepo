@@ -20,6 +20,7 @@ export const mailingListThreadsQuerySchema = z.object({
   /** ILIKE search on thread subject and message body. */
   q: z.preprocess(emptyToUndefined, z.string().min(1).max(500).optional()),
   sort: mailingListSortFieldSchema.default("lastMessageAt"),
+  sourceGroup: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   sourceId: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   volumeClass: z.preprocess(
     emptyToUndefined,
@@ -52,6 +53,7 @@ export type MailingListThreadDetailQuery = z.infer<
 
 export const mailingListSyncBodySchema = z.object({
   all: z.boolean().optional(),
+  older: z.boolean().optional(),
   sourceSlug: z.string().min(1).optional(),
 });
 

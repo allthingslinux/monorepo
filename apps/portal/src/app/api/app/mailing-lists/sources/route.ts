@@ -1,10 +1,15 @@
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
 import { ensureMlSourcesSeeded } from "@/features/mailing-lists/lib/sync";
 import { handleAPIError, requireAuth } from "@atl/api/utils";
 import { db } from "@atl/db/client";
-import { mlUserFollowSource, mlSource } from "@atl/db/schema/mailing-lists";
+import {
+  mlSource,
+  mlThread,
+  mlUserFollowSource,
+  mlUserReadState,
+} from "@atl/db/schema/mailing-lists";
 import {
   enrichWideEventWithUser,
   withWideEvent,
@@ -35,13 +40,35 @@ export const GET = withWideEvent(
         .from(mlUserFollowSource)
         .where(eq(mlUserFollowSource.userId, userId));
 
+      const unreadBySource = await db
+        .select({
+          sourceId: mlThread.sourceId,
+          unreadCount: sql<number>`COUNT(*)`,
+        })
+        .from(mlThread)
+        .leftJoin(
+          mlUserReadState,
+          and(
+            eq(mlUserReadState.threadId, mlThread.id),
+            eq(mlUserReadState.userId, userId)
+          )
+        )
+        .where(
+          sql`${mlThread.lastMessageAt} IS NOT NULL AND (${mlUserReadState.lastReadAt} IS NULL OR ${mlThread.lastMessageAt} > ${mlUserReadState.lastReadAt})`
+        )
+        .groupBy(mlThread.sourceId);
+
       const followSet = new Set(follows.map((f) => f.sourceId));
+      const unreadMap = new Map(
+        unreadBySource.map((r) => [r.sourceId, Number(r.unreadCount) || 0])
+      );
 
       return Response.json(
         {
           data: sources.map((s) => ({
             ...s,
             following: followSet.has(s.id),
+            unreadCount: unreadMap.get(s.id) ?? 0,
           })),
           ok: true,
         },

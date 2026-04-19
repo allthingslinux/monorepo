@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isReplyLikeSubject,
+  normalizeLooseThreadSubjectKey,
   normalizeRfcMessageId,
   normalizeSubjectKey,
   normalizeThreadSubjectKey,
@@ -29,6 +31,27 @@ describe("normalizeThreadSubjectKey", () => {
     );
     expect(a).toBe(b);
     expect(a).toContain("__pkg__");
+  });
+});
+
+describe("normalizeLooseThreadSubjectKey", () => {
+  it("normalizes patch-series bracket variants to one fallback key", () => {
+    const a = normalizeLooseThreadSubjectKey(
+      "Re: [PATCH v2 08/10] ARM: dts: qcom: msm8960: add SMSM & SPS"
+    );
+    const b = normalizeLooseThreadSubjectKey(
+      "[PATCH 08/10] ARM: dts: qcom: msm8960: add SMSM & SPS"
+    );
+    expect(a).toBe(b);
+    expect(a).toBe("arm: dts: qcom: msm8960: add smsm & sps");
+  });
+});
+
+describe("isReplyLikeSubject", () => {
+  it("detects reply-prefix chains", () => {
+    expect(isReplyLikeSubject("Re: Re: patch discussion")).toBe(true);
+    expect(isReplyLikeSubject("Fwd: topic")).toBe(true);
+    expect(isReplyLikeSubject("[PATCH] topic")).toBe(false);
   });
 });
 

@@ -38,22 +38,28 @@ export const POST = withWideEvent(
 
       const json: unknown = await request.json().catch(() => ({}));
       const body = mailingListSyncBodySchema.parse(json);
+      const cursorMode = body.older ? "older" : "smart";
 
       if (body.all) {
-        const results = await syncAllMlSources({ bypassNextDataCache: true });
+        const results = await syncAllMlSources({
+          bypassNextDataCache: true,
+          cursorMode,
+        });
         return Response.json({ data: { results }, ok: true });
       }
 
       if (body.sourceSlug) {
         const result = await syncMlSource(body.sourceSlug, {
           bypassNextDataCache: true,
+          cursorMode,
         });
         return Response.json({ data: { result }, ok: true });
       }
 
       return Response.json(
         {
-          error: 'Provide body { all: true } or { sourceSlug: "lkml" }',
+          error:
+            'Provide body { all: true } or { sourceSlug: "lkml" } (optionally with { older: true })',
           ok: false,
         },
         { status: 400 }

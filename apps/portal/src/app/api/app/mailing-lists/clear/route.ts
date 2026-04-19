@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 
 import { allowMailingListSync } from "@/features/mailing-lists/lib/rate-limit";
-import { clearAllMlIngestedData } from "@/features/mailing-lists/lib/sync";
+import { clearMlUserState } from "@/features/mailing-lists/lib/sync";
 import { handleAPIError, requireAuth } from "@atl/api/utils";
 import {
   enrichWideEventWithUser,
@@ -11,7 +11,7 @@ import type { WideEvent } from "@atl/observability/wide-events";
 
 /**
  * POST /api/app/mailing-lists/clear
- * Delete all ingested mailing-list data (rate-limited per user).
+ * Clear current user's mailing-list state (rate-limited per user).
  */
 export const POST = withWideEvent(
   async (request: NextRequest, event: WideEvent) => {
@@ -32,7 +32,7 @@ export const POST = withWideEvent(
         );
       }
 
-      const result = await clearAllMlIngestedData();
+      const result = await clearMlUserState(userId);
       return Response.json({ data: result, ok: true });
     } catch (error) {
       return handleAPIError(error);

@@ -1,6 +1,11 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const mailingListQueryKeys = {
   sources: () => ["mailing-lists", "sources"] as const,
@@ -15,6 +20,7 @@ export interface MailingListThreadsFilters {
   order?: "asc" | "desc";
   q?: string;
   sort?: "lastMessageAt" | "messageCount" | "subject";
+  sourceGroup?: string | null;
   sourceId?: string | null;
   volumeClass?: "high" | "medium" | "low" | "";
 }
@@ -27,6 +33,9 @@ function buildThreadsQueryString(filters: MailingListThreadsFilters): string {
   qs.set("order", filters.order ?? "desc");
   if (filters.sourceId) {
     qs.set("sourceId", filters.sourceId);
+  }
+  if (filters.sourceGroup) {
+    qs.set("sourceGroup", filters.sourceGroup);
   }
   if (filters.volumeClass) {
     qs.set("volumeClass", filters.volumeClass);
@@ -44,17 +53,55 @@ export function useMailingListSources() {
       if (!res.ok) {
         throw new Error("Failed to load sources");
       }
-      const json: { data: unknown; ok: boolean } = await res.json();
+      const json: { data: MailingListSourceRow[]; ok: boolean } =
+        await res.json();
       return json.data;
     },
     queryKey: mailingListQueryKeys.sources(),
   });
 }
 
+export interface MailingListSourceRow {
+  archiveUrl: string;
+  displayName: string;
+  following: boolean;
+  id: string;
+  lastSyncError: string | null;
+  lastSyncStatus: string | null;
+  lastSyncedAt: string | null;
+  listLabel: string | null;
+  slug: string;
+  sourceLabel: string | null;
+  unreadCount: number;
+}
+
 export function useMailingListThreads(filters: MailingListThreadsFilters = {}) {
-  const qs = buildThreadsQueryString(filters);
-  return useQuery({
-    queryFn: async () => {
+  const limit = filters.limit ?? 40;
+  const keyFilters: MailingListThreadsFilters = {
+    ...filters,
+    limit,
+    offset: 0,
+  };
+  const queryKey = mailingListQueryKeys.threads(keyFilters);
+
+  return useInfiniteQuery({
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < limit) {
+        return;
+      }
+      return allPages.length * limit;
+    },
+    initialPageParam: 0,
+    queryFn: async ({
+      pageParam,
+    }: {
+      pageParam: number;
+    }): Promise<MailingListThreadRow[]> => {
+      const qs = buildThreadsQueryString({
+        ...filters,
+        limit,
+        offset: pageParam,
+      });
       const res = await fetch(`/api/app/mailing-lists/threads?${qs}`);
       if (!res.ok) {
         throw new Error("Failed to load threads");
@@ -65,7 +112,8 @@ export function useMailingListThreads(filters: MailingListThreadsFilters = {}) {
       } = await res.json();
       return json.data.threads;
     },
-    queryKey: mailingListQueryKeys.threads(filters),
+    queryKey,
+    staleTime: 10_000,
   });
 }
 
@@ -188,7 +236,11 @@ export function useMarkThreadRead() {
 export function useSyncMailingLists() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { all?: boolean; sourceSlug?: string }) => {
+    mutationFn: async (input: {
+      all?: boolean;
+      older?: boolean;
+      sourceSlug?: string;
+    }) => {
       const res = await fetch("/api/app/mailing-lists/sync", {
         body: JSON.stringify(input),
         headers: { "Content-Type": "application/json" },
@@ -218,7 +270,13 @@ export function useClearMailingLists() {
         throw new Error(typeof j.error === "string" ? j.error : "Clear failed");
       }
       return res.json() as Promise<{
-        data: { deletedSources: number };
+        data: {
+          deletedBookmarks: number;
+          deletedFollowedSources: number;
+          deletedFollowedThreads: number;
+          deletedReadStates: number;
+          totalDeleted: number;
+        };
         ok: boolean;
       }>;
     },
